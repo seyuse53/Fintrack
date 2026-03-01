@@ -30,53 +30,81 @@
         </DataGrid>
 
         <!-- Edit panel -->
-        <Border Grid.Row="2" BorderBrush="#AAA" BorderThickness="1" CornerRadius="4" Padding="10" Margin="0,0,0,10" Background="#F9F9F9">
+        <Border Grid.Row="2" BorderBrush="#AAA" BorderThickness="1" CornerRadius="4" Padding="12" Margin="0,0,0,10" Background="#F9F9F9">
             <StackPanel>
                 <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="4"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="4"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="4"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="8"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="4"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="4"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox x:Name="BankNameBox" Grid.Column="0" VerticalContentAlignment="Center" Padding="2" FontSize="11"
-                         ToolTip="Banka Adı (örn. İş Bankası)" TextChanged="BankNameBox_TextChanged"/>
-                <TextBox x:Name="CardLabelBox" Grid.Column="2" VerticalContentAlignment="Center" Padding="2" FontSize="11"
-                         ToolTip="Kart Etiketi (örn. Asıl Kart)"/>
-                <TextBox x:Name="StatementDayBox" Grid.Column="4" VerticalContentAlignment="Center" Padding="2" FontSize="11"
-                         ToolTip="Hesap Kesim Günü (1-31)"/>
-                <TextBox x:Name="PaymentDueDayBox" Grid.Column="6" VerticalContentAlignment="Center" Padding="2" FontSize="11"
-                         ToolTip="Son Ödeme Günü (1-31)"/>
-                <Button x:Name="AddCardBtn" Grid.Column="8" Content="➕ Ekle" FontSize="11"
-                        Padding="6,4" Background="#4CAF50" Foreground="White" BorderThickness="0"
-                        Click="AddCard_Click"/>
-                <Button x:Name="UpdateCardBtn" Grid.Column="10" Content="💾 Güncelle" FontSize="11"
-                        Padding="6,4" Background="#2196F3" Foreground="White" BorderThickness="0"
-                        Click="UpdateCard_Click" IsEnabled="False"/>
-                <Button x:Name="ToggleActiveBtn" Grid.Column="12" Content="🔄 Aktif" FontSize="11"
-                        Padding="6,4" Background="#FF9800" Foreground="White" BorderThickness="0"
-                        Click="ToggleActive_Click" IsEnabled="False"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Row 0: Labels -->
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Banka Adı" FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Kart Etiketi" FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="0" Grid.Column="4" Text="Kesim G." FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="0" Grid.Column="6" Text="S. Ödeme G." FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
+
+                    <!-- Row 1: Inputs -->
+                    <TextBox x:Name="BankNameBox" Grid.Row="1" Grid.Column="0" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
+                             ToolTip="Banka Adı (örn. İş Bankası)" TextChanged="BankNameBox_TextChanged"/>
+                    <TextBox x:Name="CardLabelBox" Grid.Row="1" Grid.Column="2" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
+                             ToolTip="Kart Etiketi (örn. Asıl Kart)"/>
+                    <TextBox x:Name="StatementDayBox" Grid.Row="1" Grid.Column="4" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
+                             ToolTip="Hesap Kesim Günü (1-31)"/>
+                    <TextBox x:Name="PaymentDueDayBox" Grid.Row="1" Grid.Column="6" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
+                             ToolTip="Son Ödeme Günü (1-31)"/>
                 </Grid>
 
-                <!-- Parent Card Selection (Added inside Border for visibility) -->
-                <Grid Margin="0,10,0,0">
+                <!-- Parent Card Selection -->
+                <Grid Margin="0,15,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="🔗 Bağlı Olduğu Ana Kart:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#2980B9" FontWeight="SemiBold" FontSize="11"/>
                     <ComboBox x:Name="ParentCardCombo" Grid.Column="1" DisplayMemberPath="CardLabel" SelectedValuePath="Id"
-                              Padding="3" FontSize="11" ToolTip="Hangi karta bağlı?"/>
+                              Padding="3" FontSize="12" ToolTip="Hangi karta bağlı?"/>
                 </Grid>
+
+                <!-- Action Buttons -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
+                    <Button x:Name="AddCardBtn" Content="➕ Ekle" FontSize="12"
+                            Padding="12,6" Background="#4CAF50" Foreground="White" BorderThickness="0" Cursor="Hand"
+                            Click="AddCard_Click" Margin="0,0,8,0">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button x:Name="UpdateCardBtn" Content="💾 Güncelle" FontSize="12"
+                            Padding="12,6" Background="#2196F3" Foreground="White" BorderThickness="0" Cursor="Hand"
+                            Click="UpdateCard_Click" IsEnabled="False" Margin="0,0,8,0">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button x:Name="ToggleActiveBtn" Content="🔄 Aktif/Pasif" FontSize="12"
+                            Padding="12,6" Background="#FF9800" Foreground="White" BorderThickness="0" Cursor="Hand"
+                            Click="ToggleActive_Click" IsEnabled="False">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
             </StackPanel>
         </Border>
 
