@@ -60,49 +60,79 @@ namespace FinTrack.WPF.Views
         {
             string tempFilePath = Path.Combine(Path.GetTempPath(), "FinTrackUpdate.exe");
 
-            // 1. Download the new executable
+            // 1. Download the new executable with progress reporting
             using (var client = new HttpClient())
             {
-                // GitHub releases sometimes redirect, so HttpClient handles it automatically
+                client.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("FinTrackUpdater", "1.0"));
+                
                 var response = await client.GetAsync(_releaseInfo.DownloadUrl, HttpCompletionOption.ResponseHeadersRead);
                 response.EnsureSuccessStatusCode();
 
+                var totalBytes = response.Content.Headers.ContentLength;
+
                 using (var fs = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var stream = await response.Content.ReadAsStreamAsync())
                 {
-                    await response.Content.CopyToAsync(fs);
+                    var buffer = new byte[8192];
+                    long totalRead = 0;
+                    int read;
+
+                    DownloadProgressBar.IsIndeterminate = false;
+                    DownloadProgressBar.Minimum = 0;
+                    DownloadProgressBar.Maximum = totalBytes ?? 100;
+
+                    while ((read = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    {
+                        await fs.WriteAsync(buffer, 0, read);
+                        totalRead += read;
+
+                        if (totalBytes.HasValue)
+                        {
+                            double progress = (double)totalRead / totalBytes.Value * 100;
+                            Dispatcher.Invoke(() =>
+                            {
+                                DownloadProgressBar.Value = totalRead;
+                                DownloadProgressText.Text = $"İndiriliyor: %{progress:F0} ({(totalRead / 1024.0 / 1024.0):F1} MB / {(totalBytes.Value / 1024.0 / 1024.0):F1} MB)";
+                            });
+                        }
+                    }
                 }
             }
 
-            // 2. Create the updater script
+            Dispatcher.Invoke(() => DownloadProgressText.Text = "Uygulama güncelleniyor, lütfen bekleyin...");
+
+            // 2. Create a more robust updater script
             string currentExePath = Process.GetCurrentProcess().MainModule?.FileName ?? "FinTrack.exe";
             string scriptPath = Path.Combine(Path.GetTempPath(), "FinTrackUpdater.bat");
             
-            // The batch script does the following:
-            // - waits 3 seconds to let the current app close completely
-            // - deletes the old exe
-            // - moves the new exe to the current location
-            // - starts the new exe
-            // - deletes itself
+            // This script waits effectively by looping until the delete is successful
             string scriptContent = $@"
 @echo off
-timeout /t 3 /nobreak > NUL
-del /f /q ""{currentExePath}""
-move /y ""{tempFilePath}"" ""{currentExePath}""
-start """" ""{currentExePath}""
+set ""EXE_PATH={currentExePath}""
+set ""TEMP_PATH={tempFilePath}""
+
+:loop
+timeout /t 1 /nobreak > nul
+del /f /q ""%EXE_PATH%"" 2>nul
+if exist ""%EXE_PATH%"" goto loop
+
+move /y ""%TEMP_PATH%"" ""%EXE_PATH%""
+start """" ""%EXE_PATH%""
 del ""%~f0""
 ";
             File.WriteAllText(scriptPath, scriptContent);
 
-            // 3. Launch the script hidden
+            // 3. Launch the script
             ProcessStartInfo procInfo = new ProcessStartInfo
             {
-                FileName = scriptPath,
+                FileName = "cmd.exe",
+                Arguments = $"/c \"{scriptPath}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
             Process.Start(procInfo);
 
-            // 4. Close the application gracefully to let the script replace it
+            // 4. Shutdown
             Application.Current.Shutdown();
         }
     }
