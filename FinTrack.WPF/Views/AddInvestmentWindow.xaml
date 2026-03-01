@@ -1,0 +1,63 @@
+<Window x:Class="FinTrack.WPF.Views.AddInvestmentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Yatırım Satın Al" SizeToContent="Height" Width="450"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#F4F6F9">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Yeni Yatırım Alışı" FontSize="20" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="Varlık Sembolü (örn. XAU, USD, AAPL)" FontSize="12" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="SymbolTextBox" Padding="10" FontSize="14" CharacterCasing="Upper" Margin="0,0,0,15"/>
+
+                <TextBlock Text="Varlık Adı (örn. Gram Altın)" FontSize="12" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="NameTextBox" Padding="10" FontSize="14" Margin="0,0,0,15"/>
+
+                <TextBlock Text="Kategori" FontSize="12" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <ComboBox x:Name="CategoryComboBox" Padding="10" FontSize="14" Margin="0,0,0,15">
+                    <ComboBoxItem Content="Altın" IsSelected="True"/>
+                    <ComboBoxItem Content="Döviz"/>
+                    <ComboBoxItem Content="Hisse Senedi"/>
+                    <ComboBoxItem Content="Kripto Para"/>
+                    <ComboBoxItem Content="Fon"/>
+                    <ComboBoxItem Content="Diğer"/>
+                </ComboBox>
+
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Alınan Miktar" FontSize="12" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="AmountTextBox" Padding="10" FontSize="14"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Birim Fiyatı (₺)" FontSize="12" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="UnitPriceTextBox" Padding="10" FontSize="14"/>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="Aracı Kurum Masrafı / Komisyon (₺)" FontSize="12" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="FeeTextBox" Padding="10" FontSize="14" Margin="0,0,0,15" Text="0"/>
+
+                <TextBlock Text="Ödeme Kaynağı (İsteğe Bağlı)" FontSize="12" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+            <TextBlock Text="Seçilen hesabın bakiyesi otomatik olarak düşürülecektir." FontSize="11" Foreground="#7F8C8D" Margin="0,0,0,5" TextWrapping="Wrap"/>
+            <ComboBox x:Name="BankAccountComboBox" Padding="10" FontSize="14" Margin="0,0,0,20" DisplayMemberPath="DisplayInfo" SelectedValuePath="Id"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="İptal" Width="90" Padding="10" Click="Cancel_Click" Background="#ECF0F1" BorderThickness="0" Margin="0,0,10,0"/>
+            <Button Content="Satın Al" Width="120" Padding="10" Click="Save_Click" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0"/>
+        </StackPanel>
+    </Grid>
+</Window>

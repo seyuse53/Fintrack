@@ -1,0 +1,410 @@
+<UserControl x:Class="FinTrack.WPF.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="900">
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="⚙️ Ayarlar" FontSize="28" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+
+        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Border x:Name="Border" Padding="20,10" Margin="0,0,10,0" Background="#ECF0F1" CornerRadius="5,5,0,0">
+                                    <ContentPresenter x:Name="ContentSite" ContentSource="Header" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <ContentPresenter.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="#7F8C8D"/>
+                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                            </Style>
+                                        </ContentPresenter.Resources>
+                                    </ContentPresenter>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="White"/>
+                                        <Setter Property="Panel.ZIndex" Value="100"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+
+            <!-- TAB 1: GÜVENLİK -->
+            <TabItem Header="🔒 Güvenlik">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="White" Padding="30" CornerRadius="0,8,8,8" BorderBrush="#E0E0E0" BorderThickness="0,1,1,1">
+                        <StackPanel>
+                            <StackPanel MaxWidth="400" HorizontalAlignment="Left">
+                                <TextBlock Text="Giriş Şifresini Değiştir" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                                <TextBlock Text="Uygulama girişinde kullandığınız ve verilerinizi şifreleyen ana şifreyi buradan güncelleyebilirsiniz." 
+                                           FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
+
+                                <TextBlock Text="Mevcut Şifre" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
+                                <PasswordBox x:Name="CurrentPasswordBox" Padding="10" Margin="0,0,0,15"/>
+
+                                <TextBlock Text="Yeni Şifre" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
+                                <PasswordBox x:Name="NewPasswordBox" Padding="10" Margin="0,0,0,15"/>
+
+                                <TextBlock Text="Yeni Şifre (Tekrar)" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
+                                <PasswordBox x:Name="ConfirmPasswordBox" Padding="10" Margin="0,0,0,5"/>
+
+                                <TextBlock x:Name="PasswordStatusText" Text="" Foreground="#E74C3C" FontSize="12" Margin="0,0,0,20"/>
+
+                                <Button Content="Şifreyi Güncelle" HorizontalAlignment="Left" Padding="30,10" 
+                                        Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                                        Click="ChangePassword_Click" Cursor="Hand">
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="5"/>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
+                            </StackPanel>
+
+                            <!-- Otomatik Kilitleme (Auto-Lock) Bölümü -->
+                            <StackPanel Margin="0,30,0,0">
+                                <TextBlock Text="Otomatik Kilitleme (Auto-Lock)" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                                <TextBlock Text="Hareketsizlik durumunda ekrana şifre kalkanı koyarak verilerinizi meraklı gözlerden koruyun." 
+                                           FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,15" TextWrapping="Wrap"/>
+                                
+                                <Border Background="#F8F9F9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1">
+                                    <StackPanel>
+                                        <CheckBox x:Name="EnableAutoLockCheckBox" Content="Hareketsizlik durumunda uygulamayı kilitle" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,15" VerticalContentAlignment="Center"/>
+                                        
+                                        <StackPanel x:Name="AutoLockSettingsPanel">
+                                            <TextBlock Text="Kilitlenme Süresi (Dakika):" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
+                                            <TextBox x:Name="AutoLockTimeoutTextBox" Text="3" Padding="8" Background="White" BorderBrush="#D5DBDB" FontSize="13" Width="100" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="0,0,0,15"/>
+                                        </StackPanel>
+
+                                        <Button x:Name="SaveAutoLockSettingsButton" Content="⏱️ Kilitleme Ayarlarını Kaydet" Width="Auto" HorizontalAlignment="Left"
+                                                Padding="15,8" Margin="0,0,0,0" Background="#F39C12" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand"
+                                                Click="SaveAutoLockSettingsButton_Click">
+                                            <Button.Resources>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="6"/>
+                                                </Style>
+                                            </Button.Resources>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- TAB 2: BULUT SENKRONİZASYONU & YEDEKLEME -->
+            <TabItem Header="☁️ Bulut ve Yedekleme">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="White" Padding="30" CornerRadius="0,8,8,8" BorderBrush="#E0E0E0" BorderThickness="0,1,1,1">
+                        <StackPanel>
+                            <TextBlock Text="Bulut Senkronizasyonu ve Yedekleme" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                            <TextBlock Text="Veritabanınızı doğrudan buluta taşıyın veya otomatik yedekleme kurallarını belirleyin." 
+                                       FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25"/>
+
+                            <Border Background="#F8F9F9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="Mevcut Veritabanı Konumu" FontSize="12" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,10"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="PathTextBox" IsReadOnly="True" Padding="10" Background="White" BorderBrush="#D5DBDB" 
+                                                 FontSize="12" Foreground="#34495E"/>
+                                        <Button Grid.Column="1" Content="Klasör Seç" Padding="20,8" Margin="10,0,0,0" 
+                                                Background="#3498DB" Foreground="White" FontWeight="Bold" BorderThickness="0" 
+                                                Click="SelectFolder_Click" Cursor="Hand">
+                                            <Button.Resources>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="5"/>
+                                                </Style>
+                                            </Button.Resources>
+                                        </Button>
+                                    </Grid>
+                                    
+                                    <Button x:Name="SaveCloudSettingsButton" Content="💾 Ayarları Kaydet" Width="Auto" HorizontalAlignment="Left"
+                                            Padding="15,8" Margin="0,15,0,0" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand"
+                                            Click="SaveCloudSettingsButton_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="6"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Otomatik Yedekleme Bölümü -->
+                            <TextBlock Text="Otomatik Yedekleme (Auto-Backup)" FontSize="14" FontWeight="Bold" Foreground="#2C3E50" Margin="0,30,0,10"/>
+                            
+                            <Border Background="#F8F9F9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1">
+                                <StackPanel>
+                                    <CheckBox x:Name="EnableBackupCheckBox" Content="Uygulama kapanırken otomatik yedek al" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,15" VerticalContentAlignment="Center"/>
+                                    
+                                    <StackPanel x:Name="BackupSettingsPanel">
+                                        <TextBlock Text="Yedekleme Klasörü (Örn: G:\My Drive\Backups)" FontSize="12" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,5"/>
+                                        <Grid Margin="0,0,0,15">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Name="BackupPathTextBox" IsReadOnly="True" Padding="10" Background="White" BorderBrush="#D5DBDB" 
+                                                     FontSize="12" Foreground="#34495E"/>
+                                            <Button Grid.Column="1" Content="Klasör Seç" Padding="20,8" Margin="10,0,0,0" 
+                                                    Background="#3498DB" Foreground="White" FontWeight="Bold" BorderThickness="0" 
+                                                    Click="SelectBackupFolder_Click" Cursor="Hand">
+                                                <Button.Resources>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="CornerRadius" Value="5"/>
+                                                    </Style>
+                                                </Button.Resources>
+                                            </Button>
+                                        </Grid>
+
+                                        <Grid MaxWidth="400" HorizontalAlignment="Left">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="20"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Maks. Yedek Sayısı:" FontSize="12" Foreground="#34495E" Margin="0,0,0,5" ToolTip="En fazla kaç adet yedek dosyası saklanacağını belirler."/>
+                                                <TextBox x:Name="MaxBackupCountTextBox" Text="5" Padding="8" Background="White" BorderBrush="#D5DBDB" FontSize="13" HorizontalContentAlignment="Center"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Maks. Saklama Günü:" FontSize="12" Foreground="#34495E" Margin="0,0,0,5" ToolTip="Bir yedek dosyasının en fazla kaç gün saklanacağını belirler."/>
+                                                <TextBox x:Name="MaxBackupAgeTextBox" Text="30" Padding="8" Background="White" BorderBrush="#D5DBDB" FontSize="13" HorizontalContentAlignment="Center"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <Button x:Name="SaveBackupSettingsButton" Content="💾 Yedekleme Ayarlarını Kaydet" Width="Auto" HorizontalAlignment="Left"
+                                            Padding="15,8" Margin="0,20,0,0" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand"
+                                            Click="SaveBackupSettingsButton_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="6"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="Hızlı Kurulum Klavuzu" FontSize="14" FontWeight="Bold" Foreground="#2C3E50" Margin="0,30,0,10"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                    <TextBlock Text="Google Drive" FontWeight="Bold" Foreground="#4285F4" Margin="0,0,0,5"/>
+                                    <TextBlock Text="Drive Desktop uygulamasını açın ve 'G:\My Drive' klasörünü hedef gösterin." FontSize="11" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                                    <TextBlock Text="OneDrive" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,5"/>
+                                    <TextBlock Text="Kullanıcı klasörünüzdeki yerel OneDrive dizinini seçin." FontSize="11" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="10,0,0,0">
+                                    <TextBlock Text="Dropbox" FontWeight="Bold" Foreground="#0061FF" Margin="0,0,0,5"/>
+                                    <TextBlock Text="Dropbox masaüstü klasörünü hedef olarak belirleyin." FontSize="11" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- TAB 3: YATIRIMLAR & API -->
+            <TabItem Header="🌍 API ve Entegrasyonlar">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="White" Padding="30" CornerRadius="0,8,8,8" BorderBrush="#E0E0E0" BorderThickness="0,1,1,1">
+                         <StackPanel>
+                            <TextBlock Text="Fiyat Sağlayıcı (API) Ayarları" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                            <TextBlock Text="Yatırım portföyünüzdeki varlıkların güncel fiyatlarını çekmek için kullanılacak servisi seçin. Kaydet butonuna basmayı unutmayın." 
+                                       FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
+                                       
+                            <Border Background="#F9FAF9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1" MaxWidth="500" HorizontalAlignment="Left">
+                                <StackPanel>
+                                    <TextBlock Text="Sağlayıcı Seçimi" FontSize="12" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,10"/>
+                                    
+                                    <ComboBox x:Name="ApiProviderComboBox" Padding="10" FontSize="14" Margin="0,0,0,15" Width="300" HorizontalAlignment="Left"
+                                              SelectionChanged="ApiProviderComboBox_SelectionChanged">
+                                        <ComboBoxItem Content="Sadece Manuel (API Kapalı)"/>
+                                        <ComboBoxItem Content="Yahoo Finance (Ücretsiz)"/>
+                                        <ComboBoxItem Content="Özel API (Kendi Sunucum)"/>
+                                    </ComboBox>
+                                    
+                                    <StackPanel x:Name="CustomApiPanel" Visibility="Collapsed" Margin="0,0,0,15">
+                                        <TextBlock Text="Özel API End-point URL:" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
+                                        <TextBox x:Name="CustomApiTextBox" Padding="10" Width="300" HorizontalAlignment="Left" 
+                                                 ToolTip="Örn: https://api.sunucum.com/fiyatlar"/>
+                                    </StackPanel>
+
+                                    <TextBlock Text="Not: Manuel seçeneğinde fiyatları elle girmeniz gerekir. Yahoo Finance veya Özel API üzerinden canlı fiyatları Otomatik Çek butonu ile yükleyebilirsiniz." 
+                                               FontSize="11" Foreground="#7F8C8D" TextWrapping="Wrap" Margin="0,0,0,15"/>
+                                               
+                                    <Button x:Name="SaveApiSettingsButton" Content="💾 Ayarları Kaydet" Width="Auto" HorizontalAlignment="Left"
+                                            Padding="15,8" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand"
+                                            Click="SaveApiSettingsButton_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="6"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+
+                         </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- TAB 4: KULLANIM KILAVUZU -->
+            <TabItem Header="📖 Kullanım Kılavuzu">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="White" Padding="30" CornerRadius="0,8,8,8" BorderBrush="#E0E0E0" BorderThickness="0,1,1,1">
+                        <StackPanel>
+                            <!-- Kılavuz Başlığı -->
+                            <TextBlock Text="Kullanım Kılavuzu (Kısa Rehber)" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                            <TextBlock Text="FinTrack özelliklerini tam verimle kullanmak için aşağıdaki başlıkları inceleyebilirsiniz." 
+                                       FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25"/>
+
+                            <!-- Akordeon İçerikleri için Wrapper -->
+                            <StackPanel>
+                                <StackPanel.Resources>
+                                    <Style TargetType="Expander">
+                                        <Setter Property="Background" Value="#F8F9F9"/>
+                                        <Setter Property="BorderBrush" Value="#D5DBDB"/>
+                                        <Setter Property="BorderThickness" Value="1"/>
+                                        <Setter Property="Margin" Value="0,0,0,10"/>
+                                        <Setter Property="Padding" Value="10"/>
+                                    </Style>
+                                    <Style TargetType="TextBlock" x:Key="ExpanderHeader">
+                                        <Setter Property="FontSize" Value="14"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="Foreground" Value="#2C3E50"/>
+                                        <Setter Property="Margin" Value="0,5,0,5"/>
+                                    </Style>
+                                    <Style TargetType="TextBlock" x:Key="ExpanderContent">
+                                        <Setter Property="FontSize" Value="13"/>
+                                        <Setter Property="Foreground" Value="#555"/>
+                                        <Setter Property="TextWrapping" Value="Wrap"/>
+                                        <Setter Property="Margin" Value="5,10,5,5"/>
+                                    </Style>
+                                </StackPanel.Resources>
+
+                                <!-- Seçenek 1: İşlemler & Ana Ekran -->
+                                <Expander Header="🏠 Ana Ekran (Dashboard) ve İşlem Ekleme">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Gelir ve Gider Takibi:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,10" Text="İşlem eklerken 'Gelir' veya 'Gider' sekmelerini kullanarak işlemin türünü seçebilirsiniz. Ana ekran her ayın net bakiyesini, toplam gelir ve borç dağılımlarını hesaplar."/>
+                                    
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Ödeme Yöntemi:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="Sabit bir Gelir (örn: Maaş, EFT) eklerken 'Ödeme Yöntemi' seçeneğinden hedeflenen Banka Hesabını seçerek paranın doğrudan banka cüzdanınıza girmesini sağlayabilirsiniz. Aynı mantık Gider işlemleri için de geçerlidir."/>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Header="🏦 Banka Hesapları ve Transfer İşlemleri">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Hesap Yönetimi:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,10" Text="Hesaplar paneli üzerinden yeni banka hesapları ekleyebilir, IBAN veya açılış bakiyesi belirtebilirsiniz. Eklenen hesaplar Ana Ekrandaki 'Toplam Varlık' tutarına doğrudan eklenir."/>
+                                    
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Hesap Hareketleri:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,10" Text="Hesaplar sayfasındaki '📝 Hareketler' butonunu kullanarak o hesaba ait geçmiş tüm gelir, gider ve transfer işlemlerini detaylı bir listede görebilir, hesap bakiyenizin nasıl oluştuğunu takip edebilirsiniz."/>
+
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Para Transferi:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="Hesaplar sayfasındaki '🔄 Transfer' butonunu kullanarak;"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="15,0,5,0" Text="• İki banka arası EFT/Havale yapabilir,"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="15,0,5,0" Text="• Bankadan Nakit (veya tam tersi) çekim işlemi girebilir,"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="15,0,5,0" Text="• Kredi Kartınızın ekstre borcunu bir bankadan anında ödeyebilirsiniz."/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,5,5,5" Text="Sistem bunu arka planda (- / +) iki kayıt oluşturarak otomatik dengeler."/>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Header="📊 Aylık Bütçe Planlama">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,10,5,10" Text="Bütçe ekranı sayesinde kategorilere göre aylık limit belirleyebilirsiniz. Sistem, limit aşımlarında görsel uyarılarda bulunur (Sarı, Kırmızı)."/>
+                                    
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Enflasyon Düzeltmesi:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="'Yıllık Karşılaştırma' modülü, harcamalarınızı bir önceki yılın aynı dönemine göre analiz ederken Merkez Bankası / TÜİK'in sunduğu gerçek enflasyon (TÜFE) oranlarını kullanarak gizli enflasyon verisini hesaplar."/>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Header="💳 Kredi Kartı Yönetimi ve Asıl/Bağlı Kart">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,10,5,10" Text="'Kartlarım' sekmesindeki ilerleme çubukları ile her kartın hesap kesim veya ödeme günlerine ne kadar kaldığını günlük görebilirsiniz."/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="Sanal kartları veya aile bireylerinin kartlarını asıl karta bağlayarak (Kart Düzenleme ekranından) birden fazla bağımsız harcama geçmişini tek bir borç havuzunda (Ana Kart) toplayabilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Header="🔒 Güvenlik, Yedekleme ve Bulut">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,10,5,10" Text="FinTrack, veritabanınızı AES-256 standardında tamamen uçtan uca şifreler. Uygulama şifrenizi unutursanız, sadece sisteme ilk girdiğinizde size verilen 16 Haneli Kurtarma Kodu ile şifreyi sıfırlayabilirsiniz. Aksi takdirde verileriniz kimse tarafından (biz dahil) kurtarılamaz."/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="'Ayarlar > Bulut ve Yedekleme' sekmesini kullanarak şifreli veritabanınızı OneDrive veya Google Drive ortamına otomatik olarak yedeklenmesini (Auto-Backup) sağlayabilir, veri kaybı yaşama riskinizi sıfırlayabilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Header="🌍 Fiyat Sağlayıcılar (Yatırım API)">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,10,5,10" Text="Portföyünüzün döviz veya borsa değerlerini canlı olarak yenilemek için 'API ve Entegrasyonlar' sekmesinden 'Yahoo Finance' ayarını seçip kaydetmeniz yeterlidir."/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="Kendi kişisel veri servislerinden JSON çeken kullanıcılar için ise 'Özel API' (Custom URL) seçeneğiyle doğrudan kendi sunucunuza bağlanabilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+                            </StackPanel> <!-- Wrapper End -->
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
+            <!-- TAB 5: HAKKINDA -->
+            <TabItem Header="ℹ️ Hakkında">
+                <Border Background="White" Padding="30" CornerRadius="0,8,8,8" BorderBrush="#E0E0E0" BorderThickness="0,1,1,1">
+                    <StackPanel>
+                        <TextBlock Text="FinTrack" FontSize="22" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                        <TextBlock Text="Sürüm 0.8.0" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,25"/>
+                        
+                        <TextBlock Text="Açıklama" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                        <TextBlock Text="FinTrack, kişisel harcamalarınızı ve bütçenizi en ince ayrıntısıyla takip etmeniz için tasarlanmış, tam şifreli ve yerel veri korumalı bir finans yönetim aracıdır." 
+                                   FontSize="13" Foreground="#34495E" TextWrapping="Wrap" Margin="0,0,0,20"/>
+
+                        <TextBlock Text="Güvenlik ve Gizlilik" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                        <Border Background="#F9FAF9" Padding="15" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="• SQLCipher Full Encryption:" FontWeight="SemiBold" FontSize="12" Foreground="#2C3E50"/>
+                                <TextBlock Text="Veritabanı dosyası AES-256 ile bir bütün olarak şifrelenmiştir. Şifreniz olmadan dosya hiçbir araçla açılamaz." 
+                                           FontSize="12" Foreground="#7F8C8D" TextWrapping="Wrap" Margin="0,0,0,10"/>
+                                
+                                <TextBlock Text="• Zero-Knowledge Architecture:" FontWeight="SemiBold" FontSize="12" Foreground="#2C3E50"/>
+                                <TextBlock Text="Şifreleme anahtarlarınız sadece sizin cihazınızda saklanır. FinTrack dahil hiç kimse verilerinize erişemez." 
+                                           FontSize="12" Foreground="#7F8C8D" TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+                                <TextBlock Text="• AES-256 Field Protection:" FontWeight="SemiBold" FontSize="12" Foreground="#2C3E50"/>
+                                <TextBlock Text="İşlem açıklamaları gibi hassas metinler, veritabanı içinde ikinci bir katman olarak ayrıca şifrelenir." 
+                                           FontSize="12" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Separator Background="#ECF0F1" Margin="0,10"/>
+
+                        <TextBlock Text="Geliştirici" FontWeight="Bold" Margin="0,10,0,5"/>
+                        <TextBlock Text="FinTrack Development Team" FontSize="13" Foreground="#34495E"/>
+                        
+                        <TextBlock Text="Lisans" FontWeight="Bold" Margin="0,15,0,5"/>
+                        <TextBlock Text="MIT License - Ticari olmayan kişisel kullanım için ücretsizdir." FontSize="13" Foreground="#34495E"/>
+                    </StackPanel>
+                </Border>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

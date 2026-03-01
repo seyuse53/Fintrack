@@ -1,0 +1,92 @@
+<Window x:Class="FinTrack.WPF.CreditCardAccountsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="💳 Kartlarım" Height="480" Width="500"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResize">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="💳 Kredi Kartı Hesapları" FontSize="18" FontWeight="Bold" Margin="0,0,0,12"/>
+
+        <!-- Card list -->
+        <DataGrid x:Name="CardsGrid" Grid.Row="1"
+                  AutoGenerateColumns="False" CanUserAddRows="False"
+                  CanUserDeleteRows="False" IsReadOnly="True"
+                  SelectionMode="Single" Margin="0,0,0,10"
+                  SelectionChanged="CardsGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Banka" Binding="{Binding BankName}" Width="*"/>
+                <DataGridTextColumn Header="Kart" Binding="{Binding CardLabel}" Width="100"/>
+                <DataGridTextColumn Header="Kesim" Binding="{Binding StatementDay}" Width="45"/>
+                <DataGridTextColumn Header="Ödeme" Binding="{Binding PaymentDueDay}" Width="45"/>
+                <DataGridTextColumn Header="Ana Kart" Binding="{Binding ParentCard.CardLabel}" Width="80"/>
+                <DataGridCheckBoxColumn Header="Aktif" Binding="{Binding IsActive}" Width="40"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Edit panel -->
+        <Border Grid.Row="2" BorderBrush="#AAA" BorderThickness="1" CornerRadius="4" Padding="10" Margin="0,0,0,10" Background="#F9F9F9">
+            <StackPanel>
+                <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="4"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="4"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="4"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="4"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="4"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="BankNameBox" Grid.Column="0" VerticalContentAlignment="Center" Padding="2" FontSize="11"
+                         ToolTip="Banka Adı (örn. İş Bankası)" TextChanged="BankNameBox_TextChanged"/>
+                <TextBox x:Name="CardLabelBox" Grid.Column="2" VerticalContentAlignment="Center" Padding="2" FontSize="11"
+                         ToolTip="Kart Etiketi (örn. Asıl Kart)"/>
+                <TextBox x:Name="StatementDayBox" Grid.Column="4" VerticalContentAlignment="Center" Padding="2" FontSize="11"
+                         ToolTip="Hesap Kesim Günü (1-31)"/>
+                <TextBox x:Name="PaymentDueDayBox" Grid.Column="6" VerticalContentAlignment="Center" Padding="2" FontSize="11"
+                         ToolTip="Son Ödeme Günü (1-31)"/>
+                <Button x:Name="AddCardBtn" Grid.Column="8" Content="➕ Ekle" FontSize="11"
+                        Padding="6,4" Background="#4CAF50" Foreground="White" BorderThickness="0"
+                        Click="AddCard_Click"/>
+                <Button x:Name="UpdateCardBtn" Grid.Column="10" Content="💾 Güncelle" FontSize="11"
+                        Padding="6,4" Background="#2196F3" Foreground="White" BorderThickness="0"
+                        Click="UpdateCard_Click" IsEnabled="False"/>
+                <Button x:Name="ToggleActiveBtn" Grid.Column="12" Content="🔄 Aktif" FontSize="11"
+                        Padding="6,4" Background="#FF9800" Foreground="White" BorderThickness="0"
+                        Click="ToggleActive_Click" IsEnabled="False"/>
+                </Grid>
+
+                <!-- Parent Card Selection (Added inside Border for visibility) -->
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="🔗 Bağlı Olduğu Ana Kart:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#2980B9" FontWeight="SemiBold" FontSize="11"/>
+                    <ComboBox x:Name="ParentCardCombo" Grid.Column="1" DisplayMemberPath="CardLabel" SelectedValuePath="Id"
+                              Padding="3" FontSize="11" ToolTip="Hangi karta bağlı?"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+
+        <!-- Bottom buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="DeleteCardBtn" Content="🗑️ Sil" Width="80" Padding="5"
+                    Margin="0,0,10,0" Background="#F44336" Foreground="White" BorderThickness="0"
+                    Click="DeleteCard_Click" IsEnabled="False"/>
+            <Button Content="Kapat" Width="80" Padding="5" Click="Close_Click" IsDefault="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

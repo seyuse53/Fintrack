@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="FinTrack.Core/FinTrack.Core.csproj" />
+  <Project Path="FinTrack.Data/FinTrack.Data.csproj" />
+  <Project Path="FinTrack.WPF/FinTrack.WPF.csproj" />
+</Solution>

@@ -1,0 +1,40 @@
+<Window x:Class="FinTrack.WPF.Views.UpdatePricesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Fiyatları Güncelle" SizeToContent="Height" Width="400"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#F4F6F9">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Manuel Fiyat Güncelleme" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+        <TextBlock Grid.Row="1" Text="Varlık sembolü ve yeni birim fiyatını giriniz." FontSize="12" Foreground="#7F8C8D" Margin="0,0,0,20"/>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Sembol (örn: XAU, USD, THYAO)" FontSize="12" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="SymbolTextBox" Padding="8" FontSize="14" CharacterCasing="Upper"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2">
+                <TextBlock Text="Yeni Birim Fiyatı (₺)" FontSize="12" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <TextBox x:Name="PriceTextBox" Padding="8" FontSize="14"/>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="İptal" Width="80" Padding="8" Margin="0,0,10,0" Click="Cancel_Click" Background="#ECF0F1" BorderThickness="0"/>
+            <Button Content="Kaydet" Width="100" Padding="8" Click="Save_Click" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0"/>
+        </StackPanel>
+    </Grid>
+</Window>
