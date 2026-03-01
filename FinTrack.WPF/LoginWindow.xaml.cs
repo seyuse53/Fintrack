@@ -10,6 +10,9 @@ namespace FinTrack.WPF
         public LoginWindow()
         {
             InitializeComponent();
+            // Display current version
+            string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.9.1";
+            VersionText.Text = $"v{currentVersion}";
             LoadProfiles();
         }
 
