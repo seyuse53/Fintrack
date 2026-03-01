@@ -31,6 +31,10 @@ namespace FinTrack.WPF
 
             Loaded += async (_, _) =>
             {
+                // Display current version
+                string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.9.1";
+                VersionText.Text = $"v{currentVersion}";
+
                 // Pre-initialize views
                 _dashboardView = new DashboardView();
                 _budgetView = new BudgetView();

@@ -142,6 +142,9 @@
                 <StatusBarItem>
                     <TextBlock x:Name="StatusText" Text="Hazır" Foreground="#7F8C8D"/>
                 </StatusBarItem>
+                <StatusBarItem HorizontalAlignment="Right">
+                    <TextBlock x:Name="VersionText" Text="v0.9.2" Foreground="#95A5A6" Margin="0,0,10,0" FontSize="11"/>
+                </StatusBarItem>
             </StatusBar>
         </Grid>
     </Grid>
