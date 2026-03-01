@@ -1,5 +1,6 @@
 using System.Windows;
 using Microsoft.Win32;
+using System.IO;
 
 namespace FinTrack.WPF
 {
@@ -45,6 +46,18 @@ namespace FinTrack.WPF
             }
 
             ProfileName = ProfileNameInput.Text.Trim();
+
+            // Quick check for existing keys before we close
+            if (!string.IsNullOrEmpty(SelectedDbPath))
+            {
+                string keysFile = SelectedDbPath + ".keys";
+                if (File.Exists(keysFile))
+                {
+                    MessageBox.Show("Seçilen veritabanı için şifreleme anahtarları bulundu!\n\nYeni bir şifre belirlemenize gerek kalmayacak. Giriş ekranında mevcut ana şifrenizi kullanarak devam edebilirsiniz.", 
+                        "Veriler İçe Aktarıldı", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+
             DialogResult = true;
             Close();
         }

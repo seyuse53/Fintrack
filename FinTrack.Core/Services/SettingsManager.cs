@@ -89,17 +89,36 @@ namespace FinTrack.Core.Services
                 string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProfilesFile);
                 File.WriteAllText(path, JsonSerializer.Serialize(profiles));
 
-                // Eğer bir veritabanı yolu belirtilmişse, profilin ayarlarını hemen oluşturup kaydet
-                if (!string.IsNullOrEmpty(databasePath))
+                // Initialize settings for the new profile
+                string oldProfile = _currentProfile;
+                _currentProfile = profileName;
+                
+                var settings = new Settings { DatabasePath = databasePath };
+
+                // [SIDE-CAR RECOVERY] 
+                // If an existing DB is selected, check for a companion .keys file to restore encryption info
+                if (!string.IsNullOrEmpty(databasePath) && File.Exists(databasePath))
                 {
-                    string oldProfile = _currentProfile;
-                    _currentProfile = profileName; // Geçici olarak geçiş yap
-                    
-                    var settings = new Settings { DatabasePath = databasePath };
-                    SaveSettings(settings);
-                    
-                    _currentProfile = oldProfile; // Eski profile geri dön
+                    string keysFile = databasePath + ".keys";
+                    if (File.Exists(keysFile))
+                    {
+                        try
+                        {
+                            string keysJson = File.ReadAllText(keysFile);
+                            var keysData = JsonSerializer.Deserialize<Settings>(keysJson);
+                            if (keysData != null)
+                            {
+                                settings.HashedPassword = keysData.HashedPassword;
+                                settings.EncryptedDataKey = keysData.EncryptedDataKey;
+                                settings.RecoveryEncryptedDataKey = keysData.RecoveryEncryptedDataKey;
+                            }
+                        }
+                        catch { /* Silent fail, fallback to first-time setup UI */ }
+                    }
                 }
+
+                SaveSettings(settings);
+                _currentProfile = oldProfile;
             }
         }
 
@@ -204,6 +223,25 @@ namespace FinTrack.Core.Services
         {
             string json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(SettingsFile, json);
+
+            // [SIDE-CAR KEYS] Save a copy of encryption info alongside the database for portability
+            if (!string.IsNullOrEmpty(settings.DatabasePath) && !string.IsNullOrEmpty(settings.HashedPassword))
+            {
+                try
+                {
+                    var keysOnly = new Settings
+                    {
+                        HashedPassword = settings.HashedPassword,
+                        EncryptedDataKey = settings.EncryptedDataKey,
+                        RecoveryEncryptedDataKey = settings.RecoveryEncryptedDataKey,
+                        DatabasePath = settings.DatabasePath // For reference
+                    };
+                    string keysJson = JsonSerializer.Serialize(keysOnly, new JsonSerializerOptions { WriteIndented = true });
+                    string keysPath = settings.DatabasePath + ".keys";
+                    File.WriteAllText(keysPath, keysJson);
+                }
+                catch { /* Logging would be good here but let's keep it robust */ }
+            }
         }
 
         public static string GetDatabasePath()
