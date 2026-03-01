@@ -71,7 +71,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="🔗 Bağlı Olduğu Ana Kart:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#2980B9" FontWeight="SemiBold" FontSize="11"/>
-                    <ComboBox x:Name="ParentCardCombo" Grid.Column="1" DisplayMemberPath="CardLabel" SelectedValuePath="Id"
+                    <ComboBox x:Name="ParentCardCombo" Grid.Column="1" DisplayMemberPath="DisplayName" SelectedValuePath="Id"
                               Padding="3" FontSize="12" ToolTip="Hangi karta bağlı?"/>
                 </Grid>
 

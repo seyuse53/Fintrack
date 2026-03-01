@@ -24,6 +24,8 @@ namespace FinTrack.Core.Models
         public CreditCardAccount? ParentCard { get; set; }
         public System.Collections.Generic.ICollection<CreditCardAccount> LinkedCards { get; set; } = new System.Collections.Generic.List<CreditCardAccount>();
 
+        public string DisplayName => Id == -1 ? CardLabel : $"{BankName} - {CardLabel}";
+
         /// <summary>
         /// Calculates the start and end dates of the statement period that includes the given date.
         /// </summary>
