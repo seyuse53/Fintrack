@@ -16,6 +16,13 @@ All notable changes to this project will be documented in this file.
 - **Güvenli Otomatik Yedekleme (Auto-Backup)**: Uygulama kapanırken (veya profil değiştirirken) veritabanınızın şifreli bir kopyasını istediğiniz bir klasöre (örn. OneDrive, Google Drive) otomatik olarak yedekleyen gelişmiş veri koruma sistemi eklendi.
     - **Akıllı Temizlik**: "Sadece son 5 yedeği tut" veya "30 günden eski yedekleri sil" gibi kurallarla disk alanınızın dolması engellenir.
     - **İlk Kurulum Asistanı**: Kullanıcı yedekleme klasörü seçmemişse, sisteme ilk girişinde otomatik uyarı/öneri penceresi çıkarak "Veri güvenliğiniz için yedek klasörü seçin" şeklinde yönlendirme yapar.
+- **Kredi Kartı Yönetimi İyileştirmeleri**:
+    - Kart ekleme ekranı, kafa karışıklığını önlemek için açıklayıcı başlıklar ve daha düzenli bir yerleşimle yenilendi.
+    - Bağlı (ana) kart seçim listesinde banka ve kart adı beraber gösterilecek şekilde (Örn: *Yapı Kredi - Master*) güncellendi.
+- **Veritabanı Taşınabilirliği (Sidecar Keys)**:
+    - Veritabanı dosyası başka bir bilgisayara taşındığında şifreleme bilgilerinin de taşınabilmesi için otomatik `.keys` dosyası altyapısı kuruldu.
+    - Mevcut bir veritabanı dosyası seçildiğinde sistem anahtarları otomatik algılar ve yeni şifre oluşturmak yerine mevcut şifreyle giriş yapılmasını sağlar.
+- **Giriş Ekranı Güncellemesi**: Uygulama versiyon numarası artık giriş ekranının sağ alt köşesinde dinamik olarak görünüyor.
 
 - **Güçlendirilmiş Şifreleme (PBKDF2 & Salt)**: Veri gizliliği ve güvenliği "Askeri Düzey" (Military-Grade) standartlarına yükseltildi. 
     - Uygulama şifreleri (`HashedPassword`) artık düz SHA-256 yerine, brute-force (kaba kuvvet) saldırılarını imkansız kılan **PBKDF2** algoritması ve rastgele **Salt** kullanılarak şifreleniyor. 

@@ -34,7 +34,7 @@
             </StackPanel>
 
             <!-- Sürüm Notları (Release Notes) -->
-            <Border Grid.Row="2" Margin="30,10,30,20" Background="#F8F9F9" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+            <Border x:Name="ReleaseNotesBorder" Grid.Row="2" Margin="30,10,30,20" Background="#F8F9F9" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <TextBlock Text="Sürüm Notları:" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,10"/>
@@ -43,8 +43,17 @@
                 </ScrollViewer>
             </Border>
 
-            <TextBlock x:Name="DownloadProgressText" Grid.Row="2" Text="" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#2980B9" Visibility="Collapsed"/>
-            <ProgressBar x:Name="DownloadProgressBar" Grid.Row="2" Height="5" VerticalAlignment="Bottom" Margin="30,0,30,10" Visibility="Collapsed"/>
+            <!-- İndirme Durumu (Sürüm Notları Gizlendiğinde Görünür) -->
+            <StackPanel Grid.Row="2" VerticalAlignment="Center" Margin="30,0">
+                <TextBlock x:Name="DownloadProgressText" Text="" HorizontalAlignment="Center" FontWeight="Bold" Foreground="#2980B9" Visibility="Collapsed" Margin="0,0,0,15"/>
+                <ProgressBar x:Name="DownloadProgressBar" Height="10" Visibility="Collapsed">
+                    <ProgressBar.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </ProgressBar.Resources>
+                </ProgressBar>
+            </StackPanel>
 
             <!-- Butonlar -->
             <Grid Grid.Row="3" Margin="30,0,30,25">

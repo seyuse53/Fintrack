@@ -36,13 +36,12 @@ namespace FinTrack.WPF.Views
 
         private async void UpdateNowButton_Click(object sender, RoutedEventArgs e)
         {
-            // Disable buttons
+            // UI Güncelleme: İndirme başlıyor
             UpdateNowButton.IsEnabled = false;
             RemindLaterButton.IsEnabled = false;
-            
-            // Show progress
-            DownloadProgressBar.Visibility = Visibility.Visible;
+            ReleaseNotesBorder.Visibility = Visibility.Collapsed; // Sürüm notlarını gizle
             DownloadProgressText.Visibility = Visibility.Visible;
+            DownloadProgressBar.Visibility = Visibility.Visible;
             DownloadProgressBar.IsIndeterminate = true;
             DownloadProgressText.Text = "Güncelleme indiriliyor, Lütfen bekleyin...";
 
