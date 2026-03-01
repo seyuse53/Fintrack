@@ -16,6 +16,10 @@ Bu doküman, FinTrack projesine eklenecek yeni özellikleri, geliştirme fikirle
   *Tarih: 2026-03-01*
   Kullanıcı bilgisayar başından kalktığında veya uygulama arka planda belirlenen süre (varsayılan 3 dakika) boyunca hareketsiz kaldığında ekranı kilitleyen "Oturum Zaman Aşımı" güvenlik modülü entegre edildi.
 
+- **[x] Uygulama İçi Otomatik Güncelleme (Auto-Updater)**
+  *Tarih: 2026-03-01*
+  GitHub Releases API üzerine kurulu, tamamen maliyetsiz ve çok hızlı bir uygulama içi güncelleme motoru entegre edildi. Uygulama açılışta yeni sürümü denetleyip dilerse kendi kendini güncelleyebilir duruma getirildi.
+
 ---
 
 ## 🟡 Sonraki Aşamalar İçin Planlanan Özellikler (Faz 3 & Sonrası)
@@ -40,6 +44,3 @@ Uygulama arayüzünü WPF ile birebir aynı kod yapısına (XAML) sahip olan **A
 
 ### 6. 🧪 Otomatik Testlerin (Unit Tests) Kurulması
 Gelecekte projeye eklenecek yeni özelliklerin mevcut sağlam yapıyı bozmadığından emin olmak (Regresyonları önlemek) için `FinTrack.Tests` adında bir xUnit test projesi oluşturulabilir. Özellikle yazdığımız `CryptoProvider` ve fatura/bütçe hesaplama mantıkları otomatik testlere bağlanabilir.
-
-### 7. 📥 Uygulama İçi Otomatik Güncelleme (Auto-Updater)
-Tek dosya `.exe` çıktıları için çok ideal olan bu sistem sayesinde, yeni bir sürüm yayınladığınızda kullanıcılara uygulama içinden uyarı çıkarılabilir. GitHub Releases veya özel bir sunucu üzerinden versiyon kontrolü yapıp, "Yeni sürüm var, indirilip kurulsun mu?" şeklinde çalışan bir güncelleme motoru entegre edilebilir.

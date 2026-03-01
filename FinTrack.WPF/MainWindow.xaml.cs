@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using FinTrack.Core.Models;
+using FinTrack.Core.Services;
 using FinTrack.Data;
 using FinTrack.WPF.Views;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +49,38 @@ namespace FinTrack.WPF
                 // Start global Auto-Lock watcher
                 FinTrack.WPF.Services.AutoLockService.OnLockTriggered += AutoLockService_OnLockTriggered;
                 FinTrack.WPF.Services.AutoLockService.Start();
+
+                // Check for Updates
+                _ = CheckForUpdatesAsync();
             };
+        }
+
+        private async Task CheckForUpdatesAsync()
+        {
+            try
+            {
+                // Current version of the app from assembly
+                string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.9.1";
+                
+                var githubService = new GitHubReleaseService();
+                var result = await githubService.CheckForUpdatesAsync(currentVersion);
+
+                if (result.IsUpdateAvailable)
+                {
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        var updateWindow = new UpdateAvailableWindow(currentVersion, result)
+                        {
+                            Owner = this
+                        };
+                        updateWindow.ShowDialog();
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error during update check: {ex.Message}");
+            }
         }
 
         private void AutoLockService_OnLockTriggered()

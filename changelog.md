@@ -5,15 +5,18 @@ All notable changes to this project will be documented in this file.
 ## [0.9.1] - 2026-03-01
 
 ### Added
-- **Otomatik Kilitleme (Auto-Lock)**: Güvenliği en üst seviyeye taşımak için "Oturum Zaman Aşımı" sistemi eklendi.
-    - Uygulama açıkken bilgisayar başında olmadığınızda veya belirli bir süre (varsayılan: 3 dakika) fare/klavye hareketi olmazsa uygulama **tam ekran kilit moduna** geçer.
-    - Kilit ekranındayken arkadaki verileriniz gizlenir. Uygulamayı tekrar açmak için mevcut şifrenizi girmeniz yeterlidir.
-    - `Ayarlar > Güvenlik` sekmesinden bu özelliği kapatabilir veya dakika sınırını dilediğiniz gibi güncelleyebilirsiniz.
+- **Otomatik Kilitleme (Auto-Lock)**:
+  - Uzun süreli hareketsizlik (mouse/klavye kullanılmaması) durumunda uygulamanın otomatik olarak bir şifre kalkanı ile kilitlenmesi sağlandı.
+  - Sizi verilerinizden uzaklaştığınızda güvenlik altına alan bu ekran, sadece uygulamanın ana şifresi ile açılabiliyor.
+  - Otomatik kilitleme süresi varsayılan olarak **3 dakika** ayarlı olarak gelir. İstenirse `Ayarlar > Güvenlik` menüsünden süre değiştirilebilir veya tamamen kapatılabilir.
+- **Uygulama İçi Otomatik Güncelleme (Auto-Updater)**:
+  - FinTrack'in yeni sürümlerinin otomatik olarak tespit edilmesi ve tek tuşla indirilip kurulması için altyapı geliştirildi.
+  - Uygulama sadece her başlangıçta GitHub üzerindeki kararlı (Release) sürümleri denetler ve "Yeni Sürüm Var" uyarısı ile beraber o sürüme ait yenilik notlarını ekranda gösterir.
+  - Arka planda çalışan güncelleyici sistemi (updater), eski dosyayı silip yeni kurulan `.exe` dosyası ile uygulamayı saniyeler içinde baştan başlatır. Tamamen ücretsiz ve güvenli GitHub altyapısı üzerine inşa edildi.
 - **Güvenli Otomatik Yedekleme (Auto-Backup)**: Uygulama kapanırken (veya profil değiştirirken) veritabanınızın şifreli bir kopyasını istediğiniz bir klasöre (örn. OneDrive, Google Drive) otomatik olarak yedekleyen gelişmiş veri koruma sistemi eklendi.
     - **Akıllı Temizlik**: "Sadece son 5 yedeği tut" veya "30 günden eski yedekleri sil" gibi kurallarla disk alanınızın dolması engellenir.
     - **İlk Kurulum Asistanı**: Kullanıcı yedekleme klasörü seçmemişse, sisteme ilk girişinde otomatik uyarı/öneri penceresi çıkarak "Veri güvenliğiniz için yedek klasörü seçin" şeklinde yönlendirme yapar.
 
-### Changed
 - **Güçlendirilmiş Şifreleme (PBKDF2 & Salt)**: Veri gizliliği ve güvenliği "Askeri Düzey" (Military-Grade) standartlarına yükseltildi. 
     - Uygulama şifreleri (`HashedPassword`) artık düz SHA-256 yerine, brute-force (kaba kuvvet) saldırılarını imkansız kılan **PBKDF2** algoritması ve rastgele **Salt** kullanılarak şifreleniyor. 
     - Eski sürümlerde oluşturulan şifreler, kullanıcı uygulamaya ilk giriş yaptığında *otomatik* ve kesintisiz olarak yeni yüksek güvenlikli PBKDF2 altyapısına yükseltiliyor (Geriye dönük tam uyumluluk).
