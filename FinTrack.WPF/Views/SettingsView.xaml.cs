@@ -71,15 +71,22 @@ namespace FinTrack.WPF.Views
                 return;
             }
 
-            SettingsManager.ChangePassword(current, newPwd);
-
-            MessageBox.Show("Şifreniz başarıyla değiştirildi.", "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
-            
-            // Clear boxes
-            CurrentPasswordBox.Clear();
-            NewPasswordBox.Clear();
-            ConfirmPasswordBox.Clear();
-            PasswordStatusText.Text = "";
+            if (SettingsManager.ChangePassword(current, newPwd))
+            {
+                var successWin = new GeneralConfirmWindow("Başarılı", "Şifreniz başarıyla değiştirildi. Artık yeni şifrenizle giriş yapabilirsiniz.", "Tamam", "");
+                successWin.Owner = Window.GetWindow(this);
+                successWin.ShowDialog();
+                
+                // Clear boxes
+                CurrentPasswordBox.Clear();
+                NewPasswordBox.Clear();
+                ConfirmPasswordBox.Clear();
+                PasswordStatusText.Text = "";
+            }
+            else
+            {
+                PasswordStatusText.Text = "Şifre değiştirilemedi (DEK hatası). Lütfen teknik desteğe danışın.";
+            }
         }
 
         // ==================== CLOUD SYNC LOGIC ====================
@@ -110,25 +117,34 @@ namespace FinTrack.WPF.Views
             
             if (string.IsNullOrWhiteSpace(newPath) || currentPath.Equals(newPath, StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("Veritabanı zaten seçili konumda veya yeni bir klasör seçilmedi.", "Bilgi");
+                var infoWin = new GeneralConfirmWindow("Bilgi", "Veritabanı zaten seçili konumda veya yeni bir klasör seçilmedi.", "Tamam", "");
+                infoWin.Owner = Window.GetWindow(this);
+                infoWin.ShowDialog();
                 return;
             }
 
             try
             {
-                var result = MessageBox.Show(
+                var confirmWin = new GeneralConfirmWindow(
+                    "Veritabanını Taşı",
                     $"Veritabanı dosyası şu konuma taşınacak:\n\n{newPath}\n\nDevam etmek istiyor musunuz?",
-                    "Veritabanını Taşı", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    "Evet, Taşı",
+                    "Vazgeç");
+                confirmWin.Owner = Window.GetWindow(this);
 
-                if (result == MessageBoxResult.Yes)
+                if (confirmWin.ShowDialog() == true)
                 {
                     if (File.Exists(newPath))
                     {
-                        var overwrite = MessageBox.Show(
+                        var conflictWin = new GeneralConfirmWindow(
+                            "Dosya Çakışması",
                             "Hedef klasörde zaten bir fintrack.db dosyası var. Mevcut dosyayı SEÇİLEN klasördeki ile değiştirmek ister misiniz?\n\n(Eski yerel verileriniz korunacaktır ancak aktif dosya buluttaki olacaktır)",
-                            "Dosya Çakışması", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                            "Değiştir",
+                            "Vazgeç");
+                        conflictWin.Owner = Window.GetWindow(this);
+                        conflictWin.SetHighContrast(true);
                         
-                        if (overwrite != MessageBoxResult.Yes) return;
+                        if (conflictWin.ShowDialog() != true) return;
                     }
                     else
                     {
@@ -137,14 +153,17 @@ namespace FinTrack.WPF.Views
 
                     SettingsManager.SetDatabasePath(newPath);
 
-                    MessageBox.Show(
-                        "Veritabanı konumu başarıyla güncellendi!\n\nDeğişikliklerin tam olarak uygulanması için lütfen uygulamayı kapatıp tekrar açın.",
-                        "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
+                    var successWin = new GeneralConfirmWindow("Başarılı", "Veritabanı konumu başarıyla güncellendi!\n\nDeğişikliklerin tam olarak uygulanması için lütfen uygulamayı kapatıp tekrar açın.", "Tamam", "");
+                    successWin.Owner = Window.GetWindow(this);
+                    successWin.ShowDialog();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Dosya taşıma sırasında bir hata oluştu: {ex.Message}", "Hata", MessageBoxButton.OK, MessageBoxImage.Error);
+                var errorWin = new GeneralConfirmWindow("Hata", $"Dosya taşıma sırasında bir hata oluştu: {ex.Message}", "Tamam", "");
+                errorWin.Owner = Window.GetWindow(this);
+                errorWin.SetHighContrast(true);
+                errorWin.ShowDialog();
             }
         }
 
@@ -248,7 +267,9 @@ namespace FinTrack.WPF.Views
                     SettingsManager.SetCustomApiUrl(CustomApiTextBox.Text);
                 }
 
-                MessageBox.Show("Fiyat sağlayıcı (API) ayarları başarıyla kaydedildi.", "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
+                var successWin = new GeneralConfirmWindow("Başarılı", "Fiyat sağlayıcı (API) ayarları başarıyla kaydedildi.", "Tamam", "");
+                successWin.Owner = Window.GetWindow(this);
+                successWin.ShowDialog();
             }
         }
     }

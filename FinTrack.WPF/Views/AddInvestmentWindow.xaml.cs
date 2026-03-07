@@ -5,6 +5,7 @@ using System.Windows;
 using Microsoft.EntityFrameworkCore;
 using FinTrack.Core.Models;
 using FinTrack.Data;
+using FinTrack.WPF.Helpers;
 
 namespace FinTrack.WPF.Views
 {
@@ -102,6 +103,11 @@ namespace FinTrack.WPF.Views
             }
         }
 
+        private void NumberTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            UIHelper.FormatAmountTextBox(sender as System.Windows.Controls.TextBox);
+        }
+
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -116,19 +122,19 @@ namespace FinTrack.WPF.Views
                     return;
                 }
 
-                if (!decimal.TryParse(AmountTextBox.Text, out decimal amount) || amount <= 0)
+                if (!UIHelper.TryParseAmount(AmountTextBox.Text, out decimal amount) || amount <= 0)
                 {
                     MessageBox.Show("Lütfen geçerli bir miktar giriniz.", "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                if (!decimal.TryParse(UnitPriceTextBox.Text, out decimal unitPrice) || unitPrice < 0)
+                if (!UIHelper.TryParseAmount(UnitPriceTextBox.Text, out decimal unitPrice) || unitPrice < 0)
                 {
                     MessageBox.Show("Lütfen geçerli bir birim fiyat giriniz.", "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                if (!decimal.TryParse(FeeTextBox.Text, out decimal fee) || fee < 0)
+                if (!UIHelper.TryParseAmount(FeeTextBox.Text, out decimal fee) || fee < 0)
                 {
                     MessageBox.Show("Lütfen geçerli bir masraf/komisyon tutarı giriniz (yoksa 0 yazınız).", "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;

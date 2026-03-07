@@ -14,7 +14,11 @@ namespace FinTrack.WPF
 {
     public partial class MainWindow : Window
     {
+        public static int GlobalSelectedMonth { get; private set; }
+        public static int GlobalSelectedYear { get; private set; }
+        
         private readonly AppDbContext _context;
+        private bool _isInitializingFilters = true;
         private DashboardView _dashboardView = null!;
         private BudgetView _budgetView = null!;
         private ReportsView _reportsView = null!;
@@ -32,7 +36,7 @@ namespace FinTrack.WPF
             Loaded += async (_, _) =>
             {
                 // Display current version
-                string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.9.1";
+                string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.9.4";
                 VersionText.Text = $"v{currentVersion}";
 
                 // Pre-initialize views
@@ -57,6 +61,46 @@ namespace FinTrack.WPF
                 // Check for Updates
                 _ = CheckForUpdatesAsync();
             };
+
+            SetupInitialFilters();
+        }
+
+        private void SetupInitialFilters()
+        {
+            var culture = new System.Globalization.CultureInfo("tr-TR");
+            var months = culture.DateTimeFormat.MonthNames.Where(m => !string.IsNullOrEmpty(m)).Select(m => char.ToUpper(m[0]) + m.Substring(1)).ToArray();
+            MonthFilter.ItemsSource = months;
+            
+            int currentYear = DateTime.Now.Year;
+            var years = Enumerable.Range(currentYear - 5, 10).ToList();
+            YearFilter.ItemsSource = years;
+
+            GlobalSelectedMonth = DateTime.Now.Month;
+            GlobalSelectedYear = currentYear;
+
+            MonthFilter.SelectedIndex = GlobalSelectedMonth - 1;
+            YearFilter.SelectedItem = GlobalSelectedYear;
+
+            _isInitializingFilters = false;
+        }
+
+        private async void Filter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isInitializingFilters) return;
+            
+            GlobalSelectedMonth = MonthFilter.SelectedIndex + 1;
+            if (YearFilter.SelectedItem is int year)
+            {
+                GlobalSelectedYear = year;
+            }
+
+            // Reload current view if it depends on data
+            if (_currentView is DashboardView dv)
+                await dv.LoadDataAsync();
+            else if (_currentView is BudgetView bv)
+                await bv.InitializeAsync(_context);
+            else if (_currentView is ReportsView rv)
+                await rv.LoadDataAsync();
         }
 
         private async Task CheckForUpdatesAsync()
@@ -64,7 +108,7 @@ namespace FinTrack.WPF
             try
             {
                 // Current version of the app from assembly
-                string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.9.1";
+                string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.9.4";
                 
                 var githubService = new GitHubReleaseService();
                 var result = await githubService.CheckForUpdatesAsync(currentVersion);
@@ -166,12 +210,18 @@ namespace FinTrack.WPF
                 await bv.InitializeAsync(_context);
             else if (view is ReportsView rv)
                 await rv.InitializeAsync(_context);
-            else if (view is CardsView cv) // Added initialization for CardsView
+            else if (view is CardsView cv) 
                 await cv.InitializeAsync(_context);
             else if (view is AccountsView av)
                 await av.InitializeAsync(_context);
             else if (view is InvestmentsView iv)
                 await iv.InitializeAsync(_context);
+                
+            // Sadece finansal verilerin olduğu pencerelerde filtreyi göster
+            if (view == _dashboardView)
+                GlobalDateFilterPanel.Visibility = Visibility.Visible;
+            else
+                GlobalDateFilterPanel.Visibility = Visibility.Collapsed;
         }
 
         private void ResetSidebarButtons()

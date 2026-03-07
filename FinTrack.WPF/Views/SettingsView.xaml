@@ -46,32 +46,58 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <Border Background="White" Padding="30" CornerRadius="0,8,8,8" BorderBrush="#E0E0E0" BorderThickness="0,1,1,1">
                         <StackPanel>
-                            <StackPanel MaxWidth="400" HorizontalAlignment="Left">
-                                <TextBlock Text="Giriş Şifresini Değiştir" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
-                                <TextBlock Text="Uygulama girişinde kullandığınız ve verilerinizi şifreleyen ana şifreyi buradan güncelleyebilirsiniz." 
-                                           FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
+                            <!-- Giriş Şifresini Değiştir Kartı -->
+                            <Border Background="White" CornerRadius="12" BorderBrush="#EBEDEF" BorderThickness="1" Margin="0,0,0,30" Padding="25">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.05"/>
+                                </Border.Effect>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                        <TextBlock Text="🛡️" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Giriş Şifresini Değiştir" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    
+                                    <TextBlock Text="Uygulama girişinde kullandığınız ve verilerinizi şifreleyen ana şifreyi buradan güncelleyebilirsiniz." 
+                                               FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
 
-                                <TextBlock Text="Mevcut Şifre" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
-                                <PasswordBox x:Name="CurrentPasswordBox" Padding="10" Margin="0,0,0,15"/>
+                                    <Grid Width="500" HorizontalAlignment="Left" Margin="0,15,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="Yeni Şifre" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
-                                <PasswordBox x:Name="NewPasswordBox" Padding="10" Margin="0,0,0,15"/>
+                                        <!-- Mevcut Şifre -->
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Mevcut Şifre" VerticalAlignment="Center" Foreground="#34495E" FontWeight="SemiBold"/>
+                                        <PasswordBox x:Name="CurrentPasswordBox" Grid.Row="0" Grid.Column="1" Padding="10" Margin="0,0,0,15" BorderBrush="#D5DBDB" Background="#FDFEFE"/>
 
-                                <TextBlock Text="Yeni Şifre (Tekrar)" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
-                                <PasswordBox x:Name="ConfirmPasswordBox" Padding="10" Margin="0,0,0,5"/>
+                                        <!-- Yeni Şifre -->
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Yeni Şifre" VerticalAlignment="Center" Foreground="#34495E" FontWeight="SemiBold"/>
+                                        <PasswordBox x:Name="NewPasswordBox" Grid.Row="1" Grid.Column="1" Padding="10" Margin="0,0,0,15" BorderBrush="#D5DBDB" Background="#FDFEFE"/>
 
-                                <TextBlock x:Name="PasswordStatusText" Text="" Foreground="#E74C3C" FontSize="12" Margin="0,0,0,20"/>
+                                        <!-- Yeni Şifre (Tekrar) -->
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Yeni Şifre (Tekrar)" VerticalAlignment="Center" Foreground="#34495E" FontWeight="SemiBold"/>
+                                        <PasswordBox x:Name="ConfirmPasswordBox" Grid.Row="2" Grid.Column="1" Padding="10" Margin="0,0,0,5" BorderBrush="#D5DBDB" Background="#FDFEFE"/>
 
-                                <Button Content="Şifreyi Güncelle" HorizontalAlignment="Left" Padding="30,10" 
-                                        Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0"
-                                        Click="ChangePassword_Click" Cursor="Hand">
-                                    <Button.Resources>
-                                        <Style TargetType="Border">
-                                            <Setter Property="CornerRadius" Value="5"/>
-                                        </Style>
-                                    </Button.Resources>
-                                </Button>
-                            </StackPanel>
+                                        <TextBlock x:Name="PasswordStatusText" Grid.Row="3" Grid.Column="1" Text="" Foreground="#E74C3C" FontSize="12" Margin="0,0,0,20"/>
+                                    </Grid>
+
+                                    <Button Content="Şifreyi Şimdi Güncelle" HorizontalAlignment="Right" Padding="30,12" 
+                                            Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                                            Click="ChangePassword_Click" Cursor="Hand" MaxWidth="250">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="8"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
 
                             <!-- Otomatik Kilitleme (Auto-Lock) Bölümü -->
                             <StackPanel Margin="0,30,0,0">

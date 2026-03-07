@@ -66,7 +66,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         
-                        <TextBlock Grid.Row="0" Text="🟢 ALACAK (BU AY)" FontSize="16" FontWeight="Bold" Foreground="#27AE60"/>
+                        <TextBlock x:Name="IncomeGridHeader" Grid.Row="0" Text="🟢 ALACAK (BU AY)" FontSize="16" FontWeight="Bold" Foreground="#27AE60"/>
                         
                         <DataGrid x:Name="IncomeGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
                                   GridLinesVisibility="None" HeadersVisibility="Column" Background="Transparent" RowBackground="Transparent" 
@@ -159,7 +159,7 @@
                             <RowDefinition Height="Auto"/> <!-- For Bill Distribution -->
                         </Grid.RowDefinitions>
                         
-                        <TextBlock Grid.Row="0" Text="🔴 BORÇ (BU AY)" FontSize="16" FontWeight="Bold" Foreground="#E74C3C"/>
+                        <TextBlock x:Name="ExpenseGridHeader" Grid.Row="0" Text="🔴 BORÇ (BU AY)" FontSize="16" FontWeight="Bold" Foreground="#E74C3C"/>
                         
                         <DataGrid x:Name="ExpenseGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
                                   GridLinesVisibility="None" HeadersVisibility="Column" Background="Transparent" RowBackground="Transparent" 

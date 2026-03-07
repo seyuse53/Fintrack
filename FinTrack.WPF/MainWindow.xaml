@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="FinTrack - Kişisel Finans Takip" Height="700" Width="1200"
         WindowStartupLocation="CenterScreen"
-        Icon="pack://application:,,,/Resources/app_icon.ico">
+        Icon="pack://application:,,,/Resources/app_icon.png">
     <Grid>
         <Grid.ColumnDefinitions>
             <!-- Sidebar -->
@@ -124,14 +124,43 @@
                 
                 <TextBlock x:Name="ViewTitle" Text="Ana Ekran (Özet)" FontSize="24" FontWeight="SemiBold" Foreground="#333" VerticalAlignment="Center"/>
                 
-                <Button x:Name="AddButton" Grid.Column="1" Content="+ Yeni İşlem Ekle" Padding="20,8" FontSize="14" FontWeight="Bold"
-                        Click="AddButton_Click" Background="#27AE60" Foreground="White" BorderThickness="0" Cursor="Hand">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="20"/> <!-- Pill shape -->
-                        </Style>
-                    </Button.Resources>
-                </Button>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Global Date Filter -->
+                    <Border x:Name="GlobalDateFilterPanel" Background="#F8F9F9" CornerRadius="8" Padding="12,6" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,15,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📅" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="15"/>
+                            <ComboBox x:Name="MonthFilter" Width="120" Margin="0,0,10,0" 
+                                      SelectionChanged="Filter_SelectionChanged"
+                                      Background="White" BorderBrush="#BDC3C7" Foreground="#2C3E50" 
+                                      Padding="8,4" VerticalContentAlignment="Center" FontSize="14" FontWeight="SemiBold">
+                                    <ComboBox.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="4"/>
+                                        </Style>
+                                    </ComboBox.Resources>
+                            </ComboBox>
+                            <ComboBox x:Name="YearFilter" Width="90" 
+                                      SelectionChanged="Filter_SelectionChanged"
+                                      Background="White" BorderBrush="#BDC3C7" Foreground="#2C3E50" 
+                                      Padding="8,4" VerticalContentAlignment="Center" FontSize="14" FontWeight="SemiBold">
+                                    <ComboBox.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="4"/>
+                                        </Style>
+                                    </ComboBox.Resources>
+                            </ComboBox>
+                        </StackPanel>
+                    </Border>
+
+                    <Button x:Name="AddButton" Content="+ Yeni İşlem Ekle" Padding="20,8" FontSize="14" FontWeight="Bold"
+                            Click="AddButton_Click" Background="#27AE60" Foreground="White" BorderThickness="0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="20"/> <!-- Pill shape -->
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
             </Grid>
 
             <!-- Main Content Area (Dynamic) -->
@@ -143,7 +172,7 @@
                     <TextBlock x:Name="StatusText" Text="Hazır" Foreground="#7F8C8D"/>
                 </StatusBarItem>
                 <StatusBarItem HorizontalAlignment="Right">
-                    <TextBlock x:Name="VersionText" Text="v0.9.2" Foreground="#95A5A6" Margin="0,0,10,0" FontSize="11"/>
+                    <TextBlock x:Name="VersionText" Text="v0.9.4" Foreground="#95A5A6" Margin="0,0,10,0" FontSize="11"/>
                 </StatusBarItem>
             </StatusBar>
         </Grid>

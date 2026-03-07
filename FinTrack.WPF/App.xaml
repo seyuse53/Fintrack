@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:FinTrack.WPF"
              >
     <Application.Resources>
-         
+        <Style TargetType="Window">
+            <Setter Property="Icon" Value="pack://application:,,,/Resources/app_icon.png" />
+        </Style>
     </Application.Resources>
 </Application>

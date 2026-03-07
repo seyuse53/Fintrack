@@ -1,6 +1,7 @@
 using System.Windows;
 using Microsoft.Win32;
 using System.IO;
+using FinTrack.WPF.Views;
 
 namespace FinTrack.WPF
 {
@@ -34,6 +35,17 @@ namespace FinTrack.WPF
             {
                 DbPathInput.Text = openFileDialog.FileName;
                 SelectedDbPath = openFileDialog.FileName;
+
+                // Auto-fill ProfileName if it's empty
+                if (string.IsNullOrWhiteSpace(ProfileNameInput.Text) || ProfileNameInput.Text == "[Profilİsmi]")
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(openFileDialog.FileName);
+                    if (fileName.StartsWith("fintrack_", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        fileName = fileName.Substring(9); // remove "fintrack_" prefix
+                    }
+                    ProfileNameInput.Text = fileName;
+                }
             }
         }
 
@@ -53,8 +65,13 @@ namespace FinTrack.WPF
                 string keysFile = SelectedDbPath + ".keys";
                 if (File.Exists(keysFile))
                 {
-                    MessageBox.Show("Seçilen veritabanı için şifreleme anahtarları bulundu!\n\nYeni bir şifre belirlemenize gerek kalmayacak. Giriş ekranında mevcut ana şifrenizi kullanarak devam edebilirsiniz.", 
-                        "Veriler İçe Aktarıldı", MessageBoxButton.OK, MessageBoxImage.Information);
+                    var infoDialog = new InfoDialogWindow(
+                        "Veriler İçe Aktarıldı",
+                        "Seçilen veritabanı için şifreleme anahtarları bulundu!\n\nYeni bir şifre belirlemenize gerek kalmayacak. Giriş ekranında mevcut ana şifrenizi kullanarak devam edebilirsiniz.",
+                        "Tamam"
+                    );
+                    infoDialog.Owner = this;
+                    infoDialog.ShowDialog();
                 }
             }
 

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using FinTrack.Core.Models;
 using FinTrack.Data;
+using FinTrack.WPF.Helpers;
 
 namespace FinTrack.WPF
 {
@@ -72,6 +73,11 @@ namespace FinTrack.WPF
             // Simple validation could go here (e.g., warning if source == target)
         }
 
+        private void AmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UIHelper.FormatAmountTextBox(sender as TextBox);
+        }
+
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             if (SourceCombo.SelectedItem is not TransferItem source || TargetCombo.SelectedItem is not TransferItem target)
@@ -86,7 +92,7 @@ namespace FinTrack.WPF
                 return;
             }
 
-            if (!decimal.TryParse(AmountTextBox.Text, out decimal amount) || amount <= 0)
+            if (!UIHelper.TryParseAmount(AmountTextBox.Text, out decimal amount) || amount <= 0)
             {
                 MessageBox.Show("Geçerli bir tutar giriniz.", "Hata", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;

@@ -32,12 +32,15 @@ namespace FinTrack.WPF.Views
             try
             {
                 var now = DateTime.Now;
+                int selectedYear = MainWindow.GlobalSelectedYear;
+                int selectedMonth = MainWindow.GlobalSelectedMonth;
+
                 // Fetch ALL transactions within the date range
                 var transactions = await _context.Transactions
                     .Include(t => t.Category)
                         .ThenInclude(c => c!.ParentCategory)
                     .Include(t => t.CreditCardAccount)
-                    .Where(t => t.Date.Year == now.Year && t.Date.Month == now.Month) // Assuming startDate and endDate are defined elsewhere for the snippet
+                    .Where(t => t.Date.Year == selectedYear && t.Date.Month == selectedMonth)
                     .OrderByDescending(t => t.Date)
                     .ToListAsync();
 
@@ -69,6 +72,12 @@ namespace FinTrack.WPF.Views
                 IncomeCardText.Text  = $"₺{totalIncome:N2}";
                 ExpenseCardText.Text = $"₺{totalExpense:N2}";
                 BalanceCardText.Text = $"₺{balance:N2}";
+
+                // Update headers to reflect the selected month
+                var culture = new System.Globalization.CultureInfo("tr-TR");
+                string monthName = culture.DateTimeFormat.GetAbbreviatedMonthName(selectedMonth).ToUpper();
+                IncomeGridHeader.Text = $"🟢 ALACAK ({monthName} {selectedYear})";
+                ExpenseGridHeader.Text = $"🔴 BORÇ ({monthName} {selectedYear})";
 
                 LoadCardSummary(allCardTransactions);
                 LoadBillBreakdown(expenseList);

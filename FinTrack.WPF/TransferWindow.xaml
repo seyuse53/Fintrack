@@ -34,7 +34,7 @@
 
         <!-- Amount -->
         <TextBlock Text="Tutar:" Grid.Row="4" VerticalAlignment="Center"/>
-        <TextBox x:Name="AmountTextBox" Grid.Row="4" Grid.Column="1" Margin="0,0,0,10" Padding="2" FontSize="14"/>
+        <TextBox x:Name="AmountTextBox" Grid.Row="4" Grid.Column="1" Margin="0,0,0,10" Padding="2" FontSize="14" TextChanged="AmountTextBox_TextChanged"/>
 
         <!-- Description -->
         <TextBlock Text="Açıklama:" Grid.Row="5" VerticalAlignment="Top" Margin="0,5,0,0"/>

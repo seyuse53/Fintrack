@@ -2,9 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.9.1] - 2026-03-01
+## [0.9.4] - 2026-03-02
 
 ### Added
+- **Küresel Tarih Filtresi (Global Date Filter)**: Ana ekranın tepe menüsüne modern görünümlü bir tarih (Ay/Yıl) filtresi eklendi. Artık geçmiş aylara ait gelir/gider detaylarını ve toplam harcamaları tek tıkla görebilirsiniz.
+- **Rakam Biçimlendirme (Binlik Ayracı)**: İşlem Ekleme, Kredi Kartı Ödemesi, Yatırım Alım/Satım vb. dahil uygulama genelindeki tüm tutar giriş kutularına anlık binlik ayraç (örn: 1.250,50) düzeltmesi eklendi. Girdi deneyimi çok daha finansal standartlara uygun hale getirildi.
+- **Akıllı Profil İçe Aktarımı**: `.db` dosyasından mevcut bir bağlantı kurulurken veritabanı dosyasının ismi otomatik olarak profil adı olarak doldurulacak şekilde iyileştirildi.
+
+### Fixed
+- **Modern Bilgilendirme ve Onay Pencereleri**: Ayarlar ve veri onay süreçlerinde karşınıza çıkan eski nesil Windows mesaj eklentileri (`MessageBox`) yerine uygulamanın koyu/açık temasına uygun modern `InfoDialogWindow` ve `GeneralConfirmWindow` tasarımlarına geçildi.
+
+## [0.9.3] - 2026-03-01
+
+### Added
+- **Modern Şifre Değiştirme UI**: `Ayarlar > Güvenlik` sekmesi modern, kart tabanlı bir tasarıma ve 3D gölge efektlerine ![alt text](image.png)geçirildi.
+- **Premium Mesaj Kutuları**: Ayarlar menüsündeki tüm eski Windows `MessageBox` uyarıları, uygulamanın genel temasına uygun `GeneralConfirmWindow` ile değiştirildi.
+- **Ana Başlık Versiyon Gösterimi**: Uygulama versiyon numarası (Örn: v0.9.3) artık ana pencerenin sağ alt köşesindeki durum çubuğunda (StatusBar) dinamik olarak görünüyor.
+- **Görsel Güncelleme İlerleyişi**: Güncelleme penceresine (Update Window) gerçek zamanlı yüzde (%) ve MB bazlı indirme ilerleme çubuğu eklendi. Alt alta çakışan yazı sorunları giderildi.
+- **Şifre Kutusu Düzenlemesi**: Ayarlar ekranındaki şifre giriş kutularının bazı ekranlarda daralması (collapse) engellendi ve yerleşim optimize edildi.
+
+### Fixed
+- **Uygulama Simgesi (App Icon) Şeffaflığı ve Görünürlük Sorunu**: 
+  - Görev çubuğunda ve pencere başlıklarında simgenin etrafında oluşan beyaz çerçeve (damalı arka plan) özel bir işleme algoritması ile temizlenerek **gerçek şeffaflık** sağlandı.
+  - Simgelerin bazı pencerelerde (Örn: Giriş Ekranı) kaybolmasına sebep olan kaynak bağlama (Resource) hataları giderildi.
+  - Simgelerin görünürlüğünü tüm pencerelerde standartlaştırmak için `App.xaml` üzerine global bir stil kuralı eklendi. Hem kaliteyi artırmak hem de sorunları aşmak için başlık çubuklarında yüksek çözünürlüklü **PNG** formatına, genel Windows kullanımı için ise **ICO** formatına geçildi.
+- **Otomatik .keys Onarımı**: Eski profillerde "DatabasePath" boş olduğu için `.keys` dosyasının oluşmasını engelleyen kritik mantık hatası giderildi. Artık her girişte dosya otomatik doğrulanır/oluşturulur.
+- **Gelişmiş Güncelleyici (Updater)**: İndirme işlemlerinde `User-Agent` eksikliği nedeniyle oluşan hatalar giderildi ve güncelleme betiği (bat), uygulama kapanmadan dosya değişimini zorlamayacak şekilde güçlendirildi.
+- **GitHub API Erişimi**: Gizli repository nedeniyle güncellemelerin 404 vermesi sorunu için genel erişim altyapısı optimize edildi.
+
+## [0.9.1] - 2026-03-01
 - **Otomatik Kilitleme (Auto-Lock)**:
   - Uzun süreli hareketsizlik (mouse/klavye kullanılmaması) durumunda uygulamanın otomatik olarak bir şifre kalkanı ile kilitlenmesi sağlandı.
   - Sizi verilerinizden uzaklaştığınızda güvenlik altına alan bu ekran, sadece uygulamanın ana şifresi ile açılabiliyor.

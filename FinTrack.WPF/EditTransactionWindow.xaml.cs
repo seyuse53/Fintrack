@@ -1,6 +1,7 @@
 using System.Windows;
 using FinTrack.Core.Models;
 using FinTrack.Data;
+using FinTrack.WPF.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinTrack.WPF
@@ -63,6 +64,7 @@ namespace FinTrack.WPF
                 // Populate data
                 DatePicker.SelectedDate = _transactionToEdit.Date;
                 AmountTextBox.Text = _transactionToEdit.Amount.ToString("0.##");
+                UIHelper.FormatAmountTextBox(AmountTextBox);
                 DescriptionTextBox.Text = _transactionToEdit.Description;
                 
                 CategoryComboBox.SelectedValue = _transactionToEdit.CategoryId;
@@ -122,9 +124,14 @@ namespace FinTrack.WPF
             // Handled on save
         }
 
+        private void AmountTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            UIHelper.FormatAmountTextBox(sender as System.Windows.Controls.TextBox);
+        }
+
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!decimal.TryParse(AmountTextBox.Text, out decimal amount))
+            if (!UIHelper.TryParseAmount(AmountTextBox.Text, out decimal amount))
             {
                 MessageBox.Show("Lütfen geçerli bir tutar giriniz.", "Doğrulama Hatası");
                 return;

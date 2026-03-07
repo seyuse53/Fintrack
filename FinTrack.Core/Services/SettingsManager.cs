@@ -105,15 +105,20 @@ namespace FinTrack.Core.Services
                         try
                         {
                             string keysJson = File.ReadAllText(keysFile);
-                            var keysData = JsonSerializer.Deserialize<Settings>(keysJson);
-                            if (keysData != null)
+                            var options = new JsonSerializerOptions 
+                            { 
+                                PropertyNameCaseInsensitive = true,
+                                AllowTrailingCommas = true
+                            };
+                            var keysData = JsonSerializer.Deserialize<Settings>(keysJson, options);
+                            if (keysData != null && !string.IsNullOrEmpty(keysData.HashedPassword))
                             {
                                 settings.HashedPassword = keysData.HashedPassword;
                                 settings.EncryptedDataKey = keysData.EncryptedDataKey;
                                 settings.RecoveryEncryptedDataKey = keysData.RecoveryEncryptedDataKey;
                             }
                         }
-                        catch { /* Silent fail, fallback to first-time setup UI */ }
+                        catch { /* Silent fail */ }
                     }
                 }
 
@@ -225,7 +230,13 @@ namespace FinTrack.Core.Services
             File.WriteAllText(SettingsFile, json);
 
             // [SIDE-CAR KEYS] Save a copy of encryption info alongside the database for portability
-            if (!string.IsNullOrEmpty(settings.DatabasePath) && !string.IsNullOrEmpty(settings.HashedPassword))
+            string? dbPath = settings.DatabasePath;
+            if (string.IsNullOrEmpty(dbPath))
+            {
+                dbPath = GetDatabasePath();
+            }
+
+            if (!string.IsNullOrEmpty(dbPath) && !string.IsNullOrEmpty(settings.HashedPassword))
             {
                 try
                 {
@@ -234,10 +245,10 @@ namespace FinTrack.Core.Services
                         HashedPassword = settings.HashedPassword,
                         EncryptedDataKey = settings.EncryptedDataKey,
                         RecoveryEncryptedDataKey = settings.RecoveryEncryptedDataKey,
-                        DatabasePath = settings.DatabasePath // For reference
+                        DatabasePath = dbPath
                     };
                     string keysJson = JsonSerializer.Serialize(keysOnly, new JsonSerializerOptions { WriteIndented = true });
-                    string keysPath = settings.DatabasePath + ".keys";
+                    string keysPath = dbPath + ".keys";
                     File.WriteAllText(keysPath, keysJson);
                 }
                 catch { /* Logging would be good here but let's keep it robust */ }
@@ -429,8 +440,10 @@ namespace FinTrack.Core.Services
                 if (needsUpgrade)
                 {
                     settings.HashedPassword = HashPassword(inputPassword);
-                    SaveSettings(settings);
                 }
+
+                // Always save to ensure .keys file exists and is up to date
+                SaveSettings(settings);
 
                 return true;
             }

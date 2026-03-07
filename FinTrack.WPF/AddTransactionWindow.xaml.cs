@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using FinTrack.Core.Models;
 using FinTrack.Data;
+using FinTrack.WPF.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinTrack.WPF
@@ -111,9 +112,14 @@ namespace FinTrack.WPF
             // No additional UI change needed — card is read at save time
         }
 
+        private void AmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UIHelper.FormatAmountTextBox(sender as TextBox);
+        }
+
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!decimal.TryParse(AmountTextBox.Text.Replace(".", ","), out decimal amount))
+            if (!UIHelper.TryParseAmount(AmountTextBox.Text, out decimal amount))
             {
                 MessageBox.Show("Lütfen geçerli bir tutar giriniz.", "Doğrulama Hatası");
                 return;
