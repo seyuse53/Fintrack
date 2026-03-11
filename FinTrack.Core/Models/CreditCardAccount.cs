@@ -19,6 +19,9 @@ namespace FinTrack.Core.Models
         /// <summary>The day of the month the payment is due (e.g., 25).</summary>
         public int PaymentDueDay { get; set; } = 15;
 
+        /// <summary>Total credit limit of the card.</summary>
+        public decimal Limit { get; set; } = 0;
+
         // Parent/Child relationship for consolidated billing
         public int? ParentCardId { get; set; }
         public CreditCardAccount? ParentCard { get; set; }

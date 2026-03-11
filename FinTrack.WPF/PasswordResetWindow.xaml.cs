@@ -38,7 +38,9 @@ namespace FinTrack.WPF
 
             if (success)
             {
-                MessageBox.Show("Şifreniz başarıyla sıfırlandı ve verileriniz kurtarıldı. Uygulamaya giriş yapılıyor.", "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
+                var infoDialog = new FinTrack.WPF.Views.InfoDialogWindow("Başarılı", "Şifreniz başarıyla sıfırlandı ve verileriniz kurtarıldı. Uygulamaya giriş yapılıyor.");
+                infoDialog.Owner = this;
+                infoDialog.ShowDialog();
                 DialogResult = true;
                 Close();
             }

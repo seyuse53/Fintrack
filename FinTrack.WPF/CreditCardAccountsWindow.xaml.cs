@@ -34,6 +34,11 @@ namespace FinTrack.WPF
             LoadParentOptions();
         }
 
+        private void LimitBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            FinTrack.WPF.Helpers.UIHelper.FormatAmountTextBox(sender as TextBox);
+        }
+
         private void LoadParentOptions(int? currentParentId = null)
         {
             if (_db == null || ParentCardCombo == null) return;
@@ -70,6 +75,7 @@ namespace FinTrack.WPF
             {
                 BankNameBox.Text = card.BankName;
                 CardLabelBox.Text = card.CardLabel;
+                LimitBox.Text = card.Limit.ToString("N2");
                 StatementDayBox.Text = card.StatementDay.ToString();
                 PaymentDueDayBox.Text = card.PaymentDueDay.ToString();
                 
@@ -83,6 +89,7 @@ namespace FinTrack.WPF
             {
                 BankNameBox.Clear();
                 CardLabelBox.Clear();
+                LimitBox.Clear();
                 StatementDayBox.Clear();
                 PaymentDueDayBox.Clear();
                 DeleteCardBtn.IsEnabled = false;
@@ -112,6 +119,11 @@ namespace FinTrack.WPF
                 return;
             }
 
+            if (!FinTrack.WPF.Helpers.UIHelper.TryParseAmount(LimitBox.Text, out decimal limit))
+            {
+                limit = 0;
+            }
+
             // Check duplicate
             bool exists = _db.CreditCardAccounts
                              .Any(c => c.BankName == bank && c.CardLabel == label);
@@ -129,6 +141,7 @@ namespace FinTrack.WPF
             {
                 BankName = bank,
                 CardLabel = label,
+                Limit = limit,
                 StatementDay = sDay,
                 PaymentDueDay = pDay,
                 ParentCardId = parentId,
@@ -138,6 +151,7 @@ namespace FinTrack.WPF
 
             BankNameBox.Clear();
             CardLabelBox.Clear();
+            LimitBox.Clear();
             StatementDayBox.Clear();
             PaymentDueDayBox.Clear();
             LoadCards();
@@ -166,6 +180,11 @@ namespace FinTrack.WPF
                 return;
             }
 
+            if (!FinTrack.WPF.Helpers.UIHelper.TryParseAmount(LimitBox.Text, out decimal limit))
+            {
+                limit = 0;
+            }
+
             var entity = _db.CreditCardAccounts.Find(card.Id);
             if (entity == null) return;
 
@@ -174,6 +193,7 @@ namespace FinTrack.WPF
 
             entity.BankName = bank;
             entity.CardLabel = label;
+            entity.Limit = limit;
             entity.StatementDay = sDay;
             entity.PaymentDueDay = pDay;
             entity.ParentCardId = parentId;

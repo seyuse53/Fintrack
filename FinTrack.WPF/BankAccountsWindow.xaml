@@ -94,7 +94,7 @@
                     </Grid.ColumnDefinitions>
                     
                     <TextBox x:Name="IbanBox" Grid.Column="0" Style="{StaticResource WatermarkTextBox}" Tag="IBAN (İsteğe Bağlı)" FontSize="12"
-                             ToolTip="IBAN Numarası (İsteğe Bağlı)"/>
+                             ToolTip="IBAN Numarası (İsteğe Bağlı)" TextChanged="IbanBox_TextChanged"/>
                     
                     <Button x:Name="AddAccountBtn" Grid.Column="2" Content="➕ Ekle" FontSize="11"
                             Padding="6,4" Background="#27AE60" Foreground="White" BorderThickness="0"

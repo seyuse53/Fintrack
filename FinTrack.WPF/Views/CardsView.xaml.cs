@@ -72,6 +72,9 @@ namespace FinTrack.WPF.Views
                         BankName = master.BankName,
                         CardLabel = master.CardLabel,
                         TotalDebt = consolidatedDebt,
+                        Limit = master.Limit,
+                        RemainingLimit = master.Limit > 0 ? (master.Limit - consolidatedDebt) : 0,
+                        LimitProgressValue = (master.Limit > 0) ? (double)(consolidatedDebt / master.Limit * 100) : 0,
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
                         CanPay = consolidatedDebt > 0,
@@ -163,7 +166,9 @@ namespace FinTrack.WPF.Views
 
                 if (totalDebt <= 0)
                 {
-                    MessageBox.Show("Bu kartın borcu bulunmuyor.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+                    var infoDialog = new FinTrack.WPF.Views.InfoDialogWindow("Bilgi", "Bu kartın borcu bulunmuyor.");
+                    infoDialog.Owner = Window.GetWindow(this);
+                    infoDialog.ShowDialog();
                     return;
                 }
 
@@ -224,6 +229,9 @@ namespace FinTrack.WPF.Views
         public required string BankName { get; set; }
         public required string CardLabel { get; set; }
         public decimal TotalDebt { get; set; }
+        public decimal Limit { get; set; }
+        public decimal RemainingLimit { get; set; }
+        public double LimitProgressValue { get; set; }
         public DateTime PeriodStart { get; set; }
         public DateTime PeriodEnd { get; set; }
         public bool CanPay { get; set; }

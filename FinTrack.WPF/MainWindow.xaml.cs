@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -133,17 +133,57 @@ namespace FinTrack.WPF
 
         private void AutoLockService_OnLockTriggered()
         {
-            // Show the lock screen on the UI thread
             Dispatcher.Invoke(() =>
             {
-                var lockScreen = new FinTrack.WPF.Views.LockScreenWindow
-                {
-                    Owner = this
-                };
-                
-                // ShowDialog halts execution of the main thread until the window is closed
-                lockScreen.ShowDialog();
+                LockScreenOverlay.Visibility = Visibility.Visible;
+                LockPasswordInput.Clear();
+                LockErrorText.Visibility = Visibility.Collapsed;
+                LockPasswordInput.Focus();
             });
+        }
+
+        private void Unlock_Click(object sender, RoutedEventArgs e)
+        {
+            VerifyAndUnlock();
+        }
+
+        private void LockPasswordInput_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                VerifyAndUnlock();
+            }
+        }
+
+        private void VerifyAndUnlock()
+        {
+            string password = LockPasswordInput.Password;
+
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                LockErrorText.Text = "Lütfen uygulama şifrenizi girin.";
+                LockErrorText.Visibility = Visibility.Visible;
+                return;
+            }
+
+            if (FinTrack.Core.Services.SettingsManager.VerifyPasswordAndLoadKey(password))
+            {
+                LockScreenOverlay.Visibility = Visibility.Collapsed;
+                LockPasswordInput.Clear();
+                FinTrack.WPF.Services.AutoLockService.MarkUnlocked();
+            }
+            else
+            {
+                LockErrorText.Text = "Hatalı şifre girdiniz.";
+                LockErrorText.Visibility = Visibility.Visible;
+                LockPasswordInput.Clear();
+                LockPasswordInput.Focus();
+            }
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
 
         private void CheckAndPromptForBackup()

@@ -13,7 +13,9 @@ namespace FinTrack.WPF
         private void CopyButton_Click(object sender, RoutedEventArgs e)
         {
             Clipboard.SetText(RecoveryCodeTextBox.Text);
-            MessageBox.Show("Kurtarma kodu panoya kopyalandı.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+            var infoDialog = new FinTrack.WPF.Views.InfoDialogWindow("Bilgi", "Kurtarma kodu panoya kopyalandı.");
+            infoDialog.Owner = this;
+            infoDialog.ShowDialog();
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)

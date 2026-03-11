@@ -26,7 +26,13 @@
                   GridLinesVisibility="Horizontal" HeadersVisibility="Column"
                   Background="White" RowBackground="White"
                   AlternatingRowBackground="#FFF8E1"
-                  CanUserReorderColumns="False">
+                  CanUserReorderColumns="False"
+                  MouseDoubleClick="TransactionsGrid_MouseDoubleClick">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="🗑 Seçili İşlemi Sil" Click="DeleteTransaction_Click"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Tarih"     Binding="{Binding Date, StringFormat=dd.MM.yyyy}" Width="80"/>
                 <DataGridTextColumn Header="Kart"      Binding="{Binding CreditCardAccount.CardLabel}" Width="90"/>

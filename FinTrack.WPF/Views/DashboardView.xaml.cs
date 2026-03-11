@@ -46,9 +46,11 @@ namespace FinTrack.WPF.Views
 
                 var incomeList  = transactions.Where(t => t.Category?.Type == TransactionType.Income).ToList();
                 var expenseList = transactions.Where(t => t.Category?.Type == TransactionType.Expense).ToList();
+                var transferList = transactions.Where(t => t.Category?.Type != TransactionType.Income && t.Category?.Type != TransactionType.Expense).ToList();
 
                 IncomeGrid.ItemsSource  = incomeList;
                 ExpenseGrid.ItemsSource = expenseList;
+                TransferGrid.ItemsSource = transferList;
 
                 // Load all credit card transactions to calculate true rolling debt
                 var allCardTransactions = await _context.Transactions
@@ -58,25 +60,66 @@ namespace FinTrack.WPF.Views
                     .Where(t => t.CreditCardAccount != null)
                     .ToListAsync();
 
-                decimal cardTotal = allCardTransactions.Sum(t => t.Amount);
-
-                decimal totalIncome  = incomeList.Sum(t => t.Amount) + cardTotal;
+                // 1. Total Income for the selected month (Pure Income)
+                decimal totalIncome  = incomeList.Sum(t => t.Amount);
+                
+                // 2. Total Expense for the selected month (Pure Expense)
                 decimal totalExpense = expenseList.Sum(t => t.Amount);
 
-                // Fetch bank accounts to add their initial balances to the total wealth
-                var bankAccounts = await _context.BankAccounts.Where(b => b.IsActive).ToListAsync();
-                decimal bankInitialBalances = bankAccounts.Sum(b => b.InitialBalance);
+                // Calculate Last Day of Selected Month for Wealth Calculation
+                int daysInMonth = DateTime.DaysInMonth(selectedYear, selectedMonth);
+                DateTime endOfMonth = new DateTime(selectedYear, selectedMonth, daysInMonth, 23, 59, 59);
 
-                decimal balance = totalIncome - totalExpense + bankInitialBalances;
+                // 3. Total Wealth (Up to the end of the selected month)
+                // Total Wealth = (Bank Initial Balances) + (All Incomes up to month end) - (All Expenses up to month end) - (All Investment Buys up to month end) + (All Investment Sells up to month end)
+                // Note: Transfers within Bank Accounts cancel out (Net 0) so we don't need to explicitly sum them.
+                // However, transfers from Bank to Credit Card (Paying Debt) decrease the Bank balance without creating an Expense.
+                // Wait, Total Wealth is strictly BankAccount balances + Cash. 
+                // Let's calculate exactly the Bank Account balances at that point in time.
+                var allAccounts = await _context.BankAccounts.Where(b => b.IsActive).ToListAsync();
+                decimal totalInitialBalances = allAccounts.Sum(a => a.InitialBalance);
+
+                var bankTransactionsUntilDate = await _context.Transactions
+                    .Include(t => t.Category)
+                    .Where(t => t.BankAccountId != null && t.Date <= endOfMonth)
+                    .ToListAsync();
+
+                decimal bankTxNet = 0;
+                foreach(var t in bankTransactionsUntilDate)
+                {
+                    if (t.Category?.Type == TransactionType.Income)
+                        bankTxNet += t.Amount;
+                    else if (t.Category?.Type == TransactionType.Expense)
+                        bankTxNet -= t.Amount;
+                    else if (t.Category?.Type == TransactionType.Transfer)
+                        bankTxNet += t.Amount; // Transfer amounts are already signed correctly (+ incoming, - outgoing) in TransferWindow
+                }
+
+                // Consider Investment transactions up to this date
+                var investmentTxUntilDate = await _context.InvestmentTransactions
+                    .Where(t => t.LinkedBankAccountId != null && t.Date <= endOfMonth)
+                    .ToListAsync();
+
+                decimal invTxNet = 0;
+                foreach(var it in investmentTxUntilDate)
+                {
+                    if (it.Type == InvestmentTransactionType.Buy)
+                        invTxNet -= it.TotalCost;
+                    else if (it.Type == InvestmentTransactionType.Sell)
+                        invTxNet += it.TotalCost;
+                }
+
+                decimal totalWealth = totalInitialBalances + bankTxNet + invTxNet;
 
                 IncomeCardText.Text  = $"₺{totalIncome:N2}";
                 ExpenseCardText.Text = $"₺{totalExpense:N2}";
-                BalanceCardText.Text = $"₺{balance:N2}";
+                BalanceCardText.Text = $"₺{totalWealth:N2}";
 
                 // Update headers to reflect the selected month
                 var culture = new System.Globalization.CultureInfo("tr-TR");
                 string monthName = culture.DateTimeFormat.GetAbbreviatedMonthName(selectedMonth).ToUpper();
                 IncomeGridHeader.Text = $"🟢 ALACAK ({monthName} {selectedYear})";
+                TransferGridHeader.Text = $"🔄 TRANSFER / DİĞER ({monthName} {selectedYear})";
                 ExpenseGridHeader.Text = $"🔴 BORÇ ({monthName} {selectedYear})";
 
                 LoadCardSummary(allCardTransactions);

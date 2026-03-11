@@ -154,25 +154,35 @@ namespace FinTrack.WPF.Views
                 // 1. Ödeme kaynağından düşeceksek bakiyeyi/limiti kontrol edelim
                 if (bankAccountId.HasValue || creditCardAccountId.HasValue)
                 {
-                    // ComboBox'tan güncel bakiyeyi alalım
-                    var selectedItem = BankAccountComboBox.SelectedItem as dynamic;
-                    if (selectedItem != null)
+                    if (creditCardAccountId.HasValue)
                     {
-                        decimal currentBalance = (decimal)selectedItem.Balance;
-                        
-                        // Reflection workaround if dynamic doesn't work correctly with anonymous types in WPF binding
-                        var propInfo = selectedItem.GetType().GetProperty("Balance");
-                        if (propInfo != null)
+                        // Use our new specialized limit check for credit cards
+                        if (!UIHelper.CheckCardLimit(_context, creditCardAccountId.Value, totalCost, this))
                         {
-                            currentBalance = (decimal)propInfo.GetValue(selectedItem);
+                            return; // Aborted by user
                         }
-
-                        if (currentBalance < totalCost)
+                    }
+                    else
+                    {
+                        // Keep existing logic for bank account balance check
+                        var selectedItem = BankAccountComboBox.SelectedItem as dynamic;
+                        if (selectedItem != null)
                         {
-                            var answer = MessageBox.Show($"Seçili hesaptaki bakiye yetersiz! ({currentBalance:C2} mevcut, {totalCost:C2} istenen)\n\nYine de işleme devam edilsin mi?", "Yetersiz Bakiye", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                            if (answer == MessageBoxResult.No)
+                            decimal currentBalance = (decimal)selectedItem.Balance;
+                            
+                            var propInfo = selectedItem.GetType().GetProperty("Balance");
+                            if (propInfo != null)
                             {
-                                return;
+                                currentBalance = (decimal)propInfo.GetValue(selectedItem);
+                            }
+
+                            if (currentBalance < totalCost)
+                            {
+                                var answer = MessageBox.Show($"Seçili hesaptaki bakiye yetersiz! ({currentBalance:C2} mevcut, {totalCost:C2} istenen)\n\nYine de işleme devam edilsin mi?", "Yetersiz Bakiye", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                                if (answer == MessageBoxResult.No)
+                                {
+                                    return;
+                                }
                             }
                         }
                     }
@@ -229,7 +239,9 @@ namespace FinTrack.WPF.Views
                 
                 await _context.SaveChangesAsync();
 
-                MessageBox.Show("İşlem başarıyla kaydedildi.", "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
+                var infoDialog = new FinTrack.WPF.Views.InfoDialogWindow("Başarılı", "İşlem başarıyla kaydedildi.");
+                infoDialog.Owner = Window.GetWindow(this);
+                infoDialog.ShowDialog();
                 DialogResult = true;
                 Close();
             }

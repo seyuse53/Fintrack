@@ -199,7 +199,9 @@ namespace FinTrack.WPF.Views
                 
                 await _context.SaveChangesAsync();
 
-                MessageBox.Show("Satış başarıyla gerçekleştirildi.", "Başarılı", MessageBoxButton.OK, MessageBoxImage.Information);
+                var infoDialog = new FinTrack.WPF.Views.InfoDialogWindow("Başarılı", "Satış başarıyla gerçekleştirildi.");
+                infoDialog.Owner = this;
+                infoDialog.ShowDialog();
                 DialogResult = true;
                 Close();
             }

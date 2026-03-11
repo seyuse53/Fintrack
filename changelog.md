@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.6] - 2026-03-11
+
+### Added
+- **Uygulama İçi Kilit Ekranı (In-App Lock Screen)**: Otomatik kilitleme (Auto-Lock) devreye girdiğinde artık tüm Windows ekranı yerine *sadece FinTrack penceresi* kilitleniyor. Bu sayede uygulama kilitliyken bile pencereyi başka bir ekrana taşıyabilir veya arkada kalan diğer programlarınızı engel olmadan kullanabilirsiniz.
+
+### Fixed & Changed
+- **Manuel Yedekten Dönme Rehberi**: Ayarlar > Kullanım Kılavuzu sekmesindeki "Güvenlik, Yedekleme ve Bulut" bölümüne olası bir senaryoda yedekten manuel olarak nasıl dönüleceğine dair adım adım rehber eklendi.
+
+## [0.9.5] - 2026-03-08
+
+- **Gelişmiş Taksitli İşlem Desteği**: Kredi kartı harcamalarında taksit desteği eklendi. Tek bir alışveriş girişiyle gelecek ayların taksitleri otomatik olarak takvime işlenir.
+- **Akıllı Taksit Grubu Yönetimi**: Taksitli bir işlem silinmek istendiğinde sistem otomatik olarak algılar ve tüm taksit grubunu (gelecek aylar dahil) tek tıkla silme seçeneği sunar.
+- **Standart IBAN Formatı**: IBAN numaraları artık tüm ekranlarda (Hesaplarım, Yönetim vb.) otomatik olarak standart 4'erli gruplar (TRxx xxxx...) halinde okunabilir formatta gösterilir.
+
+### Fixed
+- **Hesaplarım Arayüz İyileştirmesi**: Banka hesap listesindeki hesap adı ve IBAN bilgilerinin üst üste binme (overlap) sorunu giderildi; bilgiler alt alta daha okunaklı bir yapıya kavuşturuldu.
+- **Kartlarım Arayüz İyileştirmesi**: Kredi kartı özetlerinde "bağlı kart" bilgilerinin borç toplamı ile çakışması sorunu dikey katmanlı yeni grid tasarımı ile çözüldü.
+- **Senkronize Transfer Silme**: Bir transfer işlemi (Para Transferi veya Kart Ödemesi) silindiğinde, karşı hesaptaki ilgili kayıt da otomatik olarak bulunur ve silinerek bakiye tutarlılığı sağlanır.
+- **Veritabanı Uyum Hatası**: Yeni eklenen taksit özellikleri sonrası oluşan "Pending Model Changes" hatası senkronize bir EF Core geçişi (Migration) ile giderildi.
+
+
 ## [0.9.4] - 2026-03-02
 
 ### Added

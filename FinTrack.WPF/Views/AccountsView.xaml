@@ -55,10 +55,11 @@
                                     <RowDefinition Height="Auto"/> <!-- Action Buttons -->
                                 </Grid.RowDefinitions>
 
-                                <!-- Header Area -->
-                                <TextBlock Grid.Row="0" Text="{Binding BankName}" FontSize="16" FontWeight="Bold" Foreground="#27AE60"/>
-                                <TextBlock Grid.Row="2" Text="{Binding AccountName}" FontSize="13" Foreground="#34495E" FontWeight="SemiBold"/>
-                                <TextBlock Grid.Row="2" Text="{Binding IBAN}" FontSize="11" Foreground="#95A5A6" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                                <!-- Account Name/IBAN -->
+                                <StackPanel Grid.Row="2">
+                                    <TextBlock Text="{Binding AccountName}" FontSize="13" Foreground="#34495E" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding IBAN}" FontSize="11" Foreground="#95A5A6" Margin="0,2,0,0"/>
+                                </StackPanel>
 
                                 <!-- Balance Info -->
                                 <StackPanel Grid.Row="4" Margin="0,5,0,0">

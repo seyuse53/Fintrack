@@ -86,7 +86,9 @@ namespace FinTrack.WPF
                 _db.Transactions.Add(paymentTx);
                 _db.SaveChanges();
 
-                MessageBox.Show("Ödeme başarıyla kaydedildi.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+                var infoDialog = new FinTrack.WPF.Views.InfoDialogWindow("Bilgi", "Ödeme başarıyla kaydedildi.");
+                infoDialog.Owner = this;
+                infoDialog.ShowDialog();
                 DialogResult = true;
                 Close();
             }

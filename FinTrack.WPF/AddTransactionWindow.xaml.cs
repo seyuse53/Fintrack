@@ -34,8 +34,9 @@ namespace FinTrack.WPF
             _context = context;
             Loaded += async (_, _) =>
             {
-                // Load all categories including hierarchy
+                // Load categories (Filter out Transfers - they should be handled via TransferWindow)
                 var allCategories = await _context.Categories
+                    .Where(c => c.Type != TransactionType.Transfer)
                     .OrderBy(c => c.Type)
                     .ThenBy(c => c.ParentCategoryId == null ? 0 : 1) // Parent first
                     .ThenBy(c => c.Name)
@@ -109,7 +110,20 @@ namespace FinTrack.WPF
 
         private void PaymentMethod_Changed(object sender, SelectionChangedEventArgs e)
         {
-            // No additional UI change needed — card is read at save time
+            if (PaymentMethodCombo.SelectedItem is PaymentItem item)
+            {
+                // Show installment option only for credit cards
+                InstallmentPanel.Visibility = item.Card != null ? Visibility.Visible : Visibility.Collapsed;
+                if (item.Card == null) IsInstallmentCheckBox.IsChecked = false;
+            }
+        }
+
+        private void IsInstallment_Toggled(object sender, RoutedEventArgs e)
+        {
+            bool isChecked = IsInstallmentCheckBox.IsChecked == true;
+            InstallmentCountLabel.Visibility = isChecked ? Visibility.Visible : Visibility.Collapsed;
+            InstallmentCountCombo.Visibility = isChecked ? Visibility.Visible : Visibility.Collapsed;
+            InstallmentCountCombo.IsEnabled = isChecked;
         }
 
         private void AmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -119,7 +133,7 @@ namespace FinTrack.WPF
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!UIHelper.TryParseAmount(AmountTextBox.Text, out decimal amount))
+            if (!UIHelper.TryParseAmount(AmountTextBox.Text, out decimal totalAmount))
             {
                 MessageBox.Show("Lütfen geçerli bir tutar giriniz.", "Doğrulama Hatası");
                 return;
@@ -140,19 +154,62 @@ namespace FinTrack.WPF
                 if (item.Bank != null) bankId = item.Bank.Id;
             }
 
-            var transaction = new Transaction
+            // Limit Check for Credit Card (Check total amount even if it's installments)
+            if (cardId.HasValue && selectedCategory.Type == TransactionType.Expense)
             {
-                Date                = DatePicker.SelectedDate ?? System.DateTime.Now,
-                Amount              = amount,
-                CategoryId          = selectedCategory.Id,
-                Description         = DescriptionTextBox.Text,
-                CreditCardAccountId = cardId,
-                BankAccountId       = bankId
-            };
+                if (!UIHelper.CheckCardLimit(_context, cardId.Value, totalAmount, this))
+                {
+                    return; // Aborted by user
+                }
+            }
+
+            bool isInstallment = IsInstallmentCheckBox.IsChecked == true && cardId.HasValue;
+            int installmentCount = 1;
+            if (isInstallment && InstallmentCountCombo.SelectedItem is ComboBoxItem countItem)
+            {
+                int.TryParse(countItem.Content.ToString(), out installmentCount);
+            }
 
             try
             {
-                _context.Transactions.Add(transaction);
+                DateTime startDate = DatePicker.SelectedDate ?? System.DateTime.Now;
+                string baseDescription = DescriptionTextBox.Text ?? "";
+                string groupId = isInstallment ? System.Guid.NewGuid().ToString() : null;
+
+                if (isInstallment && installmentCount > 1)
+                {
+                    decimal installmentAmount = totalAmount / installmentCount;
+                    
+                    for (int i = 0; i < installmentCount; i++)
+                    {
+                        var t = new Transaction
+                        {
+                            Date = startDate.AddMonths(i),
+                            Amount = installmentAmount,
+                            CategoryId = selectedCategory.Id,
+                            Description = $"{baseDescription} ({i + 1}/{installmentCount} Taksit)".Trim(),
+                            CreditCardAccountId = cardId,
+                            BankAccountId = bankId,
+                            GroupId = groupId
+                        };
+                        _context.Transactions.Add(t);
+                    }
+                }
+                else
+                {
+                    var transaction = new Transaction
+                    {
+                        Date = startDate,
+                        Amount = totalAmount,
+                        CategoryId = selectedCategory.Id,
+                        Description = baseDescription,
+                        CreditCardAccountId = cardId,
+                        BankAccountId = bankId,
+                        GroupId = groupId
+                    };
+                    _context.Transactions.Add(transaction);
+                }
+
                 await _context.SaveChangesAsync();
                 DialogResult = true;
                 Close();

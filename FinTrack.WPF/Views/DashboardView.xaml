@@ -51,22 +51,24 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/> <!-- Income -->
-                <ColumnDefinition Width="20"/> <!-- Spacer -->
+                <ColumnDefinition Width="15"/> <!-- Spacer -->
+                <ColumnDefinition Width="*"/> <!-- Transfers -->
+                <ColumnDefinition Width="15"/> <!-- Spacer -->
                 <ColumnDefinition Width="*"/> <!-- Expense -->
             </Grid.ColumnDefinitions>
 
-            <!-- INCOME SECTION -->
-            <Border Grid.Column="0" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+            <!-- INCOME SECTION (Left) -->
+            <Border Grid.Column="0" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="12">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="10"/>
-                            <RowDefinition Height="Auto"/> <!-- Changed to Auto for ScrollViewer -->
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         
-                        <TextBlock x:Name="IncomeGridHeader" Grid.Row="0" Text="🟢 ALACAK (BU AY)" FontSize="16" FontWeight="Bold" Foreground="#27AE60"/>
+                        <TextBlock x:Name="IncomeGridHeader" Grid.Row="0" Text="🟢 ALACAK (BU AY)" FontSize="15" FontWeight="Bold" Foreground="#27AE60"/>
                         
                         <DataGrid x:Name="IncomeGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
                                   GridLinesVisibility="None" HeadersVisibility="Column" Background="Transparent" RowBackground="Transparent" 
@@ -78,10 +80,10 @@
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat=d}" Width="90"/>
-                            <DataGridTextColumn Header="Kategori" Binding="{Binding Category.FullDisplayName}" Width="110"/>
+                            <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat=dd.MM}" Width="50"/>
+                            <DataGridTextColumn Header="Kategori" Binding="{Binding Category.Name}" Width="85"/>
                             <DataGridTextColumn Header="Açıklama" Binding="{Binding Description}" Width="*"/>
-                            <DataGridTextColumn Header="Tutar" Binding="{Binding Amount, StringFormat='+ ₺{0:N2}'}" Width="100" FontWeight="Bold">
+                            <DataGridTextColumn Header="Tutar" Binding="{Binding Amount, StringFormat='₺{0:N2}'}" Width="85" FontWeight="Bold">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Foreground" Value="#27AE60"/>
@@ -102,36 +104,17 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             
-                            <TextBlock Text="💳 KART TOPLAMLARI" Grid.Row="0" FontWeight="Bold" FontSize="12" Foreground="#34495E" Margin="0,0,0,8"/>
+                            <TextBlock Text="💳 KART TOPLAMLARI" Grid.Row="0" FontWeight="Bold" FontSize="11" Foreground="#34495E" Margin="0,0,0,8"/>
                             
-                            <ListBox x:Name="CardSummaryList" Grid.Row="1" Background="Transparent" BorderThickness="0"
+                            <ListBox x:Name="CardSummaryList" Grid.Row="1" Background="Transparent" BorderThickness="0" MaxHeight="200"
                                      SelectionChanged="CardSummaryList_SelectionChanged" Cursor="Hand" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                <ListBox.ItemContainerStyle>
-                                    <Style TargetType="ListBoxItem">
-                                        <Setter Property="Padding" Value="4"/>
-                                        <Setter Property="Background" Value="Transparent"/>
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#EDF1F2"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ListBox.ItemContainerStyle>
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <DockPanel x:Name="ItemPanel">
+                                        <DockPanel x:Name="ItemPanel" LastChildFill="True">
                                             <TextBlock x:Name="AmountText" Text="{Binding Total, StringFormat='₺{0:N0}'}"
-                                                       DockPanel.Dock="Right" FontWeight="SemiBold" Foreground="#2C3E50" Margin="4,0,0,0"/>
-                                            <TextBlock x:Name="LabelText" Text="{Binding Label}" Foreground="#7F8C8D" FontSize="12"/>
+                                                       DockPanel.Dock="Right" FontWeight="SemiBold" Foreground="#2C3E50" Margin="4,0,0,0" FontSize="11"/>
+                                            <TextBlock x:Name="LabelText" Text="{Binding Label}" Foreground="#7F8C8D" FontSize="11" TextTrimming="CharacterEllipsis"/>
                                         </DockPanel>
-                                        <DataTemplate.Triggers>
-                                            <DataTrigger Binding="{Binding IsHeader}" Value="True">
-                                                <Setter TargetName="LabelText" Property="FontWeight" Value="Bold"/>
-                                                <Setter TargetName="AmountText" Property="FontWeight" Value="Bold"/>
-                                                <Setter TargetName="LabelText" Property="Foreground" Value="#34495E"/>
-                                            </DataTrigger>
-                                        </DataTemplate.Triggers>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
@@ -139,8 +122,8 @@
                             <Separator Grid.Row="2" Margin="0,8" Background="#BDC3C7"/>
                             
                             <DockPanel Grid.Row="3">
-                                <TextBlock x:Name="TotalCardLabel" DockPanel.Dock="Right" FontWeight="Bold" Foreground="#2C3E50" FontSize="14"/>
-                                <TextBlock Text="G.Toplam:" FontWeight="Bold" Foreground="#34495E" FontSize="14"/>
+                                <TextBlock x:Name="TotalCardLabel" DockPanel.Dock="Right" FontWeight="Bold" Foreground="#2C3E50" FontSize="12"/>
+                                <TextBlock Text="G.Toplam:" FontWeight="Bold" Foreground="#34495E" FontSize="12"/>
                             </DockPanel>
                         </Grid>
                     </Border>
@@ -148,22 +131,20 @@
                 </ScrollViewer>
             </Border>
 
-            <!-- EXPENSE SECTION -->
-            <Border Grid.Column="2" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="10"/>
-                            <RowDefinition Height="Auto"/> <!-- Changed to Auto -->
-                            <RowDefinition Height="Auto"/> <!-- For Bill Distribution -->
-                        </Grid.RowDefinitions>
-                        
-                        <TextBlock x:Name="ExpenseGridHeader" Grid.Row="0" Text="🔴 BORÇ (BU AY)" FontSize="16" FontWeight="Bold" Foreground="#E74C3C"/>
-                        
-                        <DataGrid x:Name="ExpenseGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
-                                  GridLinesVisibility="None" HeadersVisibility="Column" Background="Transparent" RowBackground="Transparent" 
-                                  AlternatingRowBackground="#FFF9F9" BorderThickness="0" MinHeight="300">
+            <!-- TRANSFER SECTION (Middle) -->
+            <Border Grid.Column="2" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock x:Name="TransferGridHeader" Grid.Row="0" Text="🔄 TRANSFER / DİĞER" FontSize="15" FontWeight="Bold" Foreground="#7F8C8D"/>
+                    
+                    <DataGrid x:Name="TransferGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                              GridLinesVisibility="None" HeadersVisibility="Column" Background="Transparent" RowBackground="Transparent" 
+                              AlternatingRowBackground="#F4F6F7" BorderThickness="0">
                         <DataGrid.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Düzenle" Click="EditTransaction_Click"/>
@@ -171,10 +152,49 @@
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat=d}" Width="90"/>
-                            <DataGridTextColumn Header="Kategori" Binding="{Binding Category.FullDisplayName}" Width="110"/>
+                            <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat=dd.MM}" Width="50"/>
+                            <DataGridTextColumn Header="Kategori" Binding="{Binding Category.Name}" Width="85"/>
                             <DataGridTextColumn Header="Açıklama" Binding="{Binding Description}" Width="*"/>
-                            <DataGridTextColumn Header="Tutar" Binding="{Binding Amount, StringFormat='- ₺{0:N2}'}" Width="100" FontWeight="Bold">
+                            <DataGridTextColumn Header="Tutar" Binding="{Binding Amount, StringFormat='₺{0:N2}'}" Width="85" FontWeight="Bold">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="#34495E"/>
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+
+            <!-- EXPENSE SECTION (Right) -->
+            <Border Grid.Column="4" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="12">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock x:Name="ExpenseGridHeader" Grid.Row="0" Text="🔴 BORÇ (BU AY)" FontSize="15" FontWeight="Bold" Foreground="#E74C3C"/>
+                        
+                        <DataGrid x:Name="ExpenseGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                                  GridLinesVisibility="None" HeadersVisibility="Column" Background="Transparent" RowBackground="Transparent" 
+                                  AlternatingRowBackground="#FFF9F9" BorderThickness="0" MinHeight="200" MaxHeight="450">
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Düzenle" Click="EditTransaction_Click"/>
+                                <MenuItem Header="Sil" Click="DeleteTransaction_Click"/>
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat=dd.MM}" Width="50"/>
+                            <DataGridTextColumn Header="Kategori" Binding="{Binding Category.Name}" Width="85"/>
+                            <DataGridTextColumn Header="Açıklama" Binding="{Binding Description}" Width="*"/>
+                            <DataGridTextColumn Header="Tutar" Binding="{Binding Amount, StringFormat='₺{0:N2}'}" Width="85" FontWeight="Bold">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Foreground" Value="#E74C3C"/>
@@ -185,20 +205,19 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <!-- Bill Distribution Panel moved to Expense Section -->
                     <Border Grid.Row="3" x:Name="BillDistributionPanel" Visibility="Collapsed" Background="#F4F9FF" BorderBrush="#D6EAF8" BorderThickness="1" CornerRadius="5" Padding="10" Margin="0,10,0,0">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="⚡ FATURA DAĞILIMI" FontWeight="Bold" FontSize="12" Foreground="#2980B9" Margin="0,0,0,8"/>
+                            <TextBlock Text="⚡ FATURA DAĞILIMI" FontWeight="Bold" FontSize="11" Foreground="#2980B9" Margin="0,0,0,8"/>
                             <ListBox x:Name="BillBreakdownList" Grid.Row="1" Background="Transparent" BorderThickness="0" MaxHeight="150" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <DockPanel LastChildFill="False" Margin="0,2">
-                                            <TextBlock Text="{Binding Name}" Foreground="#34495E" FontSize="12"/>
-                                            <TextBlock Text="{Binding Total, StringFormat='₺{0:N2}'}" DockPanel.Dock="Right" FontWeight="Bold" Foreground="#2980B9" FontSize="12"/>
+                                            <TextBlock Text="{Binding Name}" Foreground="#34495E" FontSize="11"/>
+                                            <TextBlock Text="{Binding Total, StringFormat='₺{0:N2}'}" DockPanel.Dock="Right" FontWeight="Bold" Foreground="#2980B9" FontSize="11" Margin="5,0,0,0"/>
                                         </DockPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>

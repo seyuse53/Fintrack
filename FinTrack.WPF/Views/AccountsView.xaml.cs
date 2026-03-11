@@ -100,7 +100,7 @@ namespace FinTrack.WPF.Views
                         AccountId = account.Id,
                         BankName = account.BankName,
                         AccountName = account.AccountName,
-                        IBAN = account.IBAN ?? string.Empty,
+                        IBAN = Helpers.UIHelper.FormatIban(account.IBAN ?? string.Empty),
                         CurrentBalance = currentBalance
                     });
                 }
@@ -137,9 +137,12 @@ namespace FinTrack.WPF.Views
                     .OrderByDescending(t => t.Date)
                     .ToList();
 
-                var detailWin = new AccountDetailWindow(account, transactions);
+                var detailWin = new AccountDetailWindow(account, transactions, _context);
                 detailWin.Owner = Window.GetWindow(this);
                 detailWin.ShowDialog();
+                
+                // Refresh accounts view after closing details (in case of edits)
+                _ = LoadAccountsAsync();
             }
         }
 

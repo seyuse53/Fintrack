@@ -109,6 +109,15 @@ namespace FinTrack.WPF
                 DateTime date = DatePicker.SelectedDate ?? DateTime.Now;
                 string baseDesc = string.IsNullOrWhiteSpace(DescriptionTextBox.Text) ? "Para Transferi" : DescriptionTextBox.Text;
 
+                // Limit Check for Credit Card (only if card is the source — cash advance increases debt)
+                if (source.Card != null)
+                {
+                    if (!UIHelper.CheckCardLimit(_db, source.Card.Id, amount, this))
+                    {
+                        return; // Aborted by user
+                    }
+                }
+
                 // Create Outgoing Transaction (reduces Source)
                 var outgoingTx = new Transaction
                 {
@@ -137,7 +146,9 @@ namespace FinTrack.WPF
 
                 _db.SaveChanges();
 
-                MessageBox.Show("Transfer başarıyla tamamlandı.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
+                var infoDialog = new FinTrack.WPF.Views.InfoDialogWindow("Bilgi", "Transfer başarıyla tamamlandı.");
+                infoDialog.Owner = this;
+                infoDialog.ShowDialog();
                 DialogResult = true;
                 Close();
             }

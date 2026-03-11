@@ -50,12 +50,13 @@
 
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/> <!-- Bank Name -->
-                                    <RowDefinition Height="10"/>
-                                    <RowDefinition Height="Auto"/> <!-- Card Label & Debt -->
-                                    <RowDefinition Height="Auto"/> <!-- Progress Bar -->
-                                    <RowDefinition Height="15"/>
-                                    <RowDefinition Height="Auto"/> <!-- Action Buttons -->
+                                    <RowDefinition Height="Auto"/> <!-- Row 0: Bank & Label -->
+                                    <RowDefinition Height="Auto"/> <!-- Row 1: Linked Cards Hint -->
+                                    <RowDefinition Height="15"/>   <!-- Row 2: Spacer -->
+                                    <RowDefinition Height="Auto"/> <!-- Row 3: Debt & Limit -->
+                                    <RowDefinition Height="Auto"/> <!-- Row 4: Statement Info -->
+                                    <RowDefinition Height="20"/>   <!-- Row 5: Spacer -->
+                                    <RowDefinition Height="Auto"/> <!-- Row 6: Action Buttons -->
                                 </Grid.RowDefinitions>
 
                                 <!-- Header Area -->
@@ -63,7 +64,7 @@
                                 <TextBlock Grid.Row="0" Text="{Binding CardLabel}" FontSize="13" Foreground="#7F8C8D" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
 
                                 <!-- Linked Cards Hint -->
-                                <TextBlock Grid.Row="2" Text="{Binding LinkedCardsText}" FontSize="10" Foreground="#BDC3C7" Margin="0,0,0,5" VerticalAlignment="Top">
+                                <TextBlock Grid.Row="1" Text="{Binding LinkedCardsText}" FontSize="10" Foreground="#BDC3C7" Margin="0,2,0,0">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -78,23 +79,62 @@
                                     </TextBlock.Style>
                                 </TextBlock>
 
-                                <!-- Debt Info -->
-                                <StackPanel Grid.Row="2" Margin="0,15,0,10">
-                                    <TextBlock Text="Mevcut Dönem Borcu" FontSize="12" Foreground="#95A5A6"/>
-                                    <TextBlock Text="{Binding TotalDebt, StringFormat='₺{0:N2}'}" FontSize="24" FontWeight="Bold" Foreground="#E74C3C"/>
+                                <!-- Debt & Limit Info -->
+                                <StackPanel Grid.Row="3" Margin="0,0,0,10">
+                                    <Grid>
+                                        <StackPanel>
+                                            <TextBlock Text="Mevcut Toplam Borç" FontSize="11" Foreground="#95A5A6"/>
+                                            <TextBlock Text="{Binding TotalDebt, StringFormat='₺{0:N2}'}" FontSize="22" FontWeight="Bold" Foreground="#E74C3C"/>
+                                        </StackPanel>
+                                        <StackPanel HorizontalAlignment="Right">
+                                            <TextBlock Text="Kart Limiti" FontSize="11" Foreground="#95A5A6" HorizontalAlignment="Right"/>
+                                            <TextBlock Text="{Binding Limit, StringFormat='₺{0:N2}'}" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50" HorizontalAlignment="Right"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Limit Progress Bar (Only visible if Limit > 0) -->
+                                    <StackPanel Margin="0,10,0,0">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Limit}" Value="0">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <Grid Margin="0,0,0,3">
+                                            <TextBlock Text="Limit Kullanımı" FontSize="10" Foreground="#7F8C8D"/>
+                                            <TextBlock FontSize="10" FontWeight="Bold" HorizontalAlignment="Right">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Text" Value="{Binding RemainingLimit, StringFormat='₺{0:N2} Kullanılabilir'}"/>
+                                                        <Setter Property="Foreground" Value="#27AE60"/>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Grid>
+                                        <ProgressBar Value="{Binding LimitProgressValue}" Minimum="0" Maximum="100" Height="4" Background="#ECF0F1" BorderThickness="0">
+                                            <ProgressBar.Style>
+                                                <Style TargetType="ProgressBar">
+                                                    <Setter Property="Foreground" Value="#2ECC71"/>
+                                                </Style>
+                                            </ProgressBar.Style>
+                                        </ProgressBar>
+                                    </StackPanel>
                                 </StackPanel>
 
-                                <!-- Progress Bar and Description -->
-                                <StackPanel Grid.Row="3" Margin="0,5,0,0">
+                                <!-- Statement Progress Bar and Description -->
+                                <StackPanel Grid.Row="4" Margin="0,5,0,0">
                                     <Grid Margin="0,0,0,5">
-                                        <TextBlock Text="{Binding StatementDescription}" FontSize="11" Foreground="#34495E" FontWeight="SemiBold" HorizontalAlignment="Left"/>
-                                        <TextBlock Text="{Binding DaysRemainingText}" FontSize="11" Foreground="#C0392B" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="{Binding StatementDescription}" FontSize="10" Foreground="#34495E" FontWeight="SemiBold" HorizontalAlignment="Left"/>
+                                        <TextBlock Text="{Binding DaysRemainingText}" FontSize="10" Foreground="#C0392B" FontWeight="Bold" HorizontalAlignment="Right"/>
                                     </Grid>
-                                    <ProgressBar Value="{Binding ProgressValue}" Minimum="0" Maximum="100" Height="6" Background="#ECF0F1" Foreground="{Binding ProgressColor}" BorderThickness="0"/>
+                                    <ProgressBar Value="{Binding ProgressValue}" Minimum="0" Maximum="100" Height="4" Background="#ECF0F1" Foreground="{Binding ProgressColor}" BorderThickness="0"/>
                                 </StackPanel>
 
                                 <!-- Action Buttons -->
-                                <Grid Grid.Row="5" Margin="0,15,0,0">
+                                <Grid Grid.Row="6" Margin="0,0,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="10"/>

@@ -8,6 +8,7 @@ namespace FinTrack.Core.Models
         public decimal Amount { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         public string? Description { get; set; }
+        public string? GroupId { get; set; }
         
         // Foreign Key → Category
         public int CategoryId { get; set; }

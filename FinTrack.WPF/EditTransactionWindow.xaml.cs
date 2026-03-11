@@ -158,6 +158,27 @@ namespace FinTrack.WPF
                 if (item.Bank != null) bankId = item.Bank.Id;
             }
 
+            // Limit Check for Credit Card
+            if (cardId.HasValue && selectedCategory.Type == TransactionType.Expense)
+            {
+                // Note: We subtract the original amount because we are checking the new total after update
+                decimal addedDebt = amount;
+                if (_transactionToEdit.CreditCardAccountId == cardId)
+                {
+                    // If it was already on this card, the "CalculateCardDebt" already includes the OLD amount.
+                    // So we check: CurrentDebt - OldAmount + NewAmount > Limit
+                    addedDebt = amount - _transactionToEdit.Amount;
+                }
+
+                if (addedDebt > 0) // Only check if debt is increasing
+                {
+                    if (!UIHelper.CheckCardLimit(_context, cardId.Value, addedDebt, this))
+                    {
+                        return; // Aborted by user
+                    }
+                }
+            }
+
             _transactionToEdit.CreditCardAccountId = cardId;
             _transactionToEdit.BankAccountId = bankId;
 

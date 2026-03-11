@@ -21,10 +21,11 @@
                   SelectionChanged="CardsGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Banka" Binding="{Binding BankName}" Width="*"/>
-                <DataGridTextColumn Header="Kart" Binding="{Binding CardLabel}" Width="100"/>
+                <DataGridTextColumn Header="Kart" Binding="{Binding CardLabel}" Width="80"/>
+                <DataGridTextColumn Header="Limit" Binding="{Binding Limit, StringFormat='₺{0:N2}'}" Width="80"/>
                 <DataGridTextColumn Header="Kesim" Binding="{Binding StatementDay}" Width="45"/>
                 <DataGridTextColumn Header="Ödeme" Binding="{Binding PaymentDueDay}" Width="45"/>
-                <DataGridTextColumn Header="Ana Kart" Binding="{Binding ParentCard.CardLabel}" Width="80"/>
+                <DataGridTextColumn Header="Ana Kart" Binding="{Binding ParentCard.CardLabel}" Width="70"/>
                 <DataGridCheckBoxColumn Header="Aktif" Binding="{Binding IsActive}" Width="40"/>
             </DataGrid.Columns>
         </DataGrid>
@@ -42,25 +43,30 @@
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="1.5*"/>
                         <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="1.2*"/>
                         <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0.8*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="0.8*"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Row 0: Labels -->
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Banka Adı" FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="Kart Etiketi" FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
-                    <TextBlock Grid.Row="0" Grid.Column="4" Text="Kesim G." FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
-                    <TextBlock Grid.Row="0" Grid.Column="6" Text="S. Ödeme G." FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="0" Grid.Column="4" Text="Limit" FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="0" Grid.Column="6" Text="Kesim" FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="0" Grid.Column="8" Text="S.Ödeme" FontSize="11" Foreground="#555" Margin="0,0,0,4"/>
 
                     <!-- Row 1: Inputs -->
                     <TextBox x:Name="BankNameBox" Grid.Row="1" Grid.Column="0" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
                              ToolTip="Banka Adı (örn. İş Bankası)" TextChanged="BankNameBox_TextChanged"/>
                     <TextBox x:Name="CardLabelBox" Grid.Row="1" Grid.Column="2" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
                              ToolTip="Kart Etiketi (örn. Asıl Kart)"/>
-                    <TextBox x:Name="StatementDayBox" Grid.Row="1" Grid.Column="4" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
+                    <TextBox x:Name="LimitBox" Grid.Row="1" Grid.Column="4" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
+                             ToolTip="Kredi Kartı Limiti" TextChanged="LimitBox_TextChanged"/>
+                    <TextBox x:Name="StatementDayBox" Grid.Row="1" Grid.Column="6" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
                              ToolTip="Hesap Kesim Günü (1-31)"/>
-                    <TextBox x:Name="PaymentDueDayBox" Grid.Row="1" Grid.Column="6" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
+                    <TextBox x:Name="PaymentDueDayBox" Grid.Row="1" Grid.Column="8" VerticalContentAlignment="Center" Padding="5,3" FontSize="12"
                              ToolTip="Son Ödeme Günü (1-31)"/>
                 </Grid>
 

@@ -23,7 +23,33 @@ namespace FinTrack.WPF
                               .OrderBy(a => a.BankName)
                               .ThenBy(a => a.AccountName)
                               .ToList();
+                              
+            // Format existing IBANs correctly
+            bool modified = false;
+            foreach (var account in accounts)
+            {
+                if (!string.IsNullOrEmpty(account.IBAN))
+                {
+                    string formatted = FinTrack.WPF.Helpers.UIHelper.FormatIban(account.IBAN);
+                    if (account.IBAN != formatted)
+                    {
+                        account.IBAN = formatted;
+                        modified = true;
+                    }
+                }
+            }
+
+            if (modified)
+            {
+                _db.SaveChanges(); // Persist formatted IBANs
+            }
+
             AccountsGrid.ItemsSource = accounts;
+        }
+
+        private void IbanBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            FinTrack.WPF.Helpers.UIHelper.FormatIbanTextBox(sender as TextBox);
         }
 
         private void InputBox_TextChanged(object sender, TextChangedEventArgs e)
