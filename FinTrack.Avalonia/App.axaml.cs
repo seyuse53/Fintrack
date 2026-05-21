@@ -27,6 +27,14 @@ public partial class App : Application
         // Initialize SQLitePCL for SQLCipher
         SQLitePCL.Batteries_V2.Init();
 
+        string themePref = FinTrack.Core.Services.SettingsManager.GetThemePreference();
+        if (themePref == "Aydınlık")
+            RequestedThemeVariant = global::Avalonia.Styling.ThemeVariant.Light;
+        else if (themePref == "Karanlık")
+            RequestedThemeVariant = global::Avalonia.Styling.ThemeVariant.Dark;
+        else
+            RequestedThemeVariant = global::Avalonia.Styling.ThemeVariant.Default;
+
         // Setup global exception handling for debugging silent crashes
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
         {

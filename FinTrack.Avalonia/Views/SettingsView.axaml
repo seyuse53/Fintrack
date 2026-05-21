@@ -33,6 +33,11 @@
                         Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
                         Background="Transparent"/>
 
+                <Button Content="🎨 Görünüm" Tag="6" Command="{Binding SwitchTabCommand}" CommandParameter="6"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
+                        Background="Transparent"/>
+
                 <Button Content="☁️ Yedekleme" Tag="2" Command="{Binding SwitchTabCommand}" CommandParameter="2"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
                         Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
@@ -141,6 +146,23 @@
                                 </StackPanel>
                             </Border>
                         </StackPanel>
+                    </StackPanel>
+
+                    <!-- ==================== TAB 6: GÖRÜNÜM ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=6}">
+                        <TextBlock Text="Uygulama Teması" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                        <TextBlock Text="FinTrack arayüzünün karanlık veya aydınlık olmasını seçebilirsiniz." 
+                                   FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
+
+                        <Border Background="#F8F9F9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1" MaxWidth="500" HorizontalAlignment="Left">
+                            <StackPanel>
+                                <TextBlock Text="Tema Seçimi" FontSize="14" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,10"/>
+                                <ComboBox ItemsSource="{Binding AvailableThemes}" SelectedItem="{Binding SelectedTheme}" 
+                                          Padding="10" FontSize="14" CornerRadius="4" Width="250" />
+                                <TextBlock Text="Sistem seçeneği cihazınızın varsayılan temasını (Light/Dark) otomatik olarak takip eder." 
+                                           FontSize="11" Foreground="#7F8C8D" Margin="0,15,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
 
                     <!-- ==================== TAB 1: KATEGORİ YÖNETİMİ ==================== -->

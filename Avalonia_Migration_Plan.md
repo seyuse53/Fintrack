@@ -69,10 +69,10 @@ WPF arayüzünü Avalonia UI'a taşıyarak Linux ve Android desteği kazandırma
 - [x] Platforma özel dosya yolu yönetimi (Android/Linux/Windows - Zaten uyumlu)
 - [x] GitHub Updater platform adaptasyonu
 
-## Faz 11: Diyaloglar + UX Polish `[ ]`
-- [ ] Tüm modern diyalog pencerelerini (Error, Info, Confirm) port et
-- [ ] Tema sistemi (Dark/Light toggle)
-- [ ] Font ve ikon setini (platform bağımsız) sabitle
+## Faz 11: Diyaloglar + UX Polish `[DONE]`
+- [x] Tüm modern diyalog pencerelerini (Error, Info, Confirm) port et
+- [x] Tema sistemi (Dark/Light toggle)
+- [x] Font ve ikon setini (platform bağımsız) sabitle
 
 ## Faz 12: Build, Test & Dağıtım `[ ]`
 - [ ] `FinTrack.Tests` (xUnit) projesini kur

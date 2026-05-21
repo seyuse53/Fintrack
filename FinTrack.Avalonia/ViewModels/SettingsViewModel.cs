@@ -20,6 +20,30 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     private int _selectedTabIndex;
 
+    // ==================== GENERAL TAB ====================
+
+    [ObservableProperty]
+    private List<string> _availableThemes = new() { "Sistem", "Aydınlık", "Karanlık" };
+
+    [ObservableProperty]
+    private string _selectedTheme = "Sistem";
+
+    partial void OnSelectedThemeChanged(string value)
+    {
+        SettingsManager.SetThemePreference(value);
+        
+        var app = global::Avalonia.Application.Current;
+        if (app != null)
+        {
+            if (value == "Aydınlık")
+                app.RequestedThemeVariant = global::Avalonia.Styling.ThemeVariant.Light;
+            else if (value == "Karanlık")
+                app.RequestedThemeVariant = global::Avalonia.Styling.ThemeVariant.Dark;
+            else
+                app.RequestedThemeVariant = global::Avalonia.Styling.ThemeVariant.Default;
+        }
+    }
+
     // ==================== SECURITY TAB ====================
 
     [ObservableProperty]
@@ -150,11 +174,16 @@ public partial class SettingsViewModel : ViewModelBase
 
     public SettingsViewModel()
     {
-        LoadAllSettings();
+        SelectedTabIndex = 0; // Changed later by UI bindings
+
+        LoadData();
     }
 
-    private void LoadAllSettings()
+    private void LoadData()
     {
+        SelectedTheme = SettingsManager.GetThemePreference();
+        
+        // Security
         try
         {
             var settings = SettingsManager.LoadSettings();

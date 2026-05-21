@@ -398,6 +398,49 @@ namespace FinTrack.Core.Services
             SaveSettings(settings);
         }
 
+        public static void RevertSettingsToDefaults()
+        {
+            SaveSettings(new Settings());
+        }
+
+        private static string _themePreference = "Sistem";
+
+        public static string GetThemePreference()
+        {
+            try
+            {
+                var settingsFile = Path.Combine(GetAppDataFolder(), "global_settings.json");
+                if (File.Exists(settingsFile))
+                {
+                    string json = File.ReadAllText(settingsFile);
+                    var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
+                    if (dict.TryGetValue("Theme", out string? theme))
+                        return theme;
+                }
+            }
+            catch { }
+            return _themePreference;
+        }
+
+        public static void SetThemePreference(string theme)
+        {
+            _themePreference = theme;
+            try
+            {
+                var settingsFile = Path.Combine(GetAppDataFolder(), "global_settings.json");
+                Dictionary<string, string> dict = new();
+                if (File.Exists(settingsFile))
+                {
+                    string existingJson = File.ReadAllText(settingsFile);
+                    dict = JsonSerializer.Deserialize<Dictionary<string, string>>(existingJson) ?? new Dictionary<string, string>();
+                }
+                dict["Theme"] = theme;
+                string newJson = JsonSerializer.Serialize(dict, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(settingsFile, newJson);
+            }
+            catch { }
+        }
+
         public static ApiProviderType GetProviderForCategory(string? category)
         {
             var settings = LoadSettings();
