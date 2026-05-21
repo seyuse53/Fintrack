@@ -13,6 +13,9 @@ namespace FinTrack.Core.Models
         public decimal TotalAmount { get; set; }     // Total quantity owned (e.g. 15.5 grams)
         public decimal AverageCost { get; set; }     // Average price paid per unit
 
+        public decimal LastKnownPrice { get; set; }   // Son bilinen güncel fiyat (uygulama kapansa bile kalır)
+        public DateTime? LastPriceUpdate { get; set; } // Fiyatın en son güncellenme zamanı
+
         public List<InvestmentTransaction> Transactions { get; set; } = new();
     }
 }

@@ -1,0 +1,169 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             x:Class="FinTrack.Avalonia.Views.ReportsView"
+             x:DataType="vm:ReportsViewModel">
+             
+    <Grid Margin="30" RowDefinitions="Auto,Auto,*">
+
+        <!-- Filtre Çubuğu -->
+        <Border Grid.Row="0" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Başlangıç Tarihi:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,10,0"/>
+                <CalendarDatePicker SelectedDate="{Binding StartDate}" Width="150" Margin="0,0,20,0"/>
+                
+                <TextBlock Text="Bitiş Tarihi:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,10,0"/>
+                <CalendarDatePicker SelectedDate="{Binding EndDate}" Width="150" Margin="0,0,20,0"/>
+
+                <Button Content="🔍 Analiz Et" Command="{Binding FetchDataCommand}" 
+                        Padding="20,8" Background="#3498DB" Foreground="White" FontWeight="Bold" BorderThickness="0" CornerRadius="18" Cursor="Hand"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Özet Kartları -->
+        <Grid Grid.Row="1" Margin="0,0,0,20" ColumnDefinitions="*,20,*,20,*">
+            <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Dönem Geliri" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding TotalIncomeText}" FontSize="20" FontWeight="Bold" Foreground="#27AE60"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Dönem Gideri" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding TotalExpenseText}" FontSize="20" FontWeight="Bold" Foreground="#E74C3C"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="4" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Net Tasarruf" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding NetBalanceText}" FontSize="20" FontWeight="Bold" Foreground="#2980B9"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- İçerik Sekmeleri -->
+        <TabControl Grid.Row="2" Background="Transparent" BorderThickness="0">
+            <!-- 1. HARCAMA ANALİZİ -->
+            <TabItem Header="📊 Harcama Dağılımı">
+                <Grid Margin="0,15,0,0" ColumnDefinitions="400,20,*">
+                    <!-- Bar Chart Area -->
+                    <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="En Çok Harcanan Kategoriler" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+                            <ItemsControl ItemsSource="{Binding TopCategories}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,15">
+                                            <Grid>
+                                                <TextBlock Text="{Binding CategoryName}" FontWeight="SemiBold" HorizontalAlignment="Left" Foreground="#34495E"/>
+                                                <TextBlock Text="{Binding FormattedAmount}" FontWeight="Bold" HorizontalAlignment="Right" Foreground="#2C3E50"/>
+                                            </Grid>
+                                            <ProgressBar Value="{Binding Percentage}" Minimum="0" Maximum="100" Height="12" Margin="0,5,0,2" Foreground="{Binding ColorHex}" Background="#ECF0F1" CornerRadius="6"/>
+                                            <TextBlock Text="{Binding Percentage, StringFormat='{}{0:F1}%'}" FontSize="11" Foreground="#95A5A6" HorizontalAlignment="Right"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Full Breakdown Grid -->
+                    <Border Grid.Column="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+                        <Grid RowDefinitions="Auto,10,*">
+                            <TextBlock Grid.Row="0" Text="Tüm Giderlerin Dökümü" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                            <DataGrid Grid.Row="2" ItemsSource="{Binding FullBreakdown}" AutoGenerateColumns="False" IsReadOnly="True" 
+                                      GridLinesVisibility="None" HeadersVisibility="Column" Background="Transparent" RowBackground="Transparent" BorderThickness="0">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Kategori" Binding="{Binding CategoryName}" Width="*"/>
+                                    <DataGridTextColumn Header="İşlem Sayısı" Binding="{Binding Count}" Width="100"/>
+                                    <DataGridTextColumn Header="Toplam Tutar" Binding="{Binding FormattedAmount}" Width="150" FontWeight="Bold"/>
+                                    <DataGridTextColumn Header="Pay" Binding="{Binding Percentage, StringFormat='{}{0:F1}%'}" Width="80"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- 2. TREND ANALİZİ -->
+            <TabItem Header="📈 Trendler (6 Ay)">
+                <Border Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="30" Margin="0,15,0,0">
+                    <Grid RowDefinitions="Auto,*">
+                        <TextBlock Grid.Row="0" Text="Aylık Gelir vs Gider Karşılaştırması" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,30"/>
+                        
+                        <!-- Simple Manual Charting with ItemsControl -->
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding MonthlyTrends}" HorizontalAlignment="Center">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="15,0" VerticalAlignment="Bottom">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Height="250">
+                                            <!-- Income Bar -->
+                                            <Border Width="25" Background="#27AE60" VerticalAlignment="Bottom" CornerRadius="4,4,0,0"
+                                                    Height="{Binding IncomeHeight}" ToolTip.Tip="{Binding IncomeAmount, StringFormat='Gelir: ₺{0:N2}'}"/>
+                                            <Border Width="5"/>
+                                            <!-- Expense Bar -->
+                                            <Border Width="25" Background="#E74C3C" VerticalAlignment="Bottom" CornerRadius="4,4,0,0"
+                                                    Height="{Binding ExpenseHeight}" ToolTip.Tip="{Binding ExpenseAmount, StringFormat='Gider: ₺{0:N2}'}"/>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding MonthLabel}" HorizontalAlignment="Center" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,10,0,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+            <!-- 3. YATIRIM ANALİZİ -->
+            <TabItem Header="💎 Yatırım Dağılımı">
+                <Grid Margin="0,15,0,0" ColumnDefinitions="*,20,*">
+
+                    <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="Portföy Dağılımı (Varlık Türü)" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+                            <ItemsControl ItemsSource="{Binding InvestmentAllocations}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,15">
+                                            <Grid>
+                                                <TextBlock Text="{Binding AssetCategory}" FontWeight="SemiBold" HorizontalAlignment="Left" Foreground="#34495E"/>
+                                                <TextBlock Text="{Binding FormattedValue}" FontWeight="Bold" HorizontalAlignment="Right" Foreground="#2C3E50"/>
+                                            </Grid>
+                                            <ProgressBar Value="{Binding Percentage}" Minimum="0" Maximum="100" Height="12" Margin="0,5,0,2" Foreground="#F1C40F" Background="#ECF0F1" CornerRadius="6"/>
+                                            <TextBlock Text="{Binding Percentage, StringFormat='{}{0:F1}%'}" FontSize="11" Foreground="#95A5A6" HorizontalAlignment="Right"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Grid Grid.Column="2" RowDefinitions="*,10,*">
+                        
+                        <Border Grid.Row="0" Background="#2980B9" CornerRadius="12" Padding="25">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="TOPLAM PORTFÖY DEĞERİ" Foreground="White" FontSize="14" Opacity="0.8" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding TotalPortfolioValueText}" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Border Grid.Row="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="25">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="TOPLAM KÂR / ZARAR" Foreground="#7F8C8D" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding TotalInvestmentProfitText}" Foreground="#27AE60" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

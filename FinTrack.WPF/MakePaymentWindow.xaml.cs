@@ -61,7 +61,7 @@ namespace FinTrack.WPF
             {
                 // Find or create the Transfer category for Credit Card Payment.
                 // ID 21 is our seeded category. Let's look for type Transfer just in case ID 21 doesn't exist.
-                var payCategory = _db.Categories.FirstOrDefault(c => c.Type == TransactionType.Transfer)
+                var payCategory = _db.Categories.FirstOrDefault(c => c.Name == "Kredi Kartı Ödemesi" && c.Type == TransactionType.Transfer)
                                   ?? new Category { Name = "Kredi Kartı Ödemesi", Type = TransactionType.Transfer };
                 
                 if (payCategory.Id == 0) 
@@ -73,17 +73,39 @@ namespace FinTrack.WPF
                     sourceBankId = source.BankAccountId;
                 }
 
-                var paymentTx = new Transaction
+                if (!sourceBankId.HasValue)
                 {
-                    Amount = -amount, // Payment reduces the card debt
+                    if (!FinTrack.WPF.Helpers.UIHelper.CheckCashLimit(_db, amount))
+                    {
+                        return; // Aborted by user
+                    }
+                }
+
+                // Create Outgoing Transaction (reduces Source)
+                var outgoingTx = new Transaction
+                {
+                    Amount = -amount,
                     Date = DateTime.Now,
-                    Description = $"{_card.BankName} Kredi Kartı Ödemesi",
+                    Description = $"{_card.BankName} Kredi Kartı Ödemesi (Giden)",
                     Category = payCategory,
-                    CreditCardAccountId = _card.Id,
-                    BankAccountId = sourceBankId
+                    BankAccountId = sourceBankId,
+                    CreditCardAccountId = null
                 };
 
-                _db.Transactions.Add(paymentTx);
+                // Create Incoming Transaction (reduces Card Debt)
+                var incomingTx = new Transaction
+                {
+                    Amount = amount,
+                    Date = DateTime.Now,
+                    Description = $"{_card.BankName} Kredi Kartı Ödemesi (Gelen)",
+                    Category = payCategory,
+                    BankAccountId = null,
+                    CreditCardAccountId = _card.Id
+                };
+
+                // Remove the old single transaction logic and add these two:
+                _db.Transactions.Add(outgoingTx);
+                _db.Transactions.Add(incomingTx);
                 _db.SaveChanges();
 
                 var infoDialog = new FinTrack.WPF.Views.InfoDialogWindow("Bilgi", "Ödeme başarıyla kaydedildi.");

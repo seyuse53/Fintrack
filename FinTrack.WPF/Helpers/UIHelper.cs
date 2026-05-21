@@ -256,5 +256,57 @@ namespace FinTrack.WPF.Helpers
 
             return true;
         }
+
+        public static decimal CalculateCashBalance(FinTrack.Data.AppDbContext db)
+        {
+            decimal balance = 0;
+
+            // Fetch transactions not linked to any account
+            var cashTxs = db.Transactions
+                .Include(t => t.Category)
+                .Where(t => t.BankAccountId == null && t.CreditCardAccountId == null)
+                .ToList();
+
+            foreach (var t in cashTxs)
+            {
+                if (t.Category?.Type == FinTrack.Core.Models.TransactionType.Income)
+                    balance += t.Amount;
+                else if (t.Category?.Type == FinTrack.Core.Models.TransactionType.Expense)
+                    balance -= t.Amount;
+                else if (t.Category?.Type == FinTrack.Core.Models.TransactionType.Transfer)
+                    balance += t.Amount;
+            }
+
+            var invTxs = db.InvestmentTransactions
+                .Where(t => t.LinkedBankAccountId == null && t.LinkedCreditCardAccountId == null)
+                .ToList();
+
+            foreach (var it in invTxs)
+            {
+                if (it.Type == FinTrack.Core.Models.InvestmentTransactionType.Buy)
+                    balance -= it.TotalCost;
+                else if (it.Type == FinTrack.Core.Models.InvestmentTransactionType.Sell)
+                    balance += it.TotalCost;
+            }
+
+            return balance;
+        }
+
+        public static bool CheckCashLimit(FinTrack.Data.AppDbContext db, decimal requestedAmount)
+        {
+            decimal currentCash = CalculateCashBalance(db);
+            if (currentCash < requestedAmount)
+            {
+                var result = System.Windows.MessageBox.Show(
+                    $"Nakit (kasa) bakiyeniz yetersiz!\n\n" +
+                    $"Mevcut Nakit: {currentCash:C2}\n" +
+                    $"İstenen Tutar: {requestedAmount:C2}\n\n" +
+                    $"Bu işlemi kaydederseniz nakit kasanız eksiye (-) düşecek.\nYine de işleme devam edilsin mi?",
+                    "Yetersiz Nakit Bakiye", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Warning);
+                
+                return result == System.Windows.MessageBoxResult.Yes;
+            }
+            return true;
+        }
     }
 }

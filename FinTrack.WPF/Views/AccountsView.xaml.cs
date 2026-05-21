@@ -58,7 +58,7 @@ namespace FinTrack.WPF.Views
                         .ToList();
 
                     // Calculate current balance based on transaction types
-                    decimal currentBalance = account.InitialBalance;
+                    decimal currentBalance = 0; // Legacy InitialBalance is moved to transactions
 
                     foreach (var t in accountTransactions)
                     {
@@ -106,11 +106,31 @@ namespace FinTrack.WPF.Views
                 }
 
                 AccountsItemsControl.ItemsSource = viewModels;
+                CashBalanceText.Text = $"₺{Helpers.UIHelper.CalculateCashBalance(_context):N2}";
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Hesaplar yüklenirken hata oluştu: {ex.Message}", "Hata",
                     MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void CashDetailButton_Click(object sender, RoutedEventArgs e)
+        {
+            var cashWin = new CashDetailWindow(_context);
+            cashWin.Owner = Window.GetWindow(this);
+            cashWin.ShowDialog();
+            await LoadAccountsAsync();
+        }
+
+        private async void CashTransferButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Transfer window automatically adds cash. Passing null means it will keep the default Nakit 
+            var transferWin = new TransferWindow(_context, null);
+            transferWin.Owner = Window.GetWindow(this);
+            if (transferWin.ShowDialog() == true)
+            {
+                await LoadAccountsAsync(); 
             }
         }
 

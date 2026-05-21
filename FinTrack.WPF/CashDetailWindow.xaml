@@ -1,0 +1,75 @@
+<Window x:Class="FinTrack.WPF.CashDetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nakit Kasa Hareketleri" Height="480" Width="580"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResize">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock x:Name="TitleText" Grid.Row="0"
+                   FontSize="17" FontWeight="Bold" Margin="0,0,0,4"/>
+
+        <!-- Subtitle Panel -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Gelen (₺)" FontSize="11" Foreground="#7F8C8D" FontWeight="SemiBold"/>
+                <TextBlock x:Name="TotalInText" FontSize="13" Foreground="#27AE60" FontWeight="Bold"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Çıkan (₺)" FontSize="11" Foreground="#7F8C8D" FontWeight="SemiBold"/>
+                <TextBlock x:Name="TotalOutText" FontSize="13" Foreground="#C62828" FontWeight="Bold"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <TextBlock Text="Güncel Bakiye" FontSize="11" Foreground="#7F8C8D" FontWeight="SemiBold"/>
+                <TextBlock x:Name="CurrentBalanceText" FontSize="13" Foreground="#2980B9" FontWeight="Bold"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Transactions list -->
+        <DataGrid x:Name="TransactionsGrid" Grid.Row="2"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  CanUserAddRows="False" CanUserDeleteRows="False"
+                  GridLinesVisibility="Horizontal" HeadersVisibility="Column"
+                  Background="White" RowBackground="White"
+                  AlternatingRowBackground="#F8F9F9"
+                  CanUserReorderColumns="False"
+                  MouseDoubleClick="TransactionsGrid_MouseDoubleClick">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="🗑 Seçili İşlemi Sil" Click="DeleteTransaction_Click"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Tarih"     Binding="{Binding Date, StringFormat=dd.MM.yyyy}" Width="80"/>
+                <DataGridTextColumn Header="Tür"       Binding="{Binding Category.Type}" Width="70"/>
+                <DataGridTextColumn Header="Kategori"  Binding="{Binding Category.Name}" Width="100"/>
+                <DataGridTextColumn Header="Açıklama"  Binding="{Binding Description}"   Width="*"/>
+                <DataGridTextColumn Header="Tutar"     Binding="{Binding FormattedAmount}" Width="95" FontWeight="Bold">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextAlignment" Value="Right"/>
+                            <Setter Property="Foreground" Value="{Binding ForegroundColor}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Close button -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Kapat" Width="80" Padding="5" Click="Close_Click" IsDefault="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

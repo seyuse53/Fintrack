@@ -1,4 +1,6 @@
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+
 using System.Windows;
 using System.Windows.Controls;
 using FinTrack.Core.Models;
@@ -20,30 +22,35 @@ namespace FinTrack.WPF
         private void LoadAccounts()
         {
             var accounts = _db.BankAccounts
+                              .Include(a => a.Transactions)
                               .OrderBy(a => a.BankName)
                               .ThenBy(a => a.AccountName)
                               .ToList();
-                              
-            // Format existing IBANs correctly
-            bool modified = false;
+            
+            // Populate OpeningBalance from transactions for display
+            var openingCategory = _db.Categories.FirstOrDefault(c => c.Id == 30 || c.Name == "Açılış Bakiyesi");
+            
             foreach (var account in accounts)
             {
+                if (openingCategory != null)
+                {
+                    account.OpeningBalance = _db.Transactions
+                        .Where(t => t.BankAccountId == account.Id && t.CategoryId == openingCategory.Id)
+                        .Sum(t => (decimal?)t.Amount) ?? 0;
+                }
+
+                // Format existing IBANs correctly
                 if (!string.IsNullOrEmpty(account.IBAN))
                 {
                     string formatted = FinTrack.WPF.Helpers.UIHelper.FormatIban(account.IBAN);
                     if (account.IBAN != formatted)
                     {
                         account.IBAN = formatted;
-                        modified = true;
                     }
                 }
             }
 
-            if (modified)
-            {
-                _db.SaveChanges(); // Persist formatted IBANs
-            }
-
+            _db.SaveChanges(); // Persist any IBAN formatting changes
             AccountsGrid.ItemsSource = accounts;
         }
 
@@ -73,12 +80,14 @@ namespace FinTrack.WPF
             {
                 BankNameBox.Text = account.BankName;
                 AccountNameBox.Text = account.AccountName;
-                InitialBalanceBox.Text = account.InitialBalance.ToString("0.##");
+                InitialBalanceBox.Text = account.OpeningBalance.ToString("0.##");
                 IbanBox.Text = account.IBAN;
+                IsCryptoCheckBox.IsChecked = account.IsCryptoExchange;
 
                 DeleteAccountBtn.IsEnabled = true;
                 ToggleActiveBtn.IsEnabled = true;
                 UpdateAccountBtn.IsEnabled = true;
+                ResetOpeningBtn.IsEnabled = account.OpeningBalance != 0;
                 AddAccountBtn.IsEnabled = false; // Prevent adding when something is selected to avoid confusion
             }
             else
@@ -87,10 +96,12 @@ namespace FinTrack.WPF
                 AccountNameBox.Clear();
                 InitialBalanceBox.Clear();
                 IbanBox.Clear();
+                IsCryptoCheckBox.IsChecked = false;
 
                 DeleteAccountBtn.IsEnabled = false;
                 ToggleActiveBtn.IsEnabled = false;
                 UpdateAccountBtn.IsEnabled = false;
+                ResetOpeningBtn.IsEnabled = false;
             }
         }
 
@@ -113,15 +124,40 @@ namespace FinTrack.WPF
                 return;
             }
 
-            _db.BankAccounts.Add(new BankAccount
+            var newAccount = new BankAccount
             {
                 BankName = bank,
                 AccountName = accountName,
                 IBAN = string.IsNullOrEmpty(iban) ? null : iban,
-                InitialBalance = initialBalance,
-                IsActive = true
-            });
-            _db.SaveChanges();
+                InitialBalance = 0, // Legacy field remains 0
+                IsActive = true,
+                IsCryptoExchange = IsCryptoCheckBox.IsChecked ?? false
+            };
+
+            _db.BankAccounts.Add(newAccount);
+            _db.SaveChanges(); // Save to get ID
+
+            // Create Opening Balance Transaction if amount > 0
+            if (initialBalance != 0)
+            {
+                var openingCategory = _db.Categories.FirstOrDefault(c => c.Id == 30 || c.Name == "Açılış Bakiyesi");
+                if (openingCategory == null)
+                {
+                    openingCategory = new Category { Name = "Açılış Bakiyesi", Type = TransactionType.Income };
+                    _db.Categories.Add(openingCategory);
+                    _db.SaveChanges();
+                }
+
+                _db.Transactions.Add(new Transaction
+                {
+                    BankAccountId = newAccount.Id,
+                    CategoryId = openingCategory.Id,
+                    Amount = initialBalance,
+                    Date = DateTime.Now,
+                    Description = "Açılış Bakiyesi"
+                });
+                _db.SaveChanges();
+            }
 
             AccountsGrid.SelectedItem = null; // Clear selection to reset fields
             LoadAccounts();
@@ -147,7 +183,34 @@ namespace FinTrack.WPF
             entity.BankName = bank;
             entity.AccountName = accountName;
             entity.IBAN = string.IsNullOrEmpty(iban) ? null : iban;
-            entity.InitialBalance = initialBalance;
+            entity.InitialBalance = 0; // Ensure legacy field is 0
+            entity.IsCryptoExchange = IsCryptoCheckBox.IsChecked ?? false;
+
+            // Update or Create Opening Balance Transaction
+            var openingCategory = _db.Categories.FirstOrDefault(c => c.Id == 30 || c.Name == "Açılış Bakiyesi");
+            if (openingCategory == null)
+            {
+                openingCategory = new Category { Name = "Açılış Bakiyesi", Type = TransactionType.Income };
+                _db.Categories.Add(openingCategory);
+                _db.SaveChanges();
+            }
+
+            var openingTx = _db.Transactions.FirstOrDefault(t => t.BankAccountId == entity.Id && t.CategoryId == openingCategory.Id);
+            if (openingTx != null)
+            {
+                openingTx.Amount = initialBalance;
+            }
+            else if (initialBalance != 0)
+            {
+                _db.Transactions.Add(new Transaction
+                {
+                    BankAccountId = entity.Id,
+                    CategoryId = openingCategory.Id,
+                    Amount = initialBalance,
+                    Date = DateTime.Now,
+                    Description = "Açılış Bakiyesi"
+                });
+            }
 
             _db.SaveChanges();
             
@@ -168,6 +231,32 @@ namespace FinTrack.WPF
             
             AccountsGrid.SelectedItem = null;
             LoadAccounts();
+        }
+
+        private void ResetOpening_Click(object sender, RoutedEventArgs e)
+        {
+            if (AccountsGrid.SelectedItem is not BankAccount account) return;
+
+            var result = MessageBox.Show(
+                $"{account.BankName} – {account.AccountName} hesabının açılış bakiyesini sıfırlamak istiyor musunuz?",
+                "Bakiyeyi Sıfırla", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.Yes) return;
+
+            var openingCategory = _db.Categories.FirstOrDefault(c => c.Id == 30 || c.Name == "Açılış Bakiyesi");
+            if (openingCategory == null) return;
+
+            var openingTxs = _db.Transactions.Where(t => t.BankAccountId == account.Id && t.CategoryId == openingCategory.Id).ToList();
+            
+            if (openingTxs.Any())
+            {
+                _db.Transactions.RemoveRange(openingTxs);
+                _db.SaveChanges();
+            }
+
+            InitialBalanceBox.Text = "0";
+            LoadAccounts();
+            MessageBox.Show("Açılış bakiyesi sıfırlandı.", "Bilgi", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void DeleteAccount_Click(object sender, RoutedEventArgs e)

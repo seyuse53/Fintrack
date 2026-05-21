@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using FinTrack.Core.Models;
+using FinTrack.Core.Services;
 using FinTrack.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,6 +61,11 @@ namespace FinTrack.WPF.Views
                     .Where(t => t.CreditCardAccount != null)
                     .ToListAsync();
 
+                // DEBUG: Check cash transactions globally
+                var allBanks = await _context.BankAccounts.ToListAsync();
+                var bankNames = string.Join(", ", allBanks.Select(b => b.BankName + " - " + b.AccountName));
+                System.IO.File.WriteAllText(@"C:\VSRepos\FinTrack\cash_debug.txt", $"Banks: {bankNames}");
+
                 // 1. Total Income for the selected month (Pure Income)
                 decimal totalIncome  = incomeList.Sum(t => t.Amount);
                 
@@ -77,7 +83,7 @@ namespace FinTrack.WPF.Views
                 // Wait, Total Wealth is strictly BankAccount balances + Cash. 
                 // Let's calculate exactly the Bank Account balances at that point in time.
                 var allAccounts = await _context.BankAccounts.Where(b => b.IsActive).ToListAsync();
-                decimal totalInitialBalances = allAccounts.Sum(a => a.InitialBalance);
+                decimal totalInitialBalances = 0; // Legacy InitialBalance is moved to transactions
 
                 var bankTransactionsUntilDate = await _context.Transactions
                     .Include(t => t.Category)
@@ -111,9 +117,32 @@ namespace FinTrack.WPF.Views
 
                 decimal totalWealth = totalInitialBalances + bankTxNet + invTxNet;
 
+                // Yatırım portföy değerini hesapla
+                var investmentAssets = await _context.InvestmentAssets.ToListAsync();
+                decimal portfolioValue = 0;
+                decimal cryptoValue = 0;
+
+                foreach (var asset in investmentAssets)
+                {
+                    decimal price = PricingService.GetCurrentPrice(asset.Symbol, asset.AverageCost);
+                    decimal assetValue = asset.TotalAmount * price;
+                    
+                    portfolioValue += assetValue;
+
+                    if (asset.Category == "Kripto Para")
+                    {
+                        cryptoValue += assetValue;
+                    }
+                }
+
                 IncomeCardText.Text  = $"₺{totalIncome:N2}";
                 ExpenseCardText.Text = $"₺{totalExpense:N2}";
                 BalanceCardText.Text = $"₺{totalWealth:N2}";
+                PortfolioCardText.Text = $"₺{portfolioValue:N2}";
+                
+                // Portföy bilgisini "Toplam Varlık" kartına alt satır olarak ekle
+                if (portfolioValue > 0)
+                    BalanceCardText.Text = $"₺{totalWealth:N2}\n📈 Portföy: ₺{portfolioValue:N2}\n💎 Genel: ₺{totalWealth + portfolioValue:N2}";
 
                 // Update headers to reflect the selected month
                 var culture = new System.Globalization.CultureInfo("tr-TR");

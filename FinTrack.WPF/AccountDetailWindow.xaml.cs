@@ -20,6 +20,15 @@ namespace FinTrack.WPF
 
             TitleText.Text = $"🏦 {account.BankName} – {account.AccountName}";
             
+            // Populate OpeningBalance for this window
+            var openingCategory = _db.Categories.FirstOrDefault(c => c.Id == 30 || c.Name == "Açılış Bakiyesi");
+            if (openingCategory != null)
+            {
+                _account.OpeningBalance = _db.Transactions
+                    .Where(t => t.BankAccountId == _account.Id && t.CategoryId == openingCategory.Id)
+                    .Sum(t => (decimal?)t.Amount) ?? 0;
+            }
+
             LoadData(transactions);
         }
 
@@ -41,10 +50,10 @@ namespace FinTrack.WPF
                 }
             }
 
-            decimal currentBalance = _account.InitialBalance + totalIn - totalOut;
+            decimal currentBalance = totalIn - totalOut; // InitialBalance is now 0 as it's moved to transactions
 
-            InitialBalanceText.Text = $"₺{_account.InitialBalance:N2}";
-            TotalInText.Text = $"+₺{totalIn:N2}";
+            InitialBalanceText.Text = $"₺{_account.OpeningBalance:N2}";
+            TotalInText.Text = $"+₺{(totalIn - _account.OpeningBalance):N2}"; // Show other income separately? No, let's keep it simple.
             TotalOutText.Text = $"-₺{totalOut:N2}";
             CurrentBalanceText.Text = $"₺{currentBalance:N2}";
 

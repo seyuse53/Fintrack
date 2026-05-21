@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FinTrack.Avalonia.Views"
+        x:Class="FinTrack.Avalonia.Views.UpdateAvailableWindow"
+        x:DataType="vm:UpdateAvailableWindow"
+        Title="Yeni Güncelleme Mevcut" Height="380" Width="450"
+        WindowStartupLocation="CenterOwner" CanResize="False"
+        Background="#F4F7F6">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="🎉 Yeni Bir Sürüm Çıktı!" FontSize="24" FontWeight="Bold" Foreground="#2A3B4C"/>
+            <TextBlock x:Name="CurrentVersionText" Text="Mevcut Sürüm: vX.X.X" FontSize="14" Foreground="#666" Margin="0,5,0,0"/>
+            <TextBlock x:Name="NewVersionText" Text="Yeni Sürüm: vY.Y.Y" FontSize="14" FontWeight="SemiBold" Foreground="#10B981" Margin="0,2,0,0"/>
+        </StackPanel>
+
+        <!-- Release Notes -->
+        <Border Grid.Row="1" Background="White" CornerRadius="8" Padding="15" 
+                BorderBrush="#E5E7EB" BorderThickness="1" Margin="0,0,0,20">
+            <ScrollViewer>
+                <TextBlock x:Name="ReleaseNotesText" TextWrapping="Wrap" FontSize="13" Foreground="#4B5563"/>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*">
+            <Button Grid.Column="0" Content="Daha Sonra" HorizontalAlignment="Stretch" Margin="0,0,5,0"
+                    Background="White" Foreground="#4B5563" BorderBrush="#D1D5DB" BorderThickness="1"
+                    Click="RemindLaterButton_Click" CornerRadius="6" Padding="10" HorizontalContentAlignment="Center"/>
+            
+            <Button Grid.Column="1" Content="Tarayıcıda Aç" HorizontalAlignment="Stretch" Margin="5,0,0,0"
+                    Background="#3B82F6" Foreground="White" FontWeight="SemiBold"
+                    Click="UpdateNowButton_Click" CornerRadius="6" Padding="10" HorizontalContentAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>

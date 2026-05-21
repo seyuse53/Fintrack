@@ -9,176 +9,290 @@
         WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/Resources/app_icon.png">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <!-- Sidebar -->
-            <ColumnDefinition Width="220"/>
-            <!-- Main Content Area -->
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <!-- ==================== APP CONTENT CONTAINER ==================== -->
+        <Grid x:Name="AppContentContainer" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <!-- Sidebar -->
+                <ColumnDefinition Width="220"/>
+                <!-- Main Content Area -->
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- ==================== SIDEBAR ==================== -->
-        <Border Grid.Column="0" Background="#2C3E50">
-            <Grid>
+            <!-- ==================== SIDEBAR ==================== -->
+            <Border Grid.Column="0" Background="#2C3E50">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/> <!-- Logo/Title -->
+                        <RowDefinition Height="Auto"/> <!-- Main Menu -->
+                        <RowDefinition Height="*"/>    <!-- Spacer -->
+                        <RowDefinition Height="Auto"/> <!-- Bottom Menu/Settings -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Sidebar Header -->
+                    <StackPanel Grid.Row="0" Margin="20,30,20,40">
+                        <TextBlock Text="FinTrack" FontSize="26" FontWeight="Bold" Foreground="White" TextAlignment="Center"/>
+                        <TextBlock Text="Kişisel Finans Takip" FontSize="12" Foreground="#95A5A6" TextAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+
+                    <!-- Main Menu Items -->
+                    <StackPanel Grid.Row="1" Margin="10,0">
+                        <!-- Dashboard (Current Main View) -->
+                        <Button x:Name="DashboardButton" Content="🏠 Ana Ekran (Özet)" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
+                                Click="DashboardButton_Click" Background="#34495E" Foreground="White" BorderThickness="0" Margin="0,0,0,5">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+
+                        <Button x:Name="BudgetButton" Content="📊 Bütçe" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
+                                Click="BudgetButton_Click" Background="Transparent" Foreground="#ECF0F1" BorderThickness="0" Margin="0,0,0,5">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+
+                        <Button x:Name="CardsButton" Content="💳 Kartlarım" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
+                                Click="CardsButton_Click" Background="Transparent" Foreground="#ECF0F1" BorderThickness="0" Margin="0,0,0,5">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+
+                        <!-- Accounts button -->
+                        <Button x:Name="AccountsButton" Content="🏦 Hesaplarım" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
+                                Click="AccountsButton_Click" Background="Transparent" Foreground="#ECF0F1" BorderThickness="0" Margin="0,0,0,5">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                        
+                        <!-- Investments button -->
+                        <Button x:Name="InvestmentsButton" Content="📈 Yatırımlar" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
+                                Click="InvestmentsButton_Click" Background="Transparent" Foreground="#ECF0F1" BorderThickness="0" Margin="0,0,0,5">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                        
+                        <!-- Reports button -->
+                        <Button x:Name="ReportsButton" Content="📉 Raporlar" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
+                                Click="ReportsButton_Click" Background="Transparent" Foreground="#ECF0F1" BorderThickness="0" Margin="0,0,0,5">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Bottom Menu -->
+                    <StackPanel Grid.Row="3" Margin="10,0,10,20">
+                        <Button x:Name="SettingsButton" Content="⚙️ Ayarlar" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
+                                Click="SettingsButton_Click" Background="Transparent" Foreground="#95A5A6" BorderThickness="0">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ==================== MAIN CONTENT AREA ==================== -->
+            <Grid Grid.Column="1" Background="#F4F6F9">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/> <!-- Logo/Title -->
-                    <RowDefinition Height="Auto"/> <!-- Main Menu -->
-                    <RowDefinition Height="*"/>    <!-- Spacer -->
-                    <RowDefinition Height="Auto"/> <!-- Bottom Menu/Settings -->
+                    <RowDefinition Height="Auto"/> <!-- Top Bar -->
+                    <RowDefinition Height="*"/>    <!-- Actual Content -->
+                    <RowDefinition Height="Auto"/> <!-- Status Bar -->
                 </Grid.RowDefinitions>
 
-                <!-- Sidebar Header -->
-                <StackPanel Grid.Row="0" Margin="20,30,20,40">
-                    <TextBlock Text="FinTrack" FontSize="26" FontWeight="Bold" Foreground="White" TextAlignment="Center"/>
-                    <TextBlock Text="Kişisel Finans Takip" FontSize="12" Foreground="#95A5A6" TextAlignment="Center" Margin="0,5,0,0"/>
-                </StackPanel>
-
-                <!-- Main Menu Items -->
-                <StackPanel Grid.Row="1" Margin="10,0">
-                    <!-- Dashboard (Current Main View) -->
-                    <Button x:Name="DashboardButton" Content="🏠 Ana Ekran (Özet)" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
-                            Click="DashboardButton_Click" Background="#34495E" Foreground="White" BorderThickness="0" Margin="0,0,0,5">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-
-                    <Button x:Name="BudgetButton" Content="📊 Bütçe" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
-                            Click="BudgetButton_Click" Background="Transparent" Foreground="#ECF0F1" BorderThickness="0" Margin="0,0,0,5">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-
-                    <Button x:Name="CardsButton" Content="💳 Kartlarım" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
-                            Click="CardsButton_Click" Background="Transparent" Foreground="#ECF0F1" BorderThickness="0" Margin="0,0,0,5">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-
-                    <!-- Accounts button -->
-                    <Button x:Name="AccountsButton" Content="🏦 Hesaplarım" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
-                            Click="AccountsButton_Click" Background="Transparent" Foreground="#ECF0F1" BorderThickness="0" Margin="0,0,0,5">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                <!-- Top Bar (Contextual Header + Add Button) -->
+                <Grid Grid.Row="0" Margin="20,20,20,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
                     
-                    <!-- Investments button -->
-                    <Button x:Name="InvestmentsButton" Content="📈 Yatırımlar" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
-                            Click="InvestmentsButton_Click" Background="Transparent" Foreground="#ECF0F1" BorderThickness="0" Margin="0,0,0,5">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                    <TextBlock x:Name="ViewTitle" Text="Ana Ekran (Özet)" FontSize="24" FontWeight="SemiBold" Foreground="#333" VerticalAlignment="Center"/>
                     
-                    <!-- Reports button -->
-                    <Button x:Name="ReportsButton" Content="📉 Raporlar" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
-                            Click="ReportsButton_Click" Background="Transparent" Foreground="#ECF0F1" BorderThickness="0" Margin="0,0,0,5">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Global Date Filter -->
+                        <Border x:Name="GlobalDateFilterPanel" Background="#F8F9F9" CornerRadius="8" Padding="12,6" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,15,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📅" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="15"/>
+                                <ComboBox x:Name="MonthFilter" Width="120" Margin="0,0,10,0" 
+                                          SelectionChanged="Filter_SelectionChanged"
+                                          Background="White" BorderBrush="#BDC3C7" Foreground="#2C3E50" 
+                                          Padding="8,4" VerticalContentAlignment="Center" FontSize="14" FontWeight="SemiBold">
+                                        <ComboBox.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="4"/>
+                                            </Style>
+                                        </ComboBox.Resources>
+                                </ComboBox>
+                                <ComboBox x:Name="YearFilter" Width="90" 
+                                          SelectionChanged="Filter_SelectionChanged"
+                                          Background="White" BorderBrush="#BDC3C7" Foreground="#2C3E50" 
+                                          Padding="8,4" VerticalContentAlignment="Center" FontSize="14" FontWeight="SemiBold">
+                                        <ComboBox.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="4"/>
+                                            </Style>
+                                        </ComboBox.Resources>
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
 
-                <!-- Bottom Menu -->
-                <StackPanel Grid.Row="3" Margin="10,0,10,20">
-                    <Button x:Name="SettingsButton" Content="⚙️ Ayarlar" Padding="15,12" FontSize="14" HorizontalContentAlignment="Left"
-                            Click="SettingsButton_Click" Background="Transparent" Foreground="#95A5A6" BorderThickness="0">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <!-- ==================== MAIN CONTENT AREA ==================== -->
-        <Grid Grid.Column="1" Background="#F4F6F9">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/> <!-- Top Bar -->
-                <RowDefinition Height="*"/>    <!-- Actual Content -->
-                <RowDefinition Height="Auto"/> <!-- Status Bar -->
-            </Grid.RowDefinitions>
-
-            <!-- Top Bar (Contextual Header + Add Button) -->
-            <Grid Grid.Row="0" Margin="20,20,20,20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                
-                <TextBlock x:Name="ViewTitle" Text="Ana Ekran (Özet)" FontSize="24" FontWeight="SemiBold" Foreground="#333" VerticalAlignment="Center"/>
-                
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <!-- Global Date Filter -->
-                    <Border x:Name="GlobalDateFilterPanel" Background="#F8F9F9" CornerRadius="8" Padding="12,6" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,15,0">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📅" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="15"/>
-                            <ComboBox x:Name="MonthFilter" Width="120" Margin="0,0,10,0" 
-                                      SelectionChanged="Filter_SelectionChanged"
-                                      Background="White" BorderBrush="#BDC3C7" Foreground="#2C3E50" 
-                                      Padding="8,4" VerticalContentAlignment="Center" FontSize="14" FontWeight="SemiBold">
-                                    <ComboBox.Resources>
+                        <!-- ==================== GLOBAL SEARCH BOX ==================== -->
+                        <Border x:Name="SearchBoxBorder" Background="White" CornerRadius="20" 
+                                BorderBrush="#D5DBDB" BorderThickness="1" Padding="4,0" Margin="0,0,15,0"
+                                Width="280" Height="36">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- Magnifying Glass Icon -->
+                                <TextBlock Grid.Column="0" Text="🔍" FontSize="14" VerticalAlignment="Center" 
+                                           Margin="8,0,6,0" Foreground="#95A5A6" IsHitTestVisible="False"/>
+                                <!-- Search TextBox -->
+                                <TextBox x:Name="SearchTextBox" Grid.Column="1" BorderThickness="0" Background="Transparent"
+                                         FontSize="13" Foreground="#2C3E50" VerticalAlignment="Center" Padding="0,4"
+                                         TextChanged="SearchTextBox_TextChanged"
+                                         GotFocus="SearchTextBox_GotFocus"
+                                         PreviewKeyDown="SearchTextBox_PreviewKeyDown"/>
+                                <!-- Placeholder -->
+                                <TextBlock x:Name="SearchPlaceholder" Grid.Column="1" Text="Ara... (Ctrl+K)" 
+                                           FontSize="13" Foreground="#B0B8BF" VerticalAlignment="Center" Padding="0,4"
+                                           IsHitTestVisible="False" FontStyle="Italic"/>
+                                <!-- Clear Button -->
+                                <Button x:Name="SearchClearButton" Grid.Column="2" Content="✕" FontSize="11" 
+                                        Foreground="#95A5A6" Background="Transparent" BorderThickness="0" 
+                                        Cursor="Hand" Padding="6,0" VerticalAlignment="Center" Visibility="Collapsed"
+                                        Click="SearchClear_Click">
+                                    <Button.Resources>
                                         <Style TargetType="Border">
-                                            <Setter Property="CornerRadius" Value="4"/>
+                                            <Setter Property="CornerRadius" Value="10"/>
                                         </Style>
-                                    </ComboBox.Resources>
-                            </ComboBox>
-                            <ComboBox x:Name="YearFilter" Width="90" 
-                                      SelectionChanged="Filter_SelectionChanged"
-                                      Background="White" BorderBrush="#BDC3C7" Foreground="#2C3E50" 
-                                      Padding="8,4" VerticalContentAlignment="Center" FontSize="14" FontWeight="SemiBold">
-                                    <ComboBox.Resources>
-                                        <Style TargetType="Border">
-                                            <Setter Property="CornerRadius" Value="4"/>
-                                        </Style>
-                                    </ComboBox.Resources>
-                            </ComboBox>
-                        </StackPanel>
-                    </Border>
+                                    </Button.Resources>
+                                </Button>
+                            </Grid>
+                        </Border>
 
-                    <Button x:Name="AddButton" Content="+ Yeni İşlem Ekle" Padding="20,8" FontSize="14" FontWeight="Bold"
-                            Click="AddButton_Click" Background="#27AE60" Foreground="White" BorderThickness="0" Cursor="Hand">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="20"/> <!-- Pill shape -->
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                </StackPanel>
+                        <!-- Search Results Popup -->
+                        <Popup x:Name="SearchResultsPopup" PlacementTarget="{Binding ElementName=SearchBoxBorder}" 
+                               Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
+                               HorizontalOffset="0" VerticalOffset="4"
+                               Closed="SearchResultsPopup_Closed">
+                            <Border Background="White" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1"
+                                    Width="380" MaxHeight="420">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="#000000" Opacity="0.12" BlurRadius="16" ShadowDepth="4"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <!-- No Results Message -->
+                                    <TextBlock x:Name="SearchNoResults" Text="Sonuç bulunamadı" 
+                                               FontSize="13" Foreground="#95A5A6" FontStyle="Italic"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Margin="20" Visibility="Collapsed"/>
+                                    <!-- Loading Indicator -->
+                                    <TextBlock x:Name="SearchLoading" Text="Aranıyor..." 
+                                               FontSize="13" Foreground="#3498DB" FontStyle="Italic"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Margin="20" Visibility="Collapsed"/>
+                                    <!-- Results List -->
+                                    <ScrollViewer x:Name="SearchResultsScroll" VerticalScrollBarVisibility="Auto" MaxHeight="400">
+                                        <ItemsControl x:Name="SearchResultsList">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel>
+                                                        <!-- Group Header -->
+                                                        <Border Background="#F0F3F5" Padding="12,8" BorderBrush="#E8ECF0" BorderThickness="0,0,0,1">
+                                                            <TextBlock Text="{Binding GroupTitle}" FontSize="12" FontWeight="Bold" 
+                                                                       Foreground="#2C3E50"/>
+                                                        </Border>
+                                                        <!-- Group Results -->
+                                                        <ItemsControl ItemsSource="{Binding Results}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Border x:Name="ResultItemBorder" Background="Transparent" Padding="12,8" 
+                                                                            Cursor="Hand" BorderBrush="#F0F0F0" BorderThickness="0,0,0,1"
+                                                                            MouseLeftButtonUp="SearchResultItem_Click"
+                                                                            MouseEnter="SearchResultItem_MouseEnter"
+                                                                            MouseLeave="SearchResultItem_MouseLeave">
+                                                                        <Grid>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="Auto"/>
+                                                                                <ColumnDefinition Width="*"/>
+                                                                                <ColumnDefinition Width="Auto"/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <!-- Icon -->
+                                                                            <TextBlock Grid.Column="0" Text="{Binding Icon}" FontSize="16" 
+                                                                                       VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                                                            <!-- Title + Subtitle -->
+                                                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                                                <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" 
+                                                                                           Foreground="#2C3E50" TextTrimming="CharacterEllipsis"/>
+                                                                                <TextBlock Text="{Binding Subtitle}" FontSize="11" 
+                                                                                           Foreground="#7F8C8D" TextTrimming="CharacterEllipsis" Margin="0,2,0,0"/>
+                                                                            </StackPanel>
+                                                                            <!-- Amount -->
+                                                                            <TextBlock Grid.Column="2" Text="{Binding Amount}" FontSize="13" FontWeight="SemiBold"
+                                                                                       Foreground="{Binding AmountColor}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                                                        </Grid>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Border>
+                        </Popup>
+
+                        <Button x:Name="AddButton" Content="+ Yeni İşlem Ekle" Padding="20,8" FontSize="14" FontWeight="Bold"
+                                Click="AddButton_Click" Background="#27AE60" Foreground="White" BorderThickness="0" Cursor="Hand">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="20"/> <!-- Pill shape -->
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Main Content Area (Dynamic) -->
+                <ContentControl x:Name="MainContentArea" Grid.Row="1"/>
+
+                <!-- Status Bar -->
+                <StatusBar Grid.Row="2" Background="#ECF0F1" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
+                    <StatusBarItem>
+                        <TextBlock x:Name="StatusText" Text="Hazır" Foreground="#7F8C8D"/>
+                    </StatusBarItem>
+                    <StatusBarItem HorizontalAlignment="Right">
+                        <TextBlock x:Name="VersionText" Text="v0.9.4" Foreground="#95A5A6" Margin="0,0,10,0" FontSize="11"/>
+                    </StatusBarItem>
+                </StatusBar>
             </Grid>
-
-            <!-- Main Content Area (Dynamic) -->
-            <ContentControl x:Name="MainContentArea" Grid.Row="1"/>
-
-            <!-- Status Bar -->
-            <StatusBar Grid.Row="2" Background="#ECF0F1" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
-                <StatusBarItem>
-                    <TextBlock x:Name="StatusText" Text="Hazır" Foreground="#7F8C8D"/>
-                </StatusBarItem>
-                <StatusBarItem HorizontalAlignment="Right">
-                    <TextBlock x:Name="VersionText" Text="v0.9.4" Foreground="#95A5A6" Margin="0,0,10,0" FontSize="11"/>
-                </StatusBarItem>
-            </StatusBar>
         </Grid>
 
         <!-- ==================== LOCK SCREEN OVERLAY ==================== -->
-        <Grid x:Name="LockScreenOverlay" Grid.ColumnSpan="2" Visibility="Collapsed" Background="#D9E5E7EB" Panel.ZIndex="999">
+        <Grid x:Name="LockScreenOverlay" Grid.ColumnSpan="2" Visibility="Collapsed" Background="#F4F6F9" Panel.ZIndex="999">
             <Border Background="White" Width="380" CornerRadius="12" Padding="40" 
                     HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Border.Effect>
@@ -186,6 +300,7 @@
                 </Border.Effect>
 
                 <StackPanel>
+                    <TextBlock Text="v1.0.0" Foreground="#BDC3C7" FontSize="10" VerticalAlignment="Center" Margin="0,0,10,0"/>
                     <TextBlock Text="🔒" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                     <TextBlock Text="Oturum Kilitlendi" FontSize="22" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center" Margin="0,0,0,5"/>
                     <TextBlock Text="Güvenliğiniz için uygulama kilitlendi. Devam etmek için şifrenizi girin." 

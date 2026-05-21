@@ -1,0 +1,122 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
+             x:Class="FinTrack.Avalonia.Views.MainAppView"
+             x:DataType="vm:MainAppViewModel">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Sidebar -->
+            <ColumnDefinition Width="220"/>
+            <!-- Main Content Area -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ==================== SIDEBAR ==================== -->
+        <Border Grid.Column="0" Background="#2C3E50">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/> <!-- Logo/Title -->
+                    <RowDefinition Height="Auto"/> <!-- Main Menu -->
+                    <RowDefinition Height="*"/>    <!-- Spacer -->
+                    <RowDefinition Height="Auto"/> <!-- Bottom Menu/Settings -->
+                </Grid.RowDefinitions>
+
+                <!-- Sidebar Header -->
+                <StackPanel Grid.Row="0" Margin="20,30,20,40">
+                    <TextBlock Text="FinTrack" FontSize="26" FontWeight="Bold" Foreground="White" TextAlignment="Center"/>
+                    <TextBlock Text="Kişisel Finans Takip" FontSize="12" Foreground="#95A5A6" TextAlignment="Center" Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <!-- Main Menu Items -->
+                <StackPanel Grid.Row="1" Margin="10,0" Spacing="5">
+                    <Button Content="🏠 Ana Ekran (Özet)" Command="{Binding SwitchToDashboardCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="15,12" FontSize="14" Background="#34495E" Foreground="White" CornerRadius="5"/>
+
+                    <Button Content="📊 Bütçe" Command="{Binding SwitchToBudgetCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="15,12" FontSize="14" Background="Transparent" Foreground="#ECF0F1" CornerRadius="5"/>
+
+                    <Button Content="💳 Kartlarım" Command="{Binding SwitchToCardsCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="15,12" FontSize="14" Background="Transparent" Foreground="#ECF0F1" CornerRadius="5"/>
+
+                    <Button Content="🏦 Hesaplarım" Command="{Binding SwitchToAccountsCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="15,12" FontSize="14" Background="Transparent" Foreground="#ECF0F1" CornerRadius="5"/>
+                    
+                    <Button Content="📈 Yatırımlar" Command="{Binding SwitchToInvestmentsCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="15,12" FontSize="14" Background="Transparent" Foreground="#ECF0F1" CornerRadius="5"/>
+                    
+                    <Button Content="📉 Raporlar" Command="{Binding SwitchToReportsCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="15,12" FontSize="14" Background="Transparent" Foreground="#ECF0F1" CornerRadius="5"/>
+                </StackPanel>
+
+                <!-- Bottom Menu -->
+                <StackPanel Grid.Row="3" Margin="10,0,10,20">
+                    <Button Content="⚙️ Ayarlar" Command="{Binding SwitchToSettingsCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="15,12" FontSize="14" Background="Transparent" Foreground="#95A5A6" CornerRadius="5"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ==================== MAIN CONTENT AREA ==================== -->
+        <Grid Grid.Column="1" Background="#F4F6F9">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Top Bar -->
+                <RowDefinition Height="*"/>    <!-- Actual Content -->
+            </Grid.RowDefinitions>
+
+            <!-- Top Bar -->
+            <Grid Grid.Row="0" Margin="20,20,20,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Text="{Binding ViewTitle}" FontSize="24" FontWeight="SemiBold" Foreground="#333" VerticalAlignment="Center"/>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Spacing="15">
+                    
+                    <!-- Date Filter -->
+                    <Border Background="#F8F9F9" CornerRadius="8" Padding="12,6" BorderBrush="#E0E0E0" BorderThickness="1"
+                            IsVisible="{Binding IsDateFilterVisible}">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="📅" VerticalAlignment="Center" FontSize="15"/>
+                            <ComboBox ItemsSource="{Binding Months}" SelectedIndex="{Binding SelectedMonthIndex}" Width="120" CornerRadius="4"/>
+                            <ComboBox ItemsSource="{Binding Years}" SelectedItem="{Binding SelectedYear}" Width="90" CornerRadius="4"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Global Search Box -->
+                    <Border Background="White" CornerRadius="20" BorderBrush="#D5DBDB" BorderThickness="1" Padding="10,4" Width="250" Height="36">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="🔍" FontSize="14" VerticalAlignment="Center" Foreground="#95A5A6" Margin="0,0,8,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding SearchText}" PlaceholderText="Ara... (Ctrl+K)" 
+                                     BorderThickness="0" Background="Transparent" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Add Transaction Button -->
+                    <Button Content="+ Yeni İşlem Ekle" Padding="20,8" FontSize="14" FontWeight="Bold"
+                            Background="#27AE60" Foreground="White" CornerRadius="20" Click="AddTransactionButton_Click"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Content Area using ViewLocator -->
+            <ContentControl Grid.Row="1" Content="{Binding CurrentView}" Margin="20,0,20,20"/>
+            
+        </Grid>
+    </Grid>
+</UserControl>

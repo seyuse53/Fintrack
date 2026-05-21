@@ -1,0 +1,124 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             xmlns:controls="using:FinTrack.Avalonia.Controls"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:Class="FinTrack.Avalonia.Views.InvestmentsView"
+             x:DataType="vm:InvestmentsViewModel">
+
+    <Grid Margin="10" RowDefinitions="Auto,Auto,*">
+        
+        <!-- Summary Cards Row -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Total Portfolio Value Card -->
+            <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Toplam Portföy" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding TotalPortfolioValue, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" Foreground="#2C3E50"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Total Cost Basis Card -->
+            <Border Grid.Column="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Toplam Maliyet" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding TotalCostBasis, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" Foreground="#34495E"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Net Profit Card -->
+            <Border Grid.Column="4" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Net Kâr / Zarar" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="{Binding TotalProfit, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" 
+                                   Foreground="{Binding TotalProfit, Converter={x:Static ObjectConverters.IsNull}}"/> <!-- We can handle colors better but keeping simple for now -->
+                        <TextBlock Text="{Binding TotalProfitPercentage, StringFormat='({0:N1}%)'}" FontSize="16" VerticalAlignment="Bottom" Margin="0,0,0,4"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Top Performer Card -->
+            <Border Grid.Column="6" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="En Çok Kazandıran" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding TopPerformerText}" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding TopPerformerProfitPercentage, StringFormat='%{0:N1}'}" FontSize="14" FontWeight="SemiBold" Foreground="#27AE60" Margin="0,5,0,0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="1" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Margin="0,0,0,15">
+            <Grid ColumnDefinitions="Auto,*,Auto,10,Auto,10,Auto">
+                
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock Text="Kategori:" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="#34495E"/>
+                    <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" Width="160" CornerRadius="4"/>
+                </StackPanel>
+
+                <Button Grid.Column="2" Content="📊 Vergi Raporu" Command="{Binding OpenTaxReportCommand}" Background="#8E44AD" Foreground="White" CornerRadius="6" Padding="15,8"/>
+                <Button Grid.Column="4" Content="🔄 Fiyatları Çek (API)" Background="#3498DB" Foreground="White" CornerRadius="6" Padding="15,8"/>
+                <Button Grid.Column="6" Content="➕ Yatırım Al/Sat" Background="#27AE60" Foreground="White" CornerRadius="6" Padding="15,8" Click="ManageInvestmentsButton_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- Investments List -->
+        <ScrollViewer Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding FilteredInvestments}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Margin="0,0,0,10">
+                            <Grid ColumnDefinitions="2*,1.5*,1.5*,2*,2*,1*">
+                                
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Symbol}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                                    <TextBlock Text="{Binding Name}" FontSize="13" Foreground="#7F8C8D" Margin="0,2,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Miktar" FontSize="11" Foreground="#95A5A6"/>
+                                    <TextBlock Text="{Binding TotalAmount}" FontSize="15" FontWeight="SemiBold" Foreground="#34495E"/>
+                                    <TextBlock Text="{Binding PortfolioWeight, StringFormat='Ağırlık: {0}'}" FontSize="11" Foreground="#BDC3C7" Margin="0,2,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                    <TextBlock Text="Maliyet / Anlık Fiyat" FontSize="11" Foreground="#95A5A6"/>
+                                    <TextBlock Text="{Binding AverageCost, StringFormat='{}{0:N2}'}" FontSize="14" Foreground="#34495E"/>
+                                    <TextBlock Text="{Binding CurrentPrice, StringFormat='{}{0:N2}'}" FontSize="14" FontWeight="SemiBold" Foreground="#2980B9" Margin="0,2,0,0"/>
+                                </StackPanel>
+
+                                <!-- Sparkline Grafiği -->
+                                <controls:AvaloniaSparklineControl Grid.Column="3" Height="45" Margin="15,0"
+                                      Data="{Binding SparklineData}" ShowFill="True" ShowLabels="False" ShowTooltip="True"/>
+
+                                <StackPanel Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,15,0">
+                                    <TextBlock Text="Toplam Değer / Kâr" FontSize="11" Foreground="#95A5A6" HorizontalAlignment="Right"/>
+                                    <TextBlock Text="{Binding CurrentValue, StringFormat='{}{0:C2}'}" FontSize="15" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Right"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,2,0,0" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding Profit, StringFormat='{}{0:C2}'}" FontSize="13"/>
+                                        <TextBlock Text="{Binding ProfitPercentage, StringFormat='({0:N1}%)'}" FontSize="13"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <Button Grid.Column="5" Content="İşlemler" VerticalAlignment="Center" HorizontalAlignment="Right" Background="#F4F6F9" Foreground="#34495E" CornerRadius="4" Padding="15,8"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+    </Grid>
+</UserControl>

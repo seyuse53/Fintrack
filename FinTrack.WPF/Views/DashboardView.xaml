@@ -16,9 +16,11 @@
         <Grid Grid.Row="0" Margin="0,0,0,30">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="15"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
@@ -43,6 +45,14 @@
                 <StackPanel>
                     <TextBlock Text="Toplam Varlık (Nakit + Banka)" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
                     <TextBlock x:Name="BalanceCardText" Text="₺0,00" FontSize="24" FontWeight="Bold" Foreground="#2980B9"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Investment Portfolio Card -->
+            <Border Grid.Column="6" Background="#FAF6FB" CornerRadius="12" BorderBrush="#E8DAEF" BorderThickness="1" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Yatırım Portföyü" FontSize="14" Foreground="#8E44AD" Margin="0,0,0,5"/>
+                    <TextBlock x:Name="PortfolioCardText" Text="₺0,00" FontSize="24" FontWeight="Bold" Foreground="#8E44AD"/>
                 </StackPanel>
             </Border>
         </Grid>
@@ -83,7 +93,7 @@
                             <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat=dd.MM}" Width="50"/>
                             <DataGridTextColumn Header="Kategori" Binding="{Binding Category.Name}" Width="85"/>
                             <DataGridTextColumn Header="Açıklama" Binding="{Binding Description}" Width="*"/>
-                            <DataGridTextColumn Header="Tutar" Binding="{Binding Amount, StringFormat='₺{0:N2}'}" Width="85" FontWeight="Bold">
+                            <DataGridTextColumn Header="Tutar" Binding="{Binding DisplayAmount, StringFormat='₺{0:N2}'}" Width="85" FontWeight="Bold">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Foreground" Value="#27AE60"/>
@@ -155,7 +165,7 @@
                             <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat=dd.MM}" Width="50"/>
                             <DataGridTextColumn Header="Kategori" Binding="{Binding Category.Name}" Width="85"/>
                             <DataGridTextColumn Header="Açıklama" Binding="{Binding Description}" Width="*"/>
-                            <DataGridTextColumn Header="Tutar" Binding="{Binding Amount, StringFormat='₺{0:N2}'}" Width="85" FontWeight="Bold">
+                            <DataGridTextColumn Header="Tutar" Binding="{Binding DisplayAmount, StringFormat='₺{0:N2}'}" Width="85" FontWeight="Bold">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Foreground" Value="#34495E"/>
@@ -194,7 +204,7 @@
                             <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat=dd.MM}" Width="50"/>
                             <DataGridTextColumn Header="Kategori" Binding="{Binding Category.Name}" Width="85"/>
                             <DataGridTextColumn Header="Açıklama" Binding="{Binding Description}" Width="*"/>
-                            <DataGridTextColumn Header="Tutar" Binding="{Binding Amount, StringFormat='₺{0:N2}'}" Width="85" FontWeight="Bold">
+                            <DataGridTextColumn Header="Tutar" Binding="{Binding DisplayAmount, StringFormat='₺{0:N2}'}" Width="85" FontWeight="Bold">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Foreground" Value="#E74C3C"/>

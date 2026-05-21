@@ -56,8 +56,9 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Banka" Binding="{Binding BankName}" Width="*"/>
                 <DataGridTextColumn Header="Hesap Adı/Türü" Binding="{Binding AccountName}" Width="*"/>
-                <DataGridTextColumn Header="Açılış Bakiyesi" Binding="{Binding InitialBalance, StringFormat='₺{0:N2}'}" Width="110"/>
+                <DataGridTextColumn Header="Açılış Bakiyesi" Binding="{Binding OpeningBalance, StringFormat='₺{0:N2}'}" Width="110"/>
                 <DataGridTextColumn Header="IBAN" Binding="{Binding IBAN}" Width="100"/>
+                <DataGridCheckBoxColumn Header="Kripto" Binding="{Binding IsCryptoExchange}" Width="45"/>
                 <DataGridCheckBoxColumn Header="Aktif" Binding="{Binding IsActive}" Width="45"/>
             </DataGrid.Columns>
         </DataGrid>
@@ -72,14 +73,17 @@
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="4"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     
-                    <TextBox x:Name="BankNameBox" Grid.Column="0" Style="{StaticResource WatermarkTextBox}" Tag="Banka Adı (örn. Garanti)" FontSize="12"
-                             ToolTip="Banka Adı (örn. Garanti BBVA)" TextChanged="InputBox_TextChanged"/>
-                    <TextBox x:Name="AccountNameBox" Grid.Column="2" Style="{StaticResource WatermarkTextBox}" Tag="Hesap / Kart Türü" FontSize="12"
-                             ToolTip="Hesap Türü (örn. Maaş Hesabı)" TextChanged="InputBox_TextChanged"/>
+                    <TextBox x:Name="BankNameBox" Grid.Column="0" Style="{StaticResource WatermarkTextBox}" Tag="Banka / Borsa (örn. BtcTurk)" FontSize="12"
+                             ToolTip="Kurum Adı (örn. Garanti BBVA, BtcTurk)" TextChanged="InputBox_TextChanged"/>
+                    <TextBox x:Name="AccountNameBox" Grid.Column="2" Style="{StaticResource WatermarkTextBox}" Tag="Hesap / Cüzdan Adı" FontSize="12"
+                             ToolTip="Hesap Türü (örn. TRY Cüzdanı)" TextChanged="InputBox_TextChanged"/>
                     <TextBox x:Name="InitialBalanceBox" Grid.Column="4" Style="{StaticResource WatermarkTextBox}" Tag="Açılış ₺" FontSize="12"
                              ToolTip="Açılış Bakiyesi" TextChanged="InputBox_TextChanged"/>
+                    <CheckBox x:Name="IsCryptoCheckBox" Grid.Column="6" Content="🪙 Kripto" VerticalAlignment="Center" FontSize="12" Foreground="#34495E" ToolTip="Bu hesabın bir Kripto Para Borsası olduğunu belirtir."/>
                 </Grid>
 
                 <Grid Margin="0,10,0,0">
@@ -91,18 +95,24 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="4"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="4"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     
                     <TextBox x:Name="IbanBox" Grid.Column="0" Style="{StaticResource WatermarkTextBox}" Tag="IBAN (İsteğe Bağlı)" FontSize="12"
                              ToolTip="IBAN Numarası (İsteğe Bağlı)" TextChanged="IbanBox_TextChanged"/>
                     
-                    <Button x:Name="AddAccountBtn" Grid.Column="2" Content="➕ Ekle" FontSize="11"
+                    <Button x:Name="ResetOpeningBtn" Grid.Column="2" Content="🔄 Sıfırla" FontSize="11"
+                            Padding="6,4" Background="#7F8C8D" Foreground="White" BorderThickness="0"
+                            Click="ResetOpening_Click" IsEnabled="False" ToolTip="Açılış bakiyesini sıfırlarsınız"/>
+
+                    <Button x:Name="AddAccountBtn" Grid.Column="4" Content="➕ Ekle" FontSize="11"
                             Padding="6,4" Background="#27AE60" Foreground="White" BorderThickness="0"
                             Click="AddAccount_Click" IsEnabled="False"/>
-                    <Button x:Name="UpdateAccountBtn" Grid.Column="4" Content="💾 Güncelle" FontSize="11"
+                    <Button x:Name="UpdateAccountBtn" Grid.Column="6" Content="💾 Güncelle" FontSize="11"
                             Padding="6,4" Background="#2980B9" Foreground="White" BorderThickness="0"
                             Click="UpdateAccount_Click" IsEnabled="False"/>
-                    <Button x:Name="ToggleActiveBtn" Grid.Column="6" Content="🔄 Aktif" FontSize="11"
+                    <Button x:Name="ToggleActiveBtn" Grid.Column="8" Content="🔄 Aktif" FontSize="11"
                             Padding="6,4" Background="#F39C12" Foreground="White" BorderThickness="0"
                             Click="ToggleActive_Click" IsEnabled="False"/>
                 </Grid>

@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="FinTrack.Avalonia.Views.LoginView"
+             x:DataType="vm:LoginViewModel">
+
+    <Grid Background="#F5F5F5">
+        <Border BorderBrush="#DDDDDD" BorderThickness="1" CornerRadius="5" Background="White" Padding="30"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Width="380">
+            <StackPanel Spacing="15">
+                <TextBlock Text="FinTrack'e Giriş Yapın" FontSize="20" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" IsVisible="{Binding !IsFirstLaunch}"/>
+                <TextBlock Text="Yeni Profil Kurulumu" FontSize="20" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" IsVisible="{Binding IsFirstLaunch}"/>
+
+                <!-- Profil Seçimi -->
+                <TextBlock Text="Profil Seçin:" Foreground="#555555" Margin="0,0,0,-10"/>
+                <Grid ColumnDefinitions="*,Auto,Auto">
+                    <ComboBox Grid.Column="0" ItemsSource="{Binding Profiles}" 
+                              SelectedItem="{Binding SelectedProfile}"
+                              HorizontalAlignment="Stretch" Height="32" VerticalContentAlignment="Center"/>
+                    
+                    <Button Grid.Column="1" Content="+" Width="32" Height="32" Margin="5,0,0,0"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            ToolTip.Tip="Yeni Profil Ekle"/>
+                    
+                    <Button Grid.Column="2" Content="-" Width="32" Height="32" Margin="5,0,0,0"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                            Background="#F39C12" Foreground="White" FontWeight="Bold"
+                            ToolTip.Tip="Profili Listeden Kaldır"/>
+                </Grid>
+
+                <TextBlock Text="Şifrenizi Girin:" Foreground="#555555" Margin="0,0,0,-10"/>
+                <TextBox Text="{Binding Password}" PasswordChar="•" Height="32" FontSize="16" VerticalContentAlignment="Center"/>
+
+                <StackPanel IsVisible="{Binding IsFirstLaunch}" Spacing="15">
+                    <TextBlock Text="Şifrenizi Tekrar Girin:" Foreground="#555555" Margin="0,0,0,-10"/>
+                    <TextBox Text="{Binding ConfirmPassword}" PasswordChar="•" Height="32" FontSize="16" VerticalContentAlignment="Center"/>
+                </StackPanel>
+
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="#E74C3C" IsVisible="{Binding HasError}" TextWrapping="Wrap"/>
+
+                <Button Content="Giriş" Command="{Binding LoginCommand}" IsVisible="{Binding !IsFirstLaunch}"
+                        IsDefault="True"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="38"
+                        Background="#007ACC" Foreground="White" FontSize="16" FontWeight="Bold" CornerRadius="3" Margin="0,10,0,10"/>
+                
+                <Button Content="Kurulumu Tamamla" Command="{Binding LoginCommand}" IsVisible="{Binding IsFirstLaunch}"
+                        IsDefault="True"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="38"
+                        Background="#27AE60" Foreground="White" FontSize="16" FontWeight="Bold" CornerRadius="3" Margin="0,10,0,10"/>
+
+                <Grid ColumnDefinitions="*,*">
+                    <Button Grid.Column="0" Content="Şifremi Unuttum" Background="Transparent" Foreground="#007ACC" Padding="0" Cursor="Hand" HorizontalAlignment="Left" BorderThickness="0"/>
+                    <Button Grid.Column="1" Content="Profili Sil" Background="Transparent" Foreground="#E74C3C" Padding="0" Cursor="Hand" HorizontalAlignment="Right" BorderThickness="0"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+        
+        <!-- Sürüm Bilgisi -->
+        <TextBlock Text="v0.9.4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Foreground="#999999" FontSize="11"/>
+    </Grid>
+</UserControl>

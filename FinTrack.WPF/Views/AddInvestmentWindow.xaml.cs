@@ -17,6 +17,7 @@ namespace FinTrack.WPF.Views
         {
             InitializeComponent();
             _context = context;
+            TransactionDatePicker.SelectedDate = DateTime.Now;
             Loaded += async (s, e) => await LoadBankAccountsAsync();
         }
 
@@ -39,11 +40,12 @@ namespace FinTrack.WPF.Views
                     .ToListAsync();
 
                 var items = new System.Collections.Generic.List<object>();
-                items.Add(new { Id = "0", DisplayInfo = "-- Seçiniz (Opsiyonel) --", Balance = 0m });
+                decimal cashBalance = UIHelper.CalculateCashBalance(_context);
+                items.Add(new { Id = "0", DisplayInfo = $"💵 Nakit (Cüzdan/Kasa) ({cashBalance:C2})", Balance = cashBalance });
 
                 foreach (var account in accounts)
                 {
-                    decimal currentBalance = account.InitialBalance;
+                    decimal currentBalance = 0; // Legacy InitialBalance is moved to transactions
 
                     // Normal işlemler
                     foreach (var t in allBankTransactions.Where(x => x.BankAccountId == account.Id))
@@ -60,7 +62,10 @@ namespace FinTrack.WPF.Views
                         else if (invT.Type == InvestmentTransactionType.Sell) currentBalance += invT.TotalCost;
                     }
 
-                    items.Add(new { Id = "B_" + account.Id, DisplayInfo = $"🏦 {account.BankName} - {account.AccountName} ({currentBalance:C2})", Balance = currentBalance });
+                    // İkona karar ver
+                    string icon = account.IsCryptoExchange ? "🪙" : "🏦";
+
+                    items.Add(new { Id = "B_" + account.Id, DisplayInfo = $"{icon} {account.BankName} - {account.AccountName} ({currentBalance:C2})", Balance = currentBalance });
                 }
 
                 // Kredi Kartları
@@ -106,6 +111,53 @@ namespace FinTrack.WPF.Views
         private void NumberTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             UIHelper.FormatAmountTextBox(sender as System.Windows.Controls.TextBox);
+            UpdateCostPreview();
+        }
+
+        private void UpdateCostPreview()
+        {
+            try
+            {
+                UIHelper.TryParseAmount(AmountTextBox?.Text ?? "", out decimal amount);
+                UIHelper.TryParseAmount(UnitPriceTextBox?.Text ?? "", out decimal unitPrice);
+                UIHelper.TryParseAmount(FeeTextBox?.Text ?? "", out decimal fee);
+
+                decimal total = (amount * unitPrice) + fee;
+                if (TotalCostPreviewText != null)
+                    TotalCostPreviewText.Text = $"₺{total:N2}";
+            }
+            catch { /* Ignore parse errors during typing */ }
+        }
+
+        private async void SymbolTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            // Mevcut varlık varsa adını ve kategorisini otomatik doldur
+            string symbol = SymbolTextBox.Text.Trim().ToUpper();
+            if (string.IsNullOrEmpty(symbol)) return;
+
+            try
+            {
+                var existingAsset = await _context.InvestmentAssets.FirstOrDefaultAsync(a => a.Symbol == symbol);
+                if (existingAsset != null)
+                {
+                    if (string.IsNullOrEmpty(NameTextBox.Text))
+                        NameTextBox.Text = existingAsset.Name;
+
+                    // Kategori ComboBox'ı eşleştir
+                    if (!string.IsNullOrEmpty(existingAsset.Category))
+                    {
+                        foreach (System.Windows.Controls.ComboBoxItem item in CategoryComboBox.Items)
+                        {
+                            if (item.Content?.ToString() == existingAsset.Category)
+                            {
+                                CategoryComboBox.SelectedItem = item;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch { /* Ignore DB errors during auto-fill */ }
         }
 
         private async void Save_Click(object sender, RoutedEventArgs e)
@@ -139,6 +191,8 @@ namespace FinTrack.WPF.Views
                     MessageBox.Show("Lütfen geçerli bir masraf/komisyon tutarı giriniz (yoksa 0 yazınız).", "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
+
+                DateTime transactionDate = TransactionDatePicker.SelectedDate ?? DateTime.Now;
 
                 decimal totalCost = (amount * unitPrice) + fee;
                 int? bankAccountId = null;
@@ -187,6 +241,14 @@ namespace FinTrack.WPF.Views
                         }
                     }
                 }
+                else if (!string.IsNullOrEmpty(sourceId) && sourceId == "0")
+                {
+                    // Cash check
+                    if (!UIHelper.CheckCashLimit(_context, totalCost))
+                    {
+                        return; // Aborted by user
+                    }
+                }
 
                 // 2. Varlık var mı diye bakalım, yoksa yenisini yaratalım
                 var asset = await _context.InvestmentAssets.FirstOrDefaultAsync(a => a.Symbol == symbol);
@@ -226,7 +288,7 @@ namespace FinTrack.WPF.Views
                     UnitPrice = unitPrice,
                     Fee = fee,
                     TotalCost = totalCost,
-                    Date = DateTime.Now,
+                    Date = transactionDate,
                     Notes = $"Varlık alımı: {amount} {symbol} @ {unitPrice:C2} (Masraf: {fee:C2})",
                     LinkedBankAccountId = bankAccountId,
                     LinkedCreditCardAccountId = creditCardAccountId

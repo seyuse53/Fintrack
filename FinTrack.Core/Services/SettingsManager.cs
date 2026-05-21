@@ -10,7 +10,8 @@ namespace FinTrack.Core.Services
     {
         Manual = 0,
         YahooFinance = 1,
-        Custom = 2
+        Custom = 2,
+        GenelPara = 3
     }
 
     public class Settings
@@ -22,6 +23,14 @@ namespace FinTrack.Core.Services
         public ApiProviderType PricingApiProvider { get; set; } = ApiProviderType.Manual;
         public string? CustomApiUrl { get; set; }
 
+        // Kategori bazlı API sağlayıcıları (yazılımdan değiştirmeden ayarlanabilir)
+        public ApiProviderType DovizProvider { get; set; } = ApiProviderType.GenelPara;
+        public ApiProviderType AltinProvider { get; set; } = ApiProviderType.GenelPara;
+        public ApiProviderType HisseProvider { get; set; } = ApiProviderType.YahooFinance;
+        public ApiProviderType KriptoProvider { get; set; } = ApiProviderType.YahooFinance;
+        public ApiProviderType FonProvider { get; set; } = ApiProviderType.Manual;
+        public ApiProviderType DigerProvider { get; set; } = ApiProviderType.Manual;
+
         // Backup Settings
         public bool BackupEnabled { get; set; } = false;
         public string? BackupDirectory { get; set; }
@@ -31,13 +40,47 @@ namespace FinTrack.Core.Services
         // Auto-Lock Settings
         public bool AutoLockEnabled { get; set; } = true;
         public int AutoLockTimeoutMinutes { get; set; } = 3;
+
+        // Vergi Oranları (%) — Ayarlar sayfasından değiştirilebilir
+        public decimal TaxRateHisseSenedi { get; set; } = 0m;      // BIST hisse alım-satım stopajı %0
+        public decimal TaxRateMKYO { get; set; } = 10m;            // MKYO (1 yıl altı) %10
+        public decimal TaxRateTemettü { get; set; } = 15m;         // Temettü stopajı %15
+        public decimal TaxRateDöviz { get; set; } = 0m;            // Döviz — beyan (stopaj yok)
+        public decimal TaxRateAltın { get; set; } = 0m;            // Altın — beyan (stopaj yok)
+        public decimal TaxRateKripto { get; set; } = 0m;           // Kripto — henüz düzenleme yok
+        public decimal TaxRateYurtDışı { get; set; } = 0m;         // Yurt dışı — beyan zorunlu
     }
 
     public static class SettingsManager
     {
         private static string _currentProfile = "Default";
-        private static string SettingsFile => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"settings_{_currentProfile}.json");
         private const string ProfilesFile = "profiles.json";
+
+        private static string GetAppDataFolder()
+        {
+            string localApp = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string path = Path.Combine(localApp, "FinTrack");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return path;
+        }
+
+        private static string GetSettingsFilePath(string profile)
+        {
+            string fileName = $"settings_{profile}.json";
+            string newPath = Path.Combine(GetAppDataFolder(), fileName);
+
+            // Migration: Move from BaseDirectory to AppData if exists
+            string oldPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+            if (File.Exists(oldPath) && !File.Exists(newPath))
+            {
+                try { File.Move(oldPath, newPath); } catch { }
+            }
+
+            return newPath;
+        }
+
+        private static string SettingsFile => GetSettingsFilePath(_currentProfile);
 
         // Holds the decrypted data key in memory while the app is running
         public static string? ActiveDataKey { get; private set; }
@@ -56,7 +99,16 @@ namespace FinTrack.Core.Services
 
         private static string GetProfilesPath()
         {
-            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProfilesFile);
+            string newPath = Path.Combine(GetAppDataFolder(), ProfilesFile);
+
+            // Migration
+            string oldPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProfilesFile);
+            if (File.Exists(oldPath) && !File.Exists(newPath))
+            {
+                try { File.Move(oldPath, newPath); } catch { }
+            }
+
+            return newPath;
         }
 
         public static List<string> GetProfiles()
@@ -86,7 +138,7 @@ namespace FinTrack.Core.Services
             if (!profiles.Contains(profileName))
             {
                 profiles.Add(profileName);
-                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProfilesFile);
+                string path = GetProfilesPath();
                 File.WriteAllText(path, JsonSerializer.Serialize(profiles));
 
                 // Initialize settings for the new profile
@@ -134,8 +186,12 @@ namespace FinTrack.Core.Services
             try
             {
                 // Delete Settings File
-                string sFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"settings_{profileName}.json");
+                string sFile = GetSettingsFilePath(profileName);
                 if (File.Exists(sFile)) File.Delete(sFile);
+                
+                // Also check legacy location just in case migration hadn't happened
+                string oldSFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"settings_{profileName}.json");
+                if (File.Exists(oldSFile)) File.Delete(oldSFile);
 
                 if (deleteDatabase)
                 {
@@ -153,7 +209,7 @@ namespace FinTrack.Core.Services
                 if (profiles.Contains(profileName))
                 {
                     profiles.Remove(profileName);
-                    string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProfilesFile);
+                    string path = GetProfilesPath();
                     File.WriteAllText(path, JsonSerializer.Serialize(profiles));
                 }
             }
@@ -170,15 +226,24 @@ namespace FinTrack.Core.Services
                 var profiles = GetProfiles();
                 foreach (var profile in profiles)
                 {
-                    string sFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"settings_{profile}.json");
+                    string sFile = GetSettingsFilePath(profile);
                     if (File.Exists(sFile)) File.Delete(sFile);
+                    
+                    string oldSFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"settings_{profile}.json");
+                    if (File.Exists(oldSFile)) File.Delete(oldSFile);
                 }
 
-                string pFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProfilesFile);
+                string pFile = GetProfilesPath();
                 if (File.Exists(pFile)) File.Delete(pFile);
                 
-                string oldFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings.json");
+                string oldPFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ProfilesFile);
+                if (File.Exists(oldPFile)) File.Delete(oldPFile);
+                
+                string oldFile = Path.Combine(GetAppDataFolder(), "settings.json");
                 if (File.Exists(oldFile)) File.Delete(oldFile);
+
+                string legacyOldFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "settings.json");
+                if (File.Exists(legacyOldFile)) File.Delete(legacyOldFile);
 
                 if (deleteDatabase)
                 {
@@ -273,8 +338,11 @@ namespace FinTrack.Core.Services
             try
             {
                 // Ayar dosyasını sil (şifre ve anahtar buradadır)
-                string sFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"settings_{profileName}.json");
+                string sFile = GetSettingsFilePath(profileName);
                 if (File.Exists(sFile)) File.Delete(sFile);
+
+                string oldSFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"settings_{profileName}.json");
+                if (File.Exists(oldSFile)) File.Delete(oldSFile);
 
                 if (deleteDatabase)
                 {
@@ -330,6 +398,44 @@ namespace FinTrack.Core.Services
             SaveSettings(settings);
         }
 
+        public static ApiProviderType GetProviderForCategory(string? category)
+        {
+            var settings = LoadSettings();
+            return (category ?? "").Trim() switch
+            {
+                "Döviz" => settings.DovizProvider,
+                "Altın" => settings.AltinProvider,
+                "Hisse Senedi" => settings.HisseProvider,
+                "Kripto Para" => settings.KriptoProvider,
+                "Fon" => settings.FonProvider,
+                "Diğer" => settings.DigerProvider,
+                _ => settings.PricingApiProvider
+            };
+        }
+
+        public static void SaveCategoryProviders(
+            ApiProviderType doviz, ApiProviderType altin, ApiProviderType hisse,
+            ApiProviderType kripto, ApiProviderType fon, ApiProviderType diger)
+        {
+            var settings = LoadSettings();
+            settings.DovizProvider = doviz;
+            settings.AltinProvider = altin;
+            settings.HisseProvider = hisse;
+            settings.KriptoProvider = kripto;
+            settings.FonProvider = fon;
+            settings.DigerProvider = diger;
+
+            // Genel provider'ı en çok kullanılana göre ayarla (Yahoo varsa Yahoo)
+            if (hisse == ApiProviderType.YahooFinance || doviz == ApiProviderType.YahooFinance)
+                settings.PricingApiProvider = ApiProviderType.YahooFinance;
+            else if (doviz == ApiProviderType.GenelPara || altin == ApiProviderType.GenelPara)
+                settings.PricingApiProvider = ApiProviderType.GenelPara;
+            else
+                settings.PricingApiProvider = ApiProviderType.Manual;
+
+            SaveSettings(settings);
+        }
+
         public static bool IsPasswordSet()
         {
             var settings = LoadSettings();
@@ -350,6 +456,42 @@ namespace FinTrack.Core.Services
         {
             var settings = LoadSettings();
             return (settings.AutoLockEnabled, settings.AutoLockTimeoutMinutes);
+        }
+
+        // ==================== TAX SETTINGS ====================
+
+        public static decimal GetTaxRateForCategory(string? category)
+        {
+            var settings = LoadSettings();
+            return (category ?? "").Trim() switch
+            {
+                "Hisse Senedi" => settings.TaxRateHisseSenedi,
+                "Döviz" => settings.TaxRateDöviz,
+                "Altın" => settings.TaxRateAltın,
+                "Kripto Para" => settings.TaxRateKripto,
+                _ => 0m
+            };
+        }
+
+        public static decimal GetDividendTaxRate()
+        {
+            var settings = LoadSettings();
+            return settings.TaxRateTemettü;
+        }
+
+        public static void SaveTaxSettings(
+            decimal hisse, decimal mkyo, decimal temettü,
+            decimal döviz, decimal altın, decimal kripto, decimal yurtDışı)
+        {
+            var settings = LoadSettings();
+            settings.TaxRateHisseSenedi = hisse;
+            settings.TaxRateMKYO = mkyo;
+            settings.TaxRateTemettü = temettü;
+            settings.TaxRateDöviz = döviz;
+            settings.TaxRateAltın = altın;
+            settings.TaxRateKripto = kripto;
+            settings.TaxRateYurtDışı = yurtDışı;
+            SaveSettings(settings);
         }
 
         public static void SaveAutoLockSettings(bool enabled, int timeoutMinutes)

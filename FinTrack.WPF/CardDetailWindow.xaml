@@ -38,10 +38,10 @@
                 <DataGridTextColumn Header="Kart"      Binding="{Binding CreditCardAccount.CardLabel}" Width="90"/>
                 <DataGridTextColumn Header="Kategori"  Binding="{Binding Category.Name}" Width="100"/>
                 <DataGridTextColumn Header="Açıklama"  Binding="{Binding Description}"   Width="*"/>
-                <DataGridTextColumn Header="Tutar"     Binding="{Binding Amount, StringFormat='₺{0:N2}'}" Width="95" FontWeight="Bold">
+                <DataGridTextColumn Header="Tutar"     Binding="{Binding FormattedAmount}" Width="95" FontWeight="Bold">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="Foreground"   Value="#C62828"/>
+                            <Setter Property="Foreground"   Value="{Binding ForegroundColor}"/>
                             <Setter Property="TextAlignment" Value="Right"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>

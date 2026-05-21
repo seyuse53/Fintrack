@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             x:Class="FinTrack.Avalonia.Views.AddProfileView"
+             x:DataType="vm:AddProfileViewModel">
+
+    <Grid Background="#2C3E50">
+        <Border Background="White" CornerRadius="8" Padding="30"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Width="350">
+            <StackPanel Spacing="15">
+                <TextBlock Text="Yeni Profil Oluştur" FontSize="20" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center"/>
+                
+                <TextBlock Text="Profil Adı" FontWeight="SemiBold"/>
+                <TextBox Text="{Binding ProfileName}" PlaceholderText="Örn: Ev, Şirket, Kripto"/>
+
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" IsVisible="{Binding HasError}" TextWrapping="Wrap"/>
+
+                <Button Content="Oluştur" Command="{Binding SaveCommand}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                        Background="#3498DB" Foreground="White" FontSize="16" Padding="10" CornerRadius="4"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

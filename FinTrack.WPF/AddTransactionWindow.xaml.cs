@@ -23,8 +23,8 @@ namespace FinTrack.WPF
         {
             public required int Id { get; set; }
             public required string Name { get; set; }
-            public required string DisplayName { get; set; }
             public required TransactionType Type { get; set; }
+            public string TypeIcon => Type == TransactionType.Income ? "💰" : Type == TransactionType.Transfer ? "🔄" : "💸";
             public bool IsSubCategory { get; set; }
         }
 
@@ -34,9 +34,9 @@ namespace FinTrack.WPF
             _context = context;
             Loaded += async (_, _) =>
             {
-                // Load categories (Filter out Transfers - they should be handled via TransferWindow)
+                // Load categories (Filter out Transfers and Hidden Categories)
                 var allCategories = await _context.Categories
-                    .Where(c => c.Type != TransactionType.Transfer)
+                    .Where(c => c.Type != TransactionType.Transfer && c.IsVisible)
                     .OrderBy(c => c.Type)
                     .ThenBy(c => c.ParentCategoryId == null ? 0 : 1) // Parent first
                     .ThenBy(c => c.Name)
@@ -52,7 +52,6 @@ namespace FinTrack.WPF
                     { 
                         Id = parent.Id, 
                         Name = parent.Name, 
-                        DisplayName = parent.Name, 
                         Type = parent.Type,
                         IsSubCategory = false
                     });
@@ -64,7 +63,6 @@ namespace FinTrack.WPF
                         { 
                             Id = child.Id, 
                             Name = child.Name, 
-                            DisplayName = $"  ↳ {child.Name}", 
                             Type = child.Type,
                             IsSubCategory = true
                         });
@@ -162,6 +160,14 @@ namespace FinTrack.WPF
                     return; // Aborted by user
                 }
             }
+            else if (!cardId.HasValue && !bankId.HasValue && selectedCategory.Type == TransactionType.Expense)
+            {
+                // Check Cash Limit
+                if (!UIHelper.CheckCashLimit(_context, totalAmount))
+                {
+                    return; // Aborted by user
+                }
+            }
 
             bool isInstallment = IsInstallmentCheckBox.IsChecked == true && cardId.HasValue;
             int installmentCount = 1;
@@ -174,7 +180,7 @@ namespace FinTrack.WPF
             {
                 DateTime startDate = DatePicker.SelectedDate ?? System.DateTime.Now;
                 string baseDescription = DescriptionTextBox.Text ?? "";
-                string groupId = isInstallment ? System.Guid.NewGuid().ToString() : null;
+                string? groupId = isInstallment ? System.Guid.NewGuid().ToString() : null;
 
                 if (isInstallment && installmentCount > 1)
                 {

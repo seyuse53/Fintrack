@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
 using System.IO;
@@ -53,11 +55,31 @@ namespace FinTrack.WPF
         {
             if (string.IsNullOrWhiteSpace(ProfileNameInput.Text))
             {
-                MessageBox.Show("Lütfen bir profil ismi girin.", "Uyarı", MessageBoxButton.OK, MessageBoxImage.Warning);
+                var errorDialog = new InfoDialogWindow(
+                    "Profil İsmi Gerekli",
+                    "Lütfen bir profil ismi girin.",
+                    "Tamam"
+                );
+                errorDialog.Owner = this;
+                errorDialog.ShowDialog();
                 return;
             }
 
             ProfileName = ProfileNameInput.Text.Trim();
+
+            // Check if profile already exists
+            var existingProfiles = FinTrack.Core.Services.SettingsManager.GetProfiles();
+            if (existingProfiles.Contains(ProfileName, StringComparer.OrdinalIgnoreCase))
+            {
+                var errorDialog = new InfoDialogWindow(
+                    "Profil Zaten Mevcut",
+                    $"'{ProfileName}' isminde bir profil zaten mevcut. Lütfen farklı bir profil ismi belirleyin.",
+                    "Tamam"
+                );
+                errorDialog.Owner = this;
+                errorDialog.ShowDialog();
+                return;
+            }
 
             // Quick check for existing keys before we close
             if (!string.IsNullOrEmpty(SelectedDbPath))

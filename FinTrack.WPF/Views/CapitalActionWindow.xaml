@@ -1,0 +1,108 @@
+<Window x:Class="FinTrack.WPF.Views.CapitalActionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sermaye İşlemi" SizeToContent="Height" Width="480"
+        WindowStartupLocation="CenterOwner" Background="#F4F6F9" ResizeMode="NoResize">
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Başlık -->
+        <TextBlock Grid.Row="0" Text="📊 Sermaye İşlemi Kaydı" FontSize="20" FontWeight="Bold" Foreground="#2C3E50"/>
+
+        <!-- Varlık Bilgisi -->
+        <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="15">
+            <StackPanel>
+                <TextBlock x:Name="AssetInfoText" Text="THYAO — Türk Hava Yolları" FontSize="14" FontWeight="SemiBold" Foreground="#2C3E50"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <TextBlock Text="Mevcut Miktar: " FontSize="12" Foreground="#7F8C8D"/>
+                    <TextBlock x:Name="CurrentAmountText" Text="0" FontSize="12" FontWeight="Bold" Foreground="#2C3E50"/>
+                    <TextBlock Text="  |  Ort. Maliyet: " FontSize="12" Foreground="#7F8C8D" Margin="10,0,0,0"/>
+                    <TextBlock x:Name="CurrentAvgCostText" Text="₺0" FontSize="12" FontWeight="Bold" Foreground="#34495E"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- İşlem Türü -->
+        <StackPanel Grid.Row="4">
+            <TextBlock Text="İşlem Türü" FontSize="13" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+            <ComboBox x:Name="ActionTypeComboBox" FontSize="14" Padding="10,8" SelectionChanged="ActionType_Changed">
+                <ComboBoxItem Content="🔄 Bedelsiz Sermaye Artırımı" IsSelected="True"/>
+                <ComboBoxItem Content="📋 Bedelli Sermaye Artırımı"/>
+                <ComboBoxItem Content="✂️ Hisse Bölünmesi"/>
+            </ComboBox>
+        </StackPanel>
+
+        <!-- Oran / Miktar -->
+        <StackPanel Grid.Row="6">
+            <TextBlock x:Name="RateLabel" Text="Bedelsiz Oranı (%)" FontSize="13" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+            <TextBox x:Name="RateTextBox" FontSize="14" Padding="10,8" Text="50" TextChanged="Rate_Changed"/>
+            <TextBlock x:Name="RateHelpText" Text="Örnek: %50 bedelsiz → 100 lot ise 50 lot daha eklenir" FontSize="11" Foreground="#95A5A6" Margin="0,3,0,0" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <!-- Bedelli: Rüçhan Fiyatı -->
+        <StackPanel x:Name="RightsIssuePricePanel" Grid.Row="8" Visibility="Collapsed">
+            <TextBlock Text="Rüçhan Fiyatı (₺)" FontSize="13" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+            <TextBox x:Name="RightsPriceTextBox" FontSize="14" Padding="10,8" Text="0" TextChanged="Rate_Changed"/>
+        </StackPanel>
+
+        <!-- Tarih -->
+        <StackPanel Grid.Row="8" x:Name="DatePanel">
+            <TextBlock Text="İşlem Tarihi" FontSize="13" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+            <DatePicker x:Name="ActionDatePicker" FontSize="14" Padding="10,6"/>
+        </StackPanel>
+
+        <!-- Önizleme -->
+        <Border Grid.Row="10" Background="#EBF5FB" CornerRadius="8" Padding="15">
+            <StackPanel>
+                <TextBlock Text="📊 Sonuç Önizleme" FontSize="13" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,8"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Yeni Miktar" FontSize="11" Foreground="#7F8C8D"/>
+                        <TextBlock x:Name="NewAmountPreviewText" Text="0" FontSize="18" FontWeight="Bold" Foreground="#2980B9"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Yeni Ort. Maliyet" FontSize="11" Foreground="#7F8C8D"/>
+                        <TextBlock x:Name="NewAvgCostPreviewText" Text="₺0" FontSize="18" FontWeight="Bold" Foreground="#34495E"/>
+                    </StackPanel>
+                </Grid>
+                <TextBlock x:Name="PreviewDetailText" Text="" FontSize="11" Foreground="#7F8C8D" Margin="0,5,0,0" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Butonlar -->
+        <StackPanel Grid.Row="12" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="💾 Kaydet" Padding="15,10" Click="Save_Click" Background="#3498DB" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" Margin="0,0,10,0">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="6"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Content="İptal" Padding="15,10" Click="Cancel_Click" Background="#BDC3C7" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="6"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

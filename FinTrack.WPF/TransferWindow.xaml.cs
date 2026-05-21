@@ -101,8 +101,8 @@ namespace FinTrack.WPF
             try
             {
                 // Ensure "Transfer" category exists
-                var transferCategory = _db.Categories.FirstOrDefault(c => c.Type == TransactionType.Transfer)
-                                  ?? new Category { Name = "Transfer", Type = TransactionType.Transfer };
+                var transferCategory = _db.Categories.FirstOrDefault(c => c.Name == "Hesaplar Arası Transfer" && c.Type == TransactionType.Transfer)
+                                  ?? new Category { Name = "Hesaplar Arası Transfer", Type = TransactionType.Transfer };
                 
                 if (transferCategory.Id == 0) _db.Categories.Add(transferCategory);
 
@@ -113,6 +113,14 @@ namespace FinTrack.WPF
                 if (source.Card != null)
                 {
                     if (!UIHelper.CheckCardLimit(_db, source.Card.Id, amount, this))
+                    {
+                        return; // Aborted by user
+                    }
+                }
+                else if (source.Bank == null && source.Card == null)
+                {
+                    // It's a Cash transfer
+                    if (!UIHelper.CheckCashLimit(_db, amount))
                     {
                         return; // Aborted by user
                     }

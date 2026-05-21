@@ -18,8 +18,8 @@ namespace FinTrack.WPF
         {
             public required int Id { get; set; }
             public required string Name { get; set; }
-            public required string DisplayName { get; set; }
             public required TransactionType Type { get; set; }
+            public string TypeIcon => Type == TransactionType.Income ? "💰" : Type == TransactionType.Transfer ? "🔄" : "💸";
             public bool IsSubCategory { get; set; }
         }
 
@@ -42,6 +42,7 @@ namespace FinTrack.WPF
             try
             {
                 var allCategories = await _context.Categories
+                    .Where(c => c.IsVisible || c.Id == _transactionToEdit.CategoryId) 
                     .OrderBy(c => c.Type)
                     .ThenBy(c => c.ParentCategoryId == null ? 0 : 1)
                     .ThenBy(c => c.Name)
@@ -51,11 +52,11 @@ namespace FinTrack.WPF
                 var parents = allCategories.Where(c => c.ParentCategoryId == null).ToList();
                 foreach (var parent in parents)
                 {
-                    viewModels.Add(new CategoryViewModel { Id = parent.Id, Name = parent.Name, DisplayName = parent.Name, Type = parent.Type, IsSubCategory = false });
+                    viewModels.Add(new CategoryViewModel { Id = parent.Id, Name = parent.Name, Type = parent.Type, IsSubCategory = false });
                     var children = allCategories.Where(c => c.ParentCategoryId == parent.Id).ToList();
                     foreach (var child in children)
                     {
-                        viewModels.Add(new CategoryViewModel { Id = child.Id, Name = child.Name, DisplayName = $"  ↳ {child.Name}", Type = child.Type, IsSubCategory = true });
+                        viewModels.Add(new CategoryViewModel { Id = child.Id, Name = child.Name, Type = child.Type, IsSubCategory = true });
                     }
                 }
 
@@ -63,7 +64,7 @@ namespace FinTrack.WPF
                 
                 // Populate data
                 DatePicker.SelectedDate = _transactionToEdit.Date;
-                AmountTextBox.Text = _transactionToEdit.Amount.ToString("0.##");
+                AmountTextBox.Text = Math.Abs(_transactionToEdit.Amount).ToString("0.##");
                 UIHelper.FormatAmountTextBox(AmountTextBox);
                 DescriptionTextBox.Text = _transactionToEdit.Description;
                 
@@ -145,7 +146,15 @@ namespace FinTrack.WPF
 
             // Update transaction
             _transactionToEdit.Date = DatePicker.SelectedDate ?? DateTime.Now;
-            _transactionToEdit.Amount = amount;
+            
+            decimal finalAmount = Math.Abs(amount);
+            if (selectedCategory.Type == TransactionType.Transfer && _transactionToEdit.Amount < 0)
+            {
+                // If it was originally an outgoing transfer (like credit card payment), keep it negative
+                finalAmount = -finalAmount;
+            }
+            
+            _transactionToEdit.Amount = finalAmount;
             _transactionToEdit.CategoryId = selectedCategory.Id;
             _transactionToEdit.Description = DescriptionTextBox.Text;
 

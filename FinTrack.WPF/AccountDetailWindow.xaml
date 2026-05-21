@@ -61,13 +61,11 @@
                 <DataGridTextColumn Header="Tür"       Binding="{Binding Category.Type}" Width="70"/>
                 <DataGridTextColumn Header="Kategori"  Binding="{Binding Category.Name}" Width="100"/>
                 <DataGridTextColumn Header="Açıklama"  Binding="{Binding Description}"   Width="*"/>
-                <DataGridTextColumn Header="Tutar"     Binding="{Binding Amount, StringFormat='₺{0:N2}'}" Width="95" FontWeight="Bold">
+                <DataGridTextColumn Header="Tutar"     Binding="{Binding FormattedAmount}" Width="95" FontWeight="Bold">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextAlignment" Value="Right"/>
-                            <!-- We can use DataTriggers to color Income green and Expense red if needed, 
-                                 but the sign (+/-) or Transfer/Income/Expense type usually clarifies it. 
-                                 By default, we'll keep it standard dark here. -->
+                            <Setter Property="Foreground" Value="{Binding ForegroundColor}"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>

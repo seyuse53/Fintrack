@@ -1,12 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using FinTrack.Core.Models;
 using FinTrack.Core.Services;
 using FinTrack.Data;
+using FinTrack.WPF.Helpers;
 using FinTrack.WPF.Views;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,10 +33,17 @@ namespace FinTrack.WPF
         private SettingsView _settingsView = null!;
         private UserControl _currentView = null!;
 
+        // Search fields
+        private CancellationTokenSource? _searchCts;
+        private System.Windows.Threading.DispatcherTimer? _searchDebounceTimer;
+
         public MainWindow(AppDbContext context)
         {
             InitializeComponent();
             _context = context;
+
+            // Global keyboard shortcut for search (Ctrl+K)
+            PreviewKeyDown += MainWindow_PreviewKeyDown;
 
             Loaded += async (_, _) =>
             {
@@ -135,7 +147,19 @@ namespace FinTrack.WPF
         {
             Dispatcher.Invoke(() =>
             {
+                // Close all other open windows for security
+                var windows = System.Windows.Application.Current.Windows;
+                for (int i = windows.Count - 1; i >= 0; i--)
+                {
+                    var w = windows[i];
+                    if (w != this)
+                    {
+                        try { w.Close(); } catch { }
+                    }
+                }
+
                 LockScreenOverlay.Visibility = Visibility.Visible;
+                AppContentContainer.Visibility = Visibility.Collapsed;
                 LockPasswordInput.Clear();
                 LockErrorText.Visibility = Visibility.Collapsed;
                 LockPasswordInput.Focus();
@@ -169,6 +193,7 @@ namespace FinTrack.WPF
             if (FinTrack.Core.Services.SettingsManager.VerifyPasswordAndLoadKey(password))
             {
                 LockScreenOverlay.Visibility = Visibility.Collapsed;
+                AppContentContainer.Visibility = Visibility.Visible;
                 LockPasswordInput.Clear();
                 FinTrack.WPF.Services.AutoLockService.MarkUnlocked();
             }
@@ -350,7 +375,425 @@ namespace FinTrack.WPF
                     await bv.InitializeAsync(_context);
                 else if (_currentView is ReportsView rv)
                     await rv.LoadDataAsync();
+                else if (_currentView is AccountsView av)
+                    await av.LoadAccountsAsync();
+                else if (_currentView is CardsView cv)
+                    await cv.LoadCardsAsync();
+                else if (_currentView is InvestmentsView iv)
+                    await iv.LoadInvestmentsAsync();
             }
+        }
+
+        // ==================== GLOBAL SEARCH ====================
+
+        private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            // Ctrl+K → Focus search box
+            if (e.Key == Key.K && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                SearchTextBox.Focus();
+                SearchTextBox.SelectAll();
+                e.Handled = true;
+            }
+        }
+
+        private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            SearchPlaceholder.Visibility = Visibility.Collapsed;
+            SearchBoxBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(52, 152, 219)); // #3498DB
+        }
+
+        private void SearchResultsPopup_Closed(object sender, EventArgs e)
+        {
+            // Restore placeholder if empty
+            if (string.IsNullOrEmpty(SearchTextBox.Text))
+            {
+                SearchPlaceholder.Visibility = Visibility.Visible;
+                SearchBoxBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(213, 219, 219)); // #D5DBDB
+            }
+        }
+
+        private void SearchTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                SearchResultsPopup.IsOpen = false;
+                SearchTextBox.Text = "";
+                SearchClearButton.Visibility = Visibility.Collapsed;
+                SearchPlaceholder.Visibility = Visibility.Visible;
+                SearchBoxBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(213, 219, 219)); // #D5DBDB
+
+                // Return focus to main content
+                MainContentArea.Focus();
+                e.Handled = true;
+            }
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string query = SearchTextBox.Text.Trim();
+
+            // Toggle placeholder and clear button
+            SearchPlaceholder.Visibility = string.IsNullOrEmpty(SearchTextBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+            SearchClearButton.Visibility = string.IsNullOrEmpty(SearchTextBox.Text) ? Visibility.Collapsed : Visibility.Visible;
+
+            // Cancel any previous pending search
+            _searchDebounceTimer?.Stop();
+
+            if (query.Length < 2)
+            {
+                SearchResultsPopup.IsOpen = false;
+                return;
+            }
+
+            // Debounce: wait 300ms before executing search
+            _searchDebounceTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(300)
+            };
+            _searchDebounceTimer.Tick += async (s, _) =>
+            {
+                _searchDebounceTimer.Stop();
+                await ExecuteSearchAsync(query);
+            };
+            _searchDebounceTimer.Start();
+        }
+
+        private void SearchClear_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Text = "";
+            SearchResultsPopup.IsOpen = false;
+            SearchClearButton.Visibility = Visibility.Collapsed;
+            SearchPlaceholder.Visibility = Visibility.Visible;
+            SearchBoxBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(213, 219, 219)); // #D5DBDB
+        }
+
+        private async Task ExecuteSearchAsync(string query)
+        {
+            // Cancel previous search
+            _searchCts?.Cancel();
+            _searchCts = new CancellationTokenSource();
+            var token = _searchCts.Token;
+
+            try
+            {
+                // Show loading state
+                SearchResultsPopup.IsOpen = true;
+                SearchLoading.Visibility = Visibility.Visible;
+                SearchNoResults.Visibility = Visibility.Collapsed;
+                SearchResultsScroll.Visibility = Visibility.Collapsed;
+
+                var groups = new List<SearchResultGroup>();
+
+                // 1. Search Transactions
+                var transactionResults = await SearchTransactionsAsync(query, token);
+                if (token.IsCancellationRequested) return;
+                if (transactionResults.Count > 0)
+                {
+                    groups.Add(new SearchResultGroup
+                    {
+                        GroupTitle = $"💸 İŞLEMLER ({transactionResults.Count})",
+                        Results = transactionResults
+                    });
+                }
+
+                // 2. Search Bank Accounts
+                var bankResults = await SearchBankAccountsAsync(query, token);
+                if (token.IsCancellationRequested) return;
+                if (bankResults.Count > 0)
+                {
+                    groups.Add(new SearchResultGroup
+                    {
+                        GroupTitle = $"🏦 HESAPLAR ({bankResults.Count})",
+                        Results = bankResults
+                    });
+                }
+
+                // 3. Search Credit Cards
+                var cardResults = await SearchCreditCardsAsync(query, token);
+                if (token.IsCancellationRequested) return;
+                if (cardResults.Count > 0)
+                {
+                    groups.Add(new SearchResultGroup
+                    {
+                        GroupTitle = $"💳 KREDİ KARTLARI ({cardResults.Count})",
+                        Results = cardResults
+                    });
+                }
+
+                // 4. Search Investment Assets
+                var investmentResults = await SearchInvestmentsAsync(query, token);
+                if (token.IsCancellationRequested) return;
+                if (investmentResults.Count > 0)
+                {
+                    groups.Add(new SearchResultGroup
+                    {
+                        GroupTitle = $"📈 YATIRIMLAR ({investmentResults.Count})",
+                        Results = investmentResults
+                    });
+                }
+
+                // Update UI
+                SearchLoading.Visibility = Visibility.Collapsed;
+
+                if (groups.Count == 0)
+                {
+                    SearchNoResults.Visibility = Visibility.Visible;
+                    SearchResultsScroll.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    SearchNoResults.Visibility = Visibility.Collapsed;
+                    SearchResultsScroll.Visibility = Visibility.Visible;
+                    SearchResultsList.ItemsSource = groups;
+                }
+            }
+            catch (OperationCanceledException) { /* Search was cancelled, ignore */ }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Search error: {ex.Message}");
+                SearchLoading.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private async Task<List<SearchResult>> SearchTransactionsAsync(string query, CancellationToken token)
+        {
+            // Load transactions with related data into memory (because Description is encrypted)
+            var transactions = await _context.Transactions
+                .Include(t => t.Category)
+                    .ThenInclude(c => c!.ParentCategory)
+                .Include(t => t.CreditCardAccount)
+                .Include(t => t.BankAccount)
+                .OrderByDescending(t => t.Date)
+                .ToListAsync(token);
+
+            var lowerQuery = query.ToLower(new System.Globalization.CultureInfo("tr-TR"));
+
+            return transactions
+                .Where(t =>
+                    (t.Description != null && t.Description.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery)) ||
+                    (t.Category?.FullDisplayName != null && t.Category.FullDisplayName.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery)) ||
+                    t.Amount.ToString("N2").Contains(query) ||
+                    t.DisplayAmount.ToString("N2").Contains(query) ||
+                    t.Date.ToString("dd.MM.yyyy").Contains(query) ||
+                    t.Date.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR")).ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery) ||
+                    (t.CreditCardAccount != null && t.CreditCardAccount.DisplayName.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery)) ||
+                    (t.BankAccount != null && ($"{t.BankAccount.BankName} {t.BankAccount.AccountName}").ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery)))
+                .Take(8)
+                .Select(t =>
+                {
+                    string icon = t.Category?.Type == TransactionType.Income ? "💰" :
+                                  t.Category?.Type == TransactionType.Transfer ? "🔄" : "💸";
+                    string subtitle = t.Category?.FullDisplayName ?? "";
+                    if (t.CreditCardAccount != null)
+                        subtitle += $" · {t.CreditCardAccount.DisplayName}";
+                    else if (t.BankAccount != null)
+                        subtitle += $" · {t.BankAccount.BankName}";
+                    subtitle += $" · {t.Date:dd MMM yyyy}";
+
+                    return new SearchResult
+                    {
+                        Icon = icon,
+                        Title = string.IsNullOrEmpty(t.Description) ? (t.Category?.FullDisplayName ?? "İşlem") : t.Description,
+                        Subtitle = subtitle,
+                        Amount = t.FormattedAmount,
+                        AmountColor = t.ForegroundColor,
+                        ResultType = "Transaction",
+                        EntityId = t.Id
+                    };
+                })
+                .ToList();
+        }
+
+        private async Task<List<SearchResult>> SearchBankAccountsAsync(string query, CancellationToken token)
+        {
+            var lowerQuery = query.ToLower(new System.Globalization.CultureInfo("tr-TR"));
+
+            var accounts = await _context.BankAccounts
+                .Where(a => a.IsActive)
+                .ToListAsync(token);
+
+            return accounts
+                .Where(a =>
+                    a.BankName.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery) ||
+                    a.AccountName.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery) ||
+                    (a.IBAN != null && a.IBAN.Replace(" ", "").ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery.Replace(" ", ""))))
+                .Take(5)
+                .Select(a => new SearchResult
+                {
+                    Icon = "🏦",
+                    Title = $"{a.BankName} - {a.AccountName}",
+                    Subtitle = a.IBAN != null ? UIHelper.FormatIban(a.IBAN) : "IBAN belirtilmemiş",
+                    ResultType = "BankAccount",
+                    EntityId = a.Id
+                })
+                .ToList();
+        }
+
+        private async Task<List<SearchResult>> SearchCreditCardsAsync(string query, CancellationToken token)
+        {
+            var lowerQuery = query.ToLower(new System.Globalization.CultureInfo("tr-TR"));
+
+            var cards = await _context.CreditCardAccounts
+                .Where(c => c.IsActive)
+                .ToListAsync(token);
+
+            return cards
+                .Where(c =>
+                    c.BankName.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery) ||
+                    c.CardLabel.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery) ||
+                    c.DisplayName.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery))
+                .Take(5)
+                .Select(c => new SearchResult
+                {
+                    Icon = "💳",
+                    Title = c.DisplayName,
+                    Subtitle = c.Limit > 0 ? $"Limit: ₺{c.Limit:N2}" : "Limit belirtilmemiş",
+                    ResultType = "CreditCard",
+                    EntityId = c.Id
+                })
+                .ToList();
+        }
+
+        private async Task<List<SearchResult>> SearchInvestmentsAsync(string query, CancellationToken token)
+        {
+            var lowerQuery = query.ToLower(new System.Globalization.CultureInfo("tr-TR"));
+
+            var assets = await _context.InvestmentAssets.ToListAsync(token);
+
+            return assets
+                .Where(a =>
+                    a.Name.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery) ||
+                    a.Symbol.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery) ||
+                    (a.Category != null && a.Category.ToLower(new System.Globalization.CultureInfo("tr-TR")).Contains(lowerQuery)))
+                .Take(5)
+                .Select(a => new SearchResult
+                {
+                    Icon = "📈",
+                    Title = $"{a.Name} ({a.Symbol})",
+                    Subtitle = $"{a.Category ?? "Yatırım"} · Miktar: {a.TotalAmount:N4}",
+                    Amount = $"Ort: ₺{a.AverageCost:N2}",
+                    AmountColor = "#2C3E50",
+                    ResultType = "Investment",
+                    EntityId = a.Id
+                })
+                .ToList();
+        }
+
+        private async void SearchResultItem_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.DataContext is SearchResult result)
+            {
+                SearchResultsPopup.IsOpen = false;
+
+                switch (result.ResultType)
+                {
+                    case "Transaction":
+                        var transaction = await _context.Transactions
+                            .Include(t => t.Category)
+                                .ThenInclude(c => c!.ParentCategory)
+                            .Include(t => t.CreditCardAccount)
+                            .Include(t => t.BankAccount)
+                            .FirstOrDefaultAsync(t => t.Id == result.EntityId);
+                        if (transaction != null)
+                        {
+                            var editWindow = new EditTransactionWindow(_context, transaction)
+                            {
+                                Owner = this
+                            };
+                            if (editWindow.ShowDialog() == true)
+                            {
+                                await RefreshCurrentView();
+                            }
+                        }
+                        break;
+
+                    case "BankAccount":
+                        var account = await _context.BankAccounts.FirstOrDefaultAsync(a => a.Id == result.EntityId);
+                        if (account != null)
+                        {
+                            var accountTxs = await _context.Transactions
+                                .Include(t => t.Category)
+                                    .ThenInclude(c => c!.ParentCategory)
+                                .Where(t => t.BankAccountId == account.Id)
+                                .OrderByDescending(t => t.Date)
+                                .ToListAsync();
+
+                            var detailWin = new AccountDetailWindow(account, accountTxs, _context)
+                            {
+                                Owner = this
+                            };
+                            detailWin.ShowDialog();
+                            await RefreshCurrentView();
+                        }
+                        break;
+
+                    case "CreditCard":
+                        var card = await _context.CreditCardAccounts.FirstOrDefaultAsync(c => c.Id == result.EntityId);
+                        if (card != null)
+                        {
+                            var period = card.GetStatementPeriod(DateTime.Now);
+                            var familyIds = new List<int> { card.Id };
+                            var childIds = await _context.CreditCardAccounts
+                                .Where(c => c.ParentCardId == card.Id)
+                                .Select(c => c.Id)
+                                .ToListAsync();
+                            familyIds.AddRange(childIds);
+
+                            var cardTxs = await _context.Transactions
+                                .Include(t => t.Category)
+                                .Include(t => t.CreditCardAccount)
+                                .Where(t => familyIds.Contains(t.CreditCardAccountId ?? 0))
+                                .OrderByDescending(t => t.Date)
+                                .ToListAsync();
+                            decimal total = cardTxs.Sum(t => t.Amount);
+
+                            var cardDetailWin = new CardDetailWindow(
+                                card.DisplayName,
+                                $"{period.Start:dd MMM yyyy} - {period.End:dd MMM yyyy} Ekstresi",
+                                cardTxs, total, _context, card)
+                            {
+                                Owner = this
+                            };
+                            cardDetailWin.ShowDialog();
+                            await RefreshCurrentView();
+                        }
+                        break;
+
+                    case "Investment":
+                        // Switch to Investments view
+                        await SwitchToView(_investmentsView, "Yatırım Portföyü", InvestmentsButton);
+                        break;
+                }
+            }
+        }
+
+        private void SearchResultItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (sender is Border border)
+                border.Background = new SolidColorBrush(Color.FromRgb(235, 245, 251)); // #EBF5FB
+        }
+
+        private void SearchResultItem_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (sender is Border border)
+                border.Background = Brushes.Transparent;
+        }
+
+        private async Task RefreshCurrentView()
+        {
+            if (_currentView is DashboardView dv)
+                await dv.LoadDataAsync();
+            else if (_currentView is BudgetView bv)
+                await bv.InitializeAsync(_context);
+            else if (_currentView is ReportsView rv)
+                await rv.LoadDataAsync();
+            else if (_currentView is AccountsView av)
+                await av.LoadAccountsAsync();
+            else if (_currentView is CardsView cv)
+                await cv.LoadCardsAsync();
+            else if (_currentView is InvestmentsView iv)
+                await iv.LoadInvestmentsAsync();
         }
     }
 }

@@ -43,6 +43,9 @@ namespace FinTrack.Data.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsCryptoExchange")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("BankAccounts");
@@ -77,6 +80,9 @@ namespace FinTrack.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -97,132 +103,154 @@ namespace FinTrack.Data.Migrations
                         new
                         {
                             Id = 1,
+                            IsVisible = true,
                             Name = "Maaş",
                             Type = 0
                         },
                         new
                         {
                             Id = 2,
+                            IsVisible = true,
                             Name = "Ek Gelir/Serbest",
                             Type = 0
                         },
                         new
                         {
                             Id = 3,
+                            IsVisible = true,
                             Name = "Market & Mutfak",
                             Type = 1
                         },
                         new
                         {
                             Id = 4,
+                            IsVisible = true,
                             Name = "Kira",
                             Type = 1
                         },
                         new
                         {
                             Id = 5,
+                            IsVisible = true,
                             Name = "Faturalar",
                             Type = 1
                         },
                         new
                         {
                             Id = 6,
+                            IsVisible = true,
                             Name = "Eğlence",
                             Type = 1
                         },
                         new
                         {
                             Id = 7,
+                            IsVisible = true,
                             Name = "Kişisel Harçlık",
                             Type = 1
                         },
                         new
                         {
                             Id = 8,
+                            IsVisible = true,
                             Name = "Çocuk Harçlığı",
                             Type = 1
                         },
                         new
                         {
                             Id = 9,
+                            IsVisible = true,
                             Name = "Taze Gıda & Pazar",
                             Type = 1
                         },
                         new
                         {
                             Id = 10,
+                            IsVisible = true,
                             Name = "Aile Harcamaları",
                             Type = 1
                         },
                         new
                         {
                             Id = 11,
+                            IsVisible = true,
                             Name = "Ulaşım",
                             Type = 1
                         },
                         new
                         {
                             Id = 12,
+                            IsVisible = true,
                             Name = "Ev & Yaşam",
                             Type = 1
                         },
                         new
                         {
                             Id = 13,
+                            IsVisible = true,
                             Name = "Giyim",
                             Type = 1
                         },
                         new
                         {
                             Id = 14,
+                            IsVisible = true,
                             Name = "Eğitim",
                             Type = 1
                         },
                         new
                         {
                             Id = 15,
+                            IsVisible = true,
                             Name = "Sağlık",
                             Type = 1
                         },
                         new
                         {
                             Id = 16,
+                            IsVisible = true,
                             Name = "Hediye & Bağış",
                             Type = 1
                         },
                         new
                         {
                             Id = 17,
+                            IsVisible = true,
                             Name = "Yemek Ödeneği",
                             Type = 0
                         },
                         new
                         {
                             Id = 18,
+                            IsVisible = true,
                             Name = "Aile Desteği",
                             Type = 0
                         },
                         new
                         {
                             Id = 19,
+                            IsVisible = true,
                             Name = "Kredi Kartı Çekilen",
                             Type = 0
                         },
                         new
                         {
                             Id = 20,
+                            IsVisible = true,
                             Name = "Ekstra Ödemesi",
                             Type = 1
                         },
                         new
                         {
                             Id = 21,
+                            IsVisible = true,
                             Name = "Kredi Kartı Ödemesi",
                             Type = 2
                         },
                         new
                         {
                             Id = 22,
+                            IsVisible = true,
                             Name = "Elektrik",
                             ParentCategoryId = 5,
                             Type = 1
@@ -230,6 +258,7 @@ namespace FinTrack.Data.Migrations
                         new
                         {
                             Id = 23,
+                            IsVisible = true,
                             Name = "Su",
                             ParentCategoryId = 5,
                             Type = 1
@@ -237,6 +266,7 @@ namespace FinTrack.Data.Migrations
                         new
                         {
                             Id = 24,
+                            IsVisible = true,
                             Name = "Doğalgaz",
                             ParentCategoryId = 5,
                             Type = 1
@@ -244,6 +274,7 @@ namespace FinTrack.Data.Migrations
                         new
                         {
                             Id = 25,
+                            IsVisible = true,
                             Name = "İnternet & TV",
                             ParentCategoryId = 5,
                             Type = 1
@@ -251,6 +282,7 @@ namespace FinTrack.Data.Migrations
                         new
                         {
                             Id = 26,
+                            IsVisible = true,
                             Name = "Telefon",
                             ParentCategoryId = 5,
                             Type = 1
@@ -258,8 +290,23 @@ namespace FinTrack.Data.Migrations
                         new
                         {
                             Id = 27,
+                            IsVisible = true,
                             Name = "Aidat",
                             ParentCategoryId = 5,
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 28,
+                            IsVisible = true,
+                            Name = "Hatun",
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 29,
+                            IsVisible = true,
+                            Name = "Hatun",
                             Type = 1
                         });
                 });
@@ -338,6 +385,12 @@ namespace FinTrack.Data.Migrations
                     b.Property<string>("Category")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("LastKnownPrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastPriceUpdate")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -399,6 +452,40 @@ namespace FinTrack.Data.Migrations
                     b.HasIndex("LinkedCreditCardAccountId");
 
                     b.ToTable("InvestmentTransactions");
+                });
+
+            modelBuilder.Entity("FinTrack.Core.Models.PriceHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("ClosePrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("HighPrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("LowPrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Symbol", "Date")
+                        .IsUnique();
+
+                    b.ToTable("PriceHistories");
                 });
 
             modelBuilder.Entity("FinTrack.Core.Models.Transaction", b =>

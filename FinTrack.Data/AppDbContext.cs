@@ -13,6 +13,7 @@ namespace FinTrack.Data
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<InvestmentAsset> InvestmentAssets { get; set; }
         public DbSet<InvestmentTransaction> InvestmentTransactions { get; set; }
+        public DbSet<PriceHistory> PriceHistories { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -22,20 +23,36 @@ namespace FinTrack.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // Use SQLite with a dynamic path and SQLCipher password
                 var dbPath = FinTrack.Core.Services.SettingsManager.GetDatabasePath();
                 var password = FinTrack.Core.Services.SettingsManager.ActiveDataKey;
-                
-                if (string.IsNullOrEmpty(password))
+
+                // Build connection string WITHOUT password (we send PRAGMA key manually)
+                var connectionString = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder
                 {
-                    optionsBuilder.UseSqlite($"Data Source={dbPath}");
-                }
-                else
+                    DataSource = dbPath,
+                    Mode = Microsoft.Data.Sqlite.SqliteOpenMode.ReadWriteCreate
+                }.ToString();
+
+                // Create and open connection, then send PRAGMA key for SQLCipher
+                var connection = new Microsoft.Data.Sqlite.SqliteConnection(connectionString);
+                connection.Open();
+
+                if (!string.IsNullOrEmpty(password))
                 {
-                    optionsBuilder.UseSqlite($"Data Source={dbPath};Password={password}");
+                    using var cmd = connection.CreateCommand();
+                    // PRAGMA statements do not accept parameters. The Base64 ActiveDataKey is safe to interpolate.
+                    // Replace any single quotes just in case, though a Base64 string will never have them.
+                    string safePassword = password.Replace("'", "''");
+                    cmd.CommandText = $"PRAGMA key = '{safePassword}';";
+                    cmd.ExecuteNonQuery();
                 }
+
+                // Pass the already-opened connection to EF Core
+                optionsBuilder.UseSqlite(connection);
             }
         }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -85,8 +102,12 @@ namespace FinTrack.Data
                 new Category { Id = 24, Name = "Doğalgaz",            Type = TransactionType.Expense, ParentCategoryId = 5 },
                 new Category { Id = 25, Name = "İnternet & TV",       Type = TransactionType.Expense, ParentCategoryId = 5 },
                 new Category { Id = 26, Name = "Telefon",             Type = TransactionType.Expense, ParentCategoryId = 5 },
-                new Category { Id = 27, Name = "Aidat",               Type = TransactionType.Expense, ParentCategoryId = 5 }
+                new Category { Id = 27, Name = "Aidat",               Type = TransactionType.Expense, ParentCategoryId = 5 },
+                // ── Özel ─────────────────────────────────────────────
+                new Category { Id = 28, Name = "Hatun",               Type = TransactionType.Income },
+                new Category { Id = 29, Name = "Hatun",               Type = TransactionType.Expense }
             );
+
 
             // BudgetLimit: one limit per category
             modelBuilder.Entity<BudgetLimit>()
@@ -152,6 +173,61 @@ namespace FinTrack.Data
                 .WithMany(c => c.SubCategories)
                 .HasForeignKey(c => c.ParentCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // PriceHistory: günde 1 kayıt per sembol
+            modelBuilder.Entity<PriceHistory>()
+                .HasIndex(p => new { p.Symbol, p.Date })
+                .IsUnique();
+        }
+
+        /// <summary>
+        /// Moves legacy BankAccount.InitialBalance values into the Transaction system.
+        /// This is called during app startup if needed.
+        /// </summary>
+        public static void MigrateInitialBalances(AppDbContext db)
+        {
+            var accountsToMigrate = db.BankAccounts
+                .Where(a => a.InitialBalance != 0)
+                .ToList();
+
+            if (!accountsToMigrate.Any()) return;
+
+            // Ensure the "Açılış Bakiyesi" category exists (dynamic addition)
+            var openingCategory = db.Categories.FirstOrDefault(c => c.Name == "Açılış Bakiyesi");
+            if (openingCategory == null)
+            {
+                openingCategory = new Category 
+                { 
+                    Name = "Açılış Bakiyesi", 
+                    Type = TransactionType.Income,
+                    IsVisible = true 
+                };
+                db.Categories.Add(openingCategory);
+                db.SaveChanges(); // ID will be assigned automatically
+            }
+
+            foreach (var account in accountsToMigrate)
+            {
+                // Check if we already have an "Açılış Bakiyesi" transaction for this account to avoid duplicates
+                bool alreadyMigrated = db.Transactions.Any(t => t.BankAccountId == account.Id && t.CategoryId == openingCategory.Id);
+                
+                if (!alreadyMigrated)
+                {
+                    db.Transactions.Add(new Transaction
+                    {
+                        BankAccountId = account.Id,
+                        CategoryId = openingCategory.Id,
+                        Amount = account.InitialBalance,
+                        Date = account.CreatedAt, // Use account creation date for opening balance
+                        Description = "Açılış Bakiyesi (Otomatik Aktarıldı)"
+                    });
+                }
+
+                // Reset the legacy InitialBalance to 0
+                account.InitialBalance = 0;
+            }
+
+            db.SaveChanges();
         }
     }
 }

@@ -46,6 +46,33 @@ namespace FinTrack.WPF.Views
             }
         }
 
+        private void ViewHistory_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is int assetId)
+            {
+                var detailWin = new InvestmentDetailWindow(_context, assetId);
+                detailWin.Owner = this;
+                detailWin.ShowDialog();
+            }
+        }
+
+        private async void EditInvestment_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is int assetId)
+            {
+                var asset = await _context.InvestmentAssets.FindAsync(assetId);
+                if (asset == null) return;
+
+                // Basit düzenleme diyalogu — InputBox tarzı
+                var editWin = new EditInvestmentAssetWindow(_context, asset);
+                editWin.Owner = this;
+                if (editWin.ShowDialog() == true)
+                {
+                    await LoadInvestmentsAsync();
+                }
+            }
+        }
+
         private async void SellInvestment_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is int assetId)

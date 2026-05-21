@@ -41,36 +41,33 @@
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="10" Height="10" Margin="0,0,6,0" VerticalAlignment="Center">
-                            <Ellipse.Style>
-                                <Style TargetType="Ellipse">
-                                    <Setter Property="Fill" Value="#F44336"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Type}" Value="Income">
-                                            <Setter Property="Fill" Value="#4CAF50"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Ellipse.Style>
-                        </Ellipse>
-                        <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#C62828"/>
-                                    <Setter Property="FontWeight" Value="SemiBold"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Type}" Value="Income">
-                                            <Setter Property="Foreground" Value="#2E7D32"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsSubCategory}" Value="True">
-                                            <Setter Property="FontWeight" Value="Normal"/>
-                                            <Setter Property="FontSize" Value="11"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
+                        <!-- Indentation for Sub-categories -->
+                        <Border x:Name="IndentSpace" Width="0"/>
+                        
+                        <!-- Type Indicator (Circle) -->
+                        <Ellipse x:Name="TypeCircle" Width="10" Height="10" Margin="0,0,8,0" VerticalAlignment="Center" Fill="#E74C3C"/>
+                        
+                        <!-- Icon -->
+                        <TextBlock Text="{Binding TypeIcon}" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="12"/>
+                        
+                        <!-- Name -->
+                        <TextBlock x:Name="NameText" Text="{Binding Name}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#C62828"/>
                     </StackPanel>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsSubCategory}" Value="True">
+                            <Setter TargetName="IndentSpace" Property="Width" Value="20"/>
+                            <Setter TargetName="NameText" Property="FontWeight" Value="Normal"/>
+                            <Setter TargetName="NameText" Property="FontSize" Value="13"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Type}" Value="Income">
+                            <Setter TargetName="TypeCircle" Property="Fill" Value="#27AE60"/>
+                            <Setter TargetName="NameText" Property="Foreground" Value="#2E7D32"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Type}" Value="Transfer">
+                            <Setter TargetName="TypeCircle" Property="Fill" Value="#3498DB"/>
+                            <Setter TargetName="NameText" Property="Foreground" Value="#1565C0"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>

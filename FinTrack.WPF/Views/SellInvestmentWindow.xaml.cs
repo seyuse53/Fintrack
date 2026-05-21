@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using Microsoft.EntityFrameworkCore;
 using FinTrack.Core.Models;
 using FinTrack.Data;
@@ -20,6 +21,7 @@ namespace FinTrack.WPF.Views
             InitializeComponent();
             _context = context;
             _assetId = assetId;
+            TransactionDatePicker.SelectedDate = DateTime.Now;
             Loaded += async (s, e) => await LoadDataAsync();
         }
 
@@ -37,6 +39,7 @@ namespace FinTrack.WPF.Views
 
                 AssetInfoText.Text = $"Varlık: {_asset.Name} ({_asset.Symbol})";
                 AvailableAmountText.Text = $"Satılabilir Miktar: {_asset.TotalAmount:N2}";
+                AvgCostInfoText.Text = $"Ort. Maliyet: {_asset.AverageCost:C2}";
 
                 var accounts = await _context.BankAccounts
                     .OrderBy(a => a.BankName)
@@ -57,7 +60,7 @@ namespace FinTrack.WPF.Views
 
                 foreach (var account in accounts)
                 {
-                    decimal currentBalance = account.InitialBalance;
+                    decimal currentBalance = 0;
 
                     foreach (var t in allBankTransactions.Where(x => x.BankAccountId == account.Id))
                     {
@@ -107,6 +110,8 @@ namespace FinTrack.WPF.Views
 
                 BankAccountComboBox.ItemsSource = items;
                 BankAccountComboBox.SelectedIndex = 0;
+                
+                UpdateProfitPreview();
             }
             catch (Exception ex)
             {
@@ -117,6 +122,46 @@ namespace FinTrack.WPF.Views
         private void NumberTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             UIHelper.FormatAmountTextBox(sender as System.Windows.Controls.TextBox);
+            UpdateProfitPreview();
+        }
+
+        private void UpdateProfitPreview()
+        {
+            if (_asset == null || ProfitPreviewText == null) return;
+
+            try
+            {
+                UIHelper.TryParseAmount(AmountTextBox?.Text ?? "", out decimal sellAmount);
+                UIHelper.TryParseAmount(UnitPriceTextBox?.Text ?? "", out decimal unitPrice);
+                UIHelper.TryParseAmount(FeeTextBox?.Text ?? "", out decimal fee);
+
+                decimal revenue = (sellAmount * unitPrice) - fee;
+                decimal costBasis = sellAmount * _asset.AverageCost;
+                decimal profit = revenue - costBasis;
+
+                RevenuePreviewText.Text = $"₺{revenue:N2}";
+                
+                ProfitPreviewText.Text = profit >= 0 ? $"+₺{profit:N2}" : $"-₺{Math.Abs(profit):N2}";
+                ProfitPreviewText.Foreground = profit >= 0
+                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#27AE60"))
+                    : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E74C3C"));
+
+                ProfitPreviewBorder.Background = profit >= 0
+                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EAFAF1"))
+                    : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FDEDEC"));
+                ProfitPreviewBorder.BorderBrush = profit >= 0
+                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A9DFBF"))
+                    : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F5B7B1"));
+            }
+            catch { /* Ignore */ }
+        }
+
+        private void SellAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_asset != null)
+            {
+                AmountTextBox.Text = $"{_asset.TotalAmount:N2}".Replace(".", "");
+            }
         }
 
         private async void Save_Click(object sender, RoutedEventArgs e)
@@ -149,6 +194,8 @@ namespace FinTrack.WPF.Views
                     return;
                 }
 
+                DateTime transactionDate = TransactionDatePicker.SelectedDate ?? DateTime.Now;
+
                 decimal totalRevenue = (sellAmount * unitPrice) - fee;
                 int? bankAccountId = null;
                 int? creditCardAccountId = null;
@@ -160,22 +207,15 @@ namespace FinTrack.WPF.Views
                     else if (sourceId.StartsWith("C_")) creditCardAccountId = int.Parse(sourceId.Substring(2));
                 }
 
-                // Banka hesabı bakiyesi sadece raporlama/görüntüleme anında _context üzerinden hesaplandığı için
-                // burada BankAccount üzerinde herhangi bir Balance alanı güncellememize gerek yok.
-                // investmentTransactions tarafına LinkedBankAccountId'yi eklememiz yeterli. Hesaplama yapıldığında bakiye artacaktır.
-
                 // 2. Varlığı güncelle veya tamamen sil (hepsini sattıysa)
                 if (sellAmount == _asset.TotalAmount)
                 {
-                    // Tamamı satıldıysa isteğe bağlı olarak kaydı silebiliriz ya da miktarını 0 diyip bırakabiliriz.
-                    // İşlem geçmişi tutmak istiyorsak miktarını 0 yaparak tutmak daha mantıklıdır.
                     _asset.TotalAmount = 0;
-                    _asset.AverageCost = 0; // Cost basis evaporates
+                    _asset.AverageCost = 0;
                 }
                 else
                 {
                     _asset.TotalAmount -= sellAmount;
-                    // Kalan miktar için ortalama maliyet (AverageCost) aynı kalır!
                 }
 
                 _context.InvestmentAssets.Update(_asset);
@@ -188,8 +228,8 @@ namespace FinTrack.WPF.Views
                     Amount = sellAmount,
                     UnitPrice = unitPrice,
                     Fee = fee,
-                    TotalCost = totalRevenue, // Burada TotalCost = Satıştan elde edilen gelir anlamında
-                    Date = DateTime.Now,
+                    TotalCost = totalRevenue,
+                    Date = transactionDate,
                     Notes = $"Varlık satışı: {sellAmount} {_asset.Symbol} @ {unitPrice:C2} (Masraf: {fee:C2})",
                     LinkedBankAccountId = bankAccountId,
                     LinkedCreditCardAccountId = creditCardAccountId

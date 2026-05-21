@@ -3,8 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+             mc:Ignorable="d" Loaded="UserControl_Loaded"
              d:DesignHeight="600" d:DesignWidth="900">
+    <UserControl.Resources>
+        <ContextMenu x:Key="CategoryContextMenu">
+            <MenuItem Header="✏️ Düzenle" Click="CategoryEdit_Click"/>
+        </ContextMenu>
+    </UserControl.Resources>
     <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -131,7 +136,212 @@
                 </ScrollViewer>
             </TabItem>
 
-            <!-- TAB 2: BULUT SENKRONİZASYONU & YEDEKLEME -->
+            <!-- TAB 2: KATEGORİ YÖNETİMİ -->
+            <TabItem Header="🏷️ Kategoriler">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="White" Padding="30" CornerRadius="0,8,8,8" BorderBrush="#E0E0E0" BorderThickness="0,1,1,1">
+                        <StackPanel>
+                            <TextBlock Text="Kategori Yönetimi" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                            <TextBlock Text="İşlem listesinde görmek istemediğiniz kategorileri sağ tarafa (gizli) taşıyabilirsiniz. Bu işlem geçmiş verilerinizi silmez." 
+                                       FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
+
+                            <!-- Yeni Kategori Ekleme Paneli -->
+                            <Border Background="#F9FAF9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1" Margin="0,0,0,20">
+                                <StackPanel>
+                                    <TextBlock Text="Yeni Kategori Ekle" FontSize="14" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,10"/>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <!-- Row 0: Labels -->
+                                        <TextBlock Text="Kategori Adı" Grid.Row="0" Grid.Column="0" Foreground="#7F8C8D" FontSize="11" Margin="5,0,0,2"/>
+                                        <TextBlock Text="Tür" Grid.Row="0" Grid.Column="1" Foreground="#7F8C8D" FontSize="11" Margin="5,0,0,2"/>
+                                        <TextBlock Text="Üst Kategori (İsteğe Bağlı)" Grid.Row="0" Grid.Column="2" Foreground="#7F8C8D" FontSize="11" Margin="5,0,0,2"/>
+
+                                        <!-- Row 1: Inputs -->
+                                        <TextBox x:Name="NewCategoryNameTextBox" Grid.Row="1" Grid.Column="0" Padding="10" Margin="0,0,10,0" 
+                                                 BorderBrush="#D5DBDB" FontSize="13" Foreground="#34495E"/>
+
+                                        <ComboBox x:Name="NewCategoryTypeComboBox" Grid.Row="1" Grid.Column="1" Padding="10" Margin="0,0,10,0" FontSize="13" SelectionChanged="NewCategoryTypeComboBox_SelectionChanged">
+                                            <ComboBoxItem Content="Gider (Expense)" IsSelected="True"/>
+                                            <ComboBoxItem Content="Gelir (Income)"/>
+                                        </ComboBox>
+
+                                        <ComboBox x:Name="ParentCategoryComboBox" Grid.Row="1" Grid.Column="2" Padding="10" Margin="0,0,10,0" FontSize="13" DisplayMemberPath="FullDisplayName">
+                                        </ComboBox>
+
+                                        <Button Grid.Row="1" Grid.Column="3" Content="➕ Ekle" Padding="20,10" Background="#3498DB" Foreground="White" 
+                                                FontWeight="Bold" BorderThickness="0" Cursor="Hand" Click="AddNewCategory_Click">
+                                            <Button.Resources>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="6"/>
+                                                </Style>
+                                            </Button.Resources>
+                                        </Button>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Çift Listeli Görünüm (Dual-Pane) -->
+                            <Grid Height="400">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Sol: Görünür Kategoriler -->
+                                <Border Grid.Column="0" Background="#FDFEFE" BorderBrush="#D5DBDB" BorderThickness="1" CornerRadius="6">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Border Background="#27AE60" CornerRadius="5,5,0,0" Padding="10">
+                                            <TextBlock Text="✅ Görünür (Aktif) Kategoriler" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                                        </Border>
+                                        <ListBox x:Name="VisibleCategoriesListBox" Grid.Row="1" Margin="5" BorderThickness="0" FontSize="14" SelectionMode="Multiple">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" Margin="2,2,0,2">
+                                                        <!-- İndentasyon (Alt Kategori ise sola boşluk) -->
+                                                        <Border x:Name="IndentSpace" Width="0"/>
+                                                        
+                                                        <!-- Tip İkonu ve Renk Çubuğu -->
+                                                        <Border x:Name="TypeMarker" Width="4" Height="16" CornerRadius="2" Margin="0,0,8,0"/>
+                                                        <TextBlock Text="{Binding TypeIcon}" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="12"/>
+                                                        
+                                                        <!-- Kategori Adı -->
+                                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="SemiBold">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsSubCategory}" Value="True">
+                                                                            <Setter Property="Foreground" Value="#5D6D7E"/>
+                                                                            <Setter Property="FontWeight" Value="Normal"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding IsSubCategory}" Value="True">
+                                                            <Setter TargetName="IndentSpace" Property="Width" Value="25"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Income">
+                                                            <Setter TargetName="TypeMarker" Property="Background" Value="#27AE60"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Expense">
+                                                            <Setter TargetName="TypeMarker" Property="Background" Value="#E74C3C"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Transfer">
+                                                            <Setter TargetName="TypeMarker" Property="Background" Value="#3498DB"/>
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="ToolTip" Value="{Binding FullDisplayName}"/>
+                                                    <Setter Property="Padding" Value="5"/>
+                                                    <Setter Property="ContextMenu" Value="{StaticResource CategoryContextMenu}"/>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                        </ListBox>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Orta: Transfer Butonları -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Button Content="Gizle ➡️" Width="60" Height="40" Margin="0,0,0,15" Background="#E74C3C" Foreground="White" FontWeight="Bold" 
+                                            BorderThickness="0" Cursor="Hand" Click="HideCategory_Click" ToolTip="Seçili kategorileri gizle">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="5"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                    <Button Content="⬅️ Göster" Width="60" Height="40" Background="#27AE60" Foreground="White" FontWeight="Bold" 
+                                            BorderThickness="0" Cursor="Hand" Click="ShowCategory_Click" ToolTip="Seçili kategorileri tekrar görünür yap">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="5"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </StackPanel>
+
+                                <!-- Sağ: Gizli Kategoriler -->
+                                <Border Grid.Column="2" Background="#FDFEFE" BorderBrush="#D5DBDB" BorderThickness="1" CornerRadius="6">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Border Background="#95A5A6" CornerRadius="5,5,0,0" Padding="10">
+                                            <TextBlock Text="👁️‍🗨️ Gizli Kategoriler" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                                        </Border>
+                                        <ListBox x:Name="HiddenCategoriesListBox" Grid.Row="1" Margin="5" BorderThickness="0" FontSize="14" Foreground="#7F8C8D" SelectionMode="Multiple">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" Margin="2,2,0,2">
+                                                        <Border x:Name="IndentSpace" Width="0"/>
+                                                        <Border x:Name="TypeMarker" Width="4" Height="16" CornerRadius="2" Margin="0,0,8,0" Opacity="0.5"/>
+                                                        <TextBlock Text="{Binding TypeIcon}" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="12" Opacity="0.5"/>
+                                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Foreground="#7F8C8D">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsSubCategory}" Value="True">
+                                                                            <Setter Property="FontStyle" Value="Italic"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding IsSubCategory}" Value="True">
+                                                            <Setter TargetName="IndentSpace" Property="Width" Value="25"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Income">
+                                                            <Setter TargetName="TypeMarker" Property="Background" Value="#27AE60"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Expense">
+                                                            <Setter TargetName="TypeMarker" Property="Background" Value="#E74C3C"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Transfer">
+                                                            <Setter TargetName="TypeMarker" Property="Background" Value="#3498DB"/>
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="ToolTip" Value="{Binding FullDisplayName}"/>
+                                                    <Setter Property="Padding" Value="5"/>
+                                                    <Setter Property="ContextMenu" Value="{StaticResource CategoryContextMenu}"/>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                        </ListBox>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- TAB 3: BULUT SENKRONİZASYONU & YEDEKLEME -->
             <TabItem Header="☁️ Bulut ve Yedekleme">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <Border Background="White" Padding="30" CornerRadius="0,8,8,8" BorderBrush="#E0E0E0" BorderThickness="0,1,1,1">
@@ -262,32 +472,223 @@
                     <Border Background="White" Padding="30" CornerRadius="0,8,8,8" BorderBrush="#E0E0E0" BorderThickness="0,1,1,1">
                          <StackPanel>
                             <TextBlock Text="Fiyat Sağlayıcı (API) Ayarları" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
-                            <TextBlock Text="Yatırım portföyünüzdeki varlıkların güncel fiyatlarını çekmek için kullanılacak servisi seçin. Kaydet butonuna basmayı unutmayın." 
+                            <TextBlock Text="Her varlık kategorisi için ayrı fiyat kaynağı seçebilirsiniz. Değişiklikler ayarları kaydettikten sonra geçerli olur." 
                                        FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
                                        
-                            <Border Background="#F9FAF9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1" MaxWidth="500" HorizontalAlignment="Left">
+                            <Border Background="#F9FAF9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1" MaxWidth="600" HorizontalAlignment="Left">
                                 <StackPanel>
-                                    <TextBlock Text="Sağlayıcı Seçimi" FontSize="12" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,10"/>
-                                    
-                                    <ComboBox x:Name="ApiProviderComboBox" Padding="10" FontSize="14" Margin="0,0,0,15" Width="300" HorizontalAlignment="Left"
-                                              SelectionChanged="ApiProviderComboBox_SelectionChanged">
-                                        <ComboBoxItem Content="Sadece Manuel (API Kapalı)"/>
-                                        <ComboBoxItem Content="Yahoo Finance (Ücretsiz)"/>
-                                        <ComboBoxItem Content="Özel API (Kendi Sunucum)"/>
-                                    </ComboBox>
-                                    
+                                    <TextBlock Text="📊 Kategori Bazlı API Sağlayıcıları" FontSize="14" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,15"/>
+
+                                    <!-- Döviz -->
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="💱 Döviz:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <ComboBox x:Name="DovizProviderComboBox" Grid.Column="1" Padding="8" FontSize="13">
+                                            <ComboBoxItem Content="Manuel (Kapalı)"/>
+                                            <ComboBoxItem Content="Yahoo Finance"/>
+                                            <ComboBoxItem Content="Özel API"/>
+                                            <ComboBoxItem Content="GenelPara"/>
+                                        </ComboBox>
+                                    </Grid>
+
+                                    <!-- Altın -->
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="🥇 Altın:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <ComboBox x:Name="AltinProviderComboBox" Grid.Column="1" Padding="8" FontSize="13">
+                                            <ComboBoxItem Content="Manuel (Kapalı)"/>
+                                            <ComboBoxItem Content="Yahoo Finance"/>
+                                            <ComboBoxItem Content="Özel API"/>
+                                            <ComboBoxItem Content="GenelPara"/>
+                                        </ComboBox>
+                                    </Grid>
+
+                                    <!-- Hisse Senedi -->
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="📈 Hisse Senedi:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <ComboBox x:Name="HisseProviderComboBox" Grid.Column="1" Padding="8" FontSize="13">
+                                            <ComboBoxItem Content="Manuel (Kapalı)"/>
+                                            <ComboBoxItem Content="Yahoo Finance"/>
+                                            <ComboBoxItem Content="Özel API"/>
+                                            <ComboBoxItem Content="GenelPara"/>
+                                        </ComboBox>
+                                    </Grid>
+
+                                    <!-- Kripto Para -->
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="🪙 Kripto Para:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <ComboBox x:Name="KriptoProviderComboBox" Grid.Column="1" Padding="8" FontSize="13">
+                                            <ComboBoxItem Content="Manuel (Kapalı)"/>
+                                            <ComboBoxItem Content="Yahoo Finance"/>
+                                            <ComboBoxItem Content="Özel API"/>
+                                            <ComboBoxItem Content="GenelPara"/>
+                                        </ComboBox>
+                                    </Grid>
+
+                                    <!-- Fon -->
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="🏦 Fon:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <ComboBox x:Name="FonProviderComboBox" Grid.Column="1" Padding="8" FontSize="13">
+                                            <ComboBoxItem Content="Manuel (Kapalı)"/>
+                                            <ComboBoxItem Content="Yahoo Finance"/>
+                                            <ComboBoxItem Content="Özel API"/>
+                                            <ComboBoxItem Content="GenelPara"/>
+                                        </ComboBox>
+                                    </Grid>
+
+                                    <!-- Diğer -->
+                                    <Grid Margin="0,0,0,15">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="140"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="📦 Diğer:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <ComboBox x:Name="DigerProviderComboBox" Grid.Column="1" Padding="8" FontSize="13">
+                                            <ComboBoxItem Content="Manuel (Kapalı)"/>
+                                            <ComboBoxItem Content="Yahoo Finance"/>
+                                            <ComboBoxItem Content="Özel API"/>
+                                            <ComboBoxItem Content="GenelPara"/>
+                                        </ComboBox>
+                                    </Grid>
+
+                                    <Separator Background="#E0E0E0" Margin="0,5,0,15"/>
+
+                                    <!-- Bilgi Notu -->
+                                    <Border Background="#EBF5FB" CornerRadius="6" Padding="12" Margin="0,0,0,15">
+                                        <StackPanel>
+                                            <TextBlock Text="💡 Önerilen Ayarlar:" FontSize="12" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                                            <TextBlock Text="• Döviz, Altın → GenelPara (TRY bazlı, hesaplama gerektirmez)" FontSize="11" Foreground="#34495E"/>
+                                            <TextBlock Text="• Hisse Senedi → Yahoo Finance (BIST hisseleri .IS uzantısıyla)" FontSize="11" Foreground="#34495E"/>
+                                            <TextBlock Text="• Kripto Para → Yahoo Finance veya GenelPara" FontSize="11" Foreground="#34495E"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Özel API URL -->
                                     <StackPanel x:Name="CustomApiPanel" Visibility="Collapsed" Margin="0,0,0,15">
                                         <TextBlock Text="Özel API End-point URL:" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
-                                        <TextBox x:Name="CustomApiTextBox" Padding="10" Width="300" HorizontalAlignment="Left" 
+                                        <TextBox x:Name="CustomApiTextBox" Padding="10" 
                                                  ToolTip="Örn: https://api.sunucum.com/fiyatlar"/>
                                     </StackPanel>
 
-                                    <TextBlock Text="Not: Manuel seçeneğinde fiyatları elle girmeniz gerekir. Yahoo Finance veya Özel API üzerinden canlı fiyatları Otomatik Çek butonu ile yükleyebilirsiniz." 
-                                               FontSize="11" Foreground="#7F8C8D" TextWrapping="Wrap" Margin="0,0,0,15"/>
-                                               
-                                    <Button x:Name="SaveApiSettingsButton" Content="💾 Ayarları Kaydet" Width="Auto" HorizontalAlignment="Left"
+                                    <Button x:Name="SaveApiSettingsButton" Content="💾 API Ayarlarını Kaydet" Width="Auto" HorizontalAlignment="Left"
                                             Padding="15,8" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand"
                                             Click="SaveApiSettingsButton_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="6"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Vergi Oranları Bölümü -->
+                            <TextBlock Text="📊 Vergi Oranları" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,30,0,5"/>
+                            <TextBlock Text="Kategori bazlı vergi oranlarını burada değiştirebilirsiniz. Vergi Raporu bu değerleri kullanarak hesaplama yapar." 
+                                       FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,15" TextWrapping="Wrap"/>
+
+                            <Border Background="#F9FAF9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1" MaxWidth="600" HorizontalAlignment="Left">
+                                <StackPanel>
+                                    <!-- Bilgi Notu -->
+                                    <Border Background="#FEF9E7" CornerRadius="6" Padding="10" Margin="0,0,0,15">
+                                        <TextBlock Text="⚠️ Bu oranlar bilgilendirme amaçlıdır ve kesin vergi tavsiyesi değildir." FontSize="11" Foreground="#8D6E0F" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                    </Border>
+
+                                    <TextBlock Text="Alım-Satım Kazancı Stopajı (%)" FontSize="14" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,12"/>
+
+                                    <!-- Hisse Senedi -->
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="📈 Hisse Senedi (BIST):" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="TaxRateHisseTextBox" Grid.Column="1" Text="0" Padding="8" FontSize="13" HorizontalContentAlignment="Center" MaxWidth="100" HorizontalAlignment="Left"/>
+                                    </Grid>
+
+                                    <!-- MKYO -->
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="🏢 MKYO (1 yıl altı):" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="TaxRateMKYOTextBox" Grid.Column="1" Text="10" Padding="8" FontSize="13" HorizontalContentAlignment="Center" MaxWidth="100" HorizontalAlignment="Left"/>
+                                    </Grid>
+
+                                    <!-- Döviz -->
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="💱 Döviz:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="TaxRateDovizTextBox" Grid.Column="1" Text="0" Padding="8" FontSize="13" HorizontalContentAlignment="Center" MaxWidth="100" HorizontalAlignment="Left"/>
+                                    </Grid>
+
+                                    <!-- Altın -->
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="🥇 Altın:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="TaxRateAltinTextBox" Grid.Column="1" Text="0" Padding="8" FontSize="13" HorizontalContentAlignment="Center" MaxWidth="100" HorizontalAlignment="Left"/>
+                                    </Grid>
+
+                                    <!-- Kripto -->
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="🪙 Kripto Para:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="TaxRateKriptoTextBox" Grid.Column="1" Text="0" Padding="8" FontSize="13" HorizontalContentAlignment="Center" MaxWidth="100" HorizontalAlignment="Left"/>
+                                    </Grid>
+
+                                    <!-- Yurt Dışı -->
+                                    <Grid Margin="0,0,0,15">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="🌍 Yurt Dışı Hisse:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="TaxRateYurtDisiTextBox" Grid.Column="1" Text="0" Padding="8" FontSize="13" HorizontalContentAlignment="Center" MaxWidth="100" HorizontalAlignment="Left"/>
+                                    </Grid>
+
+                                    <Separator Background="#E0E0E0" Margin="0,5,0,15"/>
+
+                                    <TextBlock Text="Temettü Stopajı (%)" FontSize="14" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,12"/>
+                                    <Grid Margin="0,0,0,15">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="💰 Temettü (Kâr Payı):" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="TaxRateTemettüTextBox" Grid.Column="1" Text="15" Padding="8" FontSize="13" HorizontalContentAlignment="Center" MaxWidth="100" HorizontalAlignment="Left"/>
+                                    </Grid>
+
+                                    <Button x:Name="SaveTaxSettingsButton" Content="💾 Vergi Ayarlarını Kaydet" Width="Auto" HorizontalAlignment="Left"
+                                            Padding="15,8" Background="#E74C3C" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand"
+                                            Click="SaveTaxSettingsButton_Click">
                                         <Button.Resources>
                                             <Style TargetType="Border">
                                                 <Setter Property="CornerRadius" Value="6"/>
@@ -336,24 +737,48 @@
                                     </Style>
                                 </StackPanel.Resources>
 
-                                <!-- Seçenek 1: İşlemler & Ana Ekran -->
-                                <Expander Header="🏠 Ana Ekran (Dashboard) ve İşlem Ekleme">
+                            <Expander Header="🏠 Ana Ekran (Dashboard) ve Akıllı Arama">
                                 <StackPanel>
                                     <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Gelir ve Gider Takibi:"/>
                                     <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,10" Text="İşlem eklerken 'Gelir' veya 'Gider' sekmelerini kullanarak işlemin türünü seçebilirsiniz. Ana ekran her ayın net bakiyesini, toplam gelir ve borç dağılımlarını hesaplar."/>
                                     
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Akıllı Arama (Global Search):"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,10" Text="Aylık işlem listesinde arama çubuğunu kullanarak tarih, açıklama veya tutara göre anlık filtreleme yapabilirsiniz. 'Market', 'Yemek' gibi kelimelerle arama yaparak geçmiş harcamalarınızı saniyeler içinde bulabilirsiniz."/>
+
                                     <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Ödeme Yöntemi:"/>
-                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="Sabit bir Gelir (örn: Maaş, EFT) eklerken 'Ödeme Yöntemi' seçeneğinden hedeflenen Banka Hesabını seçerek paranın doğrudan banka cüzdanınıza girmesini sağlayabilirsiniz. Aynı mantık Gider işlemleri için de geçerlidir."/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="Sabit bir Gelir (örn: Maaş, EFT) eklerken 'Ödeme Yöntemi' seçeneğinden hedeflenen Banka Hesabını seçerek paranın doğrudan banka cüzdanınıza girmesini sağlayabilirsiniz."/>
                                 </StackPanel>
                             </Expander>
+                            <Expander Header="🏷️ Kategori Yönetimi &amp; Gizleme">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Kategorileri Gizleme (Soft-Delete):"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,10" Text="İşlem listesinde artık görmek istemediğiniz kategorileri 'Ayarlar > Kategoriler' sekmesinden sağ tarafa (Gizli) taşıyabilirsiniz. Bu işlem, o kategorieye ait geçmiş kayıtlarınızı silmez."/>
+
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Kategori Düzenleme &amp; Hiyerarşi:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="Kategorilere sağ tıklayarak 'Düzenle' diyebilir, isimlerini değiştirebilir veya bir 'Üst Kategori' seçerek hiyerarşik (örn: Market > Gıda) bir yapı kurabilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Header="💰 Nakit Kasa Modülü">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Fiziksel Nakit Takibi:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,10" Text="Banka hesaplarınız dışında, cüzdanınızdaki fiziksel nakit parayı 'Nakit Kasa' üzerinden takip edebilirsiniz. Nakit ödeme yaptığınızda harcama buradan düşer."/>
+                                    
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Kasa Detayları:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="Hesaplarım sayfasındaki Nakit Kasa kartına tıklayarak sadece nakit ile yapılmış geçmiş işlemleri görebilir ve mevcut fiziksel varlığınızı teyit edebilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Header="💳 Taksitli İşlemler &amp; Kredi Kartları">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Taksit Yönetimi:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,10" Text="Kredi kartı ile harcama yaparken 'Taksit Sayısı' belirterek işlemin gelecek aylara otomatik bölünmesini sağlayabilirsiniz. Sistem, her ayın ekstresine ilgili taksidi otomatik yansıtır."/>
+                                    
+                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Grup Silme:"/>
+                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="Taksitli bir işlemi silmek istediğinizde, sistem size sadece o ayı mı yoksa tüm gelecek taksitleri mi silmek istediğinizi sorarak tek tıkla temizlik yapmanıza olanak tanır."/>
+                                </StackPanel>
+                            </Expander>
+
                             <Expander Header="🏦 Banka Hesapları ve Transfer İşlemleri">
                                 <StackPanel>
-                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Hesap Yönetimi:"/>
-                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,10" Text="Hesaplar paneli üzerinden yeni banka hesapları ekleyebilir, IBAN veya açılış bakiyesi belirtebilirsiniz. Eklenen hesaplar Ana Ekrandaki 'Toplam Varlık' tutarına doğrudan eklenir."/>
-                                    
-                                    <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Hesap Hareketleri:"/>
-                                    <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,10" Text="Hesaplar sayfasındaki '📝 Hareketler' butonunu kullanarak o hesaba ait geçmiş tüm gelir, gider ve transfer işlemlerini detaylı bir listede görebilir, hesap bakiyenizin nasıl oluştuğunu takip edebilirsiniz."/>
-
                                     <TextBlock Style="{StaticResource ExpanderContent}" FontWeight="Bold" Foreground="#34495E" Text="Para Transferi:"/>
                                     <TextBlock Style="{StaticResource ExpanderContent}" Margin="5,0,5,5" Text="Hesaplar sayfasındaki '🔄 Transfer' butonunu kullanarak;"/>
                                     <TextBlock Style="{StaticResource ExpanderContent}" Margin="15,0,5,0" Text="• İki banka arası EFT/Havale yapabilir,"/>
@@ -405,7 +830,7 @@
                 <Border Background="White" Padding="30" CornerRadius="0,8,8,8" BorderBrush="#E0E0E0" BorderThickness="0,1,1,1">
                     <StackPanel>
                         <TextBlock Text="FinTrack" FontSize="22" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
-                        <TextBlock Text="Sürüm 0.8.0" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,25"/>
+                        <TextBlock Text="Sürüm 1.0.0" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,25"/>
                         
                         <TextBlock Text="Açıklama" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
                         <TextBlock Text="FinTrack, kişisel harcamalarınızı ve bütçenizi en ince ayrıntısıyla takip etmeniz için tasarlanmış, tam şifreli ve yerel veri korumalı bir finans yönetim aracıdır." 

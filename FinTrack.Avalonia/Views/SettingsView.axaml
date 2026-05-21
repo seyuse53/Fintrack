@@ -1,0 +1,637 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             xmlns:local="using:FinTrack.Avalonia.Views"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
+             x:Class="FinTrack.Avalonia.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Settings Side Menu -->
+            <ColumnDefinition Width="200"/>
+            <!-- Content Area -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ==================== LEFT SIDE MENU ==================== -->
+        <Border Grid.Column="0" Background="#2C3E50" CornerRadius="8,0,0,8">
+            <StackPanel Margin="0,20">
+                <TextBlock Text="⚙️ Ayarlar" FontSize="20" FontWeight="Bold" Foreground="White" 
+                           Margin="20,0,0,25" />
+
+                <!-- Tab Buttons -->
+                <Button Content="🔒 Güvenlik" Tag="0" Command="{Binding SwitchTabCommand}" CommandParameter="0"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                        Padding="20,12" FontSize="13" Foreground="White" CornerRadius="0" BorderThickness="0"
+                        Background="#34495E"/>
+
+                <Button Content="🏷️ Kategoriler" Tag="1" Command="{Binding SwitchTabCommand}" CommandParameter="1"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
+                        Background="Transparent"/>
+
+                <Button Content="☁️ Yedekleme" Tag="2" Command="{Binding SwitchTabCommand}" CommandParameter="2"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
+                        Background="Transparent"/>
+
+                <Button Content="🌍 API ve Vergi" Tag="3" Command="{Binding SwitchTabCommand}" CommandParameter="3"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
+                        Background="Transparent"/>
+
+                <Button Content="📖 Kılavuz" Tag="4" Command="{Binding SwitchTabCommand}" CommandParameter="4"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
+                        Background="Transparent"/>
+
+                <Button Content="ℹ️ Hakkında" Tag="5" Command="{Binding SwitchTabCommand}" CommandParameter="5"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
+                        Background="Transparent"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ==================== CONTENT AREA ==================== -->
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <Border Background="White" Padding="30" Margin="0" CornerRadius="0,8,8,0">
+                <Grid>
+                    <!-- ==================== TAB 0: GÜVENLİK ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=0}">
+                        <!-- Giriş Şifresini Değiştir Kartı -->
+                        <Border Background="White" CornerRadius="12" BorderBrush="#EBEDEF" BorderThickness="1" Margin="0,0,0,30" Padding="25"
+                                BoxShadow="0 2 15 0 #0D000000">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                    <TextBlock Text="🛡️" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Giriş Şifresini Değiştir" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <TextBlock Text="Uygulama girişinde kullandığınız ve verilerinizi şifreleyen ana şifreyi buradan güncelleyebilirsiniz." 
+                                           FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
+
+                                <Grid Width="500" HorizontalAlignment="Left" Margin="0,15,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Mevcut Şifre -->
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Mevcut Şifre" VerticalAlignment="Center" Foreground="#34495E" FontWeight="SemiBold"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" PasswordChar="●" 
+                                             Text="{Binding CurrentPassword}" Padding="10" Margin="0,0,0,15" 
+                                             BorderBrush="#D5DBDB" Background="#FDFEFE" CornerRadius="4"/>
+
+                                    <!-- Yeni Şifre -->
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Yeni Şifre" VerticalAlignment="Center" Foreground="#34495E" FontWeight="SemiBold"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" PasswordChar="●"
+                                             Text="{Binding NewPassword}" Padding="10" Margin="0,0,0,15" 
+                                             BorderBrush="#D5DBDB" Background="#FDFEFE" CornerRadius="4"/>
+
+                                    <!-- Yeni Şifre (Tekrar) -->
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Yeni Şifre (Tekrar)" VerticalAlignment="Center" Foreground="#34495E" FontWeight="SemiBold"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" PasswordChar="●"
+                                             Text="{Binding ConfirmPassword}" Padding="10" Margin="0,0,0,5" 
+                                             BorderBrush="#D5DBDB" Background="#FDFEFE" CornerRadius="4"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding PasswordStatusMessage}" 
+                                               FontSize="12" Margin="0,0,0,20">
+                                        <TextBlock.Foreground>
+                                            <SolidColorBrush Color="#E74C3C"/>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+                                </Grid>
+
+                                <Button Content="Şifreyi Şimdi Güncelle" HorizontalAlignment="Right" Padding="30,12" 
+                                        Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                                        Command="{Binding ChangePasswordCommand}" CornerRadius="8" MaxWidth="250"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Otomatik Kilitleme (Auto-Lock) Bölümü -->
+                        <StackPanel Margin="0,10,0,0">
+                            <TextBlock Text="Otomatik Kilitleme (Auto-Lock)" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                            <TextBlock Text="Hareketsizlik durumunda ekrana şifre kalkanı koyarak verilerinizi meraklı gözlerden koruyun." 
+                                       FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,15" TextWrapping="Wrap"/>
+
+                            <Border Background="#F8F9F9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1">
+                                <StackPanel>
+                                    <CheckBox IsChecked="{Binding AutoLockEnabled}" Content="Hareketsizlik durumunda uygulamayı kilitle" 
+                                              FontSize="13" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,15"/>
+
+                                    <StackPanel>
+                                        <TextBlock Text="Kilitlenme Süresi (Dakika):" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
+                                        <TextBox Text="{Binding AutoLockTimeout}" Padding="8" Background="White" BorderBrush="#D5DBDB" 
+                                                 FontSize="13" Width="100" HorizontalAlignment="Left" HorizontalContentAlignment="Center" 
+                                                 Margin="0,0,0,15" CornerRadius="4"/>
+                                    </StackPanel>
+
+                                    <Button Content="⏱️ Kilitleme Ayarlarını Kaydet" HorizontalAlignment="Left"
+                                            Padding="15,8" Background="#F39C12" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                                            Command="{Binding SaveAutoLockSettingsCommand}" CornerRadius="6"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- ==================== TAB 1: KATEGORİ YÖNETİMİ ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=1}">
+                        <TextBlock Text="Kategori Yönetimi" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                        <TextBlock Text="İşlem listesinde görmek istemediğiniz kategorileri sağ tarafa (gizli) taşıyabilirsiniz. Bu işlem geçmiş verilerinizi silmez." 
+                                   FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
+
+                        <!-- Yeni Kategori Ekleme Paneli -->
+                        <Border Background="#F9FAF9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1" Margin="0,0,0,20">
+                            <StackPanel>
+                                <TextBlock Text="Yeni Kategori Ekle" FontSize="14" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,10"/>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Row 0: Labels -->
+                                    <TextBlock Text="Kategori Adı" Grid.Row="0" Grid.Column="0" Foreground="#7F8C8D" FontSize="11" Margin="5,0,0,2"/>
+                                    <TextBlock Text="Tür" Grid.Row="0" Grid.Column="1" Foreground="#7F8C8D" FontSize="11" Margin="5,0,0,2"/>
+                                    <TextBlock Text="Üst Kategori (İsteğe Bağlı)" Grid.Row="0" Grid.Column="2" Foreground="#7F8C8D" FontSize="11" Margin="5,0,0,2"/>
+
+                                    <!-- Row 1: Inputs -->
+                                    <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding NewCategoryName}" 
+                                             Padding="10" Margin="0,0,10,0" BorderBrush="#D5DBDB" FontSize="13" Foreground="#34495E" CornerRadius="4"/>
+
+                                    <ComboBox Grid.Row="1" Grid.Column="1" SelectedIndex="{Binding SelectedCategoryTypeIndex}" 
+                                              Padding="10" Margin="0,0,10,0" FontSize="13" CornerRadius="4">
+                                        <ComboBoxItem Content="Gider (Expense)"/>
+                                        <ComboBoxItem Content="Gelir (Income)"/>
+                                    </ComboBox>
+
+                                    <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding ParentCategories}" 
+                                              SelectedItem="{Binding SelectedParentCategory}"
+                                              Padding="10" Margin="0,0,10,0" FontSize="13" CornerRadius="4">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding FullDisplayName}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                    <Button Grid.Row="1" Grid.Column="3" Content="➕ Ekle" Padding="20,10" 
+                                            Background="#3498DB" Foreground="White" FontWeight="Bold" BorderThickness="0" 
+                                            Command="{Binding AddCategoryCommand}" CornerRadius="6"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Çift Listeli Görünüm (Dual-Pane) -->
+                        <Grid Height="400">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Sol: Görünür Kategoriler -->
+                            <Border Grid.Column="0" Background="#FDFEFE" BorderBrush="#D5DBDB" BorderThickness="1" CornerRadius="6">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Border Background="#27AE60" CornerRadius="5,5,0,0" Padding="10">
+                                        <TextBlock Text="✅ Görünür (Aktif) Kategoriler" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                                    </Border>
+                                    <ListBox x:Name="VisibleCategoriesListBox" Grid.Row="1" Margin="5" BorderThickness="0" FontSize="14" 
+                                             ItemsSource="{Binding VisibleCategories}" SelectionMode="Multiple">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Margin="2,2,0,2">
+                                                    <Border Width="{Binding IsSubCategory, Converter={x:Static local:SubCategoryIndentConverter.Instance}}" />
+                                                    <Border Width="4" Height="16" CornerRadius="2" Margin="0,0,8,0"
+                                                            Background="{Binding Type, Converter={x:Static local:CategoryTypeColorConverter.Instance}}"/>
+                                                    <TextBlock Text="{Binding TypeIcon}" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="12"/>
+                                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" 
+                                                               FontWeight="{Binding IsSubCategory, Converter={x:Static local:SubCategoryFontWeightConverter.Instance}}"
+                                                               Foreground="{Binding IsSubCategory, Converter={x:Static local:SubCategoryForegroundConverter.Instance}}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                        <ListBox.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="✏️ Düzenle" Click="CategoryEdit_Click"/>
+                                            </ContextMenu>
+                                        </ListBox.ContextMenu>
+                                    </ListBox>
+                                </Grid>
+                            </Border>
+
+                            <!-- Orta: Transfer Butonları -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Button Content="➡️" Width="60" Height="40" Margin="0,0,0,15" Background="#E74C3C" Foreground="White" FontWeight="Bold" 
+                                        BorderThickness="0" CornerRadius="5" Click="HideCategory_Click"
+                                        ToolTip.Tip="Seçili kategorileri gizle"/>
+                                <Button Content="⬅️" Width="60" Height="40" Background="#27AE60" Foreground="White" FontWeight="Bold" 
+                                        BorderThickness="0" CornerRadius="5" Click="ShowCategory_Click"
+                                        ToolTip.Tip="Seçili kategorileri tekrar görünür yap"/>
+                            </StackPanel>
+
+                            <!-- Sağ: Gizli Kategoriler -->
+                            <Border Grid.Column="2" Background="#FDFEFE" BorderBrush="#D5DBDB" BorderThickness="1" CornerRadius="6">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Border Background="#95A5A6" CornerRadius="5,5,0,0" Padding="10">
+                                        <TextBlock Text="👁️‍🗨️ Gizli Kategoriler" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                                    </Border>
+                                    <ListBox x:Name="HiddenCategoriesListBox" Grid.Row="1" Margin="5" BorderThickness="0" FontSize="14" Foreground="#7F8C8D"
+                                             ItemsSource="{Binding HiddenCategories}" SelectionMode="Multiple">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Margin="2,2,0,2" Opacity="0.7">
+                                                    <Border Width="{Binding IsSubCategory, Converter={x:Static local:SubCategoryIndentConverter.Instance}}" />
+                                                    <Border Width="4" Height="16" CornerRadius="2" Margin="0,0,8,0" Opacity="0.5"
+                                                            Background="{Binding Type, Converter={x:Static local:CategoryTypeColorConverter.Instance}}"/>
+                                                    <TextBlock Text="{Binding TypeIcon}" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="12" Opacity="0.5"/>
+                                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Foreground="#7F8C8D"
+                                                               FontStyle="{Binding IsSubCategory, Converter={x:Static local:SubCategoryFontStyleConverter.Instance}}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                        <ListBox.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Header="✏️ Düzenle" Click="CategoryEdit_Click"/>
+                                            </ContextMenu>
+                                        </ListBox.ContextMenu>
+                                    </ListBox>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- ==================== TAB 2: YEDEKLEME ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=2}">
+                        <TextBlock Text="Bulut Senkronizasyonu ve Yedekleme" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                        <TextBlock Text="Veritabanınızı doğrudan buluta taşıyın veya otomatik yedekleme kurallarını belirleyin." 
+                                   FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25"/>
+
+                        <Border Background="#F8F9F9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="Mevcut Veritabanı Konumu" FontSize="12" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,10"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Text="{Binding DatabasePath}" IsReadOnly="True" Padding="10" Background="White" 
+                                             BorderBrush="#D5DBDB" FontSize="12" Foreground="#34495E" CornerRadius="4"/>
+                                    <Button Grid.Column="1" Content="Klasör Seç" Padding="20,8" Margin="10,0,0,0" 
+                                            Background="#3498DB" Foreground="White" FontWeight="Bold" BorderThickness="0" CornerRadius="5"
+                                            Command="{Binding SelectDatabaseFolderCommand}"/>
+                                </Grid>
+
+                                <Button Content="💾 Ayarları Kaydet" HorizontalAlignment="Left"
+                                        Padding="15,8" Margin="0,15,0,0" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                                        Command="{Binding SaveCloudSettingsCommand}" CornerRadius="6"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Otomatik Yedekleme -->
+                        <TextBlock Text="Otomatik Yedekleme (Auto-Backup)" FontSize="14" FontWeight="Bold" Foreground="#2C3E50" Margin="0,30,0,10"/>
+                        <Border Background="#F8F9F9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1">
+                            <StackPanel>
+                                <CheckBox IsChecked="{Binding BackupEnabled}" Content="Uygulama kapanırken otomatik yedek al" 
+                                          FontSize="13" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,15"/>
+
+                                <StackPanel>
+                                    <TextBlock Text="Yedekleme Klasörü (Örn: G:\My Drive\Backups)" FontSize="12" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,5"/>
+                                    <Grid Margin="0,0,0,15">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Text="{Binding BackupPath}" IsReadOnly="True" Padding="10" Background="White" 
+                                                 BorderBrush="#D5DBDB" FontSize="12" Foreground="#34495E" CornerRadius="4"/>
+                                        <Button Grid.Column="1" Content="Klasör Seç" Padding="20,8" Margin="10,0,0,0" 
+                                                Background="#3498DB" Foreground="White" FontWeight="Bold" BorderThickness="0" CornerRadius="5"
+                                                Command="{Binding SelectBackupFolderCommand}"/>
+                                    </Grid>
+
+                                    <Grid MaxWidth="400" HorizontalAlignment="Left">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="Maks. Yedek Sayısı:" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
+                                            <TextBox Text="{Binding MaxBackupCount}" Padding="8" Background="White" BorderBrush="#D5DBDB" 
+                                                     FontSize="13" HorizontalContentAlignment="Center" CornerRadius="4"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Text="Maks. Saklama Günü:" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
+                                            <TextBox Text="{Binding MaxBackupAge}" Padding="8" Background="White" BorderBrush="#D5DBDB" 
+                                                     FontSize="13" HorizontalContentAlignment="Center" CornerRadius="4"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+
+                                <Button Content="💾 Yedekleme Ayarlarını Kaydet" HorizontalAlignment="Left"
+                                        Padding="15,8" Margin="0,20,0,0" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                                        Command="{Binding SaveBackupSettingsCommand}" CornerRadius="6"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Hızlı Kurulum Kılavuzu -->
+                        <TextBlock Text="Hızlı Kurulum Kılavuzu" FontSize="14" FontWeight="Bold" Foreground="#2C3E50" Margin="0,30,0,10"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Google Drive" FontWeight="Bold" Foreground="#4285F4" Margin="0,0,0,5"/>
+                                <TextBlock Text="Drive Desktop uygulamasını açın ve 'G:\My Drive' klasörünü hedef gösterin." FontSize="11" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                                <TextBlock Text="OneDrive" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,5"/>
+                                <TextBlock Text="Kullanıcı klasörünüzdeki yerel OneDrive dizinini seçin." FontSize="11" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="10,0,0,0">
+                                <TextBlock Text="Dropbox" FontWeight="Bold" Foreground="#0061FF" Margin="0,0,0,5"/>
+                                <TextBlock Text="Dropbox masaüstü klasörünü hedef olarak belirleyin." FontSize="11" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- ==================== TAB 3: API VE VERGİ ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=3}">
+                        <TextBlock Text="Fiyat Sağlayıcı (API) Ayarları" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                        <TextBlock Text="Her varlık kategorisi için ayrı fiyat kaynağı seçebilirsiniz. Değişiklikler ayarları kaydettikten sonra geçerli olur." 
+                                   FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
+
+                        <Border Background="#F9FAF9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1" MaxWidth="600" HorizontalAlignment="Left">
+                            <StackPanel>
+                                <TextBlock Text="📊 Kategori Bazlı API Sağlayıcıları" FontSize="14" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,15"/>
+
+                                <!-- Döviz -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="140"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="💱 Döviz:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1" SelectedIndex="{Binding DovizProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
+                                        <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
+                                        <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <!-- Altın -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="140"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="🥇 Altın:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1" SelectedIndex="{Binding AltinProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
+                                        <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
+                                        <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <!-- Hisse Senedi -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="140"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="📈 Hisse Senedi:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1" SelectedIndex="{Binding HisseProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
+                                        <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
+                                        <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <!-- Kripto Para -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="140"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="🪙 Kripto Para:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1" SelectedIndex="{Binding KriptoProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
+                                        <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
+                                        <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <!-- Fon -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="140"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="🏦 Fon:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1" SelectedIndex="{Binding FonProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
+                                        <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
+                                        <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <!-- Diğer -->
+                                <Grid Margin="0,0,0,15">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="140"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="📦 Diğer:" FontSize="13" FontWeight="SemiBold" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <ComboBox Grid.Column="1" SelectedIndex="{Binding DigerProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
+                                        <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
+                                        <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <!-- Özel API URL -->
+                                <StackPanel IsVisible="{Binding ShowCustomApiPanel}" Margin="0,0,0,15">
+                                    <TextBlock Text="Özel API URL:" FontSize="12" Foreground="#34495E" Margin="0,0,0,5"/>
+                                    <TextBox Text="{Binding CustomApiUrl}" Padding="8" Background="White" BorderBrush="#D5DBDB" 
+                                             FontSize="13" PlaceholderText="https://api.example.com/prices" CornerRadius="4"/>
+                                </StackPanel>
+
+                                <!-- Bilgi Kutusu -->
+                                <Border Background="#EBF5FB" Padding="12" CornerRadius="6" BorderBrush="#AED6F1" BorderThickness="1" Margin="0,0,0,10">
+                                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#2C3E50"
+                                               Text="💡 Önerilen: Döviz ve Altın → GenelPara (TRY bazlı), Hisse Senedi → Yahoo Finance (BIST .IS uzantısı), Kripto → Yahoo Finance"/>
+                                </Border>
+
+                                <Button Content="💾 API Ayarlarını Kaydet" HorizontalAlignment="Left"
+                                        Padding="15,8" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                                        Command="{Binding SaveApiSettingsCommand}" CornerRadius="6"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Vergi Oranları -->
+                        <TextBlock Text="📊 Vergi Oranları (%)" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,30,0,5"/>
+                        <TextBlock Text="Yatırım satışlarında kâr üzerinden uygulanacak stopaj oranlarını belirleyin." 
+                                   FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,15" TextWrapping="Wrap"/>
+
+                        <Border Background="#FEF9E7" Padding="10" CornerRadius="6" BorderBrush="#F9E79F" BorderThickness="1" Margin="0,0,0,15">
+                            <TextBlock Text="⚠️ Bu oranlar bilgilendirme amaçlıdır ve kesin vergi tavsiyesi değildir." 
+                                       FontSize="11" Foreground="#7D6608" TextWrapping="Wrap"/>
+                        </Border>
+
+                        <Border Background="#F9FAF9" Padding="20" CornerRadius="8" BorderBrush="#D5DBDB" BorderThickness="1" MaxWidth="500" HorizontalAlignment="Left">
+                            <StackPanel Spacing="10">
+                                <!-- Tax Rate Fields -->
+                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="100"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Hisse Senedi (BIST):" FontSize="13" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding TaxRateHisse}" Padding="6" FontSize="13" HorizontalContentAlignment="Center" CornerRadius="4"/></Grid>
+                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="100"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="MKYO:" FontSize="13" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding TaxRateMKYO}" Padding="6" FontSize="13" HorizontalContentAlignment="Center" CornerRadius="4"/></Grid>
+                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="100"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Döviz:" FontSize="13" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding TaxRateDoviz}" Padding="6" FontSize="13" HorizontalContentAlignment="Center" CornerRadius="4"/></Grid>
+                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="100"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Altın:" FontSize="13" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding TaxRateAltin}" Padding="6" FontSize="13" HorizontalContentAlignment="Center" CornerRadius="4"/></Grid>
+                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="100"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Kripto:" FontSize="13" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding TaxRateKripto}" Padding="6" FontSize="13" HorizontalContentAlignment="Center" CornerRadius="4"/></Grid>
+                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="100"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Yurt Dışı:" FontSize="13" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding TaxRateYurtDisi}" Padding="6" FontSize="13" HorizontalContentAlignment="Center" CornerRadius="4"/></Grid>
+                                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="100"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Temettü (Dividend):" FontSize="13" Foreground="#34495E" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding TaxRateTemettü}" Padding="6" FontSize="13" HorizontalContentAlignment="Center" CornerRadius="4"/></Grid>
+
+                                <Button Content="💾 Vergi Oranlarını Kaydet" HorizontalAlignment="Left" Margin="0,10,0,0"
+                                        Padding="15,8" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                                        Command="{Binding SaveTaxSettingsCommand}" CornerRadius="6"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- ==================== TAB 4: KULLANIM KILAVUZU ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=4}">
+                        <TextBlock Text="📖 Kullanım Kılavuzu" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+
+                        <StackPanel Spacing="5">
+                            <Expander Header="🏠 Ana Ekran (Dashboard) ve Akıllı Arama" Padding="10">
+                                <StackPanel Margin="5,10,5,10" Spacing="8">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Dashboard'da gelir-gider özeti, son işlemler ve toplam varlık bilgilerinizi görüntüleyebilirsiniz."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Üst bardaki arama kutusuna yazarak tüm işlemler, hesaplar ve yatırımlar arasında anlık arama yapabilirsiniz (Ctrl+K kısayolu)."/>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Header="🏷️ Kategori Yönetimi ve Gizleme" Padding="10">
+                                <StackPanel Margin="5,10,5,10" Spacing="8">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Ayarlar > Kategoriler sekmesinden yeni kategoriler ekleyebilir, alt kategoriler oluşturabilir ve kullanmadığınız kategorileri gizleyebilirsiniz."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Gizlenen kategoriler işlem ekleme ekranlarında görünmez ancak geçmiş verileriniz korunur."/>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Header="💰 Nakit Kasa Modülü" Padding="10">
+                                <StackPanel Margin="5,10,5,10" Spacing="8">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Banka hesaplarınız dışında kalan fiziksel nakit bakiyenizi 'Hesaplarım' ekranındaki 'Nakit Kasa' kartı üzerinden takip edebilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Header="💳 Taksitli İşlemler ve Kredi Kartları" Padding="10">
+                                <StackPanel Margin="5,10,5,10" Spacing="8">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Kredi kartı harcamalarında taksit sayısı belirleyerek gelecek ayların taksitlerini otomatik olarak takvime işletebilirsiniz."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Taksitli bir işlem silinmek istendiğinde sistem tüm taksit grubunu tek tıkla silme seçeneği sunar."/>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Header="🏦 Banka Hesapları ve Transfer İşlemleri" Padding="10">
+                                <StackPanel Margin="5,10,5,10" Spacing="8">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Hesaplarım ekranından banka hesaplarınızı yönetebilir, bakiyelerinizi takip edebilir ve hesaplar arası transfer yapabilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Header="📊 Aylık Bütçe Planlama" Padding="10">
+                                <StackPanel Margin="5,10,5,10" Spacing="8">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Bütçe ekranından kategori bazlı harcama limitleri belirleyebilir ve aylık ilerlemenizi takip edebilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Header="💳 Kredi Kartı Yönetimi ve Asıl/Bağlı Kart" Padding="10">
+                                <StackPanel Margin="5,10,5,10" Spacing="8">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="'Kartlarım' sekmesindeki ilerleme çubukları ile her kartın hesap kesim veya ödeme günlerine ne kadar kaldığını görebilirsiniz."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Sanal kartları veya aile bireylerinin kartlarını asıl karta bağlayarak birden fazla bağımsız harcama geçmişini tek bir borç havuzunda toplayabilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Header="🔒 Güvenlik, Yedekleme ve Bulut" Padding="10">
+                                <StackPanel Margin="5,10,5,10" Spacing="8">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="FinTrack, veritabanınızı AES-256 standardında tamamen uçtan uca şifreler. Uygulama şifrenizi unutursanız, sadece sisteme ilk girdiğinizde size verilen 16 Haneli Kurtarma Kodu ile şifreyi sıfırlayabilirsiniz."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="'Ayarlar > Yedekleme' sekmesini kullanarak şifreli veritabanınızı OneDrive veya Google Drive ortamına otomatik olarak yedeklenmesini sağlayabilirsiniz."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" FontWeight="Bold" Text="Yedekten Dönme İşlemi:"/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="1. Uygulamayı tamamen kapatın."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="2. Yedek klasörünüzdeki .bak uzantılı yedek dosyasını bulun ve kopyalayın."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="3. Belgelerim\FinTrack klasöründeki mevcut .db dosyasının adını güvenlik için değiştirin."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="4. .bak dosyasını bu klasöre yapıştırıp adını orijinal dosya adı (.db) olarak güncelleyin."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="5. Uygulamayı açtığınızda eski verilerinizle, o tarihteki şifrenizi girerek kullanmaya devam edebilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+
+                            <Expander Header="🌍 Fiyat Sağlayıcılar (Yatırım API)" Padding="10">
+                                <StackPanel Margin="5,10,5,10" Spacing="8">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Portföyünüzün döviz veya borsa değerlerini canlı olarak yenilemek için 'API ve Vergi' sekmesinden istediğiniz sağlayıcıyı seçip kaydetmeniz yeterlidir."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Kendi kişisel veri servislerinden JSON çeken kullanıcılar için ise 'Özel API' (Custom URL) seçeneğiyle doğrudan kendi sunucunuza bağlanabilirsiniz."/>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- ==================== TAB 5: HAKKINDA ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=5}">
+                        <TextBlock Text="FinTrack" FontSize="22" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                        <TextBlock Text="Sürüm 2.0.0-alpha (Avalonia)" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,25"/>
+
+                        <TextBlock Text="Açıklama" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                        <TextBlock Text="FinTrack, kişisel harcamalarınızı ve bütçenizi en ince ayrıntısıyla takip etmeniz için tasarlanmış, tam şifreli ve yerel veri korumalı bir finans yönetim aracıdır." 
+                                   FontSize="13" Foreground="#34495E" TextWrapping="Wrap" Margin="0,0,0,20"/>
+
+                        <TextBlock Text="Güvenlik ve Gizlilik" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
+                        <Border Background="#F9FAF9" Padding="15" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Margin="0,0,0,20">
+                            <StackPanel Spacing="10">
+                                <StackPanel>
+                                    <TextBlock Text="• SQLCipher Full Encryption:" FontWeight="SemiBold" FontSize="12" Foreground="#2C3E50"/>
+                                    <TextBlock Text="Veritabanı dosyası AES-256 ile bir bütün olarak şifrelenmiştir. Şifreniz olmadan dosya hiçbir araçla açılamaz." 
+                                               FontSize="12" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <StackPanel>
+                                    <TextBlock Text="• Zero-Knowledge Architecture:" FontWeight="SemiBold" FontSize="12" Foreground="#2C3E50"/>
+                                    <TextBlock Text="Şifreleme anahtarlarınız sadece sizin cihazınızda saklanır. FinTrack dahil hiç kimse verilerinize erişemez." 
+                                               FontSize="12" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <StackPanel>
+                                    <TextBlock Text="• AES-256 Field Protection:" FontWeight="SemiBold" FontSize="12" Foreground="#2C3E50"/>
+                                    <TextBlock Text="İşlem açıklamaları gibi hassas metinler, veritabanı içinde ikinci bir katman olarak ayrıca şifrelenir." 
+                                               FontSize="12" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Height="1" Background="#ECF0F1" Margin="0,10"/>
+
+                        <TextBlock Text="Geliştirici" FontWeight="Bold" Margin="0,10,0,5"/>
+                        <TextBlock Text="FinTrack Development Team" FontSize="13" Foreground="#34495E"/>
+
+                        <TextBlock Text="Lisans" FontWeight="Bold" Margin="0,15,0,5"/>
+                        <TextBlock Text="MIT License - Ticari olmayan kişisel kullanım için ücretsizdir." FontSize="13" Foreground="#34495E"/>
+
+                        <TextBlock Text="Platform" FontWeight="Bold" Margin="0,15,0,5"/>
+                        <TextBlock Text="Avalonia UI 12.0.2 • .NET 10.0 • Windows / Linux / Android" FontSize="13" Foreground="#34495E"/>
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

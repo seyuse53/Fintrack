@@ -7,6 +7,10 @@ namespace FinTrack.Core.Models
         public int Id { get; set; }
         public required string Name { get; set; }
         public TransactionType Type { get; set; } // Limits category to income or expense
+        public bool IsVisible { get; set; } = true; // For Soft-Delete / Visibility Management
+        public bool IsSubCategory => ParentCategoryId != null;
+        public string TypeIcon => Type == TransactionType.Income ? "💰" : Type == TransactionType.Transfer ? "🔄" : "💸";
+        public string TypeName => Type == TransactionType.Income ? "Gelir" : Type == TransactionType.Transfer ? "Hesaplar Arası Transfer" : "Gider";
         
         public string FullDisplayName => ParentCategory != null ? $"{ParentCategory.Name} > {Name}" : Name;
         

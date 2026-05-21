@@ -1,0 +1,125 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             x:Class="FinTrack.Avalonia.Views.BudgetView"
+             x:DataType="vm:BudgetViewModel">
+    
+    <Grid Margin="30" RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- ── Row 0 : Title & Month Navigation ── -->
+        <Grid Grid.Row="0" Margin="0,0,0,20" ColumnDefinitions="*,Auto">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="📊 Bütçe Yönetimi" FontSize="22" FontWeight="Bold" Foreground="#333"/>
+            </StackPanel>
+
+            <!-- Month navigator -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Content="◀" Width="36" Height="36"
+                        Command="{Binding PrevMonthCommand}" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                        Background="#2C3E50" Foreground="White" BorderThickness="0" CornerRadius="18"/>
+                <TextBlock Text="{Binding MonthYearText}"
+                           FontSize="18" FontWeight="SemiBold" Margin="15,0"
+                           VerticalAlignment="Center" MinWidth="150" TextAlignment="Center"/>
+                <Button Content="▶" Width="36" Height="36"
+                        Command="{Binding NextMonthCommand}" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                        Background="#2C3E50" Foreground="White" BorderThickness="0" CornerRadius="18"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ── Row 1 : TÜİK CPI Info Bar ── -->
+        <Border Grid.Row="1" Background="#F3F9FF" BorderBrush="#BBDEFB" BorderThickness="1"
+                CornerRadius="8" Padding="15,10" Margin="0,0,0,20">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="{Binding CpiInfoText}"
+                           VerticalAlignment="Center" Foreground="#1565C0" FontSize="14"/>
+                <Button Grid.Column="1" Content="🔄 Verileri Güncelle"
+                        Command="{Binding RefreshCpiCommand}" Padding="15,5" FontSize="12"
+                        Background="#1E88E5" Foreground="White" BorderThickness="0" CornerRadius="4"
+                        IsEnabled="{Binding !IsCpiLoading}"/>
+            </Grid>
+        </Border>
+
+        <!-- ── Row 2 : Budget Cards List ── -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding BudgetCards}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,15,15" Padding="20" CornerRadius="12" Width="300"
+                                BorderThickness="1" BorderBrush="#E0E0E0" Background="White">
+                            <Grid RowDefinitions="Auto,10,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                                <!-- Category name + status icon -->
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                           Text="{Binding CategoryName}"
+                                           FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1"
+                                           Text="{Binding StatusIcon}"
+                                           FontSize="18" VerticalAlignment="Center"/>
+                                
+                                <TextBlock Grid.Row="2" Grid.ColumnSpan="2"
+                                           Text="{Binding SpendingVsLimit}"
+                                           FontSize="15" FontWeight="SemiBold"
+                                           Foreground="{Binding StatusColorHex}"
+                                           Margin="0,5,0,5"/>
+
+                                <!-- Progress Bar -->
+                                <ProgressBar Grid.Row="3" Grid.ColumnSpan="2"
+                                             Value="{Binding ProgressPercent}" Minimum="0" Maximum="100"
+                                             Height="10" Margin="0,5" CornerRadius="5"
+                                             Foreground="{Binding StatusColorHex}"
+                                             Background="#F0F0F0"/>
+
+                                <!-- Info footer -->
+                                <StackPanel Grid.Row="4" Margin="0,10,0,0">
+                                    <TextBlock Text="{Binding ComparisonText}"
+                                               FontSize="11" Foreground="#95A5A6" Margin="0,2"/>
+                                    <TextBlock Text="{Binding InflationText}"
+                                               FontSize="11" Foreground="{Binding RealDiffColorHex}"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- ── Row 3 : Edit Panel ── -->
+        <Border Grid.Row="3" Background="White" BorderBrush="#E0E0E0" BorderThickness="1"
+                CornerRadius="12" Padding="20" Margin="0,10,0,0">
+            <Grid ColumnDefinitions="*,20,200,20,Auto,10,Auto,10,Auto">
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Kategori Seçin" FontSize="12" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <ComboBox DisplayMemberBinding="{Binding Name}"
+                              ItemsSource="{Binding ExpenseCategories}"
+                              SelectedItem="{Binding SelectedCategory}"
+                              HorizontalAlignment="Stretch"
+                              FontSize="14" Height="40"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Aylık Limit (₺)" FontSize="12" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding LimitInputText}" Height="40"
+                             FontSize="16" VerticalContentAlignment="Center"
+                             Padding="10,0" FontWeight="SemiBold"/>
+                </StackPanel>
+
+                <Button Grid.Column="4" Content="💾 Kaydet"
+                        Width="100" Height="40" Command="{Binding SaveLimitCommand}" FontSize="14" FontWeight="Bold"
+                        Background="#27AE60" Foreground="White" BorderThickness="0" CornerRadius="6" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+                <Button Grid.Column="6" Content="🗑 Sil"
+                        Width="100" Height="40" Command="{Binding DeleteLimitCommand}" FontSize="14" FontWeight="Bold"
+                        Background="#E74C3C" Foreground="White" BorderThickness="0" CornerRadius="6" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+
+                <Button Grid.Column="8" Content="✕ Vazgeç"
+                        Width="100" Height="40" Command="{Binding ClearFormCommand}" FontSize="14"
+                        Background="#95A5A6" Foreground="White" BorderThickness="0" CornerRadius="6" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

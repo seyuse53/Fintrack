@@ -5,7 +5,11 @@ namespace FinTrack.Core.Models
     public enum InvestmentTransactionType
     {
         Buy,
-        Sell
+        Sell,
+        Dividend,       // Temettü (kâr payı) geliri
+        BonusShare,     // Bedelsiz sermaye artırımı (lot sayısı artar, maliyet sıfır)
+        RightsIssue,    // Bedelli sermaye artırımı (rüçhan hakkı kullanımı)
+        Split           // Hisse bölünmesi (1'e 2, 1'e 3 vb.)
     }
 
     public class InvestmentTransaction

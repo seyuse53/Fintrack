@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -38,6 +39,92 @@ namespace FinTrack.Core.Services
             if (!string.IsNullOrWhiteSpace(symbol))
             {
                 _cachedPrices[symbol.ToUpperInvariant()] = price;
+            }
+        }
+
+        /// <summary>
+        /// Veritabanındaki LastKnownPrice değerlerini bellek cache'ine yükler.
+        /// Uygulama açılışında çağrılmalıdır.
+        /// </summary>
+        public static void LoadPricesFromAssets(System.Collections.Generic.IEnumerable<InvestmentAsset> assets)
+        {
+            foreach (var asset in assets)
+            {
+                if (asset.LastKnownPrice > 0 && !string.IsNullOrWhiteSpace(asset.Symbol))
+                {
+                    _cachedPrices[asset.Symbol.ToUpperInvariant()] = asset.LastKnownPrice;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Bellek cache'indeki tüm fiyatları veritabanındaki varlıklara yazar.
+        /// Fiyat güncellendikten sonra veya uygulama kapanırken çağrılmalıdır.
+        /// </summary>
+        public static void SavePricesToAssets(System.Collections.Generic.IEnumerable<InvestmentAsset> assets)
+        {
+            var now = DateTime.Now;
+            foreach (var asset in assets)
+            {
+                if (!string.IsNullOrWhiteSpace(asset.Symbol))
+                {
+                    var upperSymbol = asset.Symbol.ToUpperInvariant();
+                    if (_cachedPrices.TryGetValue(upperSymbol, out var price))
+                    {
+                        asset.LastKnownPrice = price;
+                        asset.LastPriceUpdate = now;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Bellek cache'indeki fiyatları PriceHistory tablosuna yazar.
+        /// Günde 1 kayıt per sembol: aynı gün tekrar yazılırsa Close güncellenir, Low/High ayarlanır.
+        /// </summary>
+        public static void RecordPriceHistory(
+            System.Collections.Generic.IEnumerable<InvestmentAsset> assets,
+            System.Collections.Generic.IList<PriceHistory> existingHistories,
+            System.Action<PriceHistory> addNewRecord,
+            string source = "Manuel")
+        {
+            var today = DateTime.Today;
+
+            foreach (var asset in assets)
+            {
+                if (string.IsNullOrWhiteSpace(asset.Symbol)) continue;
+                var upperSymbol = asset.Symbol.ToUpperInvariant();
+                
+                if (!_cachedPrices.TryGetValue(upperSymbol, out var currentPrice)) continue;
+                if (currentPrice <= 0) continue;
+
+                // Bugün bu sembol için kayıt var mı?
+                var todayRecord = existingHistories
+                    .FirstOrDefault(h => h.Symbol == upperSymbol && h.Date == today);
+
+                if (todayRecord != null)
+                {
+                    // Mevcut kaydı güncelle
+                    todayRecord.ClosePrice = currentPrice;
+                    todayRecord.LowPrice = Math.Min(todayRecord.LowPrice, currentPrice);
+                    todayRecord.HighPrice = Math.Max(todayRecord.HighPrice, currentPrice);
+                    todayRecord.Source = source;
+                }
+                else
+                {
+                    // Yeni kayıt oluştur
+                    var newRecord = new PriceHistory
+                    {
+                        Symbol = upperSymbol,
+                        ClosePrice = currentPrice,
+                        LowPrice = currentPrice,
+                        HighPrice = currentPrice,
+                        Date = today,
+                        Source = source
+                    };
+                    addNewRecord(newRecord);
+                    existingHistories.Add(newRecord);
+                }
             }
         }
 
@@ -140,6 +227,102 @@ namespace FinTrack.Core.Services
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// GenelPara API'den döviz veya altın fiyatını çeker.
+        /// Döviz: https://api.genelpara.com/json/?list=doviz&sembol=USD
+        /// Altın: https://api.genelpara.com/json/?list=altin&sembol=GA (Gram Altın)
+        /// </summary>
+        public static async Task<bool> FetchFromGenelParaAsync(string symbol, string listType = "doviz")
+        {
+            if (string.IsNullOrWhiteSpace(symbol)) return false;
+
+            try
+            {
+                string gpSymbol = MapSymbolToGenelPara(symbol, listType);
+                string url = $"https://api.genelpara.com/json/?list={listType}&sembol={gpSymbol}";
+
+                var response = await _httpClient.GetAsync(url);
+                if (!response.IsSuccessStatusCode) return false;
+
+                string json = await response.Content.ReadAsStringAsync();
+                using JsonDocument doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+
+                // GenelPara response: { "success": true, "data": { "SYMBOL": { "satis": "45.25", ... } } }
+                if (root.TryGetProperty("success", out var successNode) && successNode.GetBoolean())
+                {
+                    if (root.TryGetProperty("data", out var dataNode))
+                    {
+                        foreach (var prop in dataNode.EnumerateObject())
+                        {
+                            if (prop.Value.TryGetProperty("satis", out var satisNode))
+                            {
+                                string satisStr = satisNode.GetString() ?? "";
+                                satisStr = satisStr.Replace(".", "").Replace(",", ".");
+                                if (decimal.TryParse(satisStr, System.Globalization.NumberStyles.Any,
+                                    System.Globalization.CultureInfo.InvariantCulture, out decimal price) && price > 0)
+                                {
+                                    SetPrice(symbol, price);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"GenelPara error for {symbol}: {ex.Message}");
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// GenelPara sembol eşleştirmesi
+        /// </summary>
+        private static string MapSymbolToGenelPara(string symbol, string listType)
+        {
+            symbol = symbol.ToUpperInvariant().Trim();
+
+            if (listType == "altin")
+            {
+                return symbol switch
+                {
+                    "XAU" => "GA",      // Gram Altın
+                    "CAU" => "C",       // Çeyrek Altın
+                    "YAU" => "Y",       // Yarım Altın
+                    "TAU" => "T",       // Tam Altın
+                    _ => symbol
+                };
+            }
+
+            // Döviz: GenelPara zaten USD, EUR, GBP kullanıyor
+            return symbol;
+        }
+
+        /// <summary>
+        /// Kategori bazlı akıllı rotalama: varlık kategorisine göre doğru API'yi seçer.
+        /// Ayarlardan okunur, yazılımdan değişiklik gerektirmez.
+        /// </summary>
+        public static async Task<bool> FetchPriceSmartAsync(string symbol, string? category)
+        {
+            var provider = SettingsManager.GetProviderForCategory(category);
+
+            return provider switch
+            {
+                ApiProviderType.YahooFinance => await FetchRealTimePriceAsync(symbol),
+                ApiProviderType.GenelPara => category switch
+                {
+                    "Altın" => await FetchFromGenelParaAsync(symbol, "altin"),
+                    "Kripto Para" => await FetchFromGenelParaAsync(symbol, "kripto"),
+                    _ => await FetchFromGenelParaAsync(symbol, "doviz")
+                },
+                ApiProviderType.Manual => false, // Manuel modda API çekmiyoruz
+                _ => await FetchRealTimePriceAsync(symbol) // Fallback: Yahoo
+            };
         }
     }
 }
