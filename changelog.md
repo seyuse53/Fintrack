@@ -14,6 +14,13 @@ Bu doküman, FinTrack projesine eklenecek yeni özellikleri, geliştirme fikirle
 
 ### ✨ Tamamlanan Özellikler (Faz 1 - 10)
 
+## [2.0.0-beta.1] - 2026-05-21 — Faz 11: Diyaloglar, Tema ve WPF'in Emekliliği
+
+### Added
+- **Modern Hata ve Bilgi Diyalogları**: `ErrorDialogWindow` ve `InfoDialogWindow` Avalonia altyapısına taşındı. Yuvarlatılmış köşeler, kutu gölgeleri ve yüksek kontrastlı modern bir arayüz (UI) tasarımı uygulandı.
+- **Tema Seçimi (Dark/Light Mode)**: `SettingsView` ekranına "🎨 Görünüm" sekmesi eklendi. Sistem, Aydınlık ve Karanlık tema seçenekleri sunularak uygulamanın tasarım renginin anlık olarak ve kalıcı bir şekilde (`settings.json` aracılığıyla) değişebilmesi sağlandı.
+- **WPF Projesinin Emekliye Ayrılması**: Tüm uygulama baştan aşağı cross-platform Avalonia mimarisine taşındığı için, eski `FinTrack.WPF` projesi çözümden (solution) tamamen çıkarıldı ve kaynak kodları silindi. FinTrack artık sadece Windows'ta değil, Linux ve macOS platformlarında da çalışmaya tam uyumlu hale geldi.
+
 ## [2.0.0-alpha.6] - 2026-05-21 — Faz 10: Platform Servisleri ve Cross-Platform Adaptasyonu
 
 ### Added
