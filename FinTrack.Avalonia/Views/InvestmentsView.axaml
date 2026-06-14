@@ -69,18 +69,19 @@
                 </StackPanel>
 
                 <Button Grid.Column="2" Content="📊 Vergi Raporu" Command="{Binding OpenTaxReportCommand}" Background="#8E44AD" Foreground="White" CornerRadius="6" Padding="15,8"/>
-                <Button Grid.Column="4" Content="🔄 Fiyatları Çek (API)" Background="#3498DB" Foreground="White" CornerRadius="6" Padding="15,8"/>
+                <Button Grid.Column="4" Content="🔄 Fiyatları Çek (API)" Command="{Binding FetchPricesCommand}" Background="#3498DB" Foreground="White" CornerRadius="6" Padding="15,8"/>
                 <Button Grid.Column="6" Content="➕ Yatırım Al/Sat" Background="#27AE60" Foreground="White" CornerRadius="6" Padding="15,8" Click="ManageInvestmentsButton_Click"/>
             </Grid>
         </Border>
 
         <!-- Investments List -->
-        <ScrollViewer Grid.Row="2">
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" Padding="0,0,10,0">
             <ItemsControl ItemsSource="{Binding FilteredInvestments}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Margin="0,0,0,10">
-                            <Grid ColumnDefinitions="2*,1.5*,1.5*,2*,2*,1*">
+                            <!-- Responsive Column Sizes to prevent clipping off the right edge -->
+                            <Grid ColumnDefinitions="2.5*,1.5*,1.5*,*,2.5*,Auto">
                                 
                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                     <TextBlock Text="{Binding Symbol}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
@@ -95,8 +96,8 @@
 
                                 <StackPanel Grid.Column="2" VerticalAlignment="Center">
                                     <TextBlock Text="Maliyet / Anlık Fiyat" FontSize="11" Foreground="#95A5A6"/>
-                                    <TextBlock Text="{Binding AverageCost, StringFormat='{}{0:N2}'}" FontSize="14" Foreground="#34495E"/>
-                                    <TextBlock Text="{Binding CurrentPrice, StringFormat='{}{0:N2}'}" FontSize="14" FontWeight="SemiBold" Foreground="#2980B9" Margin="0,2,0,0"/>
+                                    <TextBlock Text="{Binding FormattedAverageCost}" FontSize="14" Foreground="#34495E"/>
+                                    <TextBlock Text="{Binding FormattedCurrentPrice}" FontSize="14" FontWeight="SemiBold" Foreground="#2980B9" Margin="0,2,0,0"/>
                                 </StackPanel>
 
                                 <!-- Sparkline Grafiği -->
@@ -112,7 +113,7 @@
                                     </StackPanel>
                                 </StackPanel>
 
-                                <Button Grid.Column="5" Content="İşlemler" VerticalAlignment="Center" HorizontalAlignment="Right" Background="#F4F6F9" Foreground="#34495E" CornerRadius="4" Padding="15,8"/>
+                                <Button Grid.Column="5" Content="İşlemler" Command="{Binding $parent[UserControl].((vm:InvestmentsViewModel)DataContext).ShowDetailsCommand}" CommandParameter="{Binding Id}" VerticalAlignment="Center" HorizontalAlignment="Right" Background="#F4F6F9" Foreground="#34495E" CornerRadius="4" Padding="12,6"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

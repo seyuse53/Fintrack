@@ -30,6 +30,9 @@ public partial class InvestmentDetailViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<InvestmentTransaction> _transactions = new();
 
+    [ObservableProperty]
+    private System.Collections.Generic.List<FinTrack.Avalonia.Controls.SparklinePoint>? _sparklineData;
+
     public InvestmentDetailViewModel(AppDbContext context, global::Avalonia.Controls.Window ownerWindow, int assetId)
     {
         _context = context;
@@ -46,10 +49,21 @@ public partial class InvestmentDetailViewModel : ViewModelBase
         AssetSymbolText = $"({asset.Symbol})";
         AssetCategoryText = asset.Category ?? "Diğer";
         TotalAmountText = asset.TotalAmount.ToString("N4");
-        AvgCostText = $"₺{asset.AverageCost:N2}";
-
         decimal currentPrice = FinTrack.Core.Services.PricingService.GetCurrentPrice(asset.Symbol, asset.AverageCost);
-        CurrentPriceText = $"₺{currentPrice:N2}";
+
+        if (asset.Category == "Kripto Para")
+        {
+            AvgCostText = $"₺{asset.AverageCost.ToString("0.########")}";
+            CurrentPriceText = $"₺{currentPrice.ToString("0.########")}";
+        }
+        else
+        {
+            AvgCostText = $"₺{asset.AverageCost:N2}";
+            CurrentPriceText = $"₺{currentPrice:N2}";
+        }
+
+        var histories = await _context.PriceHistories.Where(h => h.Symbol == asset.Symbol).OrderBy(h => h.Date).ToListAsync();
+        SparklineData = InvestmentsViewModel.GenerateTrendData(asset.AverageCost, currentPrice, histories);
 
         var txs = await _context.InvestmentTransactions
             .Include(t => t.LinkedBankAccount)

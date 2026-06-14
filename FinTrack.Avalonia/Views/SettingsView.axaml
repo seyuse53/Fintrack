@@ -17,46 +17,36 @@
         </Grid.ColumnDefinitions>
 
         <!-- ==================== LEFT SIDE MENU ==================== -->
-        <Border Grid.Column="0" Background="#2C3E50" CornerRadius="8,0,0,8">
+        <Border Grid.Column="0" Background="#F8F9FA" BorderBrush="#E9ECEF" BorderThickness="0,0,1,0">
             <StackPanel Margin="0,20">
-                <TextBlock Text="⚙️ Ayarlar" FontSize="20" FontWeight="Bold" Foreground="White" 
+                <TextBlock Text="⚙️ Ayarlar" FontSize="20" FontWeight="Bold" Foreground="#2C3E50" 
                            Margin="20,0,0,25" />
 
-                <!-- Tab Buttons -->
-                <Button Content="🔒 Güvenlik" Tag="0" Command="{Binding SwitchTabCommand}" CommandParameter="0"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="20,12" FontSize="13" Foreground="White" CornerRadius="0" BorderThickness="0"
-                        Background="#34495E"/>
+                <ListBox SelectedIndex="{Binding SelectedTabIndex}" Background="Transparent" BorderThickness="0">
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Padding" Value="20,12"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="Foreground" Value="#34495E"/>
+                        </Style>
+                        <Style Selector="ListBoxItem:selected">
+                            <Setter Property="Background" Value="#EBF5FB"/>
+                            <Setter Property="Foreground" Value="#2980B9"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                        </Style>
+                        <Style Selector="ListBoxItem:pointerover">
+                            <Setter Property="Background" Value="#F1F3F5"/>
+                        </Style>
+                    </ListBox.Styles>
 
-                <Button Content="🏷️ Kategoriler" Tag="1" Command="{Binding SwitchTabCommand}" CommandParameter="1"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
-                        Background="Transparent"/>
-
-                <Button Content="🎨 Görünüm" Tag="6" Command="{Binding SwitchTabCommand}" CommandParameter="6"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
-                        Background="Transparent"/>
-
-                <Button Content="☁️ Yedekleme" Tag="2" Command="{Binding SwitchTabCommand}" CommandParameter="2"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
-                        Background="Transparent"/>
-
-                <Button Content="🌍 API ve Vergi" Tag="3" Command="{Binding SwitchTabCommand}" CommandParameter="3"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
-                        Background="Transparent"/>
-
-                <Button Content="📖 Kılavuz" Tag="4" Command="{Binding SwitchTabCommand}" CommandParameter="4"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
-                        Background="Transparent"/>
-
-                <Button Content="ℹ️ Hakkında" Tag="5" Command="{Binding SwitchTabCommand}" CommandParameter="5"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
-                        Padding="20,12" FontSize="13" Foreground="#ECF0F1" CornerRadius="0" BorderThickness="0"
-                        Background="Transparent"/>
+                    <ListBoxItem Content="🔒 Güvenlik" />
+                    <ListBoxItem Content="🏷️ Kategoriler" />
+                    <ListBoxItem Content="🎨 Görünüm" />
+                    <ListBoxItem Content="☁️ Yedekleme" />
+                    <ListBoxItem Content="🌍 API ve Vergi" />
+                    <ListBoxItem Content="📖 Kılavuz" />
+                    <ListBoxItem Content="ℹ️ Hakkında" />
+                </ListBox>
             </StackPanel>
         </Border>
 
@@ -148,8 +138,8 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <!-- ==================== TAB 6: GÖRÜNÜM ==================== -->
-                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=6}">
+                    <!-- ==================== TAB 2: GÖRÜNÜM ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=2}">
                         <TextBlock Text="Uygulama Teması" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
                         <TextBlock Text="FinTrack arayüzünün karanlık veya aydınlık olmasını seçebilirsiniz." 
                                    FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
@@ -306,8 +296,8 @@
                         </Grid>
                     </StackPanel>
 
-                    <!-- ==================== TAB 2: YEDEKLEME ==================== -->
-                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=2}">
+                    <!-- ==================== TAB 3: YEDEKLEME ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=3}">
                         <TextBlock Text="Bulut Senkronizasyonu ve Yedekleme" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
                         <TextBlock Text="Veritabanınızı doğrudan buluta taşıyın veya otomatik yedekleme kurallarını belirleyin." 
                                    FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25"/>
@@ -404,8 +394,8 @@
                         </Grid>
                     </StackPanel>
 
-                    <!-- ==================== TAB 3: API VE VERGİ ==================== -->
-                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=3}">
+                    <!-- ==================== TAB 4: API VE VERGİ ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=4}">
                         <TextBlock Text="Fiyat Sağlayıcı (API) Ayarları" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
                         <TextBlock Text="Her varlık kategorisi için ayrı fiyat kaynağı seçebilirsiniz. Değişiklikler ayarları kaydettikten sonra geçerli olur." 
                                    FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,25" TextWrapping="Wrap"/>
@@ -421,6 +411,7 @@
                                     <ComboBox Grid.Column="1" SelectedIndex="{Binding DovizProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
                                         <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
                                         <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                        <ComboBoxItem Content="Web Scraper (Kur.Doviz.com)"/>
                                     </ComboBox>
                                 </Grid>
 
@@ -431,6 +422,7 @@
                                     <ComboBox Grid.Column="1" SelectedIndex="{Binding AltinProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
                                         <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
                                         <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                        <ComboBoxItem Content="Web Scraper (Altin.Doviz.com)"/>
                                     </ComboBox>
                                 </Grid>
 
@@ -441,6 +433,7 @@
                                     <ComboBox Grid.Column="1" SelectedIndex="{Binding HisseProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
                                         <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
                                         <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                        <ComboBoxItem Content="Web Scraper (Borsa.Doviz.com)"/>
                                     </ComboBox>
                                 </Grid>
 
@@ -451,6 +444,7 @@
                                     <ComboBox Grid.Column="1" SelectedIndex="{Binding KriptoProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
                                         <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
                                         <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                        <ComboBoxItem Content="Web Scraper (Kripto.Doviz.com)"/>
                                     </ComboBox>
                                 </Grid>
 
@@ -461,6 +455,7 @@
                                     <ComboBox Grid.Column="1" SelectedIndex="{Binding FonProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
                                         <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
                                         <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                        <ComboBoxItem Content="Web Scraper (Finans.Doviz.com)"/>
                                     </ComboBox>
                                 </Grid>
 
@@ -471,6 +466,7 @@
                                     <ComboBox Grid.Column="1" SelectedIndex="{Binding DigerProviderIndex}" Padding="8" FontSize="13" CornerRadius="4">
                                         <ComboBoxItem Content="Manuel (Kapalı)"/><ComboBoxItem Content="Yahoo Finance"/>
                                         <ComboBoxItem Content="Özel API"/><ComboBoxItem Content="GenelPara"/>
+                                        <ComboBoxItem Content="Web Scraper (Genel)"/>
                                     </ComboBox>
                                 </Grid>
 
@@ -535,8 +531,8 @@
                         </Border>
                     </StackPanel>
 
-                    <!-- ==================== TAB 4: KULLANIM KILAVUZU ==================== -->
-                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=4}">
+                    <!-- ==================== TAB 5: KULLANIM KILAVUZU ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=5}">
                         <TextBlock Text="📖 Kullanım Kılavuzu" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
 
                         <StackPanel Spacing="5">
@@ -599,6 +595,15 @@
                                 </StackPanel>
                             </Expander>
 
+                            <Expander Header="📈 Yatırım ve Kripto Para Yönetimi" Padding="10">
+                                <StackPanel Margin="5,10,5,10" Spacing="8">
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Portföyünüze yeni bir yatırım eklerken (Hisse, Kripto vb.) listeyi açmadan sadece sembolünü ve adını yazarak alım yapabilirsiniz. Sistem o varlığı otomatik olarak tanıyacaktır."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Yeni çıkan veya listelerde bulunmayan bir coini dahi sembolünü doğru yazarak eklerseniz (Örn: S veya SONIC), akıllı kazıyıcımız fiyatını güncel olarak web'den bulur ve cüzdanınıza yansıtır."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Kripto paralardaki PEPE, SHIB gibi bol sıfırlı coinlerin küsuratları detaylı 8 basamak (0.00000000) hassasiyetinde tutularak hata payı sıfıra indirgenir."/>
+                                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Daha önce portföyünüze dahil ettiğiniz her varlık, yeni bir işlem eklerken akıllı arama kutusunda en üstte otomatik tamamlanarak size zaman kazandırır."/>
+                                </StackPanel>
+                            </Expander>
+
                             <Expander Header="🌍 Fiyat Sağlayıcılar (Yatırım API)" Padding="10">
                                 <StackPanel Margin="5,10,5,10" Spacing="8">
                                     <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#555" Text="Portföyünüzün döviz veya borsa değerlerini canlı olarak yenilemek için 'API ve Vergi' sekmesinden istediğiniz sağlayıcıyı seçip kaydetmeniz yeterlidir."/>
@@ -608,8 +613,8 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <!-- ==================== TAB 5: HAKKINDA ==================== -->
-                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=5}">
+                    <!-- ==================== TAB 6: HAKKINDA ==================== -->
+                    <StackPanel IsVisible="{Binding SelectedTabIndex, Converter={x:Static local:TabIndexConverter.Instance}, ConverterParameter=6}">
                         <TextBlock Text="FinTrack" FontSize="22" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,5"/>
                         <TextBlock Text="Sürüm 2.0.0-alpha (Avalonia)" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,25"/>
 

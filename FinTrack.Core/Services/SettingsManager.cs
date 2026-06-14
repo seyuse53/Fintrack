@@ -11,7 +11,8 @@ namespace FinTrack.Core.Services
         Manual = 0,
         YahooFinance = 1,
         Custom = 2,
-        GenelPara = 3
+        GenelPara = 3,
+        WebScraper = 4
     }
 
     public class Settings
@@ -449,7 +450,9 @@ namespace FinTrack.Core.Services
                 "Döviz" => settings.DovizProvider,
                 "Altın" => settings.AltinProvider,
                 "Hisse Senedi" => settings.HisseProvider,
+                "Hisse" => settings.HisseProvider,
                 "Kripto Para" => settings.KriptoProvider,
+                "Kripto" => settings.KriptoProvider,
                 "Fon" => settings.FonProvider,
                 "Diğer" => settings.DigerProvider,
                 _ => settings.PricingApiProvider

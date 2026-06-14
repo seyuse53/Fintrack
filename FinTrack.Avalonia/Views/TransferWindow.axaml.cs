@@ -1,31 +1,21 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using FinTrack.Avalonia.ViewModels;
-using FinTrack.Data;
 
 namespace FinTrack.Avalonia.Views;
 
-public partial class AddTransactionWindow : Window
+public partial class TransferWindow : Window
 {
-    public AddTransactionWindow()
+    public TransferWindow()
     {
         InitializeComponent();
     }
 
-    public AddTransactionWindow(AppDbContext context) : this()
+    public TransferWindow(int? initialSourceAccountId) : this()
     {
-        var vm = new AddTransactionViewModel(context, this);
+        var vm = new TransferViewModel(initialSourceAccountId);
+        vm.CloseAction = () => Close(true);
         DataContext = vm;
-        
-        // Initialize async data
-        Opened += async (s, e) => await vm.InitializeAsync();
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
     }
 
     private void AmountTextBox_LostFocus(object? sender, RoutedEventArgs e)

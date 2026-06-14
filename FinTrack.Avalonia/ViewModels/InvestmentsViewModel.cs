@@ -40,6 +40,30 @@ public partial class InvestmentItemViewModel : ObservableObject
 
     [ObservableProperty]
     private System.Collections.Generic.List<FinTrack.Avalonia.Controls.SparklinePoint>? _sparklineData;
+
+    public string FormattedCurrentPrice
+    {
+        get
+        {
+            if (Category == "Kripto Para") return $"₺{CurrentPrice.ToString("0.########")}";
+            return $"₺{CurrentPrice:N2}";
+        }
+    }
+
+    public string FormattedAverageCost
+    {
+        get
+        {
+            if (Category == "Kripto Para") return $"₺{AverageCost.ToString("0.########")}";
+            return $"₺{AverageCost:N2}";
+        }
+    }
+
+    partial void OnCurrentPriceChanged(decimal value)
+    {
+        OnPropertyChanged(nameof(FormattedCurrentPrice));
+        OnPropertyChanged(nameof(FormattedAverageCost));
+    }
 }
 
 public partial class InvestmentsViewModel : ViewModelBase
@@ -82,7 +106,13 @@ public partial class InvestmentsViewModel : ViewModelBase
     public InvestmentsViewModel()
     {
         _context = App.Services?.GetService<AppDbContext>();
-        _ = LoadDataAsync();
+        _ = InitializeAsync();
+    }
+
+    private async Task InitializeAsync()
+    {
+        await LoadDataAsync();
+        _ = FetchPricesAsync(); // Arka planda otomatik fiyat çek
     }
 
     public async Task LoadDataAsync()
@@ -92,6 +122,13 @@ public partial class InvestmentsViewModel : ViewModelBase
         try
         {
             var assets = await _context.InvestmentAssets.ToListAsync();
+            
+            // Veritabanındaki hafızada tutulan son bilinen fiyatları yükle
+            PricingService.LoadPricesFromAssets(assets);
+
+            var allHistories = await _context.PriceHistories.OrderBy(h => h.Date).ToListAsync();
+            var historiesBySymbol = allHistories.GroupBy(h => h.Symbol).ToDictionary(g => g.Key, g => g.ToList());
+
             var tempList = new System.Collections.Generic.List<InvestmentItemViewModel>();
 
             foreach (var asset in assets)
@@ -114,7 +151,7 @@ public partial class InvestmentsViewModel : ViewModelBase
                     CurrentValue = currentValue,
                     Profit = profit,
                     ProfitPercentage = profitPct,
-                    SparklineData = GenerateTrendData(asset.AverageCost, currentPrice)
+                    SparklineData = GenerateTrendData(asset.AverageCost, currentPrice, historiesBySymbol.ContainsKey(asset.Symbol) ? historiesBySymbol[asset.Symbol] : new System.Collections.Generic.List<PriceHistory>())
                 });
             }
 
@@ -130,21 +167,48 @@ public partial class InvestmentsViewModel : ViewModelBase
         }
     }
 
-    private System.Collections.Generic.List<FinTrack.Avalonia.Controls.SparklinePoint> GenerateTrendData(decimal avgCost, decimal currentPrice)
+    public static System.Collections.Generic.List<FinTrack.Avalonia.Controls.SparklinePoint> GenerateTrendData(decimal avgCost, decimal currentPrice, System.Collections.Generic.List<PriceHistory> history)
     {
         var list = new System.Collections.Generic.List<FinTrack.Avalonia.Controls.SparklinePoint>();
-        var random = new Random();
-        decimal basePrice = avgCost > 0 ? avgCost : currentPrice;
         
-        for(int i = 6; i >= 1; i--)
+        if (history != null && history.Count > 1)
         {
-            decimal step = basePrice * (decimal)(random.NextDouble() * 0.04 - 0.02); // +/- 2% random step
-            basePrice += step;
-            list.Add(new FinTrack.Avalonia.Controls.SparklinePoint { Date = DateTime.Now.AddDays(-i), Close = basePrice, Low = basePrice * 0.99m, High = basePrice * 1.01m });
+            // Geçmiş veriyi kullanarak grafiği çiz
+            foreach (var h in history.TakeLast(30)) // Son 30 gün
+            {
+                list.Add(new FinTrack.Avalonia.Controls.SparklinePoint 
+                { 
+                    Date = h.Date, 
+                    Close = h.ClosePrice, 
+                    Low = h.LowPrice, 
+                    High = h.HighPrice 
+                });
+            }
+            // Güncel fiyatı da son nokta olarak ekle
+            if (list.Last().Date < DateTime.Today)
+            {
+                list.Add(new FinTrack.Avalonia.Controls.SparklinePoint { Date = DateTime.Now, Close = currentPrice, Low = currentPrice * 0.99m, High = currentPrice * 1.01m });
+            }
+            else
+            {
+                list.Last().Close = currentPrice;
+            }
         }
-        
-        // Add current price as the last point
-        list.Add(new FinTrack.Avalonia.Controls.SparklinePoint { Date = DateTime.Now, Close = currentPrice, Low = currentPrice * 0.99m, High = currentPrice * 1.01m });
+        else
+        {
+            // Yeterli geçmiş yoksa geçici çizgi oluştur
+            var random = new Random();
+            decimal basePrice = avgCost > 0 ? avgCost : currentPrice;
+            
+            for(int i = 6; i >= 1; i--)
+            {
+                decimal step = basePrice * (decimal)(random.NextDouble() * 0.04 - 0.02);
+                basePrice += step;
+                list.Add(new FinTrack.Avalonia.Controls.SparklinePoint { Date = DateTime.Now.AddDays(-i), Close = basePrice, Low = basePrice * 0.99m, High = basePrice * 1.01m });
+            }
+            list.Add(new FinTrack.Avalonia.Controls.SparklinePoint { Date = DateTime.Now, Close = currentPrice, Low = currentPrice * 0.99m, High = currentPrice * 1.01m });
+        }
+
         return list;
     }
 
@@ -195,7 +259,45 @@ public partial class InvestmentsViewModel : ViewModelBase
         }
 
         FilteredInvestments.Clear();
-        foreach (var item in filteredList) FilteredInvestments.Add(item);
+        foreach (var item in filteredList.OrderByDescending(x => x.CurrentValue)) FilteredInvestments.Add(item);
+    }
+
+    [RelayCommand]
+    private async Task FetchPricesAsync()
+    {
+        if (_context == null || _allInvestments.Count == 0) return;
+
+        try
+        {
+            // Iterate over all unique symbols and fetch their prices
+            var symbolsToFetch = _allInvestments
+                .Where(x => !string.IsNullOrWhiteSpace(x.Symbol))
+                .Select(x => new { x.Symbol, x.Category })
+                .Distinct()
+                .ToList();
+
+            foreach (var item in symbolsToFetch)
+            {
+                await PricingService.FetchPriceSmartAsync(item.Symbol, item.Category);
+            }
+
+            // Save fetched prices to the database
+            var assets = await _context.InvestmentAssets.ToListAsync();
+            PricingService.SavePricesToAssets(assets);
+            
+            // Record Price History for graphs
+            var existingHistories = await _context.PriceHistories.Where(h => h.Date == DateTime.Today).ToListAsync();
+            PricingService.RecordPriceHistory(assets, existingHistories, newRecord => _context.PriceHistories.Add(newRecord));
+
+            await _context.SaveChangesAsync();
+
+            // Refresh the screen with new prices
+            await LoadDataAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Fiyat çekme hatası: {ex.Message}");
+        }
     }
 
     [RelayCommand]
@@ -208,6 +310,16 @@ public partial class InvestmentsViewModel : ViewModelBase
             {
                 taxWindow.ShowDialog(desktop.MainWindow);
             }
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowDetailsAsync(int assetId)
+    {
+        if (_context != null && global::Avalonia.Application.Current?.ApplicationLifetime is global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow != null)
+        {
+            var detailWindow = new FinTrack.Avalonia.Views.InvestmentDetailWindow(_context, assetId);
+            await detailWindow.ShowDialog(desktop.MainWindow);
         }
     }
 }

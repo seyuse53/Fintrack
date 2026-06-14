@@ -12,7 +12,62 @@ All notable changes to this project will be documented in this file.
 
 Bu doküman, FinTrack projesine eklenecek yeni özellikleri, geliştirme fikirlerini ve tamamlanan aşamaları tek bir çatı altında takip etmek için oluşturulmuştur.
 
-### ✨ Tamamlanan Özellikler (Faz 1 - 10)
+### ✨ Tamamlanan Özellikler
+
+## [2.0.0-beta.6] - 2026-06-14 — Faz 16: Kripto Para Optimizasyonları ve Esnek Portföy Yönetimi
+
+### Added
+- **Kripto Para ve Küsürat Hassasiyeti**: PEPE, FLOKI gibi düşük değerli kripto paralarda yuvarlama sorunlarını önlemek adına fiyat ve maliyet gösterimleri 8 ondalık basamaklı (0.00000000) detaylı yapıya kavuşturuldu.
+- **Dinamik Kripto Kazıyıcı (Akıllı Fallback)**: "S" (Sonic) gibi ana piyasa ekranında yer almayan kripto paralar için, arka planda doğrudan coinin özel sayfasına giderek fiyatı tespit edebilen akıllı eşleştirme (slug) algoritması eklendi.
+- **Kişiselleştirilmiş Otomatik Tamamlama (Autocomplete)**: Yatırım Ekleme ekranındaki sembol arama kutusu, artık global varlıklardan önce kullanıcının *kendi portföyündeki* varlıkları tarayıp listenin en üstüne getiriyor. Yeni işlem eklemek çok daha hızlı hale getirildi.
+- **Sınırsız Varlık Desteği**: Listelerde bulunmayan yepyeni bir varlığın bile sadece adını ve sembolünü yazarak alınabilmesi, sistemin de bu yeni varlığı hafızasına alıp anında fiyat bulması (Web Scraping) güvence altına alındı.
+
+## [2.0.0-beta.5] - 2026-06-14 — Faz 15: Gerçek Fiyat Hafızası ve Geçmiş Grafiği
+
+### Added
+- **Fiyat Hafızası (LastKnownPrice)**: Varlıkların veritabanına daha önce eklenen `LastKnownPrice` sütunları aktif edildi. Uygulama açıldığında veya Yatırımlar sekmesine girildiğinde artık maliyet fiyatına sıfırlanmak yerine son bilinen güncel fiyatlar ekrana yansıtılıyor.
+- **Otomatik Fiyat Güncellemesi**: Kullanıcının "Fiyatları Çek" butonuna basmasına gerek kalmadan, uygulama açıldığı an arka planda sessiz bir API tetikleyicisi fiyatları eşitleyecek şekilde programlandı.
+- **Gerçek Zamanlı Fiyat Geçmişi (PriceHistory)**: Yeni veya eski yatırımların çekilen her anlık fiyatı, veritabanındaki `PriceHistory` tablosuna günlük (Low, High, Close) formatında kaydedilmeye başlandı. 
+- **Veri Odaklı Grafikler (Sparklines)**: Uygulamadaki rastgele çizilen çizgisel fiyat grafikleri tamamen iptal edildi. Artık tüm grafikler `PriceHistory` tablosunda gün gün biriktirilen sizin gerçek fiyat hareketlerinizi (Geçmiş) kullanarak ekrana yansıtılıyor.
+
+### Fixed
+- **İşlem Geçmişi Tablo Görünümü**: Avalonia platformunda eksik kalan `DataGrid` (Tablo) stil kütüphanesi sisteme entegre edildi, böylece yatırım detaylarındaki "İşlem Geçmişi" görünür kılındı.
+- **Tarih Sütunu Kesilmesi**: İşlem detay tablosundaki (DataGrid) "Tarih" sütunu ve diğer sütun genişlikleri piksel olarak iyileştirildi; yıl verilerinin (`24.03.2024` yerine `24.03.202` görünmesi) kesilmesi engellendi.
+- **Manuel Ortalama Düzeltme**: Kullanıcının geçmiş portföy kayıtlarına yönelik "Açılış/Ortalama Maliyet" ve geçmiş alım fiyatları veritabanında toplu olarak istenen güncel değerlerle senkronize edildi.
+
+## [2.0.0-beta.4] - 2026-06-14 — Faz 14: Akıllı Fiyat Sağlayıcıları ve Dinamik Sembol Arama
+
+### Added
+- **Web Scraper (Kazıyıcı) Entegrasyonu**: Kategori bazlı fiyat API ayarlarına yeni bir "Web Scraper" seçeneği eklendi. Arka planda Borsa.Doviz.com, Altin.Doviz.com ve Kur.Doviz.com sitelerinin canlı sayfalarından fiyat çeken dinamik bir yapı kuruldu.
+- **Dinamik Özel API Görünürlüğü**: API ayarlarında "Özel API" seçildiğinde anında ekranda "Özel API URL" metin kutusunun belirmesini sağlayan dinamik (IsVisible) tetikleyici eklendi.
+- **Kategori Bazlı Scraper İsimlendirmesi**: API seçim listesinde artık her kategori kendi kaynağını net bir biçimde (Örn: Web Scraper (Altin.Doviz.com)) gösteriyor.
+- **Dinamik Sembol Arama (AutoComplete)**: Yatırım Ekleme/Satın Alma ekranına Avalonia `AutoCompleteBox` entegre edildi. "Hisse", "Altın" veya "Döviz" seçildiğinde, sağlayıcılardan o saniye tüm güncel semboller (Hisseler, Kur Çeşitleri) çekiliyor. Sembol araması yapılıp listeden bir varlık seçildiğinde (Örn: FENER) sembol ve uzun ismi otomatik dolduruluyor.
+
+## [2.0.0-beta.3] - 2026-06-14 — Faz 13: İşlem Düzenleme, Detaylı Bakiyeler ve Sıralama İyileştirmeleri
+
+### Added
+- **İşlem Düzenleme ve Silme**: Hesap detayları ekranına (`AccountDetailWindow`) her işlem satırı için Düzenle (✏️) ve Sil (🗑️) butonları eklendi. İşlem Düzenleme için modern bir ekran (`EditTransactionWindow` ve `EditTransactionViewModel`) oluşturuldu.
+- **Maaş Gününe Göre Dinamik Dashboard**: Aylık özet ve işlem listelerinde, ilgili ayın başlangıcını bir önceki ayın son iş günü ve bitişini ise içinde bulunulan ayın son iş günü yapacak şekilde dinamik tarih sınırları entegre edildi (`GetLastBusinessDayOfMonth`).
+- **Toplam Varlık Hesaplaması**: Dashboard üzerinde dinamik olarak nakit, banka ve yatırım bakiyelerini içeren gerçek "Toplam Varlık" hesaplaması aktifleştirildi.
+- **Kararlı Aynı Gün Sıralaması**: Aynı gün içerisinde girilen veya düzenlenen işlemlerin sıralamasında, tarih ve saat eşitliği durumunda veri tabanı kayıt sırasını (`Id` alanı) ikincil sıralama ölçütü olarak kullanan `ThenByDescending(t => t.Id)` mantığı eklendi.
+- **Canlı Borsa Fiyatları (API) Entegrasyonu**: Yatırımlar ekranındaki "Fiyatları Çek (API)" butonu aktifleştirilerek, hisse senetleri (Yahoo Finance) ve altın/döviz (GenelPara) verilerinin akıllı rotalama servisi üzerinden anlık olarak çekilmesi ve kâr/zarar durumunun hesaplanması sağlandı.
+- **Yatırım İşlem Geçmişi (Detay) Ekranı**: Yatırımlar tablosundaki her hisse için "İşlemler" butonu aktif edildi. Bu buton sayesinde o hisseye ait geçmişteki tüm alım/satım işlemlerinin (tarih, fiyat, lot adedi, masraf ve toplam tutar) detaylı olarak incelenebildiği `InvestmentDetailWindow` erişilebilir hale getirildi.
+
+### Fixed & Improved
+- **Senkronize Transfer Yönetimi**: Bir transfer işlemi düzenlendiğinde veya silindiğinde, aynı "Grup ID"ye sahip karşı hesaptaki bağlantılı kaydın (tarih, tutar, açıklama ve silinme durumu) otomatik olarak arka planda eşzamanlanması sağlandı. Silme öncesi özel uyarı diyaloğu eklendi.
+- **Anlık Arayüz Yenileme (Refresh)**: Hesap detayları (`AccountDetailWindow`) ekranında işlem yapılıp (düzenleme/silme) pencere kapatıldığında, arka plandaki "Hesaplarım" ekranının menü değiştirmeye gerek kalmadan kendi kendini anında tazelemesi sağlandı.
+- **Hesaplarım Ekranı Scrollbar Düzeltmesi**: Banka hesapları listesinde ekranın altına taşan hesaplara ulaşılamama sorunu, `StackPanel` yerine `Grid` kullanılarak çözüldü ve listeye otomatik `VerticalScrollBar` kazandırıldı.
+- **Dashboard DataGrid Yükleme Sorunları**: WPF'ten kalan ve Avalonia'da listenin boş görünmesine neden olan DataGrid şablonları, modern ItemsControl şablonları ile yenilenerek gelir, gider ve transfer listelerinin düzgün görünmesi sağlandı.
+
+## [2.0.0-beta.2] - 2026-06-14 — Faz 12: Hesap Yönetimi ve Transferler
+
+### Added
+- **Hesapları Yönet Ekranı**: Yeni banka hesaplarının eklenebildiği (Açılış Bakiyesi ve IBAN desteği ile), mevcut hesapların aktif/pasif durumlarının değiştirilebildiği ve silinebildiği modüler pencere eklendi (`ManageAccountsWindow`).
+- **Hesaplar Arası Transfer**: Nakit (Cüzdan) ve banka hesapları arasında tutar aktarımını sağlayan; arka planda giden ve gelen iki ayrı işlem oluşturan Transfer ekranı yapıldı (`TransferWindow`).
+- **Hesap Detayları Ekranı**: Seçilen banka hesabının veya cüzdanın tüm geçmiş işlemlerini (gelir, gider, transfer ve yatırım alış/satış) listeleyen ve güncel bakiyesini gösteren detay sayfası oluşturuldu (`AccountDetailWindow`).
+- **IBAN Formatlayıcı (IbanConverter)**: IBAN alanlarına değer girilirken veya okunurken dörderli gruplar halinde otomatik boşluk bırakan Avalonia IValueConverter yazıldı. Avalonia'nın cursor atlama sorunlarını engellemek adına doğrudan Binding katmanına uygulandı.
+- **Tutar Alanlarında Otomatik Formatlama**: Para Transferi (`TransferWindow`) ve Yeni İşlem Ekle (`AddTransactionWindow`) ekranlarındaki tutar kutularına odak kaybolduğunda (Lost Focus) otomatik olarak binlik ayracı ve `,00` kuruş hanesi getiren (`30.000,00` gibi) formatlama desteği eklendi.
+- **Güvenli Tutar Çözümleme**: Girilen formatlanmış değerlerin veritabanına sorunsuz şekilde kaydedilebilmesi için asenkron işlemler katmanındaki sayı çözümleme (parsing) altyapısı nokta ve virgül içeren girdileri doğru algılayacak şekilde güçlendirildi.
 
 ## [2.0.0-beta.1] - 2026-05-21 — Faz 11: Diyaloglar, Tema ve WPF'in Emekliliği
 
@@ -528,3 +583,35 @@ Projenin sürdürülebilirliği ve güvenliği için aşağıdaki prensipler uyg
 - **Dashboard**: Redesigned to show Income (Alacak) and Expense (Borç) side-by-side.
 - **Dashboard**: Added total balance calculation to status bar.
 - **System**: Reverted to .NET 10 (Preview) per user request.
+
+---
+
+## 📦 Arşiv: FinTrack → Avalonia UI Geçiş Planı
+
+*Not: Bu bölüm, uygulamanın WPF'ten platform bağımsız Avalonia UI altyapısına geçişini belgeleyen orijinal plandan aktarılmıştır.*
+
+- **Başlangıç:** 2026-05-10
+- **Hedef Platformlar:** Windows (x64), Linux (x64), Android (arm64)
+
+### Faz 0: Proje Altyapısı (Temel Kurulum) `[DONE]`
+- `dotnet new install Avalonia.Templates` ile şablonları yükle
+- `FinTrack.Avalonia` projesini oluştur (`net10.0`)
+- Core ve Data projelerini referans ekle
+- NuGet paketlerini yükle (`CommunityToolkit.Mvvm`, `SQLCipher`)
+- Global exception handling ve SQLite init ayarlarını yap
+
+### Faz 1-11: MVVM, UI, Veritabanı ve Modernizasyon `[DONE]`
+- Avalonia üzerinde cross-platform MVVM mimarisi kuruldu.
+- WPF projesindeki tüm View ve ViewModel'ler modern Avalonia yapısına taşındı.
+- Özel diyaloglar, tema desteği, otomatik kilitleme ve platform bağımsız dosya yöneticileri eklendi.
+
+### Faz 12: Build, Test & Dağıtım (Gelecek Planlar)
+- `FinTrack.Tests` (xUnit) projesini kur
+- GitHub Actions CI/CD pipeline yapılandır
+- `.apk` (Android) ve `.AppImage` (Linux) çıktılarını doğrula
+
+### 🛠️ Teknik Notlar
+- **UI Framework:** Avalonia UI 12.0.2
+- **Mimar:** MVVM (CommunityToolkit.Mvvm)
+- **Render Motoru:** Skia (Cross-platform performans için)
+- **Veritabanı:** SQLCipher (Şifreleme korunacak)

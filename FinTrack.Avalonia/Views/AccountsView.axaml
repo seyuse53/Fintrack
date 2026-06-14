@@ -18,19 +18,19 @@
                         <TextBlock Text="{Binding CashBalanceDisplay}" FontSize="24" FontWeight="Bold" Foreground="#27AE60"/>
                     </StackPanel>
                     
-                    <Button Grid.Column="1" Content="Transfer" Background="#F39C12" Foreground="White" CornerRadius="6" Padding="15,8" Margin="0,0,10,0"/>
-                    <Button Grid.Column="2" Content="Detaylar" Background="#3498DB" Foreground="White" CornerRadius="6" Padding="15,8"/>
+                    <Button Grid.Column="1" Content="Transfer" Command="{Binding TransferCommand}" CommandParameter="{x:Null}" Background="#F39C12" Foreground="White" CornerRadius="6" Padding="15,8" Margin="0,0,10,0"/>
+                    <Button Grid.Column="2" Content="Detaylar" Command="{Binding ShowDetailsCommand}" CommandParameter="{x:Null}" Background="#3498DB" Foreground="White" CornerRadius="6" Padding="15,8"/>
                 </Grid>
             </Border>
         </StackPanel>
 
-        <StackPanel Grid.Row="1">
-            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+        <Grid Grid.Row="1" RowDefinitions="Auto,*">
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
                 <TextBlock Grid.Column="0" Text="BANKA HESAPLARIM" FontSize="16" FontWeight="Bold" Foreground="#34495E" VerticalAlignment="Center"/>
-                <Button Grid.Column="1" Content="Hesapları Yönet" Background="Transparent" Foreground="#3498DB" FontWeight="SemiBold"/>
+                <Button Grid.Column="1" Content="Hesapları Yönet" Command="{Binding ManageAccountsCommand}" Background="Transparent" Foreground="#3498DB" FontWeight="SemiBold"/>
             </Grid>
 
-            <ScrollViewer>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding AccountsList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -49,8 +49,8 @@
                                                FontSize="18" FontWeight="Bold" Foreground="#2C3E50" VerticalAlignment="Center" Margin="0,0,20,0"/>
                                     
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                                        <Button Content="Transfer" Background="#F4F6F9" Foreground="#34495E" CornerRadius="4"/>
-                                        <Button Content="Detaylar" Background="#F4F6F9" Foreground="#34495E" CornerRadius="4"/>
+                                        <Button Content="Transfer" Command="{Binding $parent[UserControl].((vm:AccountsViewModel)DataContext).TransferCommand}" CommandParameter="{Binding AccountId}" Background="#F4F6F9" Foreground="#34495E" CornerRadius="4"/>
+                                        <Button Content="Detaylar" Command="{Binding $parent[UserControl].((vm:AccountsViewModel)DataContext).ShowDetailsCommand}" CommandParameter="{Binding AccountId}" Background="#F4F6F9" Foreground="#34495E" CornerRadius="4"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -58,7 +58,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-        </StackPanel>
+        </Grid>
     </Grid>
 
 </UserControl>

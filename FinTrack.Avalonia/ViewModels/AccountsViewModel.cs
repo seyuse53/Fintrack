@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using FinTrack.Core.Models;
 using FinTrack.Data;
@@ -36,6 +37,19 @@ public partial class AccountsViewModel : ViewModelBase
         _context = App.Services?.GetService<AppDbContext>();
         _ = LoadDataAsync();
     }
+
+    public event Action? RequestManageAccounts;
+    public event Action<int?>? RequestTransfer;
+    public event Action<int?>? RequestAccountDetails;
+
+    [RelayCommand]
+    private void ManageAccounts() => RequestManageAccounts?.Invoke();
+
+    [RelayCommand]
+    private void Transfer(int? accountId) => RequestTransfer?.Invoke(accountId);
+
+    [RelayCommand]
+    private void ShowDetails(int? accountId) => RequestAccountDetails?.Invoke(accountId);
 
     public async Task LoadDataAsync()
     {

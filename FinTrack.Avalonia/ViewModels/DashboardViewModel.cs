@@ -50,33 +50,67 @@ public partial class DashboardViewModel : ViewModelBase
             int selectedYear = year ?? DateTime.Now.Year;
             int selectedMonth = month ?? DateTime.Now.Month;
             
+            // Calculate Previous Month
+            int prevMonth = selectedMonth == 1 ? 12 : selectedMonth - 1;
+            int prevYear = selectedMonth == 1 ? selectedYear - 1 : selectedYear;
+
+            DateTime startDate = GetLastBusinessDayOfMonth(prevYear, prevMonth).Date;
+            DateTime endDate = GetLastBusinessDayOfMonth(selectedYear, selectedMonth).Date;
+
+            System.Diagnostics.Debug.WriteLine($"[Dashboard] Ay: {selectedMonth}/{selectedYear} | Aralık: {startDate:dd.MM.yyyy} - {endDate:dd.MM.yyyy}");
+
             var transactions = await _context.Transactions
                 .Include(t => t.Category)
                     .ThenInclude(c => c!.ParentCategory)
                 .Include(t => t.CreditCardAccount)
-                .Where(t => t.Date.Year == selectedYear && t.Date.Month == selectedMonth)
+                .Where(t => t.Date >= startDate && t.Date < endDate)
                 .OrderByDescending(t => t.Date)
+                .ThenByDescending(t => t.Id)
                 .ToListAsync();
 
-            var incomeList = transactions.Where(t => t.Category?.Type == TransactionType.Income).ToList();
-            var expenseList = transactions.Where(t => t.Category?.Type == TransactionType.Expense).ToList();
-            var transferList = transactions.Where(t => t.Category?.Type != TransactionType.Income && t.Category?.Type != TransactionType.Expense).ToList();
+            System.Diagnostics.Debug.WriteLine($"[Dashboard] Toplam işlem: {transactions.Count}");
 
-            // Using UI thread safely (Avalonia handles collection updates if bound correctly, but Dispatcher is safer. 
-            // We'll trust ObservableCollection for now as this usually runs on UI thread due to the constructor call, but we might need Avalonia.Threading.Dispatcher)
+            var incomeItems = transactions.Where(t => t.Category?.Type == TransactionType.Income).ToList();
+            var expenseItems = transactions.Where(t => t.Category?.Type == TransactionType.Expense).ToList();
+            var transferItems = transactions.Where(t => t.Category?.Type != TransactionType.Income && t.Category?.Type != TransactionType.Expense).ToList();
+
+            System.Diagnostics.Debug.WriteLine($"[Dashboard] Gelir: {incomeItems.Count}, Gider: {expenseItems.Count}, Transfer: {transferItems.Count}");
+
+            // Hesapla: Toplam Varlık (Nakit + Banka)
+            var cashAndBankTransactions = await _context.Transactions
+                .Include(t => t.Category)
+                .Where(t => t.CreditCardAccountId == null)
+                .ToListAsync();
+
+            decimal totalWealth = 0;
+            foreach (var t in cashAndBankTransactions)
+            {
+                if (t.Category?.Type == TransactionType.Income || t.Category?.Type == TransactionType.Transfer)
+                    totalWealth += t.Amount;
+                else if (t.Category?.Type == TransactionType.Expense)
+                    totalWealth -= t.Amount;
+            }
+
+            var allInvestmentTransactions = await _context.InvestmentTransactions
+                .Where(t => t.LinkedBankAccountId != null)
+                .ToListAsync();
+
+            foreach (var invT in allInvestmentTransactions)
+            {
+                if (invT.Type == InvestmentTransactionType.Buy)
+                    totalWealth -= invT.TotalCost;
+                else if (invT.Type == InvestmentTransactionType.Sell)
+                    totalWealth += invT.TotalCost;
+            }
+
             global::Avalonia.Threading.Dispatcher.UIThread.Invoke(() => {
-                IncomeList.Clear();
-                foreach (var t in incomeList) IncomeList.Add(t);
+                IncomeList = new ObservableCollection<Transaction>(incomeItems);
+                ExpenseList = new ObservableCollection<Transaction>(expenseItems);
+                TransferList = new ObservableCollection<Transaction>(transferItems);
 
-                ExpenseList.Clear();
-                foreach (var t in expenseList) ExpenseList.Add(t);
-
-                TransferList.Clear();
-                foreach (var t in transferList) TransferList.Add(t);
-
-                TotalIncome = incomeList.Sum(t => t.Amount);
-                TotalExpense = expenseList.Sum(t => t.Amount);
-                CurrentBalanceDisplay = "₺0,00"; // Placeholder for wealth
+                TotalIncome = incomeItems.Sum(t => t.Amount);
+                TotalExpense = expenseItems.Sum(t => t.Amount);
+                CurrentBalanceDisplay = $"₺{totalWealth:N2}";
             });
 
             // Hesapla: Yatırım Portföyü
@@ -97,5 +131,16 @@ public partial class DashboardViewModel : ViewModelBase
         {
             System.Diagnostics.Debug.WriteLine(ex.Message);
         }
+    }
+
+    private DateTime GetLastBusinessDayOfMonth(int year, int month)
+    {
+        int daysInMonth = DateTime.DaysInMonth(year, month);
+        DateTime lastDay = new DateTime(year, month, daysInMonth);
+        while (lastDay.DayOfWeek == DayOfWeek.Saturday || lastDay.DayOfWeek == DayOfWeek.Sunday)
+        {
+            lastDay = lastDay.AddDays(-1);
+        }
+        return lastDay;
     }
 }

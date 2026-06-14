@@ -111,21 +111,37 @@ public partial class SettingsViewModel : ViewModelBase
 
     [ObservableProperty]
     private int _dovizProviderIndex;
+    partial void OnDovizProviderIndexChanged(int value) => UpdateCustomApiPanelVisibility();
 
     [ObservableProperty]
     private int _altinProviderIndex;
+    partial void OnAltinProviderIndexChanged(int value) => UpdateCustomApiPanelVisibility();
 
     [ObservableProperty]
     private int _hisseProviderIndex;
+    partial void OnHisseProviderIndexChanged(int value) => UpdateCustomApiPanelVisibility();
 
     [ObservableProperty]
     private int _kriptoProviderIndex;
+    partial void OnKriptoProviderIndexChanged(int value) => UpdateCustomApiPanelVisibility();
 
     [ObservableProperty]
     private int _fonProviderIndex;
+    partial void OnFonProviderIndexChanged(int value) => UpdateCustomApiPanelVisibility();
 
     [ObservableProperty]
     private int _digerProviderIndex;
+    partial void OnDigerProviderIndexChanged(int value) => UpdateCustomApiPanelVisibility();
+
+    private void UpdateCustomApiPanelVisibility()
+    {
+        ShowCustomApiPanel = DovizProviderIndex == (int)ApiProviderType.Custom
+                          || AltinProviderIndex == (int)ApiProviderType.Custom
+                          || HisseProviderIndex == (int)ApiProviderType.Custom
+                          || KriptoProviderIndex == (int)ApiProviderType.Custom
+                          || FonProviderIndex == (int)ApiProviderType.Custom
+                          || DigerProviderIndex == (int)ApiProviderType.Custom;
+    }
 
     [ObservableProperty]
     private string _customApiUrl = string.Empty;

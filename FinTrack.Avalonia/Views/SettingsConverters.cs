@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 
@@ -124,4 +125,32 @@ public class SubCategoryFontStyleConverter : IValueConverter
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotSupportedException();
+}
+
+/// <summary>
+/// Converts raw IBAN to spaced IBAN (TR12 3456...) and back.
+/// </summary>
+public class IbanConverter : IValueConverter
+{
+    public static readonly IbanConverter Instance = new();
+
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is string iban && !string.IsNullOrWhiteSpace(iban))
+        {
+            var cleanIban = new string(System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Where(iban, char.IsLetterOrDigit))).ToUpper();
+            return string.Join(" ", System.Linq.Enumerable.Range(0, (cleanIban.Length + 3) / 4)
+                                         .Select(i => cleanIban.Substring(i * 4, Math.Min(4, cleanIban.Length - i * 4))));
+        }
+        return string.Empty;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is string iban)
+        {
+            return new string(System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Where(iban, char.IsLetterOrDigit))).ToUpper();
+        }
+        return string.Empty;
+    }
 }

@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        x:Class="FinTrack.Avalonia.Views.AccountDetailWindow"
+        x:DataType="vm:AccountDetailViewModel"
+        Title="{Binding AccountTitle}" Height="600" Width="650"
+        WindowStartupLocation="CenterOwner" CanResize="False" Background="#F4F6F9">
+    
+    <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
+        
+        <TextBlock Grid.Row="0" Text="{Binding AccountTitle}" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" Foreground="#2C3E50"/>
+        
+        <!-- Current Balance -->
+        <Border Grid.Row="1" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20" Margin="0,0,0,20">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="Güncel Bakiye" FontSize="14" Foreground="#7F8C8D" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                <TextBlock Text="{Binding CurrentBalanceDisplay}" FontSize="28" FontWeight="Bold" Foreground="#34495E" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Transactions List -->
+        <ScrollViewer Grid.Row="2" Margin="0,0,0,20">
+            <ItemsControl ItemsSource="{Binding Transactions}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:AccountDetailItem">
+                        <Border Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="12" Margin="0,0,0,10">
+                            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                <!-- Date & Icon -->
+                                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Icon}" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Date, StringFormat='dd MMM'}" FontSize="14" FontWeight="Bold" Foreground="#2C3E50"/>
+                                        <TextBlock Text="{Binding Date, StringFormat='yyyy'}" FontSize="12" Foreground="#95A5A6"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                
+                                <!-- Description & Category -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding CategoryName}" FontSize="14" FontWeight="SemiBold" Foreground="#34495E"/>
+                                    <TextBlock Text="{Binding Description}" FontSize="12" Foreground="#7F8C8D" Margin="0,2,0,0" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                                
+                                <!-- Amount -->
+                                <TextBlock Grid.Column="2" Text="{Binding AmountText}" Foreground="{Binding ForegroundColor}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0"/>
+
+                                <!-- Edit / Delete Buttons -->
+                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" IsVisible="{Binding !IsInvestment}">
+                                    <Button Content="✏️" ToolTip.Tip="Düzenle" Padding="6,4" Margin="0,0,4,0" FontSize="14"
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                            Command="{Binding $parent[ItemsControl].((vm:AccountDetailViewModel)DataContext).EditTransactionCommand}"
+                                            CommandParameter="{Binding}"/>
+                                    <Button Content="🗑️" ToolTip.Tip="Sil" Padding="6,4" FontSize="14"
+                                            Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                            Command="{Binding $parent[ItemsControl].((vm:AccountDetailViewModel)DataContext).DeleteTransactionCommand}"
+                                            CommandParameter="{Binding}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Kapat" Width="100" Padding="10" Command="{Binding CloseCommand}" Background="#ECF0F1" Foreground="#34495E" FontWeight="Bold" BorderThickness="0" HorizontalContentAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>
+

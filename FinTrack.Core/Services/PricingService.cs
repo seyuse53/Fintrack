@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FinTrack.Core.Models;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace FinTrack.Core.Services
 {
@@ -320,9 +322,374 @@ namespace FinTrack.Core.Services
                     "Kripto Para" => await FetchFromGenelParaAsync(symbol, "kripto"),
                     _ => await FetchFromGenelParaAsync(symbol, "doviz")
                 },
+                ApiProviderType.WebScraper => category switch
+                {
+                    "Döviz" => await FetchDovizFromDovizComScraperAsync(symbol),
+                    "Altın" => await FetchAltinFromDovizComScraperAsync(symbol),
+                    "Hisse Senedi" => await FetchFromDovizComScraperAsync(symbol),
+                    "Hisse" => await FetchFromDovizComScraperAsync(symbol),
+                    "Kripto Para" => await FetchKriptoFromDovizComScraperAsync(symbol),
+                    _ => false
+                },
                 ApiProviderType.Manual => false, // Manuel modda API çekmiyoruz
                 _ => await FetchRealTimePriceAsync(symbol) // Fallback: Yahoo
             };
+        }
+
+        /// <summary>
+        /// Hisse senetleri için Yahoo Finance yerine doğrudan borsa.doviz.com kazıyıcısı kullanır.
+        /// API limitlerine takılmaz ve doğrudan HTML içinden regex ile okur.
+        /// </summary>
+        public static async Task<bool> FetchFromDovizComScraperAsync(string symbol)
+        {
+            if (string.IsNullOrWhiteSpace(symbol)) return false;
+            symbol = symbol.ToUpperInvariant().Trim();
+
+            try
+            {
+                using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, "https://borsa.doviz.com/hisseler");
+                // Anti-bot korumasını aşmak için sıradan bir tarayıcı gibi davranıyoruz
+                request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+                request.Headers.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
+                request.Headers.Add("Accept-Language", "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7");
+                
+                var response = await _httpClient.SendAsync(request);
+                if (!response.IsSuccessStatusCode) return false;
+
+                string html = await response.Content.ReadAsStringAsync();
+
+                // Hedef: <tr id="TTRAK" ...> ... <td class="text-bold">441,25</td>
+                string pattern = $@"<tr\s+id=""{symbol}"".*?>\s*<td.*?>.*?</td>\s*<td\s+class=""text-bold"">\s*([\d\.,]+)\s*</td>";
+                var regex = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                
+                var match = regex.Match(html);
+                if (match.Success)
+                {
+                    string priceStr = match.Groups[1].Value.Trim().Replace(".", "").Replace(",", ".");
+                    if (decimal.TryParse(priceStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal price) && price > 0)
+                    {
+                        SetPrice(symbol, price);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Borsa scraper error for {symbol}: {ex.Message}");
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Kripto paralar için Binance API üzerinden USDT fiyatını alır ve USD/TRY ile TL'ye çevirir.
+        /// </summary>
+        public static async Task<bool> FetchKriptoFromBinanceAsync(string symbol)
+        {
+            if (string.IsNullOrWhiteSpace(symbol)) return false;
+            symbol = symbol.ToUpperInvariant().Trim();
+
+            try
+            {
+                string binanceSymbol = $"{symbol}USDT";
+                string url = $"https://api.binance.com/api/v3/ticker/price?symbol={binanceSymbol}";
+                
+                using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
+                request.Headers.Add("User-Agent", "Mozilla/5.0");
+                var response = await _httpClient.SendAsync(request);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    using var doc = System.Text.Json.JsonDocument.Parse(json);
+                    if (doc.RootElement.TryGetProperty("price", out var priceElement))
+                    {
+                        string priceStr = priceElement.GetString() ?? "0";
+                        if (decimal.TryParse(priceStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal priceUsd) && priceUsd > 0)
+                        {
+                            // USD/TRY kuru ile TL'ye çevir
+                            await FetchRealTimePriceAsync("USD");
+                            if (_cachedPrices.TryGetValue("USD", out var usdPrice))
+                            {
+                                decimal tryPrice = priceUsd * usdPrice;
+                                SetPrice(symbol, tryPrice);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Binance error for {symbol}: {ex.Message}");
+            }
+            
+            return false;
+        }
+
+        /// <summary>
+        /// Kripto paralar için doğrudan doviz.com kazıyıcısı kullanır.
+        /// </summary>
+        public static async Task<bool> FetchKriptoFromDovizComScraperAsync(string symbol)
+        {
+            if (string.IsNullOrWhiteSpace(symbol)) return false;
+            symbol = symbol.ToUpperInvariant().Trim();
+
+            try
+            {
+                using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, "https://www.doviz.com/kripto-paralar");
+                request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+                request.Headers.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+                request.Headers.Add("Accept-Language", "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7");
+                
+                var response = await _httpClient.SendAsync(request);
+                if (!response.IsSuccessStatusCode) return false;
+
+                string html = await response.Content.ReadAsStringAsync();
+
+                // Hedef: <div>BTC</div> ... <td class="text-bold">$64.046</td> <td>₺2.960.785</td>
+                string pattern = $@"<div>\s*{symbol}\s*</div>.*?<td.*?>.*?</td>\s*<td.*?>.*?([\d\.,]+)\s*</td>";
+                var regex = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                
+                var match = regex.Match(html);
+                if (match.Success)
+                {
+                    string priceStr = match.Groups[1].Value.Trim().Replace(".", "").Replace(",", ".");
+                    if (decimal.TryParse(priceStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal price) && price > 0)
+                    {
+                        SetPrice(symbol, price);
+                        return true;
+                    }
+                }
+
+                // Ana tabloda bulamazsa, alt sayfasına (slug) istek at:
+                string slug = symbol.ToLowerInvariant();
+                if (slug == "s") slug = "sonic"; // Özel eşleştirme: S sembolü için
+                
+                using var subRequest = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, $"https://www.doviz.com/kripto-paralar/{slug}");
+                subRequest.Headers.Add("User-Agent", "Mozilla/5.0");
+                var subResponse = await _httpClient.SendAsync(subRequest);
+                
+                if (subResponse.IsSuccessStatusCode)
+                {
+                    string subHtml = await subResponse.Content.ReadAsStringAsync();
+                    // Hedef yapı: class="text-xs text-blue-gray-2">SONIC/TRY</div> ... <div class="text-md font-semibold text-white mt-4">₺1,39</div>
+                    string subPattern = @"/TRY.*?</div>\s*<div.*?>.*?([\d\.,]+)</div>";
+                    var subRegex = new System.Text.RegularExpressions.Regex(subPattern, System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                    var subMatch = subRegex.Match(subHtml);
+                    if (subMatch.Success)
+                    {
+                        string priceStr = subMatch.Groups[1].Value.Trim().Replace(".", "").Replace(",", ".");
+                        if (decimal.TryParse(priceStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal price) && price > 0)
+                        {
+                            SetPrice(symbol, price);
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Crypto scraper error for {symbol}: {ex.Message}");
+            }
+
+            // Kazıma başarısız olursa Binance API'ye (Global Kripto) Fallback yap
+            bool binanceSuccess = await FetchKriptoFromBinanceAsync(symbol);
+            if (binanceSuccess) return true;
+
+            // Binance da başarısız olursa orijinal Yahoo yöntemine Fallback
+            return await FetchRealTimePriceAsync(symbol);
+        }
+
+        /// <summary>
+        /// Altın için doğrudan altin.doviz.com kazıyıcısı kullanır.
+        /// HTML içinden data-socket-key özniteliği aracılığıyla arar.
+        /// </summary>
+        public static async Task<bool> FetchAltinFromDovizComScraperAsync(string symbol)
+        {
+            if (string.IsNullOrWhiteSpace(symbol)) return false;
+            symbol = symbol.ToUpperInvariant().Trim();
+
+            // Sizin kullandığınız Altın sembollerini doviz.com socket key'lerine eşleştirelim
+            string dataKey = symbol switch
+            {
+                "XAU" => "gram-altin",
+                "CAU" => "ceyrek-altin",
+                "YAU" => "yarim-altin",
+                "TAU" => "tam-altin",
+                _ => symbol.ToLowerInvariant() + "-altin"
+            };
+
+            try
+            {
+                using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, "https://altin.doviz.com/");
+                request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+                request.Headers.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
+                request.Headers.Add("Accept-Language", "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7");
+                
+                var response = await _httpClient.SendAsync(request);
+                if (!response.IsSuccessStatusCode) return false;
+
+                string html = await response.Content.ReadAsStringAsync();
+
+                // Hedef: data-socket-key="ceyrek-altin" data-socket-attr="ask"...>10.325,09</td>
+                string pattern = $@"data-socket-key=""{dataKey}""\s+data-socket-attr=""ask"".*?>\s*([\d\.,]+)\s*</td>";
+                var regex = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                
+                var match = regex.Match(html);
+                if (match.Success)
+                {
+                    string priceStr = match.Groups[1].Value.Trim().Replace(".", "").Replace(",", ".");
+                    if (decimal.TryParse(priceStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal price) && price > 0)
+                    {
+                        SetPrice(symbol, price);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Altin Scraping error for {symbol}: {ex.Message}");
+            }
+
+            // Kazıma başarısız olursa GenelPara Altın yöntemine Fallback
+            return await FetchFromGenelParaAsync(symbol, "altin");
+        }
+
+        /// <summary>
+        /// Döviz için doğrudan kur.doviz.com kazıyıcısı kullanır.
+        /// HTML içinden data-socket-key özniteliği aracılığıyla arar.
+        /// </summary>
+        public static async Task<bool> FetchDovizFromDovizComScraperAsync(string symbol)
+        {
+            if (string.IsNullOrWhiteSpace(symbol)) return false;
+            symbol = symbol.ToUpperInvariant().Trim();
+
+            // Döviz için data-socket-key doğrudan sembolün kendisidir (örn. USD, EUR)
+            string dataKey = symbol;
+
+            try
+            {
+                using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, "https://kur.doviz.com/");
+                request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+                request.Headers.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
+                request.Headers.Add("Accept-Language", "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7");
+                
+                var response = await _httpClient.SendAsync(request);
+                if (!response.IsSuccessStatusCode) return false;
+
+                string html = await response.Content.ReadAsStringAsync();
+
+                // Hedef: data-socket-key="USD" data-socket-attr="ask"...>46,2874</td>
+                string pattern = $@"data-socket-key=""{dataKey}""\s+data-socket-attr=""ask"".*?>\s*([\d\.,]+)\s*</td>";
+                var regex = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                
+                var match = regex.Match(html);
+                if (match.Success)
+                {
+                    string priceStr = match.Groups[1].Value.Trim().Replace(".", "").Replace(",", ".");
+                    if (decimal.TryParse(priceStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal price) && price > 0)
+                    {
+                        SetPrice(symbol, price);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Doviz Scraping error for {symbol}: {ex.Message}");
+            }
+
+            // Kazıma başarısız olursa GenelPara Döviz yöntemine Fallback
+            return await FetchFromGenelParaAsync(symbol, "doviz");
+        }
+
+        /// <summary>
+        /// Kategoriye göre anlık kullanılabilir sembol listesini çeker (Örn. Hisse -> borsa.doviz.com/hisseler).
+        /// </summary>
+        public static async Task<List<SymbolItem>> GetAvailableSymbolsAsync(string? category)
+        {
+            var results = new List<SymbolItem>();
+            string cat = (category ?? "").Trim();
+
+            try
+            {
+                if (cat == "Hisse Senedi" || cat == "Hisse")
+                {
+                    using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, "https://borsa.doviz.com/hisseler");
+                    request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0)");
+                    var response = await _httpClient.SendAsync(request);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string html = await response.Content.ReadAsStringAsync();
+                        // <tr id="FENER" data-sector="78" data-name="FENER - FENERBAHCE FUTBOL">
+                        var regex = new System.Text.RegularExpressions.Regex(@"<tr[^>]*data-name=""([^-]+)\s*-\s*([^""]+)""", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        foreach (System.Text.RegularExpressions.Match match in regex.Matches(html))
+                        {
+                            results.Add(new SymbolItem { Symbol = match.Groups[1].Value.Trim(), Name = match.Groups[2].Value.Trim() });
+                        }
+                    }
+                }
+                else if (cat == "Altın")
+                {
+                    // Altınlar borsa.doviz.com'daki altin sayfası. Sabit liste yerine sayfadan çekebiliriz, 
+                    // Ancak sembolleri sistemle uyumlu tutmak için manuel eklemek daha güvenlidir, 
+                    // yinede Doviz.com html'sinden adları alabiliriz.
+                    using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, "https://altin.doviz.com/");
+                    request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0)");
+                    var response = await _httpClient.SendAsync(request);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string html = await response.Content.ReadAsStringAsync();
+                        // <a href="https://altin.doviz.com/gram-altin">Gram Altın</a>
+                        // veya data-socket-key="gram-altin" satırları.. Sistem XAU, CAU, YAU vb kullanıyor.
+                        results.Add(new SymbolItem { Symbol = "XAU", Name = "Gram Altın" });
+                        results.Add(new SymbolItem { Symbol = "CAU", Name = "Çeyrek Altın" });
+                        results.Add(new SymbolItem { Symbol = "YAU", Name = "Yarım Altın" });
+                        results.Add(new SymbolItem { Symbol = "TAU", Name = "Tam Altın" });
+                        results.Add(new SymbolItem { Symbol = "CUMHURIYET", Name = "Cumhuriyet Altını" });
+                        results.Add(new SymbolItem { Symbol = "ATA", Name = "Ata Altın" });
+                        results.Add(new SymbolItem { Symbol = "ONS", Name = "Ons Altın" });
+                    }
+                }
+                else if (cat == "Döviz")
+                {
+                    using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, "https://kur.doviz.com/");
+                    request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0)");
+                    var response = await _httpClient.SendAsync(request);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string html = await response.Content.ReadAsStringAsync();
+                        // <td class="text-bold" data-socket-key="USD" ...>...</td> 
+                        // <td class="text-bold" data-socket-key="EUR" ...>...</td>
+                        // Maalesef sayfada isimleri (Amerikan Doları) kolayca regexle çekmek zor olabilir. Sabit sık kullanılanları dönelim.
+                        results.Add(new SymbolItem { Symbol = "USD", Name = "Amerikan Doları" });
+                        results.Add(new SymbolItem { Symbol = "EUR", Name = "Euro" });
+                        results.Add(new SymbolItem { Symbol = "GBP", Name = "İngiliz Sterlini" });
+                        results.Add(new SymbolItem { Symbol = "CHF", Name = "İsviçre Frangı" });
+                        results.Add(new SymbolItem { Symbol = "CAD", Name = "Kanada Doları" });
+                        results.Add(new SymbolItem { Symbol = "AUD", Name = "Avustralya Doları" });
+                        results.Add(new SymbolItem { Symbol = "JPY", Name = "Japon Yeni" });
+                    }
+                }
+                else if (cat == "Kripto Para" || cat == "Kripto")
+                {
+                    results.Add(new SymbolItem { Symbol = "BTC-USD", Name = "Bitcoin" });
+                    results.Add(new SymbolItem { Symbol = "ETH-USD", Name = "Ethereum" });
+                    results.Add(new SymbolItem { Symbol = "BNB-USD", Name = "BNB" });
+                    results.Add(new SymbolItem { Symbol = "XRP-USD", Name = "Ripple" });
+                    results.Add(new SymbolItem { Symbol = "SOL-USD", Name = "Solana" });
+                    results.Add(new SymbolItem { Symbol = "ADA-USD", Name = "Cardano" });
+                    results.Add(new SymbolItem { Symbol = "AVAX-USD", Name = "Avalanche" });
+                    results.Add(new SymbolItem { Symbol = "DOGE-USD", Name = "Dogecoin" });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"GetAvailableSymbolsAsync error: {ex.Message}");
+            }
+
+            return results;
         }
     }
 }

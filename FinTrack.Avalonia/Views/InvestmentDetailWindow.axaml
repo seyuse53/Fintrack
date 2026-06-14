@@ -52,7 +52,7 @@
                 </Grid>
 
                 <!-- Sparkline Control -->
-                <controls:AvaloniaSparklineControl Grid.Row="2" ShowFill="True" ShowLabels="True" ShowTooltip="True"/>
+                <controls:AvaloniaSparklineControl Grid.Row="2" Data="{Binding SparklineData}" ShowFill="True" ShowLabels="True" ShowTooltip="True"/>
             </Grid>
         </Border>
 
@@ -65,9 +65,9 @@
                           HeadersVisibility="Column" Background="White" RowBackground="White"
                           BorderThickness="0">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat='dd.MM.yyyy'}" Width="95"/>
-                        <DataGridTextColumn Header="Tür" Binding="{Binding Type}" Width="100"/>
-                        <DataGridTextColumn Header="Adet" Binding="{Binding Amount, StringFormat=N2}" Width="80"/>
+                        <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat='dd.MM.yyyy'}" Width="110"/>
+                        <DataGridTextColumn Header="Tür" Binding="{Binding Type}" Width="80"/>
+                        <DataGridTextColumn Header="Adet" Binding="{Binding Amount, StringFormat=N2}" Width="90"/>
                         <DataGridTextColumn Header="Birim Fiyat" Binding="{Binding UnitPrice, StringFormat='₺{0:N2}'}" Width="110"/>
                         <DataGridTextColumn Header="Komisyon" Binding="{Binding Fee, StringFormat='₺{0:N2}'}" Width="90"/>
                         <DataGridTextColumn Header="Toplam" Binding="{Binding TotalCost, StringFormat='₺{0:N2}'}" Width="120"/>

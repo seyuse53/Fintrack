@@ -28,6 +28,50 @@ public partial class AddInvestmentViewModel : ViewModelBase
     private string _selectedCategory = "Altın";
 
     [ObservableProperty]
+    private ObservableCollection<SymbolItem> _availableSymbols = new();
+
+    [ObservableProperty]
+    private SymbolItem? _selectedSymbolItem;
+
+    public global::Avalonia.Controls.AutoCompleteFilterPredicate<object> SymbolFilter { get; }
+
+    partial void OnSelectedSymbolItemChanged(SymbolItem? value)
+    {
+        if (value != null)
+        {
+            Symbol = value.Symbol;
+            Name = value.Name;
+        }
+    }
+
+    partial void OnSelectedCategoryChanged(string value)
+    {
+        _ = LoadSymbolsAsync(value);
+    }
+
+    private async Task LoadSymbolsAsync(string category)
+    {
+        var symbols = await FinTrack.Core.Services.PricingService.GetAvailableSymbolsAsync(category);
+        
+        // Kullanıcının mevcut portföyünden varlıkları da otomatik tamamlama listesine ekle
+        var existingAssets = await _context.InvestmentAssets
+            .Where(a => a.Category == category)
+            .Select(a => new SymbolItem { Symbol = a.Symbol, Name = a.Name })
+            .ToListAsync();
+            
+        foreach (var asset in existingAssets)
+        {
+            if (!symbols.Any(s => s.Symbol == asset.Symbol))
+            {
+                symbols.Insert(0, asset); // Portföydeki varlıkları listenin en başına koy
+            }
+        }
+
+        // UI thread güvenliği için Avalonia Dispatcher kullanılabilir ama ObservableProperty ataması genelde çalışır.
+        AvailableSymbols = new ObservableCollection<SymbolItem>(symbols);
+    }
+
+    [ObservableProperty]
     private DateTime? _selectedDate = DateTime.Now;
 
     [ObservableProperty]
@@ -57,6 +101,18 @@ public partial class AddInvestmentViewModel : ViewModelBase
     {
         _context = context;
         _ownerWindow = ownerWindow;
+
+        SymbolFilter = (search, item) =>
+        {
+            if (string.IsNullOrWhiteSpace(search)) return true;
+            if (item is SymbolItem symbolItem)
+            {
+                var s = search.ToLowerInvariant();
+                return (symbolItem.Symbol?.ToLowerInvariant().Contains(s) ?? false) || 
+                       (symbolItem.Name?.ToLowerInvariant().Contains(s) ?? false);
+            }
+            return false;
+        };
     }
 
     public async Task InitializeAsync()
@@ -78,6 +134,8 @@ public partial class AddInvestmentViewModel : ViewModelBase
         }
 
         SelectedAccount = Accounts.First();
+
+        await LoadSymbolsAsync(SelectedCategory);
     }
 
     // This method is called whenever text changes to update the cost preview

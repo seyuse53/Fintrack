@@ -1,0 +1,82 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        xmlns:local="using:FinTrack.Avalonia.Views"
+        x:Class="FinTrack.Avalonia.Views.ManageAccountsWindow"
+        x:DataType="vm:ManageAccountsViewModel"
+        Title="Hesapları Yönet" Height="600" Width="600"
+        WindowStartupLocation="CenterOwner" CanResize="False" Background="#F4F6F9">
+    
+    <Window.Resources>
+        <local:IbanConverter x:Key="IbanConverter" />
+    </Window.Resources>
+
+    <Grid Margin="20" RowDefinitions="Auto,*,Auto,Auto">
+        
+        <TextBlock Grid.Row="0" Text="Hesapları Yönet" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Foreground="#2C3E50"/>
+        
+        <!-- Error Message -->
+        <TextBlock Grid.Row="0" Text="{Binding ErrorMessage}" Foreground="Red" IsVisible="{Binding HasError}" TextWrapping="Wrap" Margin="0,35,0,10"/>
+
+        <!-- Accounts List -->
+        <ScrollViewer Grid.Row="1" Margin="0,0,0,20">
+            <ItemsControl ItemsSource="{Binding Accounts}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Margin="0,0,0,10">
+                            <Grid ColumnDefinitions="*,Auto,Auto">
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding BankName}" FontSize="15" FontWeight="Bold" Foreground="#2C3E50"/>
+                                    <TextBlock Text="{Binding AccountName}" FontSize="13" Foreground="#7F8C8D" Margin="0,4,0,2"/>
+                                    <TextBlock Text="{Binding IBAN, Converter={StaticResource IbanConverter}}" FontSize="12" Foreground="#BDC3C7" FontFamily="Consolas"/>
+                                    <TextBlock Text="Pasif" Foreground="#C62828" FontSize="12" FontWeight="Bold" IsVisible="{Binding !IsActive}" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                
+                                <Button Grid.Column="1" Content="Pasif Yap" 
+                                        Command="{Binding $parent[Window].((vm:ManageAccountsViewModel)DataContext).ToggleActiveStatusCommand}" 
+                                        CommandParameter="{Binding}"
+                                        IsVisible="{Binding IsActive}"
+                                        Background="Transparent" Foreground="#F39C12" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        
+                                <Button Grid.Column="1" Content="Aktif Yap" 
+                                        Command="{Binding $parent[Window].((vm:ManageAccountsViewModel)DataContext).ToggleActiveStatusCommand}" 
+                                        CommandParameter="{Binding}"
+                                        IsVisible="{Binding !IsActive}"
+                                        Background="Transparent" Foreground="#27AE60" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        
+                                <Button Grid.Column="2" Content="Sil" 
+                                        Command="{Binding $parent[Window].((vm:ManageAccountsViewModel)DataContext).DeleteAccountCommand}" 
+                                        CommandParameter="{Binding}"
+                                        Background="#E74C3C" Foreground="White" CornerRadius="4" Padding="10,5" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Add New Account Form -->
+        <Border Grid.Row="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20" Margin="0,0,0,20">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="120,*">
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Yeni Banka Hesabı Ekle" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,15"/>
+                
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Banka Adı:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,10"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding NewBankName}" PlaceholderText="Örn: Garanti BBVA" Margin="0,0,0,10"/>
+                
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Hesap Adı:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,10"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NewAccountName}" PlaceholderText="Örn: Vadesiz TL" Margin="0,0,0,10"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="IBAN (Opsiyonel):" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,10"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding NewIBAN, Converter={StaticResource IbanConverter}}" PlaceholderText="TR..." Margin="0,0,0,10"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Açılış Bakiyesi:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,10"/>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding NewInitialBalance}" PlaceholderText="Örn: 1000.00" Margin="0,0,0,10"/>
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Kapat" Width="90" Margin="0,0,10,0" Padding="10" Command="{Binding CloseCommand}" Background="#ECF0F1" BorderThickness="0" HorizontalContentAlignment="Center"/>
+            <Button Content="Hesap Ekle" Width="120" Padding="10" Command="{Binding AddAccountCommand}" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" HorizontalContentAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>
