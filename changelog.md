@@ -22,6 +22,10 @@ Bu doküman, FinTrack projesine eklenecek yeni özellikleri, geliştirme fikirle
 - **Kişiselleştirilmiş Otomatik Tamamlama (Autocomplete)**: Yatırım Ekleme ekranındaki sembol arama kutusu, artık global varlıklardan önce kullanıcının *kendi portföyündeki* varlıkları tarayıp listenin en üstüne getiriyor. Yeni işlem eklemek çok daha hızlı hale getirildi.
 - **Sınırsız Varlık Desteği**: Listelerde bulunmayan yepyeni bir varlığın bile sadece adını ve sembolünü yazarak alınabilmesi, sistemin de bu yeni varlığı hafızasına alıp anında fiyat bulması (Web Scraping) güvence altına alındı.
 
+### Fixed (Deployment)
+- **Tek Dosya Derleme (Single-File Publish) ve İkon**: Avalonia geçişi sonrası `.exe` dosyasının taşınabilirliğini bozan dışa bağımlı kütüphaneler (`SkiaSharp`, `SQLCipher`) `IncludeNativeLibrariesForSelfExtract` özelliğiyle doğrudan `.exe` içerisine gömüldü.
+- **Windows Görev Çubuğu İkonu**: Windows kısayollarında ve görev çubuğunda eksik çıkan uygulama ikonu `.csproj` dosyasına `ApplicationIcon` özelliği eklenerek düzeltildi.
+
 ## [2.0.0-beta.5] - 2026-06-14 — Faz 15: Gerçek Fiyat Hafızası ve Geçmiş Grafiği
 
 ### Added
