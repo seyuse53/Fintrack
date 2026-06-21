@@ -41,6 +41,47 @@ public partial class InvestmentItemViewModel : ObservableObject
     [ObservableProperty]
     private System.Collections.Generic.List<FinTrack.Avalonia.Controls.SparklinePoint>? _sparklineData;
 
+    // BES Özellikleri
+    [ObservableProperty]
+    private decimal _besTotalCostBasis;
+
+    [ObservableProperty]
+    private decimal _besGramGold;
+
+    [ObservableProperty]
+    private decimal _besStateContribution;
+
+    // BES Sözleşme Detayları
+    [ObservableProperty]
+    private string? _besContractNo;
+
+    [ObservableProperty]
+    private DateTime? _besStartDate;
+
+    [ObservableProperty]
+    private DateTime? _besRetirementDate;
+
+    [ObservableProperty]
+    private string? _timeUntilRetirement;
+
+    [ObservableProperty]
+    private decimal _vestingPercentage;
+
+    [ObservableProperty]
+    private decimal _vestedStateContribution;
+
+    [ObservableProperty]
+    private decimal _currentTotalGramGold;
+
+    [ObservableProperty]
+    private decimal _goldProfitLoss;
+
+    [ObservableProperty]
+    private string? _besTimeInSystem;
+
+    [ObservableProperty]
+    private decimal _besMonthlyAverage;
+
     public string FormattedCurrentPrice
     {
         get
@@ -121,7 +162,7 @@ public partial class InvestmentsViewModel : ViewModelBase
 
         try
         {
-            var assets = await _context.InvestmentAssets.ToListAsync();
+            var assets = await _context.InvestmentAssets.Where(a => a.Category != "BES").ToListAsync();
             
             // Veritabanındaki hafızada tutulan son bilinen fiyatları yükle
             PricingService.LoadPricesFromAssets(assets);
@@ -282,7 +323,7 @@ public partial class InvestmentsViewModel : ViewModelBase
             }
 
             // Save fetched prices to the database
-            var assets = await _context.InvestmentAssets.ToListAsync();
+            var assets = await _context.InvestmentAssets.Where(a => a.Category != "BES").ToListAsync();
             PricingService.SavePricesToAssets(assets);
             
             // Record Price History for graphs

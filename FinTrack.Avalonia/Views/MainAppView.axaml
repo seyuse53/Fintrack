@@ -52,6 +52,10 @@
                     <Button Content="📈 Yatırımlar" Command="{Binding SwitchToInvestmentsCommand}"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
                             Padding="15,12" FontSize="14" Background="Transparent" Foreground="#ECF0F1" CornerRadius="5"/>
+                            
+                    <Button Content="🧓 Bireysel Emeklilik" Command="{Binding SwitchToBesCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                            Padding="15,12" FontSize="14" Background="Transparent" Foreground="#ECF0F1" CornerRadius="5"/>
                     
                     <Button Content="📉 Raporlar" Command="{Binding SwitchToReportsCommand}"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"

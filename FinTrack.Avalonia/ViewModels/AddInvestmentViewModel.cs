@@ -22,7 +22,7 @@ public partial class AddInvestmentViewModel : ViewModelBase
     private string _name = "";
 
     public ObservableCollection<string> Categories { get; } = new() 
-    { "Altın", "Döviz", "Hisse Senedi", "Kripto Para", "Fon", "Diğer" };
+    { "Altın", "Döviz", "Hisse Senedi", "Kripto Para", "Fon", "BES", "Diğer" };
 
     [ObservableProperty]
     private string _selectedCategory = "Altın";
@@ -224,6 +224,16 @@ public partial class AddInvestmentViewModel : ViewModelBase
                 LinkedBankAccountId = SelectedAccount?.Bank?.Id,
                 LinkedCreditCardAccountId = SelectedAccount?.Card?.Id
             };
+
+            if (SelectedCategory == "BES")
+            {
+                var gramGoldPrice = await FinTrack.Core.Services.GoldPriceService.GetGramGoldPriceAsync(transaction.Date);
+                if (gramGoldPrice.HasValue && gramGoldPrice.Value > 0)
+                {
+                    transaction.GramGoldEquivalent = Math.Round(totalCost / gramGoldPrice.Value, 2);
+                    transaction.Notes += $" ({transaction.GramGoldEquivalent} Gram Altın karşılığı)";
+                }
+            }
 
             _context.InvestmentTransactions.Add(transaction);
             await _context.SaveChangesAsync();

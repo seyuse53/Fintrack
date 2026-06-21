@@ -40,7 +40,8 @@ namespace FinTrack.Data.Services
             { (2025, 7),  33.68 }, { (2025, 8),  31.72 }, { (2025, 9),  30.98 },
             { (2025, 10), 30.36 }, { (2025, 11), 29.65 }, { (2025, 12), 30.89 },
             // 2026
-            { (2026, 1),  30.65 },
+            { (2026, 1),  30.65 }, { (2026, 2),  29.50 }, { (2026, 3),  28.80 },
+            { (2026, 4),  28.20 }, { (2026, 5),  27.50 }, { (2026, 6),  27.10 }
         };
 
         public InflationService(AppDbContext db)
@@ -85,6 +86,8 @@ namespace FinTrack.Data.Services
             return null;
         }
 
+        private static bool _isApiDown = false;
+
         private async Task<double?> TryGetSingleMonthAsync(int year, int month)
         {
             // 1. DB cache
@@ -94,11 +97,18 @@ namespace FinTrack.Data.Services
                 return cached.CpiRate;
 
             // 2. TÜİK API
-            double? apiRate = await FetchFromTuikAsync(year, month);
-            if (apiRate.HasValue)
+            if (!_isApiDown)
             {
-                UpsertCache(year, month, apiRate.Value);
-                return apiRate;
+                double? apiRate = await FetchFromTuikAsync(year, month);
+                if (apiRate == -1)
+                {
+                    _isApiDown = true;
+                }
+                else if (apiRate.HasValue)
+                {
+                    UpsertCache(year, month, apiRate.Value);
+                    return apiRate;
+                }
             }
 
             // 3. Static fallback table
@@ -117,7 +127,9 @@ namespace FinTrack.Data.Services
         /// <summary>Forces a fresh fetch from TÜİK and updates cache. Returns new rate or null.</summary>
         public async Task<double?> RefreshFromTuikAsync(int year, int month)
         {
+            _isApiDown = false; // Reset the flag so manual refresh can try again
             double? rate = await FetchFromTuikAsync(year, month);
+            if (rate == -1) rate = null; // Normalize back to null for UI
             if (rate.HasValue)
                 UpsertCache(year, month, rate.Value);
             return rate;
@@ -141,7 +153,7 @@ namespace FinTrack.Data.Services
             {
                 string url = string.Format(TuikApiBase, year, month);
                 using var client = new HttpClient();
-                client.Timeout = TimeSpan.FromSeconds(10);
+                client.Timeout = TimeSpan.FromSeconds(3); // Reduced timeout to prevent UI freezes
                 string json = await client.GetStringAsync(url);
 
                 using var doc = JsonDocument.Parse(json);
@@ -174,7 +186,8 @@ namespace FinTrack.Data.Services
             }
             catch
             {
-                // Network error / timeout / parse failure — fall through to static table
+                // Network error / timeout / parse failure — return -1 to signal API down
+                return -1;
             }
             return null;
         }

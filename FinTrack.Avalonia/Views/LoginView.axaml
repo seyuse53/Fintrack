@@ -12,7 +12,8 @@
                 HorizontalAlignment="Center" VerticalAlignment="Center"
                 Width="380">
             <StackPanel Spacing="15">
-                <TextBlock Text="FinTrack'e Giriş Yapın" FontSize="20" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" IsVisible="{Binding !IsFirstLaunch}"/>
+                <Image Source="avares://FinTrack.Avalonia/Assets/logo.png" Width="280" Height="100" Margin="0,0,0,10" Stretch="Uniform" />
+                <TextBlock Text="KT FinTrack'e Giriş Yapın" FontSize="20" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" IsVisible="{Binding !IsFirstLaunch}"/>
                 <TextBlock Text="Yeni Profil Kurulumu" FontSize="20" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" IsVisible="{Binding IsFirstLaunch}"/>
 
                 <!-- Profil Seçimi -->
@@ -60,6 +61,6 @@
         </Border>
         
         <!-- Sürüm Bilgisi -->
-        <TextBlock Text="v0.9.4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Foreground="#999999" FontSize="11"/>
+        <TextBlock Text="v2.0.0-beta.6" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20" Foreground="#999999" FontSize="12" FontWeight="SemiBold"/>
     </Grid>
 </UserControl>

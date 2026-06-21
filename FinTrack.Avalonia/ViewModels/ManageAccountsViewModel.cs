@@ -22,6 +22,16 @@ public partial class ManageAccountsViewModel : ViewModelBase
     private BankAccount? _selectedAccount;
 
     [ObservableProperty]
+    private ObservableCollection<string> _availableBanks = new(new[]
+    {
+        "Akbank", "Albaraka Türk", "Alternatif Bank", "Anadolubank", "BtcTurk", "Burgan Bank", 
+        "DenizBank", "Enpara.com", "Fibabanka", "Garanti BBVA", "Halkbank", "HSBC", 
+        "ING", "Kuveyt Türk", "Odeabank", "Papara", "QNB Finansbank", "Şekerbank", "TEB", 
+        "Türkiye Finans", "Türkiye İş Bankası", "VakıfBank", "Vakıf Katılım", "Yapı Kredi", 
+        "Ziraat Bankası", "Ziraat Katılım"
+    });
+
+    [ObservableProperty]
     private string _newBankName = string.Empty;
 
     [ObservableProperty]
@@ -41,6 +51,17 @@ public partial class ManageAccountsViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _hasError = false;
+
+    [ObservableProperty]
+    private bool _isEditing = false;
+
+    [ObservableProperty]
+    private string _formTitle = "Yeni Banka Hesabı Ekle";
+
+    [ObservableProperty]
+    private string _submitButtonText = "Hesap Ekle";
+
+    private BankAccount? _editingAccount = null;
 
     // Action to close window
     public Action? CloseAction { get; set; }
@@ -64,7 +85,9 @@ public partial class ManageAccountsViewModel : ViewModelBase
         {
             Accounts.Clear();
             foreach (var acc in dbAccounts)
+            {
                 Accounts.Add(acc);
+            }
         });
     }
 
@@ -79,44 +102,85 @@ public partial class ManageAccountsViewModel : ViewModelBase
             return;
         }
 
-        var newAcc = new BankAccount
+        if (IsEditing && _editingAccount != null)
         {
-            BankName = NewBankName.Trim(),
-            AccountName = NewAccountName.Trim(),
-            IBAN = NewIBAN?.Trim(),
-            InitialBalance = NewInitialBalance,
-            IsCryptoExchange = NewIsCryptoExchange,
-            IsActive = true
-        };
-
-        _context.BankAccounts.Add(newAcc);
-        
-        // Add Opening Balance transaction if initial balance > 0
-        if (newAcc.InitialBalance > 0)
-        {
-            // We need a category for Opening Balance.
-            var openingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Açılış Bakiyesi");
-            if (openingCategory == null)
+            var dbAcc = await _context.BankAccounts.FindAsync(_editingAccount.Id);
+            if (dbAcc != null)
             {
-                openingCategory = new Category { Name = "Açılış Bakiyesi", Type = TransactionType.Income };
-                _context.Categories.Add(openingCategory);
+                dbAcc.BankName = NewBankName.Trim();
+                dbAcc.AccountName = NewAccountName.Trim();
+                dbAcc.IBAN = NewIBAN?.Trim();
+                dbAcc.InitialBalance = NewInitialBalance;
+                dbAcc.IsCryptoExchange = NewIsCryptoExchange;
             }
-            
-            var trans = new Transaction
+        }
+        else
+        {
+            var newAcc = new BankAccount
             {
-                Amount = newAcc.InitialBalance,
-                Date = DateTime.Now,
-                Description = "Hesap Açılış Bakiyesi",
-                Category = openingCategory,
-                BankAccount = newAcc
+                BankName = NewBankName.Trim(),
+                AccountName = NewAccountName.Trim(),
+                IBAN = NewIBAN?.Trim(),
+                InitialBalance = NewInitialBalance,
+                IsCryptoExchange = NewIsCryptoExchange,
+                IsActive = true
             };
-            _context.Transactions.Add(trans);
+
+            _context.BankAccounts.Add(newAcc);
+            
+            // Add Opening Balance transaction if initial balance > 0
+            if (newAcc.InitialBalance > 0)
+            {
+                var openingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Açılış Bakiyesi");
+                if (openingCategory == null)
+                {
+                    openingCategory = new Category { Name = "Açılış Bakiyesi", Type = TransactionType.Income };
+                    _context.Categories.Add(openingCategory);
+                }
+                
+                var trans = new Transaction
+                {
+                    Amount = newAcc.InitialBalance,
+                    Date = DateTime.Now,
+                    Description = "Hesap Açılış Bakiyesi",
+                    Category = openingCategory,
+                    BankAccount = newAcc
+                };
+                _context.Transactions.Add(trans);
+            }
         }
 
         await _context.SaveChangesAsync();
         await LoadAccountsAsync();
 
-        // Clear inputs
+        CancelEdit();
+    }
+
+    [RelayCommand]
+    private void EditAccount(BankAccount account)
+    {
+        _editingAccount = account;
+        IsEditing = true;
+        FormTitle = "Hesabı Düzenle";
+        SubmitButtonText = "Güncelle";
+
+        NewBankName = account.BankName;
+        NewAccountName = account.AccountName;
+        NewIBAN = account.IBAN ?? string.Empty;
+        NewInitialBalance = account.InitialBalance;
+        NewIsCryptoExchange = account.IsCryptoExchange;
+        
+        ClearError();
+    }
+
+    [RelayCommand]
+    private void CancelEdit()
+    {
+        _editingAccount = null;
+        IsEditing = false;
+        FormTitle = "Yeni Banka Hesabı Ekle";
+        SubmitButtonText = "Hesap Ekle";
+
         NewBankName = string.Empty;
         NewAccountName = string.Empty;
         NewIBAN = string.Empty;

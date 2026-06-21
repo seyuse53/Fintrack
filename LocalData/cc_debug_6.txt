@@ -1,0 +1,8 @@
+Card Family: Asıl Kart TROY (6)
+Tx 46: Date=31.12.2023, Cat='Açılış Borcu' (Expense), Amount=23900,0, Effective=23900,0
+Tx 47: Date=31.12.2023, Cat='Açılış Borcu' (Expense), Amount=11400,0, Effective=11400,0
+Tx 48: Date=31.12.2025, Cat='Açılış Borcu' (Expense), Amount=178900,0, Effective=178900,0
+Tx 49: Date=31.12.2025, Cat='Açılış Borcu' (Expense), Amount=115900,0, Effective=115900,0
+Tx 50: Date=31.12.2025, Cat='Açılış Borcu' (Expense), Amount=178900,0, Effective=178900,0
+Tx 51: Date=31.12.2025, Cat='Açılış Borcu' (Expense), Amount=115900,0, Effective=115900,0
+Tx 53: Date=31.12.2025, Cat='Kredi Kartı Ödemesi' (Transfer), Amount=624900,0, Effective=-624900,0

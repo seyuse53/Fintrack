@@ -14,6 +14,101 @@ Bu doküman, FinTrack projesine eklenecek yeni özellikleri, geliştirme fikirle
 
 ### ✨ Tamamlanan Özellikler
 
+## [2.0.0-beta.15] - 2026-06-21 — Kredi Kartı Detay Ekranı Geliştirmeleri
+
+### Added
+- **Kart Detayları Yeni Arayüzü**: Kredi Kartı Detayları ekranı, Banka Hesap Detayları ekranı ile görsel olarak aynı standartlara çekildi. Daha okunabilir, kart tabanlı modern bir listeleme tasarımına geçildi.
+- **İşlem Düzenleme ve Silme**: Kredi kartı detaylarındaki her bir işleme "Düzenle" (✏️) ve "Sil" (🗑️) butonları eklendi.
+- **Akıllı Silme ve Senkronizasyon**: Bir kredi kartı işlemi silinirken, eğer o işlem bir transfer veya taksit grubuna aitse, bağlantılı tüm kayıtların (örn: karşı hesaptaki para çıkışı veya diğer aylardaki taksitler) aynı anda otomatik olarak silinmesi güvence altına alındı.
+- **Limit ve Kalan Limit Görüntüleme**: Kart detayları üst bilgi paneline "Güncel Borç" miktarının yanına "Limit" ve "Kalan Limit" göstergeleri eklendi. Ek kartlarda limit "0" girilmişse, sistemin otomatik olarak asıl kartın limitini bularak doğru hesaplama yapması sağlandı.
+
+
+## [2.0.0-beta.14] - 2026-06-21 — Kredi Kartı Açılış Bakiyesi ve Kategori Optimizasyonları
+
+### Fixed
+- **Kredi Kartı Devreden Borç (Eksi Bakiye) Hatası**: Kullanıcıların kredi kartını sisteme ilk eklediklerinde geçmiş borçlarını "Açılış Bakiyesi" (Gelir tipi) kategorisi ile girmelerinden kaynaklanan, kartın devasa eksi bakiyelere (örn: -₺624.900) düşmesi sorunu çözüldü.
+- **Otomatik Kategori Dönüşümü**: Kredi kartlarında "Açılış Bakiyesi" kullanılmış eski kayıtları otomatik tespit edip, bunu "Açılış Borcu" adlı yeni bir Gider (Expense) kategorisine taşıyan akıllı bir yama (migration mantığı) `CardsViewModel` içerisine eklendi.
+- **Sistem Kategorilerinin Rolleri Düzeltildi**: `AppDbContext` içerisinde yanlış tiplerle tanımlanmış olan "Kredi Kartı Nakit Çekim" (Gelir'den Gider'e) ve "Ekstre Ödemesi" (Gider'den Transfer'e) kategorilerinin yapısal tanımları düzeltilerek kredi kartı döngüsünün matematiksel olarak kusursuz çalışması sağlandı. 
+- **Veritabanı Kendi Kendini Onarma**: Eski ve bozuk kategorilerle girilmiş işlemlerin arka planda fark edilmeden otomatik olarak düzeltilmesi sağlandı. Kullanıcının herhangi bir manuel işlem yapmasına gerek kalmadan hesap ekstresi borçları gerçek değerlerine kavuşturuldu.
+
+## [2.0.0-beta.13] - 2026-06-20 — BES Detaylı Takip ve Hakediş Sistemi
+
+### Added
+- **BES Sözleşme Detayları**: Bireysel Emeklilik (BES) varlıklarına "Sözleşmeyi Güncelle" butonu ve penceresi eklendi. Sözleşme numarası, yürürlük tarihi, doğum tarihi ve emeklilik yaşı gibi kritik bilgiler sisteme entegre edildi.
+- **Dinamik Hakediş Hesaplaması**: Girilen sözleşme yürürlük tarihine göre sistem otomatik olarak emekliliğe kalan süreyi hesaplar. Devlet Katkısı hakediş oranını (%15, %35, %60, %100) ve bu orana denk gelen tutarı anlık olarak gösterir.
+- **Gerçekçi Devlet Katkısı Görünümü**: BES kartlarındaki büyük yeşil bilgi paneli revize edildi. Artık brüt eklenen katkıyı değil, süreye bağlı olarak anlık **Hakedilen Devlet Katkısı** tutarını göstererek kullanıcılara en doğru fon değerini sunar. Ayrıca "Sözleşme Özeti" alanında kullanıcının manuel girdiği brüt toplam Devlet Katkısı net olarak listelendi.
+- **BES Canlı Altın Getirisi Analizi**: BES kartlarındaki "Altın Karşılığı" bölümü tamamen yenilendi. Sadece anaparaya ait altın eşdeğeri değil, aynı zamanda güncel fon değeri ve hakedilen devlet katkısı toplamının anlık gram altın karşılığı sisteme entegre edildi.
+- **Altın Bazlı Kâr/Zarar Göstergesi**: Toplam güncel fonun gram altın değerinden, ilk yatırılan anaparaya karşılık gelen altın değeri çıkarılarak "Eğer yatırımlarımı altına yapsaydım şu an kaç gram kâr veya zarardaydım?" sorusunun yanıtı görselleştirildi. Analiz motorunun hesaplamalarında yanılma payını sıfıra indirmek için anlık XAU (Gram Altın) kurunun PricingService üzerinden canlı çekilmesi sağlandı.
+- **Detaylı Analiz Göstergeleri (Footer Metrics)**: BES kartlarının alt kısmındaki istatistikler yenilendi. Anlamsız "Ödeme Sayısı" yerine, sözleşme başlangıç tarihine göre otomatik hesaplanan **Sistemde Süre** (Örn: "4 Yıl 2 Ay") getirildi. Ayrıca, güncel fon değeri ve hakedilen devlet katkısı toplamının sistemde kalınan aya bölünmesiyle **Aylık Ort. Birikim** hesaplaması eklendi.
+- **Veritabanı Kalıcılığı**: Doğum tarihi, emeklilik yaşı, fon değerleri ve özel tutarlar SQLite (Şifreli veritabanı) altyapısına kalıcı olarak eklendi, böylece oturumlar arasında hiçbir veri kaybı yaşanmaz.
+- **Arayüz (UI) Revizyonu**: Güncelleme penceresi, tüm ekran çözünürlüklerine uyum sağlayacak şekilde dinamik grid mimarisine geçirildi ve tasarım FinTrack standartlarına göre (mavi/yeşil tonlar, altın sarısı) modernleştirildi.
+
+### Fixed
+- **Kredi Kartı Eksi Bakiye ve Hatalı Borç Yansıması**: Geliştirme/test sürecinde "Geçmiş Borç Dengelemesi" adıyla eklenen ve ödenmiş eski BES alımlarını güncel kredi kartı borcu (eksi bakiye) gibi gösteren hatalı oto-kayıt altyapısı tamamen kaldırıldı. Yanlış eklenmiş kayıtların kalıcı olarak temizlenmesi sağlandı.
+- **Sanal/Ek Kart İşlemlerinin Gizlenme Sorunu**: Kart Detayları penceresine girildiğinde sadece Asıl Kart ile yapılan doğrudan işlemlerin listelenmesi hatası düzeltildi. Artık "Detaylar" sayfası, ana karta bağlı tüm Sanal ve Ek Kart harcamalarını aynı havuzda toplayarak gerçekçi ve tam bir ekstre dökümü sunuyor.
+
+## [2.0.0-beta.12] - 2026-06-20 — Taksitli İşlemler ve Puan Yönetimi
+
+### Added
+- **Taksitli İşlemler Altyapısı**: İşlem Ekleme ekranında Kredi Kartı seçildiğinde aktifleşen "Taksitli İşlem" fonksiyonu görünür hale getirildi. 2'den 12'ye kadar taksit seçenekleriyle, girilen tutarı otomatik olarak aylara bölüp ileri tarihli ayrı işlemler oluşturan algoritma entegre edildi.
+- **Kredi Kartı Borç ve Limit Hesaplama Revizyonu**: Taksitli işlemlerin ve ileri tarihli harcamaların Kredi Kartı limitinden anında düşmesi, ancak "Güncel Borç" kısmına sadece içinde bulunulan ekstrenin (aylık taksitin) yansıması sağlandı. Böylece kart limiti ve güncel ekstre borcu matematiksel olarak tamamen ayrıştırıldı.
+- **Puan / Bonus Kullanımı Sistemi**: Puan bakiyesi takibi gerektirmeyen "Kategori Bazlı" basit puan yönetim sistemi (B Planı) oluşturuldu. Sisteme "Puan Kullanımı" adında özel bir gelir kategorisi tanımlandı ve uygulama açılışında otomatik olarak veritabanına eklenmesi (auto-seed) sağlandı. Artık harcama girilirken, puanla ödenen miktar bu kategori ile kaydedilip kredi kartı borcundan dinamik olarak düşülebiliyor.
+
+
+## [2.0.0-beta.11] - 2026-06-20 — Ayarlar ve Sürüm Geçmişi (Markdown Entegrasyonu)
+
+### Added
+- **Uygulama İçi Sürüm Geçmişi (Changelog)**: `changelog.md` dosyasının içeriği, uygulamanın "Ayarlar > Hakkında" sekmesine dinamik olarak entegre edildi. Artık yeni sürümler çıktığında sürüm notları doğrudan uygulama içerisinden okunabiliyor.
+- **Markdown.Avalonia Desteği**: Sürüm geçmişindeki metinlerin dümdüz görünmesi engellendi. `Markdown.Avalonia` paketi entegre edilerek başlıklar, kalın yazılar ve liste elemanları tıpkı bir web sayfasındaki gibi tam formatlı (Rich Text) hale getirildi. Avalonia 12 uyumluluğu için `12.0.0-a3` ön sürümü kullanıldı.
+
+## [2.0.0-beta.10] - 2026-06-19 — Kredi Kartları Modülü Onarımı ve Gelişmiş Detaylar
+
+### Added
+- **Kart Yönetimi Ekranı (`ManageCardsWindow`)**: Avalonia'da eksik olan yeni kredi kartı ekleme ve yönetme özelliği sıfırdan oluşturuldu. Kartlarım sayfasındaki "Kartları Yönet" butonu işlevsel hale getirildi. Artık banka adı, limit, hesap kesim günü ve bağlı kart (sanal/ek kart) özellikleri belirtilerek sisteme yepyeni kredi kartları eklenebilmektedir.
+- **Kredi Kartı Düzenleme Özelliği**: Kart Yönetimi ekranına mevcut kartların özelliklerini (limit, banka adı, tarihler vb.) güncelleyebilmek için "Düzenle" fonksiyonu eklendi.
+- **Borç Öde Ekranı (`PayCreditCardWindow`)**: Kartlarım sayfasındaki "Borç Öde" butonu aktif edildi. Nakit veya banka hesabı seçilerek kredi kartına ödeme/transfer yapılmasını sağlayan pencere eklendi. Bankadan para çıkışı ve karta para girişi olacak şekilde senkronize çalışan çift işlem mantığı Avalonia altyapısına uygun hale getirildi.
+- **Kart Detayları Ekranı (`CardDetailWindow`)**: Kartlarım sayfasındaki "Detaylar" butonu aktif edildi. Sadece ilgili kredi kartına ait harcama, ödeme ve iade geçmişini tarih sırasına göre gösteren yeni detay ekranı eklendi. Harcamalar kırmızı (-), ödemeler yeşil (+) renkte gösteriliyor.
+
+### Fixed
+- Yeni eklenen Kart Yönetimi pencerelerindeki eksik ikon yolu düzeltilerek, uygulamanın çökmesi (FileNotFoundException) sorunu giderildi (`app_icon.ico`).
+- Kart Yönetimi sayfasındaki Aktif/Pasif durum butonlarının arayüzde bozuk formatta ("True/False") görünmesi sorunu çözüldü.
+
+### Fixed
+- **Kartlarım Ekranının Yüklenmemesi (Boş Ekran)**: Avalonia geçişi sırasında `CardsView.axaml` içerisinde eksik olan `StringConverters` namespace referansı ve veri tipi uyumsuzlukları giderildi. Modülün çökmesi engellendi ve kartlar sorunsuz listelenebilir duruma geldi.
+- **Kredi Kartı Toplam Borç Hesaplama Hatası (Çift Eksileme)**: `CardsViewModel` içerisindeki toplam borç hesaplamasının sadece harcamaları değil, karta yapılan ödemeleri de (pozitif tutar olarak) borca dahil etme mantıksal hatası giderildi. Artık harcamalar borca eklenirken, yapılan ödemeler borçtan doğru bir şekilde düşülüyor.
+- **TextBox.Watermark Eskime Uyarısı**: Avalonia 11 ile uyum için, arayüzlerdeki tüm `Watermark` ifadeleri `PlaceholderText` olarak güncellendi.
+
+
+## [2.0.0-beta.9] - 2026-06-19 — Bütçe Modülü İyileştirmeleri ve Akıllı Öneri Sistemi
+
+### Added
+- **Akıllı Bütçe Önerisi**: Bütçe yönetimi modülüne, seçilen kategoride geçen yılın harcama verisi ve o verinin üzerine güncel TÜFE oranını ekleyerek "geçen yılın alım gücüne denk" bir limit önerisi sunan satır içi asistan eklendi. "Uygula" butonu ile otomatik değer girişi sağlandı.
+
+### Fixed & Changed
+- **TÜİK API Hata Toleransı**: `InflationService.cs` içerisindeki `HttpClient` zaman aşımı 10 saniyeden 3 saniyeye düşürüldü. API kapalı olduğunda (örn. 403 Forbidden) 12 aya kadar geri giderek 120 saniye arayüzü dondurması problemi çözüldü; sistem artık ilk hatada doğrudan "Fallback" veri tablosuna geçerek UI'ı kilitlenmekten kurtarıyor.
+- **TÜFE Fallback Tablosu Güncellendi**: "TÜFE verisi Ocak 2026'da takılı kalıyor" şikayeti üzerine arka plandaki `FallbackTable`, Haziran 2026 verilerini kapsayacak şekilde genişletildi. "2025->2026" kafa karıştırıcı görünümü "[Ocak 2026 (Yıllık)]" gibi daha net bir ibareyle sadeleştirildi.
+- **Kategori Bütçe Sınırı Senkronizasyonu**: Kullanıcı açılır menüden bir kategori değiştirdiğinde, daha önceden var olan limitin "Aylık Limit (₺)" kutusuna otomatik olarak düşmeme sorunu `OnSelectedCategoryChanged` metodunun eklenmesiyle giderildi.
+
+## [2.0.0-beta.8] - 2026-06-15 — UX, Görsel İyileştirmeler ve Logo Güncellemesi
+
+### Added
+- **Yeni Logo ve Marka Güncellemesi**: Uygulama adı "KT FinTrack" olarak güncellendi ve bu isme uygun tamamen yeni, yüksek çözünürlüklü vektörel bir logo tasarlandı. Pencereler, görev çubuğu ve uygulama `.exe` ikonları dahil her yere entegre edildi.
+- **Kâr/Zarar Dinamik Renklendirmesi**: `InvestmentsView` içerisindeki "Net Kâr / Zarar" ve listedeki tüm yatırım getirisi alanlarına dinamik bir renk dönüştürücü (`ProfitColorConverter`) yazıldı. Eksi değerler otomatik olarak **kırmızı**, artı değerler **yeşil** renkte gösteriliyor.
+
+### Fixed & Changed
+- **Logo Çözünürlük ve Boşluk Sorunu**: Yüksek çözünürlüklü logonun etrafındaki gereksiz şeffaf/beyaz (padding) alanlar kırpılarak temizlendi. Bu sayede giriş ekranındaki logo, ayrılan alanı tam doldurarak çok daha belirgin hale getirildi.
+- **Kâr/Zarar Gösterimi (Taşma Çözümü)**: Yatırım portföyündeki "Net Kâr / Zarar" kartında yüzdelik kısmın taşması sorunu, yüzdelik ifadenin (`%X,X`) alt satıra alınıp parantezlerden arındırılmasıyla çözüldü ve "En Çok Kazandıran" kartıyla biçimsel uyum sağlandı.
+- **Sürüm Numarası Konumlandırması**: Giriş ekranında sağ altta gözden kaybolan sürüm bilgisi, ekranın tam alt-orta kısmına simetrik olarak yerleştirildi.
+- **Avalonia Alt Pencere İkon Hatası**: `System.ArgumentException: Unable to load bitmap from provided data` şeklinde ortaya çıkan, alt pencerelerde (örn. `InvestmentDetailWindow`) hatalı ikon yüklenmesinden kaynaklı çökme hatası giderildi; tüm `.axaml` ikon yolları tam tanımlı formata dönüştürüldü.
+
+## [2.0.0-beta.7] - 2026-06-15 — Faz 17: Raporlar ve Gelişmiş Analiz Modülü
+
+### Added
+- **Yatırım Kâr / Zarar Hesaplaması**: Raporlar sekmesindeki "Henüz desteklenmiyor" ibaresi kaldırılarak, yatırımların portföydeki güncel değerleri (`LastKnownPrice` tabanlı) üzerinden net kâr/zarar hesaplaması aktif edildi. Sonuçlar dinamik renklendirme (yeşil/kırmızı) ile arayüze yansıtıldı.
+- **Gelir Dağılımı Sekmesi**: Harcama dağılımı görünümünün yanına yepyeni bir "Gelir Dağılımı" sekmesi eklendi. Dönemsel gelir kalemleri yüzdelik ilerleme çubukları ve döküm listesiyle eklendi.
+- **Akıllı Kategori Renklendirmesi**: Önceden sadece birkaç spesifik kategoriye renk ataması yapılırken, yeni eklenen HSL ve hash-tabanlı algoritma sayesinde kullanıcıların girdiği tüm özel kategorilere o kelimeye has kalıcı ve canlı renkler atanması sağlandı.
+- **Dinamik Trend Analizi**: "Trendler (6 Ay)" sekmesi, sabit olarak bugünden önceki 6 ayı hesaplamak yerine, kullanıcının seçtiği "Bitiş Tarihi" filtresini baz alarak dinamik bir zaman çizelgesi sunacak şekilde güncellendi.
+
 ## [2.0.0-beta.6] - 2026-06-14 — Faz 16: Kripto Para Optimizasyonları ve Esnek Portföy Yönetimi
 
 ### Added

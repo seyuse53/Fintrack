@@ -181,6 +181,38 @@ public partial class SettingsViewModel : ViewModelBase
     [ObservableProperty]
     private bool _hasStatusSuccess;
 
+    [ObservableProperty]
+    private string _versionHistory = string.Empty;
+
+    private void LoadVersionHistory()
+    {
+        try
+        {
+            string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "changelog.md");
+            if (System.IO.File.Exists(path))
+            {
+                VersionHistory = System.IO.File.ReadAllText(path);
+            }
+            else
+            {
+                // Fallback trying relative path for debugging
+                string devPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "changelog.md");
+                if (System.IO.File.Exists(devPath))
+                {
+                    VersionHistory = System.IO.File.ReadAllText(devPath);
+                }
+                else
+                {
+                    VersionHistory = "Sürüm geçmişi dosyası bulunamadı.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            VersionHistory = "Sürüm geçmişi yüklenirken hata oluştu: " + ex.Message;
+        }
+    }
+
     // ==================== EVENTS (for View to handle folder picker / dialogs) ====================
 
     public event Func<string, string, string, string, System.Threading.Tasks.Task<bool?>>? ShowConfirmDialog;
@@ -198,6 +230,7 @@ public partial class SettingsViewModel : ViewModelBase
     private void LoadData()
     {
         SelectedTheme = SettingsManager.GetThemePreference();
+        LoadVersionHistory();
         
         // Security
         try

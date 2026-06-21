@@ -4,9 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:FinTrack.Avalonia.ViewModels"
              xmlns:controls="using:FinTrack.Avalonia.Controls"
+             xmlns:conv="using:FinTrack.Avalonia.Converters"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="FinTrack.Avalonia.Views.InvestmentsView"
              x:DataType="vm:InvestmentsViewModel">
+
+    <UserControl.Resources>
+        <conv:ProfitColorConverter x:Key="ProfitColorConverter"/>
+    </UserControl.Resources>
 
     <Grid Margin="10" RowDefinitions="Auto,Auto,*">
         
@@ -42,11 +47,10 @@
             <Border Grid.Column="4" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
                 <StackPanel>
                     <TextBlock Text="Net Kâr / Zarar" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <TextBlock Text="{Binding TotalProfit, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" 
-                                   Foreground="{Binding TotalProfit, Converter={x:Static ObjectConverters.IsNull}}"/> <!-- We can handle colors better but keeping simple for now -->
-                        <TextBlock Text="{Binding TotalProfitPercentage, StringFormat='({0:N1}%)'}" FontSize="16" VerticalAlignment="Bottom" Margin="0,0,0,4"/>
-                    </StackPanel>
+                    <TextBlock Text="{Binding TotalProfit, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" 
+                               Foreground="{Binding TotalProfit, Converter={StaticResource ProfitColorConverter}}"/>
+                    <TextBlock Text="{Binding TotalProfitPercentage, StringFormat='%{0:N1}'}" FontSize="14" FontWeight="SemiBold" Margin="0,5,0,0"
+                               Foreground="{Binding TotalProfitPercentage, Converter={StaticResource ProfitColorConverter}}"/>
                 </StackPanel>
             </Border>
 
@@ -55,7 +59,7 @@
                 <StackPanel>
                     <TextBlock Text="En Çok Kazandıran" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding TopPerformerText}" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" TextTrimming="CharacterEllipsis"/>
-                    <TextBlock Text="{Binding TopPerformerProfitPercentage, StringFormat='%{0:N1}'}" FontSize="14" FontWeight="SemiBold" Foreground="#27AE60" Margin="0,5,0,0"/>
+                    <TextBlock Text="{Binding TopPerformerProfitPercentage, StringFormat='%{0:N1}'}" FontSize="14" FontWeight="SemiBold" Foreground="{Binding TopPerformerProfitPercentage, Converter={StaticResource ProfitColorConverter}}" Margin="0,5,0,0"/>
                 </StackPanel>
             </Border>
         </Grid>
@@ -108,8 +112,8 @@
                                     <TextBlock Text="Toplam Değer / Kâr" FontSize="11" Foreground="#95A5A6" HorizontalAlignment="Right"/>
                                     <TextBlock Text="{Binding CurrentValue, StringFormat='{}{0:C2}'}" FontSize="15" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Right"/>
                                     <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,2,0,0" HorizontalAlignment="Right">
-                                        <TextBlock Text="{Binding Profit, StringFormat='{}{0:C2}'}" FontSize="13"/>
-                                        <TextBlock Text="{Binding ProfitPercentage, StringFormat='({0:N1}%)'}" FontSize="13"/>
+                                        <TextBlock Text="{Binding Profit, StringFormat='{}{0:C2}'}" FontSize="13" Foreground="{Binding Profit, Converter={StaticResource ProfitColorConverter}}"/>
+                                        <TextBlock Text="{Binding ProfitPercentage, StringFormat='({0:N1}%)'}" FontSize="13" Foreground="{Binding ProfitPercentage, Converter={StaticResource ProfitColorConverter}}"/>
                                     </StackPanel>
                                 </StackPanel>
 

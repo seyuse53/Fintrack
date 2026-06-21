@@ -454,6 +454,7 @@ namespace FinTrack.Core.Services
                 "Kripto Para" => settings.KriptoProvider,
                 "Kripto" => settings.KriptoProvider,
                 "Fon" => settings.FonProvider,
+                "BES" => settings.DigerProvider,
                 "Diğer" => settings.DigerProvider,
                 _ => settings.PricingApiProvider
             };

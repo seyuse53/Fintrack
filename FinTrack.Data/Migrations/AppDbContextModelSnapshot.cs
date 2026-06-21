@@ -15,7 +15,7 @@ namespace FinTrack.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
 
             modelBuilder.Entity("FinTrack.Core.Models.BankAccount", b =>
                 {
@@ -308,6 +308,13 @@ namespace FinTrack.Data.Migrations
                             IsVisible = true,
                             Name = "Hatun",
                             Type = 1
+                        },
+                        new
+                        {
+                            Id = 30,
+                            IsVisible = true,
+                            Name = "Puan Kullanımı",
+                            Type = 0
                         });
                 });
 
@@ -382,7 +389,25 @@ namespace FinTrack.Data.Migrations
                     b.Property<decimal>("AverageCost")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("BesContractNo")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("BesRetirementAge")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("BesRetirementDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("BesStartDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Category")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("CustomCurrentValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("CustomStateContribution")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("LastKnownPrice")
@@ -393,6 +418,9 @@ namespace FinTrack.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ParticipantBirthDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Symbol")
@@ -420,6 +448,9 @@ namespace FinTrack.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Fee")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("GramGoldEquivalent")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("InvestmentAssetId")

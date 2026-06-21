@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:FinTrack.Avalonia.ViewModels"
              xmlns:local="using:FinTrack.Avalonia.Views"
+             xmlns:md="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
              x:Class="FinTrack.Avalonia.Views.SettingsView"
              x:DataType="vm:SettingsViewModel">
@@ -655,6 +656,13 @@
 
                         <TextBlock Text="Platform" FontWeight="Bold" Margin="0,15,0,5"/>
                         <TextBlock Text="Avalonia UI 12.0.2 • .NET 10.0 • Windows / Linux / Android" FontSize="13" Foreground="#34495E"/>
+
+                        <Border Height="1" Background="#ECF0F1" Margin="0,20"/>
+                        
+                        <TextBlock Text="Sürüm Geçmişi (Change Log)" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <Border Background="#F9FAF9" Padding="15" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" MaxHeight="300">
+                            <md:MarkdownScrollViewer Markdown="{Binding VersionHistory}" />
+                        </Border>
                     </StackPanel>
 
                 </Grid>

@@ -8,8 +8,8 @@
         WindowStartupLocation="CenterScreen"
         x:Class="FinTrack.Avalonia.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="FinTrack - Kişisel Finans Takip">
+        Icon="avares://FinTrack.Avalonia/Assets/avalonia-logo.ico"
+        Title="KT FinTrack - Kişisel Finans Takip">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>

@@ -1,0 +1,144 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        xmlns:models="using:FinTrack.Core.Models"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        Width="800" Height="600"
+        WindowStartupLocation="CenterOwner"
+        x:Class="FinTrack.Avalonia.Views.ManageCardsWindow"
+        x:DataType="vm:ManageCardsViewModel"
+        Title="Kartları Yönet"
+        Background="#F4F6F9"
+        Icon="/Assets/app_icon.ico">
+
+    <Grid ColumnDefinitions="*,*" Margin="20">
+        
+        <!-- Left Side: Add/Edit Card -->
+        <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="20" Margin="0,0,10,0" BorderBrush="#E0E0E0" BorderThickness="1">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+                    <TextBlock Grid.Column="0" Text="{Binding FormTitle}" FontSize="16" FontWeight="Bold" Foreground="#34495E" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Content="İptal" Command="{Binding CancelEditCommand}" IsVisible="{Binding IsEditing}" Background="Transparent" Foreground="#E74C3C" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </Grid>
+                
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Spacing="15">
+                        
+                        <StackPanel>
+                            <TextBlock Text="Banka Adı" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                            <ComboBox ItemsSource="{Binding AvailableBanks}" SelectedItem="{Binding NewBankName}" IsEnabled="{Binding IsParentNotSelected}" HorizontalAlignment="Stretch" Padding="10" PlaceholderText="Banka Seçiniz..."/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Kart Adı (Etiket)" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding NewCardLabel}" Padding="10" PlaceholderText="Örn: Asıl Kart, Sanal Kart"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <TextBlock Text="Limit (₺)" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding NewLimitText}" IsEnabled="{Binding IsParentNotSelected}" Padding="10" PlaceholderText="0,00"/>
+                        </StackPanel>
+
+                        <Grid ColumnDefinitions="*,10,*">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Hesap Kesim (Gün)" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                                <NumericUpDown Value="{Binding NewStatementDay}" IsEnabled="{Binding IsParentNotSelected}" Minimum="1" Maximum="31" Padding="5"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Son Ödeme (Gün)" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                                <NumericUpDown Value="{Binding NewPaymentDueDay}" IsEnabled="{Binding IsParentNotSelected}" Minimum="1" Maximum="31" Padding="5"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel>
+                            <TextBlock Text="Bağlı Olduğu Kart (Opsiyonel)" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                            <ComboBox ItemsSource="{Binding AvailableParentCards}" SelectedItem="{Binding SelectedParentCard}" HorizontalAlignment="Stretch" Padding="10">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DisplayName}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <Border Background="#FDEDEC" BorderBrush="#E74C3C" BorderThickness="1" CornerRadius="6" Padding="10" IsVisible="{Binding HasError}">
+                            <TextBlock Text="{Binding ErrorMessage}" Foreground="#E74C3C" TextWrapping="Wrap"/>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Button Grid.Row="2" Content="{Binding SubmitButtonText}" Command="{Binding AddCardCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#27AE60" Foreground="White" Padding="10" FontWeight="Bold" Margin="0,20,0,0"/>
+            </Grid>
+        </Border>
+
+        <!-- Right Side: Existing Cards -->
+        <Border Grid.Column="1" Background="White" CornerRadius="12" Padding="20" Margin="10,0,0,0" BorderBrush="#E0E0E0" BorderThickness="1">
+            <Grid RowDefinitions="Auto,*">
+                <TextBlock Grid.Row="0" Text="MEVCUT KARTLAR" FontSize="16" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,20"/>
+                
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Cards}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:CreditCardAccount">
+                                <Border Background="#F8F9FA" CornerRadius="8" Padding="15" Margin="0,0,0,10" BorderBrush="#ECF0F1" BorderThickness="1">
+                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="{Binding BankName}" FontSize="12" Foreground="#95A5A6" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding CardLabel}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                                            <TextBlock Text="{Binding Limit, StringFormat='Limit: {0:C0}'}" FontSize="12" Foreground="#34495E" Margin="0,2,0,0"/>
+                                            <TextBlock Text="Durum: Pasif" FontSize="11" Foreground="#E74C3C" IsVisible="{Binding !IsActive}" Margin="0,2,0,0" FontWeight="Bold"/>
+                                        </StackPanel>
+
+                                        <!-- Toggle Active Buttons -->
+                                        <Button Grid.Column="1" 
+                                                Content="Pasif Yap"
+                                                Command="{Binding $parent[Window].((vm:ManageCardsViewModel)DataContext).ToggleActiveStatusCommand}" 
+                                                CommandParameter="{Binding}"
+                                                IsVisible="{Binding IsActive}"
+                                                Background="Transparent" 
+                                                Foreground="#F39C12" 
+                                                Margin="0,0,5,0"
+                                                VerticalAlignment="Center"/>
+                                                
+                                        <Button Grid.Column="1" 
+                                                Content="Aktif Yap"
+                                                Command="{Binding $parent[Window].((vm:ManageCardsViewModel)DataContext).ToggleActiveStatusCommand}" 
+                                                CommandParameter="{Binding}"
+                                                IsVisible="{Binding !IsActive}"
+                                                Background="Transparent" 
+                                                Foreground="#27AE60" 
+                                                Margin="0,0,5,0"
+                                                VerticalAlignment="Center"/>
+
+                                        <!-- Edit Button -->
+                                        <Button Grid.Column="2" 
+                                                Content="Düzenle" 
+                                                Command="{Binding $parent[Window].((vm:ManageCardsViewModel)DataContext).EditCardCommand}" 
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" 
+                                                Foreground="#3498DB"
+                                                Margin="0,0,5,0"
+                                                VerticalAlignment="Center"/>
+
+                                        <!-- Delete Button -->
+                                        <Button Grid.Column="3" 
+                                                Content="Sil" 
+                                                Command="{Binding $parent[Window].((vm:ManageCardsViewModel)DataContext).DeleteCardCommand}" 
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" 
+                                                Foreground="#E74C3C"
+                                                VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+        
+    </Grid>
+</Window>

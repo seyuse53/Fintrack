@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using FinTrack.Core.Models;
 using FinTrack.Data;
@@ -37,6 +38,12 @@ public partial class CardsViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<CardItemViewModel> _cardsList = new();
 
+    [ObservableProperty]
+    private decimal _totalCreditLimit;
+
+    [ObservableProperty]
+    private decimal _totalCreditDebt;
+
     public CardsViewModel()
     {
         _context = App.Services?.GetService<AppDbContext>();
@@ -50,6 +57,84 @@ public partial class CardsViewModel : ViewModelBase
         try
         {
             var now = DateTime.Now;
+
+            // --- FIX FOR INCORRECT CREDIT CARD DEBT CATEGORY ---
+            var badBalances = await _context.Transactions
+                .Include(t => t.Category)
+                .Where(t => t.Description != null && t.Description.Contains("Geçmiş Borç Dengelemesi") && t.Category != null && t.Category.Type == TransactionType.Income)
+                .ToListAsync();
+
+            if (badBalances.Any())
+            {
+                var expenseCat = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Geçmiş Kredi Kartı Borcu");
+                if (expenseCat == null) 
+                {
+                    expenseCat = new Category { Name = "Geçmiş Kredi Kartı Borcu", Type = TransactionType.Expense };
+                    _context.Categories.Add(expenseCat);
+                    await _context.SaveChangesAsync();
+                }
+                
+                foreach(var b in badBalances)
+                {
+                    b.CategoryId = expenseCat.Id;
+                }
+                await _context.SaveChangesAsync();
+            }
+            // --------------------------------------------------
+            
+            // --- FIX FOR KREDİ KARTI NAKİT ÇEKİM AND EKSTRE ÖDEMESİ ---
+            var categoryFixes = await _context.Categories
+                .Where(c => (c.Name == "Kredi Kartı Çekilen" || c.Name == "Kredi Kartı Nakit Çekim" || c.Name == "Ekstra Ödemesi" || c.Name == "Ekstre Ödemesi"))
+                .ToListAsync();
+
+            bool changedCat = false;
+            foreach (var c in categoryFixes)
+            {
+                if ((c.Name == "Kredi Kartı Çekilen" || c.Name == "Kredi Kartı Nakit Çekim") && c.Type != TransactionType.Expense)
+                {
+                    c.Name = "Kredi Kartı Nakit Çekim";
+                    c.Type = TransactionType.Expense;
+                    changedCat = true;
+                }
+                if ((c.Name == "Ekstra Ödemesi" || c.Name == "Ekstre Ödemesi") && c.Type != TransactionType.Transfer)
+                {
+                    c.Name = "Ekstre Ödemesi";
+                    c.Type = TransactionType.Transfer;
+                    changedCat = true;
+                }
+            }
+            if (changedCat)
+            {
+                await _context.SaveChangesAsync();
+            }
+            // --------------------------------------------------
+            
+            // --- FIX FOR AÇILIŞ BAKİYESİ ON CREDIT CARDS ---
+            var openingBalanceCat = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Açılış Bakiyesi");
+            if (openingBalanceCat != null)
+            {
+                var badOpeningTx = await _context.Transactions
+                    .Where(t => t.CreditCardAccountId != null && t.CategoryId == openingBalanceCat.Id)
+                    .ToListAsync();
+
+                if (badOpeningTx.Any())
+                {
+                    var openingDebtCat = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Açılış Borcu");
+                    if (openingDebtCat == null)
+                    {
+                        openingDebtCat = new Category { Name = "Açılış Borcu", Type = TransactionType.Expense };
+                        _context.Categories.Add(openingDebtCat);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    foreach (var t in badOpeningTx)
+                    {
+                        t.CategoryId = openingDebtCat.Id;
+                    }
+                    await _context.SaveChangesAsync();
+                }
+            }
+            // --------------------------------------------------
             
             var activeCards = await _context.CreditCardAccounts
                 .Where(c => c.IsActive)
@@ -67,6 +152,9 @@ public partial class CardsViewModel : ViewModelBase
             var childCards = activeCards.Where(c => c.ParentCardId != null).ToList();
 
             var newItems = new System.Collections.Generic.List<CardItemViewModel>();
+            
+            decimal totalLimit = 0;
+            decimal totalDebt = 0;
 
             foreach (var master in masterCards)
             {
@@ -74,18 +162,44 @@ public partial class CardsViewModel : ViewModelBase
                 var linkedOnes = childCards.Where(c => c.ParentCardId == master.Id).ToList();
                 familyIds.AddRange(linkedOnes.Select(c => c.Id));
 
-                decimal consolidatedDebt = cardTransactions
-                    .Where(t => familyIds.Contains(t.CreditCardAccountId ?? 0))
-                    .Sum(t => t.Amount);
-
+                var familyTransactions = cardTransactions.Where(t => familyIds.Contains(t.CreditCardAccountId ?? 0));
                 var period = master.GetStatementPeriod(now);
                 
+                decimal statementDebt = 0;
+                decimal consolidatedDebt = 0;
+                
+                var debugLines = new System.Collections.Generic.List<string>();
+                debugLines.Add($"Card Family: {master.CardLabel} ({master.Id})");
+
+                foreach (var t in familyTransactions)
+                {
+                    decimal amount = 0;
+                    if (t.Category?.Type == TransactionType.Expense)
+                        amount = t.Amount;
+                    else if (t.Category?.Type == TransactionType.Income || t.Category?.Type == TransactionType.Transfer)
+                        amount = -t.Amount;
+
+                    consolidatedDebt += amount;
+
+                    if (t.Date <= period.End)
+                    {
+                        statementDebt += amount;
+                    }
+                    
+                    debugLines.Add($"Tx {t.Id}: Date={t.Date:d}, Cat='{t.Category?.Name}' ({t.Category?.Type}), Amount={t.Amount}, Effective={amount}");
+                }
+                
+                System.IO.File.WriteAllLines($@"C:\VSRepos\FinTrack\LocalData\cc_debug_{master.Id}.txt", debugLines);
+
+                totalLimit += master.Limit;
+                totalDebt += statementDebt;
+
                 var vm = new CardItemViewModel
                 {
                     CardId = master.Id,
                     BankName = master.BankName,
                     CardLabel = master.CardLabel,
-                    TotalDebt = consolidatedDebt,
+                    TotalDebt = statementDebt,
                     Limit = master.Limit,
                     RemainingLimit = master.Limit > 0 ? (master.Limit - consolidatedDebt) : 0,
                     LimitProgressValue = (master.Limit > 0) ? (double)(consolidatedDebt / master.Limit * 100) : 0,
@@ -129,6 +243,8 @@ public partial class CardsViewModel : ViewModelBase
             }
 
             global::Avalonia.Threading.Dispatcher.UIThread.Invoke(() => {
+                TotalCreditLimit = totalLimit;
+                TotalCreditDebt = totalDebt;
                 CardsList.Clear();
                 foreach(var item in newItems) CardsList.Add(item);
             });
@@ -136,6 +252,39 @@ public partial class CardsViewModel : ViewModelBase
         catch(Exception ex)
         {
             System.Diagnostics.Debug.WriteLine(ex.Message);
+        }
+    }
+
+    [RelayCommand]
+    private async Task PayDebtAsync(int cardId)
+    {
+        if (global::Avalonia.Application.Current?.ApplicationLifetime is global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow != null)
+        {
+            var window = new FinTrack.Avalonia.Views.PayCreditCardWindow(cardId);
+            await window.ShowDialog(desktop.MainWindow);
+            await LoadDataAsync();
+        }
+    }
+
+    [RelayCommand]
+    private async Task ShowDetailsAsync(int cardId)
+    {
+        if (global::Avalonia.Application.Current?.ApplicationLifetime is global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow != null)
+        {
+            var window = new FinTrack.Avalonia.Views.CardDetailWindow(cardId);
+            await window.ShowDialog(desktop.MainWindow);
+            await LoadDataAsync();
+        }
+    }
+
+    [RelayCommand]
+    private async Task ManageCardsAsync()
+    {
+        if (global::Avalonia.Application.Current?.ApplicationLifetime is global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow != null)
+        {
+            var window = new FinTrack.Avalonia.Views.ManageCardsWindow();
+            await window.ShowDialog(desktop.MainWindow);
+            await LoadDataAsync();
         }
     }
 }

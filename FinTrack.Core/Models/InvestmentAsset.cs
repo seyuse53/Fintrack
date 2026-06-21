@@ -16,6 +16,15 @@ namespace FinTrack.Core.Models
         public decimal LastKnownPrice { get; set; }   // Son bilinen güncel fiyat (uygulama kapansa bile kalır)
         public DateTime? LastPriceUpdate { get; set; } // Fiyatın en son güncellenme zamanı
 
+        public decimal? CustomCurrentValue { get; set; }     // BES gibi varlıklar için manuel girilen güncel değer
+        public decimal? CustomStateContribution { get; set; } // BES gibi varlıklar için manuel girilen devlet katkısı
+
+        public DateTime? BesStartDate { get; set; }        // BES Sözleşme Yürürlük Tarihi
+        public DateTime? BesRetirementDate { get; set; }   // BES Emeklilik Tarihi
+        public string? BesContractNo { get; set; }         // BES Müşteri/Sözleşme No
+        public DateTime? ParticipantBirthDate { get; set; } // BES Doğum Tarihi
+        public int? BesRetirementAge { get; set; }          // BES Emeklilik Yaşı
+
         public List<InvestmentTransaction> Transactions { get; set; } = new();
     }
 }

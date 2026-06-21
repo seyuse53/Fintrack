@@ -42,7 +42,7 @@ public partial class MainWindow : Window
             CanResize = false;
             Width = 420;
             Height = 460;
-            Title = "FinTrack Erişim";
+            Title = "KT FinTrack Erişim";
             CenterWindow();
         }
         else
@@ -51,7 +51,7 @@ public partial class MainWindow : Window
             CanResize = true;
             Width = 1200;
             Height = 700;
-            Title = "FinTrack - Kişisel Finans Takip";
+            Title = "KT FinTrack - Kişisel Finans Takip";
             CenterWindow();
         }
     }

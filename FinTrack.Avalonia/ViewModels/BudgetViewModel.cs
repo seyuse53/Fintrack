@@ -43,6 +43,14 @@ namespace FinTrack.Avalonia.ViewModels
         private string _limitInputText = "";
 
         [ObservableProperty]
+        private string _suggestedLimitText = "";
+
+        [ObservableProperty]
+        private bool _hasSuggestion = false;
+
+        private decimal _suggestedAmount = 0;
+
+        [ObservableProperty]
         private ObservableCollection<BudgetCardVm> _budgetCards = new();
 
         private static readonly string[] MonthNames =
@@ -104,7 +112,7 @@ namespace FinTrack.Avalonia.ViewModels
 
             if (_currentCpi.HasValue)
             {
-                string periodLabel = $"{MonthNames[_cpiActualMonth - 1]} {_cpiActualYear - 1}→{_cpiActualYear}";
+                string periodLabel = $"{MonthNames[_cpiActualMonth - 1]} {_cpiActualYear} (Yıllık)";
                 string lagNote = (_cpiActualYear != _year || _cpiActualMonth != _month)
                     ? " ⚠️ (henüz açıklanmadı, son veri kullanılıyor)"
                     : "";
@@ -191,6 +199,43 @@ namespace FinTrack.Avalonia.ViewModels
         {
             SelectedCategory = null;
             LimitInputText = string.Empty;
+            HasSuggestion = false;
+        }
+
+        [RelayCommand]
+        private void ApplySuggestion()
+        {
+            LimitInputText = _suggestedAmount.ToString("N2");
+        }
+
+        partial void OnSelectedCategoryChanged(Category? value)
+        {
+            if (value != null)
+            {
+                var limit = _budgetService.GetLimit(value.Id);
+                LimitInputText = limit != null ? limit.MonthlyLimit.ToString("N2") : string.Empty;
+
+                decimal lastYear = _budgetService.GetSameMonthLastYearSpending(value.Id, _year, _month);
+                if (lastYear > 0)
+                {
+                    decimal suggested = _currentCpi.HasValue 
+                        ? lastYear * (1 + (decimal)(_currentCpi.Value / 100.0)) 
+                        : lastYear;
+                    
+                    SuggestedLimitText = $"💡 Öneri (Geçen Yıl + Enflasyon): ₺{suggested:N0}";
+                    _suggestedAmount = suggested;
+                    HasSuggestion = true;
+                }
+                else
+                {
+                    HasSuggestion = false;
+                }
+            }
+            else
+            {
+                LimitInputText = string.Empty;
+                HasSuggestion = false;
+            }
         }
     }
 

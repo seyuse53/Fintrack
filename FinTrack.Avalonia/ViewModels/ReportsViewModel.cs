@@ -46,6 +46,15 @@ namespace FinTrack.Avalonia.ViewModels
         private string _totalInvestmentProfitText = "Analiz Ediliyor...";
 
         [ObservableProperty]
+        private string _totalInvestmentProfitColor = "#7F8C8D";
+
+        [ObservableProperty]
+        private ObservableCollection<BreakdownItem> _topIncomeCategories = new();
+
+        [ObservableProperty]
+        private ObservableCollection<BreakdownItem> _fullIncomeBreakdown = new();
+
+        [ObservableProperty]
         private ObservableCollection<InvestmentAllocationItem> _investmentAllocations = new();
 
         public ReportsViewModel(AppDbContext context)
@@ -91,8 +100,9 @@ namespace FinTrack.Avalonia.ViewModels
                 TotalExpenseText = $"₺{totalExpense:N2}";
                 NetBalanceText = $"₺{balance:N2}";
 
-                // 2. HARCAMA DAĞILIMI ANALİZİ
+                // 2. HARCAMA VE GELİR DAĞILIMI ANALİZİ
                 AnalyzeSpending(expenseList);
+                AnalyzeIncome(incomeList);
 
                 // 3. TREND ANALİZİ (SON 6 AY)
                 await AnalyzeTrendAsync();
@@ -104,6 +114,34 @@ namespace FinTrack.Avalonia.ViewModels
             {
                 // Hata UI tarafında loglanabilir veya diyalog gösterilebilir.
             }
+        }
+
+        private void AnalyzeIncome(List<Transaction> incomes)
+        {
+            if (!incomes.Any())
+            {
+                TopIncomeCategories.Clear();
+                FullIncomeBreakdown.Clear();
+                return;
+            }
+
+            decimal totalIncome = incomes.Sum(i => i.Amount);
+
+            var breakdown = incomes
+                .GroupBy(i => i.Category?.Name ?? "Diğer")
+                .Select(g => new BreakdownItem
+                {
+                    CategoryName = g.Key,
+                    TotalAmount = g.Sum(i => i.Amount),
+                    Count = g.Count(),
+                    Percentage = (double)(g.Sum(i => i.Amount) / totalIncome * 100),
+                    ColorHex = GetVibrantColorHex(g.Key)
+                })
+                .OrderByDescending(x => x.TotalAmount)
+                .ToList();
+
+            FullIncomeBreakdown = new ObservableCollection<BreakdownItem>(breakdown);
+            TopIncomeCategories = new ObservableCollection<BreakdownItem>(breakdown.Take(5));
         }
 
         private void AnalyzeSpending(List<Transaction> expenses)
@@ -137,12 +175,12 @@ namespace FinTrack.Avalonia.ViewModels
         private async Task AnalyzeTrendAsync()
         {
             var trends = new List<TrendItem>();
-            var now = DateTime.Now;
+            var endDateAnchor = EndDate ?? DateTime.Now;
 
             // Son 6 ayı hesapla
             for (int i = 5; i >= 0; i--)
             {
-                var monthDate = now.AddMonths(-i);
+                var monthDate = endDateAnchor.AddMonths(-i);
                 var startOfMonth = new DateTime(monthDate.Year, monthDate.Month, 1);
                 var endOfMonth = startOfMonth.AddMonths(1).AddTicks(-1);
 
@@ -196,28 +234,45 @@ namespace FinTrack.Avalonia.ViewModels
                 .Select(g => new InvestmentAllocationItem
                 {
                     AssetCategory = g.Key,
-                    TotalValue = g.Sum(a => a.TotalAmount * a.AverageCost)
+                    TotalValue = g.Sum(a => a.TotalAmount * (a.LastKnownPrice > 0 ? a.LastKnownPrice : a.AverageCost))
                 })
                 .ToList();
 
-            decimal totalValue = allocation.Sum(x => x.TotalValue);
+            decimal totalCost = assets.Sum(a => a.TotalAmount * a.AverageCost);
+            decimal totalCurrentValue = allocation.Sum(x => x.TotalValue);
+            decimal totalProfit = totalCurrentValue - totalCost;
             
-            if (totalValue > 0)
+            if (totalCurrentValue > 0)
             {
                 foreach (var item in allocation)
                 {
-                    item.Percentage = (double)(item.TotalValue / totalValue * 100);
+                    item.Percentage = (double)(item.TotalValue / totalCurrentValue * 100);
                 }
                 InvestmentAllocations = new ObservableCollection<InvestmentAllocationItem>(allocation.OrderByDescending(a => a.Percentage));
             }
 
-            TotalPortfolioValueText = $"₺{totalValue:N2}";
-            TotalInvestmentProfitText = "Henüz desteklenmiyor";
+            TotalPortfolioValueText = $"₺{totalCurrentValue:N2}";
+            
+            if (totalProfit > 0)
+            {
+                TotalInvestmentProfitText = $"+₺{totalProfit:N2}";
+                TotalInvestmentProfitColor = "#27AE60"; // Green
+            }
+            else if (totalProfit < 0)
+            {
+                TotalInvestmentProfitText = $"-₺{Math.Abs(totalProfit):N2}";
+                TotalInvestmentProfitColor = "#E74C3C"; // Red
+            }
+            else
+            {
+                TotalInvestmentProfitText = "₺0,00";
+                TotalInvestmentProfitColor = "#7F8C8D"; // Gray
+            }
         }
 
         private string GetVibrantColorHex(string categoryName)
         {
-            return categoryName switch
+            var preset = categoryName switch
             {
                 "Gıda" or "Market" => "#E67E22",
                 "Kira" or "Ev" => "#2980B9",
@@ -225,8 +280,46 @@ namespace FinTrack.Avalonia.ViewModels
                 "Eğlence" or "Sosyal" => "#9B59B6",
                 "Faturalar" => "#E74C3C",
                 "Sağlık" => "#27AE60",
-                _ => "#34495E"
+                "Maaş" or "Gelir" => "#27AE60",
+                _ => null
             };
+
+            if (preset != null) return preset;
+
+            // Generate HSL based on hash of category name
+            int hash = 0;
+            foreach (char c in categoryName)
+            {
+                hash = c + (hash << 5) - hash;
+            }
+            
+            double h = Math.Abs(hash % 360);
+            double s = 0.65;
+            double l = 0.55;
+            
+            return HslToHex(h, s, l);
+        }
+
+        private string HslToHex(double h, double s, double l)
+        {
+            double c = (1 - Math.Abs(2 * l - 1)) * s;
+            double x = c * (1 - Math.Abs((h / 60) % 2 - 1));
+            double m = l - c / 2;
+
+            double r = 0, g = 0, b = 0;
+
+            if (0 <= h && h < 60) { r = c; g = x; b = 0; }
+            else if (60 <= h && h < 120) { r = x; g = c; b = 0; }
+            else if (120 <= h && h < 180) { r = 0; g = c; b = x; }
+            else if (180 <= h && h < 240) { r = 0; g = x; b = c; }
+            else if (240 <= h && h < 300) { r = x; g = 0; b = c; }
+            else if (300 <= h && h < 360) { r = c; g = 0; b = x; }
+
+            int R = (int)Math.Round((r + m) * 255);
+            int G = (int)Math.Round((g + m) * 255);
+            int B = (int)Math.Round((b + m) * 255);
+
+            return $"#{R:X2}{G:X2}{B:X2}";
         }
     }
 

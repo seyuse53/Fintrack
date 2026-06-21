@@ -27,6 +27,8 @@ namespace FinTrack.Core.Models
         public decimal Fee { get; set; }          // Commission or transaction fee
         public decimal TotalCost { get; set; }    // Total money spent/received (Amount * UnitPrice + Fee, or - Fee)
         
+        public decimal? GramGoldEquivalent { get; set; } // The equivalent amount in Gram Gold (calculated on transaction date)
+
         public DateTime Date { get; set; } = DateTime.Now;
         public string? Notes { get; set; }
 

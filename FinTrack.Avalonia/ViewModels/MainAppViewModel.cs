@@ -98,7 +98,18 @@ public partial class MainAppViewModel : ViewModelBase
         if (CurrentView is not InvestmentsViewModel)
         {
             CurrentView = new InvestmentsViewModel();
-            ViewTitle = "Yatırımlar / Portföy";
+            ViewTitle = "Yatırımlar";
+            IsDateFilterVisible = false;
+        }
+    }
+
+    [RelayCommand]
+    private void SwitchToBes()
+    {
+        if (CurrentView is not BesViewModel)
+        {
+            CurrentView = new BesViewModel();
+            ViewTitle = "Bireysel Emeklilik (BES)";
             IsDateFilterVisible = false;
         }
     }

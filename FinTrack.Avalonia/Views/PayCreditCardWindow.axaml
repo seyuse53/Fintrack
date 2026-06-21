@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="550"
+        Width="450" Height="550"
+        WindowStartupLocation="CenterOwner"
+        x:Class="FinTrack.Avalonia.Views.PayCreditCardWindow"
+        x:DataType="vm:PayCreditCardViewModel"
+        Title="Borç Öde"
+        Background="#F8F9FA"
+        Icon="/Assets/app_icon.ico">
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+        
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="{Binding CardTitle}" FontSize="22" FontWeight="Bold" Foreground="#2C3E50"/>
+            <TextBlock Text="Kredi kartı borcunuzu ödeyin" FontSize="14" Foreground="#7F8C8D" Margin="0,5,0,0"/>
+        </StackPanel>
+
+        <!-- Form -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="15">
+                
+                <StackPanel>
+                    <TextBlock Text="Ödeme Yapılacak Hesap (Kaynak)" FontSize="14" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,5"/>
+                    <ComboBox ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedSourceAccount}" HorizontalAlignment="Stretch" Padding="10">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="{Binding Icon}"/>
+                                    <TextBlock Text="{Binding DisplayName}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Ödenen Tutar (₺)" FontSize="14" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding AmountText}" FontSize="18" Padding="10" PlaceholderText="0,00"/>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Ödeme Tarihi" FontSize="14" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,5"/>
+                    <CalendarDatePicker SelectedDate="{Binding SelectedDate}" HorizontalAlignment="Stretch" Padding="10"/>
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Text="Açıklama (İsteğe Bağlı)" FontSize="14" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding Description}" Padding="10" PlaceholderText="Örn: Haziran ekstresi ödemesi..."/>
+                </StackPanel>
+
+                <!-- Error Message -->
+                <Border Background="#FDEDEC" BorderBrush="#E74C3C" BorderThickness="1" CornerRadius="6" Padding="10" IsVisible="{Binding HasError}">
+                    <TextBlock Text="{Binding ErrorMessage}" Foreground="#E74C3C" TextWrapping="Wrap"/>
+                </Border>
+                
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,10,*" Margin="0,20,0,0">
+            <Button Grid.Column="0" Content="İptal" Command="{Binding CancelCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#ECF0F1" Foreground="#34495E" Padding="10"/>
+            <Button Grid.Column="2" Content="Ödemeyi Kaydet" Command="{Binding SavePaymentCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#27AE60" Foreground="White" Padding="10" FontWeight="Bold"/>
+        </Grid>
+        
+    </Grid>
+</Window>

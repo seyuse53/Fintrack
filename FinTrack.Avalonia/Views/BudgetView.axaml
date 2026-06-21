@@ -106,6 +106,10 @@
                     <TextBox Text="{Binding LimitInputText}" Height="40"
                              FontSize="16" VerticalContentAlignment="Center"
                              Padding="10,0" FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0" IsVisible="{Binding HasSuggestion}">
+                        <TextBlock Text="{Binding SuggestedLimitText}" FontSize="11" Foreground="#27AE60" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="150"/>
+                        <Button Content="Uygula" Command="{Binding ApplySuggestionCommand}" FontSize="10" Padding="5,2" Margin="5,0,0,0" Background="#E8F8F5" Foreground="#27AE60" BorderBrush="#27AE60" BorderThickness="1" CornerRadius="4" VerticalAlignment="Center" Cursor="Hand"/>
+                    </StackPanel>
                 </StackPanel>
 
                 <Button Grid.Column="4" Content="💾 Kaydet"

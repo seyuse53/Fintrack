@@ -92,8 +92,8 @@ namespace FinTrack.Data
                 new Category { Id = 17, Name = "Yemek Ödeneği",       Type = TransactionType.Income },
                 new Category { Id = 18, Name = "Aile Desteği",        Type = TransactionType.Income },
                 // ── Kredi Kartı ──────────────────────────────────────
-                new Category { Id = 19, Name = "Kredi Kartı Çekilen", Type = TransactionType.Income },
-                new Category { Id = 20, Name = "Ekstra Ödemesi",      Type = TransactionType.Expense },
+                new Category { Id = 19, Name = "Kredi Kartı Nakit Çekim", Type = TransactionType.Expense },
+                new Category { Id = 20, Name = "Ekstre Ödemesi",      Type = TransactionType.Transfer },
                 // ── Transfer ─────────────────────────────────────────
                 new Category { Id = 21, Name = "Kredi Kartı Ödemesi", Type = TransactionType.Transfer },
                 // ── Fatura Alt Kategorileri (Parent: 5) ──────────────
@@ -105,7 +105,9 @@ namespace FinTrack.Data
                 new Category { Id = 27, Name = "Aidat",               Type = TransactionType.Expense, ParentCategoryId = 5 },
                 // ── Özel ─────────────────────────────────────────────
                 new Category { Id = 28, Name = "Hatun",               Type = TransactionType.Income },
-                new Category { Id = 29, Name = "Hatun",               Type = TransactionType.Expense }
+                new Category { Id = 29, Name = "Hatun",               Type = TransactionType.Expense },
+                // ── Puan / Bonus ─────────────────────────────────────
+                new Category { Id = 30, Name = "Puan Kullanımı",      Type = TransactionType.Income }
             );
 
 

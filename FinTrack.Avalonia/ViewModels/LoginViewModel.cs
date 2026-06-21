@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrack.Core.Services;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -110,6 +112,93 @@ public partial class LoginViewModel : ViewModelBase
     private void OnLoginSuccess()
     {
         HasError = false;
+
+        try
+        {
+            var context = App.Services?.GetService<FinTrack.Data.AppDbContext>();
+            if (context != null)
+            {
+                // SQLCipher and EF Core migrations often conflict, or migration history gets out of sync.
+                // We manually ensure the columns exist here if EF skipped them.
+                bool hasGramGold = false;
+                bool hasCustomCurrentValue = false;
+                bool hasCustomStateContribution = false;
+                bool hasBesStartDate = false;
+                bool hasBesRetirementDate = false;
+                bool hasBesContractNo = false;
+                bool hasParticipantBirthDate = false;
+                bool hasBesRetirementAge = false;
+
+                using (var command = context.Database.GetDbConnection().CreateCommand())
+                {
+                    command.CommandText = "PRAGMA table_info(InvestmentTransactions);";
+                    context.Database.OpenConnection();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader.GetString(1) == "GramGoldEquivalent") hasGramGold = true;
+                        }
+                    }
+
+                    command.CommandText = "PRAGMA table_info(InvestmentAssets);";
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var colName = reader.GetString(1);
+                            if (colName == "CustomCurrentValue") hasCustomCurrentValue = true;
+                            if (colName == "CustomStateContribution") hasCustomStateContribution = true;
+                            if (colName == "BesStartDate") hasBesStartDate = true;
+                            if (colName == "BesRetirementDate") hasBesRetirementDate = true;
+                            if (colName == "BesContractNo") hasBesContractNo = true;
+                            if (colName == "ParticipantBirthDate") hasParticipantBirthDate = true;
+                            if (colName == "BesRetirementAge") hasBesRetirementAge = true;
+                        }
+                    }
+                }
+                
+                if (!hasGramGold)
+                {
+                    context.Database.ExecuteSqlRaw("ALTER TABLE InvestmentTransactions ADD COLUMN GramGoldEquivalent TEXT;");
+                }
+                if (!hasCustomCurrentValue)
+                {
+                    context.Database.ExecuteSqlRaw("ALTER TABLE InvestmentAssets ADD COLUMN CustomCurrentValue TEXT;");
+                }
+                if (!hasCustomStateContribution)
+                {
+                    context.Database.ExecuteSqlRaw("ALTER TABLE InvestmentAssets ADD COLUMN CustomStateContribution TEXT;");
+                }
+                if (!hasBesStartDate)
+                {
+                    context.Database.ExecuteSqlRaw("ALTER TABLE InvestmentAssets ADD COLUMN BesStartDate TEXT;");
+                }
+                if (!hasBesRetirementDate)
+                {
+                    context.Database.ExecuteSqlRaw("ALTER TABLE InvestmentAssets ADD COLUMN BesRetirementDate TEXT;");
+                }
+                if (!hasBesContractNo)
+                {
+                    context.Database.ExecuteSqlRaw("ALTER TABLE InvestmentAssets ADD COLUMN BesContractNo TEXT;");
+                }
+                if (!hasParticipantBirthDate)
+                {
+                    context.Database.ExecuteSqlRaw("ALTER TABLE InvestmentAssets ADD COLUMN ParticipantBirthDate TEXT;");
+                }
+                if (!hasBesRetirementAge)
+                {
+                    context.Database.ExecuteSqlRaw("ALTER TABLE InvestmentAssets ADD COLUMN BesRetirementAge INTEGER;");
+                }
+                
+                context.Database.Migrate();
+            }
+        }
+        catch (System.Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine("Migration failed: " + ex.Message);
+        }
+
         LoginSuccess?.Invoke(this, System.EventArgs.Empty);
     }
 }

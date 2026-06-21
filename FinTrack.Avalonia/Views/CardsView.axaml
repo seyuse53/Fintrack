@@ -3,20 +3,36 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             xmlns:conv="using:Avalonia.Data.Converters"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="FinTrack.Avalonia.Views.CardsView"
-             x:DataType="vm:CardsViewModel">
+             x:DataType="vm:CardsViewModel"
+             x:Name="RootControl">
 
-    <Grid Margin="10" RowDefinitions="Auto,*">
-        <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,20">
+    <Grid Margin="10" RowDefinitions="Auto,Auto,*">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
             <TextBlock Grid.Column="0" Text="KREDİ KARTLARIM" FontSize="16" FontWeight="Bold" Foreground="#34495E" VerticalAlignment="Center"/>
-            <Button Grid.Column="1" Content="Kartları Yönet" Background="Transparent" Foreground="#3498DB" FontWeight="SemiBold"/>
+            <Button Grid.Column="1" Content="Kartları Yönet" Command="{Binding ManageCardsCommand}" Background="Transparent" Foreground="#3498DB" FontWeight="SemiBold"/>
         </Grid>
 
-        <ScrollViewer Grid.Row="1">
+        <!-- Summary Section -->
+        <Border Grid.Row="1" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20" Margin="0,0,0,20">
+            <Grid ColumnDefinitions="*,*">
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Toplam Kredi Limiti" FontSize="13" Foreground="#7F8C8D" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding TotalCreditLimit, StringFormat='{}{0:C0}'}" FontSize="24" FontWeight="Bold" Foreground="#2C3E50"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Toplam Güncel Borç" FontSize="13" Foreground="#7F8C8D" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding TotalCreditDebt, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" Foreground="#E74C3C"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="2">
             <ItemsControl ItemsSource="{Binding CardsList}">
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="vm:CardItemViewModel">
                         <Border Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20" Margin="0,0,0,15">
                             <Grid ColumnDefinitions="2*,2*,Auto">
                                 
@@ -24,7 +40,7 @@
                                 <StackPanel Grid.Column="0">
                                     <TextBlock Text="{Binding BankName}" FontSize="13" Foreground="#7F8C8D" FontWeight="SemiBold"/>
                                     <TextBlock Text="{Binding CardLabel}" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,2,0,0"/>
-                                    <TextBlock Text="{Binding LinkedCardsText}" FontSize="11" Foreground="#95A5A6" Margin="0,2,0,0" IsVisible="{Binding LinkedCardsText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                    <TextBlock Text="{Binding LinkedCardsText}" FontSize="11" Foreground="#95A5A6" Margin="0,2,0,0" IsVisible="{Binding LinkedCardsText, Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"/>
                                     
                                     <TextBlock Text="{Binding StatementDescription}" FontSize="12" Foreground="#34495E" Margin="0,15,0,5"/>
                                     <Grid ColumnDefinitions="*,Auto">
@@ -48,8 +64,8 @@
 
                                 <!-- Actions -->
                                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="30,0,0,0">
-                                    <Button Content="Borç Öde" Background="#27AE60" Foreground="White" CornerRadius="6" Padding="15,8" IsEnabled="{Binding CanPay}"/>
-                                    <Button Content="Detaylar" Background="#F4F6F9" Foreground="#34495E" CornerRadius="6" Padding="15,8"/>
+                                    <Button Content="Borç Öde" Background="#27AE60" Foreground="White" CornerRadius="6" Padding="15,8" IsEnabled="{Binding CanPay}" Command="{Binding #RootControl.((vm:CardsViewModel)DataContext).PayDebtCommand}" CommandParameter="{Binding CardId}"/>
+                                    <Button Content="Detaylar" Background="#F4F6F9" Foreground="#34495E" CornerRadius="6" Padding="15,8" Command="{Binding #RootControl.((vm:CardsViewModel)DataContext).ShowDetailsCommand}" CommandParameter="{Binding CardId}"/>
                                 </StackPanel>
                             </Grid>
                         </Border>

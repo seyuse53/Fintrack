@@ -24,7 +24,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Margin="0,0,0,10">
-                            <Grid ColumnDefinitions="*,Auto,Auto">
+                            <Grid ColumnDefinitions="*,Auto,Auto,Auto">
                                 <StackPanel Grid.Column="0">
                                     <TextBlock Text="{Binding BankName}" FontSize="15" FontWeight="Bold" Foreground="#2C3E50"/>
                                     <TextBlock Text="{Binding AccountName}" FontSize="13" Foreground="#7F8C8D" Margin="0,4,0,2"/>
@@ -44,7 +44,12 @@
                                         IsVisible="{Binding !IsActive}"
                                         Background="Transparent" Foreground="#27AE60" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                         
-                                <Button Grid.Column="2" Content="Sil" 
+                                <Button Grid.Column="2" Content="Düzenle" 
+                                        Command="{Binding $parent[Window].((vm:ManageAccountsViewModel)DataContext).EditAccountCommand}" 
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent" Foreground="#3498DB" Margin="0,0,10,0" VerticalAlignment="Center"/>
+
+                                <Button Grid.Column="3" Content="Sil" 
                                         Command="{Binding $parent[Window].((vm:ManageAccountsViewModel)DataContext).DeleteAccountCommand}" 
                                         CommandParameter="{Binding}"
                                         Background="#E74C3C" Foreground="White" CornerRadius="4" Padding="10,5" VerticalAlignment="Center"/>
@@ -58,10 +63,10 @@
         <!-- Add New Account Form -->
         <Border Grid.Row="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20" Margin="0,0,0,20">
             <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="120,*">
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Yeni Banka Hesabı Ekle" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,15"/>
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding FormTitle}" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,15"/>
                 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Banka Adı:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,10"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding NewBankName}" PlaceholderText="Örn: Garanti BBVA" Margin="0,0,0,10"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AvailableBanks}" SelectedItem="{Binding NewBankName}" HorizontalAlignment="Stretch" PlaceholderText="Banka Seçiniz..." Margin="0,0,0,10"/>
                 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Hesap Adı:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,10"/>
                 <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NewAccountName}" PlaceholderText="Örn: Vadesiz TL" Margin="0,0,0,10"/>
@@ -75,8 +80,9 @@
         </Border>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="İptal" Width="90" Margin="0,0,10,0" Padding="10" Command="{Binding CancelEditCommand}" IsVisible="{Binding IsEditing}" Background="Transparent" Foreground="#E74C3C" FontWeight="SemiBold" BorderThickness="0" HorizontalContentAlignment="Center"/>
             <Button Content="Kapat" Width="90" Margin="0,0,10,0" Padding="10" Command="{Binding CloseCommand}" Background="#ECF0F1" BorderThickness="0" HorizontalContentAlignment="Center"/>
-            <Button Content="Hesap Ekle" Width="120" Padding="10" Command="{Binding AddAccountCommand}" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" HorizontalContentAlignment="Center"/>
+            <Button Content="{Binding SubmitButtonText}" Width="120" Padding="10" Command="{Binding AddAccountCommand}" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" HorizontalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

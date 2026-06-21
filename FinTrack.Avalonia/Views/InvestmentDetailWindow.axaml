@@ -4,6 +4,7 @@
         xmlns:controls="using:FinTrack.Avalonia.Controls"
         x:Class="FinTrack.Avalonia.Views.InvestmentDetailWindow"
         x:DataType="vm:InvestmentDetailViewModel"
+        Icon="avares://FinTrack.Avalonia/Assets/avalonia-logo.ico"
         Title="Yatırım Detayı" Height="780" Width="900"
         WindowStartupLocation="CenterOwner" Background="#F4F6F9">
     <Grid Margin="25" RowDefinitions="Auto,15,Auto,15,*,Auto,Auto">
@@ -71,6 +72,7 @@
                         <DataGridTextColumn Header="Birim Fiyat" Binding="{Binding UnitPrice, StringFormat='₺{0:N2}'}" Width="110"/>
                         <DataGridTextColumn Header="Komisyon" Binding="{Binding Fee, StringFormat='₺{0:N2}'}" Width="90"/>
                         <DataGridTextColumn Header="Toplam" Binding="{Binding TotalCost, StringFormat='₺{0:N2}'}" Width="120"/>
+                        <DataGridTextColumn Header="Gram Altın" Binding="{Binding GramGoldEquivalent, StringFormat='{}{0:N2} gr'}" Width="100"/>
                         <DataGridTextColumn Header="Notlar" Binding="{Binding Notes}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>

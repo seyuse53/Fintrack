@@ -20,7 +20,7 @@ public partial class EditInvestmentAssetViewModel : ViewModelBase
     private string _name = "";
 
     public ObservableCollection<string> Categories { get; } = new() 
-    { "Altın", "Döviz", "Hisse Senedi", "Kripto Para", "Fon", "Diğer" };
+    { "Altın", "Döviz", "Hisse Senedi", "Kripto Para", "Fon", "BES", "Diğer" };
 
     [ObservableProperty]
     private string _selectedCategory = "Diğer";
