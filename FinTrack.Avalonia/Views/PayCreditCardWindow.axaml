@@ -1,31 +1,31 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window SizeToContent="WidthAndHeight" xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="550"
-        Width="450" Height="550"
         WindowStartupLocation="CenterOwner"
         x:Class="FinTrack.Avalonia.Views.PayCreditCardWindow"
         x:DataType="vm:PayCreditCardViewModel"
-        Title="Borç Öde"
-        Background="#F8F9FA"
+        Title="{loc:Translate PayCard_TitleFormat}"
+        Background="{DynamicResource CardSecondaryBackgroundBrush}"
         Icon="/Assets/app_icon.ico">
 
-    <Grid RowDefinitions="Auto,*,Auto" Margin="20">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="10">
         
         <!-- Header -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock Text="{Binding CardTitle}" FontSize="22" FontWeight="Bold" Foreground="#2C3E50"/>
-            <TextBlock Text="Kredi kartı borcunuzu ödeyin" FontSize="14" Foreground="#7F8C8D" Margin="0,5,0,0"/>
+        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock Text="{Binding CardTitle}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+            <TextBlock Text="{loc:Translate PayCard_Subtitle}" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,5,0,0"/>
         </StackPanel>
 
         <!-- Form -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Spacing="15">
+            <StackPanel Spacing="10">
                 
-                <StackPanel>
-                    <TextBlock Text="Ödeme Yapılacak Hesap (Kaynak)" FontSize="14" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,5"/>
+                <StackPanel Grid.Row="0" Margin="0,0,0,15">
+                    <TextBlock Text="{loc:Translate PayCard_SourceAccount}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,5"/>
                     <ComboBox ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedSourceAccount}" HorizontalAlignment="Stretch" Padding="10">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -38,19 +38,19 @@
                     </ComboBox>
                 </StackPanel>
 
-                <StackPanel>
-                    <TextBlock Text="Ödenen Tutar (₺)" FontSize="14" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,5"/>
+                <StackPanel Grid.Row="2" Margin="0,0,0,15">
+                    <TextBlock Text="{loc:Translate PayCard_AmountToPay}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,5"/>
                     <TextBox Text="{Binding AmountText}" FontSize="18" Padding="10" PlaceholderText="0,00"/>
                 </StackPanel>
 
-                <StackPanel>
-                    <TextBlock Text="Ödeme Tarihi" FontSize="14" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,5"/>
+                <StackPanel Grid.Row="4" Margin="0,0,0,15">
+                    <TextBlock Text="{loc:Translate PayCard_PaymentDate}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,5"/>
                     <CalendarDatePicker SelectedDate="{Binding SelectedDate}" HorizontalAlignment="Stretch" Padding="10"/>
                 </StackPanel>
 
-                <StackPanel>
-                    <TextBlock Text="Açıklama (İsteğe Bağlı)" FontSize="14" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding Description}" Padding="10" PlaceholderText="Örn: Haziran ekstresi ödemesi..."/>
+                <StackPanel Grid.Row="6" Margin="0,0,0,15">
+                    <TextBlock Text="{loc:Translate PayCard_DescOpt}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding Description}" Padding="10" PlaceholderText="..."/>
                 </StackPanel>
 
                 <!-- Error Message -->
@@ -62,9 +62,9 @@
         </ScrollViewer>
 
         <!-- Buttons -->
-        <Grid Grid.Row="2" ColumnDefinitions="*,10,*" Margin="0,20,0,0">
-            <Button Grid.Column="0" Content="İptal" Command="{Binding CancelCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#ECF0F1" Foreground="#34495E" Padding="10"/>
-            <Button Grid.Column="2" Content="Ödemeyi Kaydet" Command="{Binding SavePaymentCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#27AE60" Foreground="White" Padding="10" FontWeight="Bold"/>
+        <Grid Grid.Row="2" ColumnDefinitions="*,10,*" Margin="0,10,0,0">
+            <Button Grid.Column="0" Content="{loc:Translate Global_Cancel}" Command="{Binding CancelCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="{DynamicResource CardSecondaryBackgroundBrush}" Foreground="{DynamicResource PrimaryTextBrush}" Padding="10"/>
+            <Button Grid.Column="2" Content="{loc:Translate PayCard_Execute}" Command="{Binding SavePaymentCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#27AE60" Foreground="White" Padding="10" FontWeight="Bold"/>
         </Grid>
         
     </Grid>

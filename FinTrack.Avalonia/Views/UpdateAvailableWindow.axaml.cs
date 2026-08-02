@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FinTrack.Core.Services;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.Views;
 
@@ -20,10 +21,10 @@ public partial class UpdateAvailableWindow : Window
         _releaseInfo = releaseInfo;
         
         var currentText = this.FindControl<TextBlock>("CurrentVersionText");
-        if (currentText != null) currentText.Text = $"Mevcut Sürüm: v{currentVersion}";
+        if (currentText != null) currentText.Text = string.Format(LocalizationService.GetString("UpdateAvailable_Current"), "v" + currentVersion);
         
         var newText = this.FindControl<TextBlock>("NewVersionText");
-        if (newText != null) newText.Text = $"Yeni Sürüm: v{releaseInfo.Version}";
+        if (newText != null) newText.Text = string.Format(LocalizationService.GetString("UpdateAvailable_New"), "v" + releaseInfo.Version);
         
         var notesText = this.FindControl<TextBlock>("ReleaseNotesText");
         if (notesText != null) notesText.Text = releaseInfo.ReleaseNotes;

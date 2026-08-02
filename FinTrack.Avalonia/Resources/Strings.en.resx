@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+  <data name="Login_Title" xml:space="preserve"><value>Login to KT FinTrack</value></data>
+  <data name="Login_NewProfile" xml:space="preserve"><value>New Profile Setup</value></data>
+  <data name="Login_SelectProfile" xml:space="preserve"><value>Select Profile:</value></data>
+  <data name="Login_EnterPassword" xml:space="preserve"><value>Enter your password:</value></data>
+  <data name="Login_EnterPasswordAgain" xml:space="preserve"><value>Enter password again:</value></data>
+  <data name="Login_Button_Login" xml:space="preserve"><value>Login</value></data>
+  <data name="Login_Button_CompleteSetup" xml:space="preserve"><value>Complete Setup</value></data>
+  <data name="Login_Button_ForgotPassword" xml:space="preserve"><value>Forgot Password</value></data>
+  <data name="Login_Button_DeleteProfile" xml:space="preserve"><value>Delete Profile</value></data>
+  <data name="Login_PasswordReset" xml:space="preserve"><value>Password Reset</value></data>
+  <data name="Login_RecoveryCodePlaceholder" xml:space="preserve"><value>Your Recovery Code</value></data>
+  <data name="Login_NewPasswordPlaceholder" xml:space="preserve"><value>New Password</value></data>
+  <data name="Login_NewPasswordConfirmPlaceholder" xml:space="preserve"><value>New Password (Again)</value></data>
+  <data name="Login_Button_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Login_Button_Reset" xml:space="preserve"><value>Reset</value></data>
+  <data name="Login_DeleteProfilePermanent" xml:space="preserve"><value>Permanently Delete Profile</value></data>
+  <data name="Login_DeleteProfileWarning" xml:space="preserve"><value>This action cannot be undone! The current profile's database will be completely deleted. Please enter your password to continue.</value></data>
+  <data name="Login_DeleteProfileWarningShort" xml:space="preserve"><value>Are you sure you want to permanently remove the selected profile? (Database is preserved, only connection is removed)</value></data>
+  <data name="Login_RemoveProfileTitle" xml:space="preserve"><value>Remove Profile from List</value></data>
+  <data name="Login_Tooltip_AddProfile" xml:space="preserve"><value>Add New Profile</value></data>
+  <data name="Login_Tooltip_RemoveProfile" xml:space="preserve"><value>Remove Profile from List</value></data>
+
+  <data name="Login_Msg_ProfileRemoved" xml:space="preserve"><value>Connection '{0}' was removed from the list.</value></data>
+  <data name="Login_Msg_PasswordsDoNotMatch" xml:space="preserve"><value>Passwords do not match.</value></data>
+  <data name="Login_Msg_PasswordMinLength" xml:space="preserve"><value>Password must be at least 4 characters.</value></data>
+  <data name="Login_Msg_SetupCompleted" xml:space="preserve"><value>Setup completed. You can now login.</value></data>
+  <data name="Login_Msg_InvalidPassword" xml:space="preserve"><value>Invalid password or corrupted database.</value></data>
+  <data name="Login_Msg_RecoveryCodeInvalid" xml:space="preserve"><value>Invalid recovery code.</value></data>
+  <data name="Login_Msg_PasswordResetSuccess" xml:space="preserve"><value>Your password has been successfully reset.</value></data>
+  <data name="Login_Msg_PasswordResetFailed" xml:space="preserve"><value>Password reset failed.</value></data>
+  <data name="Login_Msg_IncorrectPassword" xml:space="preserve"><value>Incorrect password.</value></data>
+  <data name="Login_Msg_ProfileDeleted" xml:space="preserve"><value>Profile '{0}' permanently deleted.</value></data>
+  
+  <!-- Phase 1: Sidebar & TopBar -->
+  <data name="Main_Subtitle" xml:space="preserve"><value>Personal Finance Tracker</value></data>
+  <data name="Menu_Dashboard" xml:space="preserve"><value>🏠 Dashboard (Summary)</value></data>
+  <data name="Menu_Budget" xml:space="preserve"><value>📊 Budget</value></data>
+  <data name="Menu_Cards" xml:space="preserve"><value>💳 My Cards</value></data>
+  <data name="Menu_Accounts" xml:space="preserve"><value>🏦 My Accounts</value></data>
+  <data name="Menu_Investments" xml:space="preserve"><value>📈 Investments</value></data>
+  <data name="Menu_Bes" xml:space="preserve"><value>🧓 Private Pension</value></data>
+  <data name="Menu_Reports" xml:space="preserve"><value>📉 Reports</value></data>
+  <data name="Menu_Settings" xml:space="preserve"><value>⚙️ Settings</value></data>
+  <data name="Main_SearchPlaceholder" xml:space="preserve"><value>Search... (Ctrl+K)</value></data>
+  <data name="Main_AddTransaction" xml:space="preserve"><value>+ Add Transaction</value></data>
+  
+  <data name="Main_Title_Dashboard" xml:space="preserve"><value>Dashboard (Summary)</value></data>
+  <data name="Main_Title_Budget" xml:space="preserve"><value>Budget Management</value></data>
+  <data name="Main_Title_Cards" xml:space="preserve"><value>My Cards</value></data>
+  <data name="Main_Title_Accounts" xml:space="preserve"><value>My Accounts</value></data>
+  <data name="Main_Title_Investments" xml:space="preserve"><value>Investments</value></data>
+  <data name="Main_Title_Bes" xml:space="preserve"><value>Private Pension (BES)</value></data>
+  <data name="Main_Title_Reports" xml:space="preserve"><value>Reports and Analysis</value></data>
+  <data name="Main_Title_Settings" xml:space="preserve"><value>Settings</value></data>
+  <!-- Phase 3: Dashboard -->
+  <data name="Dashboard_TotalIncome" xml:space="preserve"><value>Total Income</value></data>
+  <data name="Dashboard_TotalExpense" xml:space="preserve"><value>Total Expense</value></data>
+  <data name="Dashboard_TotalWealth" xml:space="preserve"><value>Total Wealth (Cash + Bank)</value></data>
+  <data name="Dashboard_InvestmentPortfolio" xml:space="preserve"><value>Investment Portfolio</value></data>
+  <data name="Dashboard_IncomeThisMonth" xml:space="preserve"><value>🟢 INCOME (THIS MONTH)</value></data>
+  <data name="Dashboard_TransferOther" xml:space="preserve"><value>🔄 TRANSFER / OTHER</value></data>
+  <data name="Dashboard_ExpenseThisMonth" xml:space="preserve"><value>🔴 DEBT (THIS MONTH)</value></data>
+
+  <!-- Phase 4A: Accounts and Cards -->
+  <data name="Accounts_WalletCash" xml:space="preserve"><value>WALLET (CASH)</value></data>
+  <data name="Accounts_TotalCashBalance" xml:space="preserve"><value>Total Cash Balance</value></data>
+  <data name="Accounts_MyBankAccounts" xml:space="preserve"><value>MY BANK ACCOUNTS</value></data>
+  <data name="Accounts_ManageAccounts" xml:space="preserve"><value>Manage Accounts</value></data>
+  <data name="General_Transfer" xml:space="preserve"><value>Transfer</value></data>
+  <data name="General_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Cards_MyCreditCards" xml:space="preserve"><value>MY CREDIT CARDS</value></data>
+  <data name="Cards_ManageCards" xml:space="preserve"><value>Manage Cards</value></data>
+  <data name="Cards_TotalCreditLimit" xml:space="preserve"><value>Total Credit Limit</value></data>
+  <data name="Cards_TotalCurrentDebt" xml:space="preserve"><value>Total Current Debt</value></data>
+  <data name="Cards_CurrentDebt" xml:space="preserve"><value>Current Debt:</value></data>
+  <data name="Cards_RemainingLimit" xml:space="preserve"><value>Remaining Limit:</value></data>
+  <data name="Cards_PayDebt" xml:space="preserve"><value>Pay Debt</value></data>
+  <data name="ManageAccounts_MakeInactive" xml:space="preserve"><value>Deactivate</value></data>
+  <data name="ManageAccounts_MakeActive" xml:space="preserve"><value>Activate</value></data>
+  <data name="General_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="General_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="ManageAccounts_BankName" xml:space="preserve"><value>Bank Name:</value></data>
+  <data name="ManageAccounts_SelectBank" xml:space="preserve"><value>Select Bank...</value></data>
+  <data name="ManageAccounts_AccountName" xml:space="preserve"><value>Account Name:</value></data>
+  <data name="ManageAccounts_EgChecking" xml:space="preserve"><value>e.g., Checking Account</value></data>
+  <data name="ManageAccounts_IbanOptional" xml:space="preserve"><value>IBAN (Optional):</value></data>
+  <data name="ManageAccounts_InitialBalance" xml:space="preserve"><value>Initial Balance:</value></data>
+  <data name="ManageAccounts_Eg1000" xml:space="preserve"><value>e.g., 1000.00</value></data>
+  <data name="General_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="General_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="ManageAccounts_Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="ManageCards_CardNameLabel" xml:space="preserve"><value>Card Name (Label)</value></data>
+  <data name="ManageCards_EgMainVirtual" xml:space="preserve"><value>e.g., Main Card, Virtual Card</value></data>
+  <data name="ManageCards_Limit" xml:space="preserve"><value>Limit (₺)</value></data>
+  <data name="ManageCards_StatementDay" xml:space="preserve"><value>Statement Day</value></data>
+  <data name="ManageCards_PaymentDueDay" xml:space="preserve"><value>Payment Due Day</value></data>
+  <data name="ManageCards_LinkedCardOptional" xml:space="preserve"><value>Linked Card (Optional)</value></data>
+  <data name="ManageCards_ExistingCards" xml:space="preserve"><value>EXISTING CARDS</value></data>
+  <data name="ManageCards_StatusInactive" xml:space="preserve"><value>Status: Inactive</value></data>
+  <data name="ManageAccounts_AddTitle" xml:space="preserve"><value>Add New Bank Account</value></data>
+  <data name="ManageAccounts_AddButton" xml:space="preserve"><value>Add Account</value></data>
+  <data name="ManageAccounts_EditTitle" xml:space="preserve"><value>Edit Account</value></data>
+  <data name="ManageAccounts_UpdateButton" xml:space="preserve"><value>Update</value></data>
+  <data name="ManageAccounts_ErrNameReq" xml:space="preserve"><value>Bank Name and Account Name are required.</value></data>
+  <data name="ManageAccounts_ErrHasTx" xml:space="preserve"><value>This account cannot be deleted because it has transactions. You can make it inactive instead.</value></data>
+  <data name="ManageCards_NoLinkedCard" xml:space="preserve"><value>No Linked Card (Main Card)</value></data>
+  <data name="ManageCards_ErrNameReq" xml:space="preserve"><value>Bank Name and Card Name are required.</value></data>
+  <data name="ManageCards_ErrInvalidLimit" xml:space="preserve"><value>Please enter a valid limit.</value></data>
+  <data name="ManageCards_ErrStatementDay" xml:space="preserve"><value>Statement day must be between 1 and 31.</value></data>
+  <data name="ManageCards_ErrDueDay" xml:space="preserve"><value>Payment due day must be between 1 and 31.</value></data>
+  <data name="ManageCards_AddTitle" xml:space="preserve"><value>ADD NEW CARD</value></data>
+  <data name="ManageCards_AddButton" xml:space="preserve"><value>Add Card</value></data>
+  <data name="ManageCards_EditTitle" xml:space="preserve"><value>EDIT CARD</value></data>
+  <data name="ManageCards_ErrHasTx" xml:space="preserve"><value>This card cannot be deleted because it has transactions. You can make it inactive instead.</value></data>
+  <data name="ManageCards_ErrHasChild" xml:space="preserve"><value>This card cannot be deleted because it has linked supplementary/virtual cards. You must delete linked cards first.</value></data>
+  <data name="Cards_DaysLeftExcl" xml:space="preserve"><value>{0} Days Left!</value></data>
+  <data name="Cards_DaysLeft" xml:space="preserve"><value>{0} Days Left</value></data>
+  <data name="Cards_Days" xml:space="preserve"><value>{0} Days</value></data>
+  <data name="Cards_StatementDesc" xml:space="preserve"><value>{0} - {1} Statement</value></data>
+  <data name="Investments_TotalPortfolio" xml:space="preserve"><value>Total Portfolio</value></data>
+  <data name="Investments_TotalCost" xml:space="preserve"><value>Total Cost</value></data>
+  <data name="Investments_NetProfitLoss" xml:space="preserve"><value>Net Profit / Loss</value></data>
+  <data name="Investments_TopPerformer" xml:space="preserve"><value>Top Performer</value></data>
+  <data name="Investments_Category" xml:space="preserve"><value>Category:</value></data>
+  <data name="Investments_TaxReport" xml:space="preserve"><value>📊 Tax Report</value></data>
+  <data name="Investments_FetchPrices" xml:space="preserve"><value>🔄 Fetch Prices (API)</value></data>
+  <data name="Investments_Manage" xml:space="preserve"><value>➕ Buy/Sell Investment</value></data>
+  <data name="Investments_Amount" xml:space="preserve"><value>Amount</value></data>
+  <data name="Investments_CostAndPrice" xml:space="preserve"><value>Cost / Current Price</value></data>
+  <data name="Investments_TotalValueAndProfit" xml:space="preserve"><value>Total Value / Profit</value></data>
+  <data name="Investments_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Bes_CurrentContracts" xml:space="preserve"><value>Your Current BES Contracts</value></data>
+  <data name="Bes_Manage" xml:space="preserve"><value>➕ Add New / Make Payment</value></data>
+  <data name="Bes_UpdateContract" xml:space="preserve"><value>Update Contract</value></data>
+  <data name="Bes_History" xml:space="preserve"><value>Transaction History</value></data>
+  <data name="Bes_ContractNo" xml:space="preserve"><value>Contract No:</value></data>
+  <data name="Bes_StartDate" xml:space="preserve"><value>Start Date:</value></data>
+  <data name="Bes_RetirementDate" xml:space="preserve"><value>Retirement Date:</value></data>
+  <data name="Bes_TimeUntilRetirement" xml:space="preserve"><value>Time until Retirement:</value></data>
+  <data name="Bes_VestingRate" xml:space="preserve"><value>Vesting Rate:</value></data>
+  <data name="Bes_StateContribution" xml:space="preserve"><value>State Contribution:</value></data>
+  <data name="Bes_CostBasis" xml:space="preserve"><value>Principal Paid</value></data>
+  <data name="Bes_GoldBasis" xml:space="preserve"><value>Gold Eqv. (Principal)</value></data>
+  <data name="Bes_GoldCurrent" xml:space="preserve"><value>Current (Incl. Contrib)</value></data>
+  <data name="Bes_CurrentValue" xml:space="preserve"><value>Current Fund Value</value></data>
+  <data name="Bes_Profit" xml:space="preserve"><value>Fund Profit</value></data>
+  <data name="Bes_VestedContribution" xml:space="preserve"><value>Vested Contribution</value></data>
+  <data name="Bes_SystemDuration" xml:space="preserve"><value>Time in System</value></data>
+  <data name="Bes_MonthlyAvg" xml:space="preserve"><value>Avg Monthly Savings</value></data>
+  <data name="Bes_FundPrice" xml:space="preserve"><value>Fund Unit Price</value></data>
+  <data name="Bes_NotEntered" xml:space="preserve"><value>Not Entered</value></data>
+  <data name="ManageInvestments_Title" xml:space="preserve"><value>Manage Investments</value></data>
+  <data name="ManageInvestments_Header" xml:space="preserve"><value>Investment Portfolio Management</value></data>
+  <data name="ManageInvestments_Desc" xml:space="preserve"><value>List your current assets, make new buy/sell transactions.</value></data>
+  <data name="ManageInvestments_AddBtn" xml:space="preserve"><value>+ New Investment (Buy)</value></data>
+  <data name="ManageInvestments_History" xml:space="preserve"><value>📋 History</value></data>
+  <data name="ManageInvestments_Edit" xml:space="preserve"><value>✏️ Edit</value></data>
+  <data name="ManageInvestments_Sell" xml:space="preserve"><value>💸 Sell</value></data>
+  <data name="ManageInvestments_Delete" xml:space="preserve"><value>🗑️ Delete</value></data>
+  <data name="UpdateBes_Title" xml:space="preserve"><value>Update BES Values</value></data>
+  <data name="UpdateBes_ContractNoLabel" xml:space="preserve"><value>Contract No</value></data>
+  <data name="UpdateBes_BirthDate" xml:space="preserve"><value>Birth Date</value></data>
+  <data name="UpdateBes_BirthDateDesc" xml:space="preserve"><value>Retirement date is calculated based on your age.</value></data>
+  <data name="UpdateBes_RetirementAge" xml:space="preserve"><value>Retirement Age</value></data>
+  <data name="UpdateBes_StartDate" xml:space="preserve"><value>Start Date</value></data>
+  <data name="UpdateBes_RetirementDate" xml:space="preserve"><value>Retirement Date</value></data>
+  <data name="UpdateBes_CurrentValue" xml:space="preserve"><value>Current Fund Value</value></data>
+  <data name="UpdateBes_CurrentValueDesc" xml:space="preserve"><value>Leave empty for auto-calculation.</value></data>
+  <data name="UpdateBes_StateContribution" xml:space="preserve"><value>State Contribution</value></data>
+  <data name="UpdateBes_StateContributionDesc" xml:space="preserve"><value>Vesting rate is calculated automatically.</value></data>
+  <data name="Investments_Weight" xml:space="preserve"><value>Weight:</value></data>
+  <data name="Bes_NotSpecified" xml:space="preserve"><value>Not Specified</value></data>
+  <data name="Bes_DurationFormat" xml:space="preserve"><value>{0} Years {1} Months</value></data>
+  <data name="Bes_RetirementEarned" xml:space="preserve"><value>Retirement Earned!</value></data>
+  <data name="Bes_TimeLeftFormat" xml:space="preserve"><value>{0} years {1} months</value></data>
+  <data name="Budget_Title" xml:space="preserve"><value>📊 Budget Management</value></data>
+  <data name="Budget_UpdateData" xml:space="preserve"><value>🔄 Update Data</value></data>
+  <data name="Budget_SelectCategory" xml:space="preserve"><value>Select Category</value></data>
+  <data name="Budget_MonthlyLimit" xml:space="preserve"><value>Monthly Limit (₺)</value></data>
+  <data name="Budget_Apply" xml:space="preserve"><value>Apply</value></data>
+  <data name="Budget_Save" xml:space="preserve"><value>💾 Save</value></data>
+  <data name="Budget_Delete" xml:space="preserve"><value>🗑 Delete</value></data>
+  <data name="Budget_Cancel" xml:space="preserve"><value>✕ Cancel</value></data>
+  <data name="Budget_Loading" xml:space="preserve"><value>Loading...</value></data>
+  <data name="Budget_SuggestionFormat" xml:space="preserve"><value>💡 Suggestion (Last Year + Inflation): {0:C0}</value></data>
+  <data name="Budget_NoLimit" xml:space="preserve"><value>{0:C0} (no limit)</value></data>
+  <data name="Budget_NoData" xml:space="preserve"><value>💡 {0} {1}: No data</value></data>
+  <data name="Budget_LastYearFormat" xml:space="preserve"><value>💡 {0} {1}: {2:C0}</value></data>
+  <data name="Budget_NoInflationData" xml:space="preserve"><value>📈 Inflation data not available</value></data>
+  <data name="Budget_InflationAdj" xml:space="preserve"><value>{0:C0} (CPI %{1:F1})</value></data>
+  <data name="Budget_Saved" xml:space="preserve"><value>🟢 Savings!</value></data>
+  <data name="Budget_Increased" xml:space="preserve"><value>🔴 Increase</value></data>
+  
+  <data name="Reports_StartDate" xml:space="preserve"><value>Start Date:</value></data>
+  <data name="Reports_EndDate" xml:space="preserve"><value>End Date:</value></data>
+  <data name="Reports_Analyze" xml:space="preserve"><value>🔍 Analyze</value></data>
+  <data name="Reports_PeriodIncome" xml:space="preserve"><value>Period Income</value></data>
+  <data name="Reports_PeriodExpense" xml:space="preserve"><value>Period Expense</value></data>
+  <data name="Reports_NetSavings" xml:space="preserve"><value>Net Savings</value></data>
+  <data name="Reports_TabExpense" xml:space="preserve"><value>📊 Expense Breakdown</value></data>
+  <data name="Reports_TopExpenseCategories" xml:space="preserve"><value>Top Expense Categories</value></data>
+  <data name="Reports_AllExpenses" xml:space="preserve"><value>All Expenses Breakdown</value></data>
+  <data name="Reports_Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Reports_TxCount" xml:space="preserve"><value>Tx Count</value></data>
+  <data name="Reports_TotalAmount" xml:space="preserve"><value>Total Amount</value></data>
+  <data name="Reports_Share" xml:space="preserve"><value>Share</value></data>
+  <data name="Reports_TabIncome" xml:space="preserve"><value>💵 Income Breakdown</value></data>
+  <data name="Reports_TopIncomeCategories" xml:space="preserve"><value>Top Income Categories</value></data>
+  <data name="Reports_AllIncomes" xml:space="preserve"><value>All Incomes Breakdown</value></data>
+  <data name="Reports_TabTrends" xml:space="preserve"><value>📈 Trends (6 Mo)</value></data>
+  <data name="Reports_MonthlyComparison" xml:space="preserve"><value>Monthly Income vs Expense</value></data>
+  <data name="Reports_TabInvestments" xml:space="preserve"><value>💎 Investment Breakdown</value></data>
+  <data name="Reports_PortfolioAllocation" xml:space="preserve"><value>Portfolio Allocation (Asset Type)</value></data>
+  <data name="Reports_TotalPortfolioValue" xml:space="preserve"><value>TOTAL PORTFOLIO VALUE</value></data>
+  <data name="Reports_TotalProfitLoss" xml:space="preserve"><value>TOTAL PROFIT / LOSS</value></data>
+  <data name="Reports_Analyzing" xml:space="preserve"><value>Analyzing...</value></data>
+  
+  <data name="Tax_Title" xml:space="preserve"><value>📊 Investment Tax Report</value></data>
+  <data name="Tax_Year" xml:space="preserve"><value>Year:</value></data>
+  <data name="Tax_TotalGain" xml:space="preserve"><value>Total Gain</value></data>
+  <data name="Tax_EstimatedTax" xml:space="preserve"><value>Estimated Tax</value></data>
+  <data name="Tax_DividendIncome" xml:space="preserve"><value>Dividend Income (Gross)</value></data>
+  <data name="Tax_NetReturn" xml:space="preserve"><value>Net Return (After Tax)</value></data>
+  <data name="Tax_TxDetails" xml:space="preserve"><value>📋 Transaction Details</value></data>
+  <data name="Tax_Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Tax_Asset" xml:space="preserve"><value>Asset</value></data>
+  <data name="Tax_Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Tax_Amount" xml:space="preserve"><value>Amount</value></data>
+  <data name="Tax_BuyCost" xml:space="preserve"><value>Buy Cost</value></data>
+  <data name="Tax_SellRevenue" xml:space="preserve"><value>Sell Revenue</value></data>
+  <data name="Tax_Gain" xml:space="preserve"><value>Gain</value></data>
+  <data name="Tax_TaxRate" xml:space="preserve"><value>Tax Rate</value></data>
+  <data name="Tax_Warning" xml:space="preserve"><value>This report is for informational purposes only, not formal tax advice.</value></data>
+  <data name="Tax_Sell" xml:space="preserve"><value>🔴 Sell</value></data>
+  <data name="Tax_Dividend" xml:space="preserve"><value>💰 Dividend</value></data>
+  <data name="Tax_TxCountFormat" xml:space="preserve"><value>({0} txs)</value></data>
+  
+  <data name="Global_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="Global_Date" xml:space="preserve"><value>Date:</value></data>
+  <data name="Global_Amount" xml:space="preserve"><value>Amount:</value></data>
+  <data name="Global_Category" xml:space="preserve"><value>Category:</value></data>
+  <data name="Global_Description" xml:space="preserve"><value>Description:</value></data>
+  <data name="Global_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Global_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Global_Update" xml:space="preserve"><value>Update</value></data>
+  <data name="Global_WalletCash" xml:space="preserve"><value>Wallet (Cash)</value></data>
+  <data name="Global_ErrInvalidAmount" xml:space="preserve"><value>Please enter a valid amount.</value></data>
+  <data name="Global_Close" xml:space="preserve"><value>Close</value></data>
+
+  <data name="AddTransaction_Title" xml:space="preserve"><value>Add New Transaction</value></data>
+  <data name="AddTransaction_PaymentMethod" xml:space="preserve"><value>Payment Method:</value></data>
+  <data name="AddTransaction_InstallmentCheck" xml:space="preserve"><value>Installment</value></data>
+  <data name="AddTransaction_InstallmentLabel" xml:space="preserve"><value>Installment:</value></data>
+  <data name="AddTransaction_Cash" xml:space="preserve"><value>💵 Cash</value></data>
+  <data name="AddTransaction_ErrCategory" xml:space="preserve"><value>Please select a category.</value></data>
+  <data name="AddTransaction_InstallmentFormat" xml:space="preserve"><value>{0} (Inst. {1}/{2})</value></data>
+  <data name="AddTransaction_ErrSave" xml:space="preserve"><value>Error saving transaction: {0}</value></data>
+
+  <data name="EditTransaction_Title" xml:space="preserve"><value>Edit Transaction</value></data>
+  <data name="EditTransaction_ErrNotFound" xml:space="preserve"><value>Transaction not found.</value></data>
+  <data name="EditTransaction_ErrUpdate" xml:space="preserve"><value>Error updating transaction: {0}</value></data>
+
+  <data name="Transfer_Title" xml:space="preserve"><value>Money Transfer</value></data>
+  <data name="Transfer_From" xml:space="preserve"><value>From:</value></data>
+  <data name="Transfer_To" xml:space="preserve"><value>To:</value></data>
+  <data name="Transfer_Execute" xml:space="preserve"><value>Transfer</value></data>
+  <data name="Transfer_ErrAccounts" xml:space="preserve"><value>Please select source and destination accounts.</value></data>
+  <data name="Transfer_ErrSameAccount" xml:space="preserve"><value>Source and destination cannot be the same.</value></data>
+  <data name="Transfer_DefaultDesc" xml:space="preserve"><value>Money Transfer</value></data>
+
+  <data name="PayCard_Subtitle" xml:space="preserve"><value>Pay your credit card debt</value></data>
+  <data name="PayCard_SourceAccount" xml:space="preserve"><value>Source Account</value></data>
+  <data name="PayCard_AmountToPay" xml:space="preserve"><value>Amount to Pay</value></data>
+  <data name="PayCard_PaymentDate" xml:space="preserve"><value>Payment Date</value></data>
+  <data name="PayCard_DescOpt" xml:space="preserve"><value>Description (Optional)</value></data>
+  <data name="PayCard_Execute" xml:space="preserve"><value>Save Payment</value></data>
+  <data name="PayCard_TitleFormat" xml:space="preserve"><value>{0} - {1} Payment</value></data>
+  <data name="PayCard_ErrSource" xml:space="preserve"><value>Please select the source account.</value></data>
+  <data name="PayCard_DefaultDesc" xml:space="preserve"><value>Credit Card Payment</value></data>
+  <data name="Global_OK" xml:space="preserve"><value>OK</value></data>
+  <data name="Global_Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Global_Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Global_Info" xml:space="preserve"><value>Info</value></data>
+  <data name="Global_Yes" xml:space="preserve"><value>Yes</value></data>
+  <data name="Global_No" xml:space="preserve"><value>No</value></data>
+  <data name="Global_GiveUp" xml:space="preserve"><value>Cancel</value></data>
+
+  <data name="AddInvestment_Title" xml:space="preserve"><value>Add New Investment</value></data>
+  <data name="AddInvestment_Symbol" xml:space="preserve"><value>Symbol (e.g., GLD, USD, AAPL)</value></data>
+  <data name="AddInvestment_Name" xml:space="preserve"><value>Asset Name</value></data>
+  <data name="AddInvestment_Category" xml:space="preserve"><value>Category</value></data>
+  <data name="AddInvestment_Amount" xml:space="preserve"><value>Amount</value></data>
+  <data name="AddInvestment_UnitPrice" xml:space="preserve"><value>Unit Price</value></data>
+  <data name="AddInvestment_Fee" xml:space="preserve"><value>Brokerage Fee / Commission</value></data>
+  <data name="AddInvestment_TotalCost" xml:space="preserve"><value>Total Cost:</value></data>
+  <data name="AddInvestment_PaymentMethod" xml:space="preserve"><value>Payment Account (Optional)</value></data>
+  <data name="AddInvestment_PaymentHint" xml:space="preserve"><value>The balance of the selected account will be automatically reduced.</value></data>
+  <data name="AddInvestment_Execute" xml:space="preserve"><value>Add</value></data>
+
+  <data name="EditInvestment_Title" xml:space="preserve"><value>Edit Asset Details</value></data>
+  <data name="EditInvestment_Symbol" xml:space="preserve"><value>Symbol</value></data>
+  <data name="EditInvestment_Name" xml:space="preserve"><value>Asset Name</value></data>
+  <data name="EditInvestment_Category" xml:space="preserve"><value>Category</value></data>
+
+  <data name="SellInvestment_Title" xml:space="preserve"><value>Sell Investment</value></data>
+  <data name="SellInvestment_SellAll" xml:space="preserve"><value>Sell All</value></data>
+  <data name="SellInvestment_SellAmount" xml:space="preserve"><value>Amount to Sell</value></data>
+  <data name="SellInvestment_UnitPrice" xml:space="preserve"><value>Unit Price</value></data>
+  <data name="SellInvestment_Fee" xml:space="preserve"><value>Brokerage Fee / Commission</value></data>
+  <data name="SellInvestment_Account" xml:space="preserve"><value>Destination Account (Optional)</value></data>
+  <data name="SellInvestment_AccountHint" xml:space="preserve"><value>The balance of the selected account will be automatically increased.</value></data>
+  <data name="SellInvestment_EstRevenue" xml:space="preserve"><value>Est. Revenue:</value></data>
+  <data name="SellInvestment_ProfitLoss" xml:space="preserve"><value>Profit / Loss:</value></data>
+  <data name="SellInvestment_Execute" xml:space="preserve"><value>Complete Sale</value></data>
+
+  <data name="AddInvestment_ErrEmpty" xml:space="preserve"><value>Symbol and Name are required.</value></data>
+  <data name="AddInvestment_ErrInvalid" xml:space="preserve"><value>Please enter valid values.</value></data>
+  <data name="AddInvestment_DescFormat" xml:space="preserve"><value>Asset purchase: {0} {1} @ {2:C2} (Fee: {3:C2})</value></data>
+  <data name="AddInvestment_GoldFormat" xml:space="preserve"><value> (Eq. {0} Grams of Gold)</value></data>
+  
+  <data name="SellInvestment_Loading" xml:space="preserve"><value>Loading...</value></data>
+  <data name="SellInvestment_Available" xml:space="preserve"><value>Available Amount: {0:N4}</value></data>
+  <data name="SellInvestment_AvgCost" xml:space="preserve"><value>Avg. Cost: {0:N2}</value></data>
+  <data name="SellInvestment_AssetInfo" xml:space="preserve"><value>Asset: {0} ({1})</value></data>
+  <data name="SellInvestment_ErrNotFound" xml:space="preserve"><value>Asset not found.</value></data>
+  <data name="SellInvestment_ErrInvalid" xml:space="preserve"><value>Please enter a valid amount (up to what you own) and price.</value></data>
+  <data name="SellInvestment_DescFormat" xml:space="preserve"><value>Sale: {0} {1} @ {2:C2} (Fee: {3:C2}, P/L: {4:C2})</value></data>
+  <data name="SellInvestment_OptCash" xml:space="preserve"><value>💵 Cash (Optional)</value></data>
+
+  <data name="Category_Gold" xml:space="preserve"><value>Gold</value></data>
+  <data name="Category_ForeignCurrency" xml:space="preserve"><value>Foreign Currency</value></data>
+  <data name="Category_Stock" xml:space="preserve"><value>Stock</value></data>
+  <data name="Category_Crypto" xml:space="preserve"><value>Crypto</value></data>
+  <data name="Category_Fund" xml:space="preserve"><value>Fund</value></data>
+  <data name="Category_BES" xml:space="preserve"><value>BES</value></data>
+
+  <data name="ConfirmDialog_Msg" xml:space="preserve"><value>Do you confirm this action?</value></data>
+  <data name="ErrorDialog_Msg" xml:space="preserve"><value>An error occurred.</value></data>
+  <!-- Account & Card Details -->
+  <data name="AccountDetail_CurrentBalance" xml:space="preserve"><value>Current Balance</value></data>
+  <data name="AccountDetail_DeleteConfirm" xml:space="preserve"><value>Are you sure you want to permanently delete this transaction?</value></data>
+  <data name="AccountDetail_TransferDeleteConfirm" xml:space="preserve"><value>This is a transfer/payment transaction. If you delete it, the linked transaction in the opposite account will also be deleted automatically.
+
+Are you sure?</value></data>
+  <data name="AccountDetail_InstallmentDeleteConfirm" xml:space="preserve"><value>This transaction belongs to an installment group. If you delete it, all installments in this group will be deleted.
+
+Are you sure?</value></data>
+
+  <data name="CardDetail_Limit" xml:space="preserve"><value>Limit</value></data>
+  <data name="CardDetail_CurrentDebt" xml:space="preserve"><value>Current Debt</value></data>
+  <data name="CardDetail_RemainingLimit" xml:space="preserve"><value>Remaining Limit</value></data>
+  <data name="CardDetail_DeleteConfirm" xml:space="preserve"><value>Are you sure you want to permanently delete this transaction?</value></data>
+  <data name="CardDetail_TransferDeleteConfirm" xml:space="preserve"><value>This is a transfer/payment/installment transaction. If you delete it, all linked transactions will be automatically deleted.
+
+Are you sure?</value></data>
+  <data name="CardDetail_InstallmentDeleteConfirm" xml:space="preserve"><value>This transaction belongs to an installment group. If you delete it, all installments in this group will be deleted.
+
+Are you sure?</value></data>
+
+  <!-- Category Details -->
+  <data name="CategoryDetail_Title" xml:space="preserve"><value>Category Transaction Details</value></data>
+  <data name="CategoryDetail_SelectedFormat" xml:space="preserve"><value>Selected Category: {0}</value></data>
+  <data name="CategoryEdit_Title" xml:space="preserve"><value>Edit Category</value></data>
+  <data name="CategoryEdit_Name" xml:space="preserve"><value>Category Name</value></data>
+  <data name="CategoryEdit_Parent" xml:space="preserve"><value>Parent Category</value></data>
+
+  <!-- Import Preview -->
+  <data name="ImportPreview_Title" xml:space="preserve"><value>Statement Import Preview</value></data>
+  <data name="ImportPreview_Desc" xml:space="preserve"><value>The expenses analyzed by AI are listed below. Select the transactions you want to save and confirm.</value></data>
+  <data name="ImportPreview_Matched" xml:space="preserve"><value>Matched Record</value></data>
+  <data name="ImportPreview_DupeWarning" xml:space="preserve"><value>Transactions that are thought to be duplicates have been automatically unselected.</value></data>
+  <data name="ImportPreview_SelectedTotal" xml:space="preserve"><value>Selected Total: </value></data>
+  <data name="ImportPreview_ImportSelected" xml:space="preserve"><value>Import Selected</value></data>
+
+  <data name="ImportPreview_DupeReason" xml:space="preserve"><value>This transaction may already exist in the database.</value></data>
+  <data name="ImportPreview_DupeDetails" xml:space="preserve"><value>Matching record in database:
+Date: {0:dd.MM.yyyy}
+Description: {1}
+Amount: {2:C2}</value></data>
+
+  <!-- Investment Detail -->
+  <data name="InvestmentDetail_TotalAmount" xml:space="preserve"><value>Total Amount</value></data>
+  <data name="InvestmentDetail_AvgCost" xml:space="preserve"><value>Avg. Cost</value></data>
+  <data name="InvestmentDetail_CurrentPrice" xml:space="preserve"><value>Current Price</value></data>
+  <data name="InvestmentDetail_PriceChart" xml:space="preserve"><value>Price Chart</value></data>
+  <data name="InvestmentDetail_All" xml:space="preserve"><value>All</value></data>
+  <data name="InvestmentDetail_History" xml:space="preserve"><value>Transaction History</value></data>
+  <data name="InvestmentDetail_TotalBuy" xml:space="preserve"><value>Total Buy</value></data>
+  <data name="InvestmentDetail_TotalSell" xml:space="preserve"><value>Total Sell</value></data>
+  <data name="InvestmentDetail_TotalFee" xml:space="preserve"><value>Total Fee</value></data>
+  <data name="InvestmentDetail_NetProfit" xml:space="preserve"><value>Net Profit/Loss</value></data>
+  <data name="InvestmentDetail_Loading" xml:space="preserve"><value>Loading...</value></data>
+
+  <!-- Update Available -->
+  <data name="UpdateAvailable_Title" xml:space="preserve"><value>A New Version is Available!</value></data>
+  <data name="UpdateAvailable_Current" xml:space="preserve"><value>Current Version: {0}</value></data>
+  <data name="UpdateAvailable_New" xml:space="preserve"><value>New Version: {0}</value></data>
+  <data name="UpdateAvailable_Later" xml:space="preserve"><value>Later</value></data>
+  <data name="UpdateAvailable_OpenBrowser" xml:space="preserve"><value>Open in Browser</value></data>
+  <data name="Global_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Global_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="AccountDetail_WalletTitle" xml:space="preserve"><value>Wallet (Cash)</value></data>
+  <data name="CategoryDetail_Selected" xml:space="preserve"><value>Selected Category:</value></data>
+  <data name="CategoryEdit_ErrEmptyName" xml:space="preserve"><value>Please enter a category name.</value></data>
+  <data name="CategoryEdit_NoParent" xml:space="preserve"><value>-- None (Main Category) --</value></data>
+  <data name="Global_Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Global_Info" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="Settings_LanguageChangedRestart" xml:space="preserve">
+    <value>Language changed. Changes will take full effect after you restart the application.</value>
+  </data>
+  <data name="Settings_TabSecurity" xml:space="preserve"><value>🔒 Security</value></data>
+  <data name="Settings_TabCategories" xml:space="preserve"><value>🏷️ Categories</value></data>
+  <data name="Settings_TabAppearance" xml:space="preserve"><value>🎨 Appearance &amp; Language</value></data>
+  <data name="Settings_TabBackup" xml:space="preserve"><value>☁️ Backup</value></data>
+  <data name="Settings_TabApiTax" xml:space="preserve"><value>🌍 API and Tax</value></data>
+  <data name="Settings_TabGuide" xml:space="preserve"><value>📖 Guide</value></data>
+  <data name="Settings_TabAbout" xml:space="preserve"><value>ℹ️ About</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>⚙️ Settings</value></data>
+  <data name="Settings_Appearance" xml:space="preserve"><value>Application Theme and Language</value></data>
+  <data name="Settings_AppearanceDesc" xml:space="preserve"><value>You can change the appearance and language of the FinTrack interface here.</value></data>
+  <data name="Settings_ThemeSelect" xml:space="preserve"><value>Theme Selection</value></data>
+  <data name="Settings_ThemeSystemInfo" xml:space="preserve"><value>The System option automatically follows your device's default theme (Light/Dark).</value></data>
+  <data name="Settings_LanguageSelect" xml:space="preserve"><value>Language Selection</value></data>
+  <data name="Settings_SecurityTitle" xml:space="preserve"><value>Change Login Password</value></data>
+  <data name="Settings_SecurityDesc" xml:space="preserve"><value>You can update the main password used for application login and encrypting your data here.</value></data>
+  <data name="Settings_SecurityCurrentPwd" xml:space="preserve"><value>Current Password</value></data>
+  <data name="Settings_SecurityNewPwd" xml:space="preserve"><value>New Password</value></data>
+  <data name="Settings_SecurityNewPwdConfirm" xml:space="preserve"><value>New Password (Confirm)</value></data>
+  <data name="Settings_SecurityUpdateBtn" xml:space="preserve"><value>Update Password Now</value></data>
+  <data name="Settings_AutoLockTitle" xml:space="preserve"><value>Auto-Lock</value></data>
+  <data name="Settings_AutoLockDesc" xml:space="preserve"><value>Protect your data from prying eyes by putting a password shield on the screen during inactivity.</value></data>
+  <data name="Settings_AutoLockEnable" xml:space="preserve"><value>Lock the application during inactivity</value></data>
+  <data name="Settings_AutoLockTime" xml:space="preserve"><value>Lock Timeout (Minutes):</value></data>
+  <data name="Settings_AutoLockSaveBtn" xml:space="preserve"><value>⏱️ Save Lock Settings</value></data>
+  <data name="Settings_AboutAppName" xml:space="preserve"><value>FinTrack</value></data>
+  <data name="Settings_AboutVersion" xml:space="preserve"><value>Version 2.0.0-alpha (Avalonia)</value></data>
+  <data name="Settings_AboutDescTitle" xml:space="preserve"><value>Description</value></data>
+  <data name="Settings_AboutDescText" xml:space="preserve"><value>FinTrack is a fully encrypted and local data protected finance management tool designed to track your personal expenses and budget in detail.</value></data>
+  <data name="Settings_AboutSecTitle" xml:space="preserve"><value>Security and Privacy</value></data>
+  <data name="Settings_AboutSecSqlTitle" xml:space="preserve"><value>🔒 SQLCipher Full Encryption:</value></data>
+  <data name="Settings_AboutSecSqlText" xml:space="preserve"><value>The database file is fully encrypted with AES-256. The file cannot be opened with any tool without your password.</value></data>
+  <data name="Settings_AboutSecZeroTitle" xml:space="preserve"><value>🛡️ Zero-Knowledge Architecture:</value></data>
+  <data name="Settings_AboutSecZeroText" xml:space="preserve"><value>Your encryption keys are stored only on your device. Nobody, including FinTrack, can access your data.</value></data>
+  <data name="Settings_AboutSecLocalTitle" xml:space="preserve"><value>💻 Offline-First and Full Local Control:</value></data>
+  <data name="Settings_AboutSecLocalText" xml:space="preserve"><value>All data is kept on your device. Even cloud backups are encrypted before being sent.</value></data>
+  <data name="Settings_AboutAuthorTitle" xml:space="preserve"><value>Developer and License</value></data>
+  <data name="Settings_AboutAuthorText" xml:space="preserve"><value>Developer: Kadir A.</value></data>
+  <data name="Settings_AboutLicenseText" xml:space="preserve"><value>License: MIT License</value></data>
+  <data name="Settings_AboutGithubText" xml:space="preserve"><value>GitHub Repository:</value></data>
+  <data name="Settings_AboutContactText" xml:space="preserve"><value>Contact &amp; Support:</value></data>
+  <data name="AddProfile_Title" xml:space="preserve"><value>Create New Profile</value></data>
+  <data name="AddProfile_ProfileName" xml:space="preserve"><value>Profile Name</value></data>
+  <data name="AddProfile_ProfileNamePlaceholder" xml:space="preserve"><value>Ex: Home, Company, Crypto</value></data>
+  <data name="AddProfile_LinkExisting" xml:space="preserve"><value>Link Existing Profile (.db)</value></data>
+  <data name="AddProfile_ErrorEmpty" xml:space="preserve"><value>Profile name cannot be empty.</value></data>
+  <data name="AddProfile_ErrorExists" xml:space="preserve"><value>A profile named '{0}' already exists. Please choose a different profile name.</value></data>
+  <data name="Global_AppTitle" xml:space="preserve"><value>KT FinTrack - Personal Finance Tracker</value></data>
+</root>

@@ -1,52 +1,53 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window Width="800" Height="600" xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         x:Class="FinTrack.Avalonia.Views.ManageInvestmentsWindow"
         x:DataType="vm:ManageInvestmentsViewModel"
-        Title="Yatırımları Yönet" Height="500" Width="900"
-        WindowStartupLocation="CenterOwner" Background="#F4F6F9">
+        Title="{loc:Translate ManageInvestments_Title}"
+        WindowStartupLocation="CenterOwner" Background="{DynamicResource CardSecondaryBackgroundBrush}">
 
-    <Grid Margin="20" RowDefinitions="Auto,*,Auto">
-        <Grid Grid.Row="0" Margin="0,0,0,20">
+    <Grid Margin="10" RowDefinitions="Auto,*,Auto">
+        <Grid Grid.Row="0" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel>
-                <TextBlock Text="Yatırım Portföyü Yönetimi" FontSize="20" FontWeight="Bold" Foreground="#2C3E50"/>
-                <TextBlock Text="Mevcut varlıklarınızı listeleyebilir, yeni alım satım işlemi yapabilirsiniz." FontSize="12" Foreground="#7F8C8D" Margin="0,5,0,0"/>
+                <TextBlock Text="{loc:Translate ManageInvestments_Header}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                <TextBlock Text="{loc:Translate ManageInvestments_Desc}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,5,0,0"/>
             </StackPanel>
 
-            <Button Grid.Column="1" Content="+ Yeni Yatırım (Satın Al)" Padding="15,8" Command="{Binding AddInvestmentCommand}"
+            <Button Grid.Column="1" Content="{loc:Translate ManageInvestments_AddBtn}" Padding="10,5" Command="{Binding AddInvestmentCommand}"
                     Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" CornerRadius="5"/>
         </Grid>
 
         <!-- Investments Grid -->
         <DataGrid Grid.Row="1" ItemsSource="{Binding Assets}" AutoGenerateColumns="False" IsReadOnly="True"
                   GridLinesVisibility="Horizontal"
-                  HeadersVisibility="Column" Background="White" RowBackground="White"
-                  Margin="0,0,0,20" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1">
+                  HeadersVisibility="Column" Background="{DynamicResource CardBackgroundBrush}" RowBackground="{DynamicResource CardBackgroundBrush}"
+                  Margin="0,0,0,10" CornerRadius="8" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Sembol" Binding="{Binding Symbol}" Width="80" FontWeight="Bold"/>
-                <DataGridTextColumn Header="Varlık Adı" Binding="{Binding Name}" Width="150"/>
-                <DataGridTextColumn Header="Kategori" Binding="{Binding Category}" Width="100"/>
-                <DataGridTextColumn Header="Miktar" Binding="{Binding TotalAmount, StringFormat=N2}" Width="90"/>
-                <DataGridTextColumn Header="Ortalama Maliyet" Binding="{Binding AverageCost, StringFormat='₺{0:N2}'}" Width="120"/>
+                <DataGridTextColumn Header="Sembol" Binding="{Binding Symbol}" FontWeight="Bold"/>
+                <DataGridTextColumn Header="Varlık Adı" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Kategori" Binding="{Binding Category}"/>
+                <DataGridTextColumn Header="Miktar" Binding="{Binding TotalAmount, StringFormat=N2}"/>
+                <DataGridTextColumn Header="Ortalama Maliyet" Binding="{Binding AverageCost, StringFormat='₺{0:N2}'}"/>
 
                 <DataGridTemplateColumn Header="İşlemler" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                <Button Content="📋 Geçmiş" Command="{Binding $parent[Window].((vm:ManageInvestmentsViewModel)DataContext).ViewHistoryCommand}" CommandParameter="{Binding Id}"
+                                <Button Content="{loc:Translate ManageInvestments_History}" Command="{Binding $parent[Window].((vm:ManageInvestmentsViewModel)DataContext).ViewHistoryCommand}" CommandParameter="{Binding Id}"
                                         Padding="8,4" Margin="0,0,5,0" Background="#3498DB" Foreground="White" FontWeight="SemiBold" CornerRadius="4" FontSize="11"/>
                                 
-                                <Button Content="✏️ Düzenle" Command="{Binding $parent[Window].((vm:ManageInvestmentsViewModel)DataContext).EditInvestmentCommand}" CommandParameter="{Binding Id}"
+                                <Button Content="{loc:Translate ManageInvestments_Edit}" Command="{Binding $parent[Window].((vm:ManageInvestmentsViewModel)DataContext).EditInvestmentCommand}" CommandParameter="{Binding Id}"
                                         Padding="8,4" Margin="0,0,5,0" Background="#8E44AD" Foreground="White" FontWeight="SemiBold" CornerRadius="4" FontSize="11"/>
                                 
-                                <Button Content="💸 Sat" Command="{Binding $parent[Window].((vm:ManageInvestmentsViewModel)DataContext).SellInvestmentCommand}" CommandParameter="{Binding Id}"
+                                <Button Content="{loc:Translate ManageInvestments_Sell}" Command="{Binding $parent[Window].((vm:ManageInvestmentsViewModel)DataContext).SellInvestmentCommand}" CommandParameter="{Binding Id}"
                                         Padding="8,4" Margin="0,0,5,0" Background="#F39C12" Foreground="White" FontWeight="Bold" CornerRadius="4" FontSize="11"/>
                                 
-                                <Button Content="🗑️ Sil" Command="{Binding $parent[Window].((vm:ManageInvestmentsViewModel)DataContext).DeleteInvestmentCommand}" CommandParameter="{Binding Id}"
+                                <Button Content="{loc:Translate ManageInvestments_Delete}" Command="{Binding $parent[Window].((vm:ManageInvestmentsViewModel)DataContext).DeleteInvestmentCommand}" CommandParameter="{Binding Id}"
                                         Padding="8,4" Background="#E74C3C" Foreground="White" FontWeight="Bold" CornerRadius="4" FontSize="11"/>
                             </StackPanel>
                         </DataTemplate>
@@ -56,7 +57,7 @@
         </DataGrid>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Kapat" Width="100" Padding="10" Command="{Binding CloseCommand}" Background="#BDC3C7" Foreground="White" FontWeight="Bold" BorderThickness="0" CornerRadius="4" HorizontalContentAlignment="Center"/>
+            <Button Content="{loc:Translate Global_Close}" Padding="10" Command="{Binding CloseCommand}" Background="#BDC3C7" Foreground="White" FontWeight="Bold" BorderThickness="0" CornerRadius="4" HorizontalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

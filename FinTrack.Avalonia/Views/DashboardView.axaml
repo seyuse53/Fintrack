@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:FinTrack.Avalonia.ViewModels"
              xmlns:models="using:FinTrack.Core.Models"
+             xmlns:loc="using:FinTrack.Avalonia.Localization"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="FinTrack.Avalonia.Views.DashboardView"
              x:DataType="vm:DashboardViewModel">
@@ -15,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <!-- Summary Cards Row -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
+        <Grid Grid.Row="0" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="15"/>
@@ -27,33 +28,33 @@
             </Grid.ColumnDefinitions>
 
             <!-- Total Income Card -->
-            <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+            <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10">
                 <StackPanel>
-                    <TextBlock Text="Toplam Gelir" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{loc:Translate Dashboard_TotalIncome}" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding TotalIncome, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" Foreground="#27AE60"/>
                 </StackPanel>
             </Border>
 
             <!-- Total Expense Card -->
-            <Border Grid.Column="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+            <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10">
                 <StackPanel>
-                    <TextBlock Text="Toplam Gider" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{loc:Translate Dashboard_TotalExpense}" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding TotalExpense, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" Foreground="#E74C3C"/>
                 </StackPanel>
             </Border>
 
             <!-- Remaining Balance Card -->
-            <Border Grid.Column="4" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+            <Border Grid.Column="4" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10">
                 <StackPanel>
-                    <TextBlock Text="Toplam Varlık (Nakit + Banka)" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{loc:Translate Dashboard_TotalWealth}" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding CurrentBalanceDisplay}" FontSize="24" FontWeight="Bold" Foreground="#2980B9"/>
                 </StackPanel>
             </Border>
 
             <!-- Investment Portfolio Card -->
-            <Border Grid.Column="6" Background="#FAF6FB" CornerRadius="12" BorderBrush="#E8DAEF" BorderThickness="1" Padding="20">
+            <Border Grid.Column="6" Background="{DynamicResource CardSecondaryBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10">
                 <StackPanel>
-                    <TextBlock Text="Yatırım Portföyü" FontSize="14" Foreground="#8E44AD" Margin="0,0,0,5"/>
+                    <TextBlock Text="{loc:Translate Dashboard_InvestmentPortfolio}" FontSize="14" Foreground="#8E44AD" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding InvestmentPortfolioValue, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" Foreground="#8E44AD"/>
                 </StackPanel>
             </Border>
@@ -70,15 +71,15 @@
             </Grid.ColumnDefinitions>
 
             <!-- INCOME SECTION -->
-            <Border Grid.Column="0" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="12">
+            <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="8" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="12">
                 <Grid RowDefinitions="Auto,10,*">
-                    <TextBlock Grid.Row="0" Text="🟢 ALACAK (BU AY)" FontSize="15" FontWeight="Bold" Foreground="#27AE60"/>
+                    <TextBlock Grid.Row="0" Text="{loc:Translate Dashboard_IncomeThisMonth}" FontSize="15" FontWeight="Bold" Foreground="#27AE60"/>
                     <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                         <ItemsControl ItemsSource="{Binding IncomeList}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="models:Transaction">
                                     <Grid ColumnDefinitions="55,*,90" Margin="0,4">
-                                        <TextBlock Grid.Column="0" Text="{Binding Date, StringFormat='dd.MM'}" FontSize="13" Foreground="#555" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="0" Text="{Binding Date, StringFormat='dd.MM'}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="1" Text="{Binding Description}" FontSize="13" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="5,0"/>
                                         <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='{}{0:N2}'}" FontSize="13" FontWeight="SemiBold" Foreground="#27AE60" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                     </Grid>
@@ -90,17 +91,17 @@
             </Border>
 
             <!-- TRANSFER SECTION -->
-            <Border Grid.Column="2" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="12">
+            <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="8" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="12">
                 <Grid RowDefinitions="Auto,10,*">
-                    <TextBlock Grid.Row="0" Text="🔄 TRANSFER / DİĞER" FontSize="15" FontWeight="Bold" Foreground="#7F8C8D"/>
+                    <TextBlock Grid.Row="0" Text="{loc:Translate Dashboard_TransferOther}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource SecondaryTextBrush}"/>
                     <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                         <ItemsControl ItemsSource="{Binding TransferList}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="models:Transaction">
                                     <Grid ColumnDefinitions="55,*,90" Margin="0,4">
-                                        <TextBlock Grid.Column="0" Text="{Binding Date, StringFormat='dd.MM'}" FontSize="13" Foreground="#555" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="0" Text="{Binding Date, StringFormat='dd.MM'}" FontSize="13" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="1" Text="{Binding Description}" FontSize="13" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="5,0"/>
-                                        <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='{}{0:N2}'}" FontSize="13" FontWeight="SemiBold" Foreground="#7F8C8D" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='{}{0:N2}'}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -110,15 +111,15 @@
             </Border>
 
             <!-- EXPENSE SECTION -->
-            <Border Grid.Column="4" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="12">
+            <Border Grid.Column="4" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="8" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="12">
                 <Grid RowDefinitions="Auto,10,*">
-                    <TextBlock Grid.Row="0" Text="🔴 BORÇ (BU AY)" FontSize="15" FontWeight="Bold" Foreground="#E74C3C"/>
+                    <TextBlock Grid.Row="0" Text="{loc:Translate Dashboard_ExpenseThisMonth}" FontSize="15" FontWeight="Bold" Foreground="#E74C3C"/>
                     <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                         <ItemsControl ItemsSource="{Binding ExpenseList}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="models:Transaction">
                                     <Grid ColumnDefinitions="55,*,90" Margin="0,4">
-                                        <TextBlock Grid.Column="0" Text="{Binding Date, StringFormat='dd.MM'}" FontSize="13" Foreground="#555" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="0" Text="{Binding Date, StringFormat='dd.MM'}" FontSize="13" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="1" Text="{Binding Description}" FontSize="13" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="5,0"/>
                                         <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='{}{0:N2}'}" FontSize="13" FontWeight="SemiBold" Foreground="#E74C3C" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                                     </Grid>

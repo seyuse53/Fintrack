@@ -1,55 +1,56 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window Width="800" Height="600" xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:FinTrack.Avalonia.ViewModels"
         xmlns:local="using:FinTrack.Avalonia.Views"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         x:Class="FinTrack.Avalonia.Views.ManageAccountsWindow"
         x:DataType="vm:ManageAccountsViewModel"
-        Title="Hesapları Yönet" Height="600" Width="600"
-        WindowStartupLocation="CenterOwner" CanResize="False" Background="#F4F6F9">
+        Title="{loc:Translate Accounts_ManageAccounts}" MinWidth="500" MinHeight="500"
+        WindowStartupLocation="CenterOwner" CanResize="True" Background="{DynamicResource CardSecondaryBackgroundBrush}">
     
     <Window.Resources>
         <local:IbanConverter x:Key="IbanConverter" />
     </Window.Resources>
 
-    <Grid Margin="20" RowDefinitions="Auto,*,Auto,Auto">
+    <Grid Margin="10" RowDefinitions="Auto,*,Auto,Auto">
         
-        <TextBlock Grid.Row="0" Text="Hesapları Yönet" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Foreground="#2C3E50"/>
+        <TextBlock Grid.Row="0" Text="{loc:Translate Accounts_ManageAccounts}" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource PrimaryTextBrush}"/>
         
         <!-- Error Message -->
         <TextBlock Grid.Row="0" Text="{Binding ErrorMessage}" Foreground="Red" IsVisible="{Binding HasError}" TextWrapping="Wrap" Margin="0,35,0,10"/>
 
         <!-- Accounts List -->
-        <ScrollViewer Grid.Row="1" Margin="0,0,0,20">
+        <ScrollViewer Grid.Row="1" Margin="0,0,0,10">
             <ItemsControl ItemsSource="{Binding Accounts}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Margin="0,0,0,10">
+                        <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="8" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="15" Margin="0,0,0,10">
                             <Grid ColumnDefinitions="*,Auto,Auto,Auto">
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding BankName}" FontSize="15" FontWeight="Bold" Foreground="#2C3E50"/>
-                                    <TextBlock Text="{Binding AccountName}" FontSize="13" Foreground="#7F8C8D" Margin="0,4,0,2"/>
+                                    <TextBlock Text="{Binding BankName}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                    <TextBlock Text="{Binding AccountName}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,4,0,2"/>
                                     <TextBlock Text="{Binding IBAN, Converter={StaticResource IbanConverter}}" FontSize="12" Foreground="#BDC3C7" FontFamily="Consolas"/>
-                                    <TextBlock Text="Pasif" Foreground="#C62828" FontSize="12" FontWeight="Bold" IsVisible="{Binding !IsActive}" Margin="0,4,0,0"/>
+                                    <TextBlock Text="{loc:Translate ManageAccounts_Inactive}" Foreground="#C62828" FontSize="12" FontWeight="Bold" IsVisible="{Binding !IsActive}" Margin="0,4,0,0"/>
                                 </StackPanel>
                                 
-                                <Button Grid.Column="1" Content="Pasif Yap" 
+                                <Button Grid.Column="1" Content="{loc:Translate ManageAccounts_MakeInactive}" 
                                         Command="{Binding $parent[Window].((vm:ManageAccountsViewModel)DataContext).ToggleActiveStatusCommand}" 
                                         CommandParameter="{Binding}"
                                         IsVisible="{Binding IsActive}"
                                         Background="Transparent" Foreground="#F39C12" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                         
-                                <Button Grid.Column="1" Content="Aktif Yap" 
+                                <Button Grid.Column="1" Content="{loc:Translate ManageAccounts_MakeActive}" 
                                         Command="{Binding $parent[Window].((vm:ManageAccountsViewModel)DataContext).ToggleActiveStatusCommand}" 
                                         CommandParameter="{Binding}"
                                         IsVisible="{Binding !IsActive}"
                                         Background="Transparent" Foreground="#27AE60" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                         
-                                <Button Grid.Column="2" Content="Düzenle" 
+                                <Button Grid.Column="2" Content="{loc:Translate General_Edit}" 
                                         Command="{Binding $parent[Window].((vm:ManageAccountsViewModel)DataContext).EditAccountCommand}" 
                                         CommandParameter="{Binding}"
                                         Background="Transparent" Foreground="#3498DB" Margin="0,0,10,0" VerticalAlignment="Center"/>
 
-                                <Button Grid.Column="3" Content="Sil" 
+                                <Button Grid.Column="3" Content="{loc:Translate General_Delete}" 
                                         Command="{Binding $parent[Window].((vm:ManageAccountsViewModel)DataContext).DeleteAccountCommand}" 
                                         CommandParameter="{Binding}"
                                         Background="#E74C3C" Foreground="White" CornerRadius="4" Padding="10,5" VerticalAlignment="Center"/>
@@ -61,28 +62,28 @@
         </ScrollViewer>
 
         <!-- Add New Account Form -->
-        <Border Grid.Row="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20" Margin="0,0,0,20">
+        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,0,10">
             <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="120,*">
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding FormTitle}" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,15"/>
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding FormTitle}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,15"/>
                 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Banka Adı:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,10"/>
-                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AvailableBanks}" SelectedItem="{Binding NewBankName}" HorizontalAlignment="Stretch" PlaceholderText="Banka Seçiniz..." Margin="0,0,0,10"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{loc:Translate ManageAccounts_BankName}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,10"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AvailableBanks}" SelectedItem="{Binding NewBankName}" HorizontalAlignment="Stretch" PlaceholderText="{loc:Translate ManageAccounts_SelectBank}" Margin="0,0,0,10"/>
                 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Hesap Adı:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,10"/>
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NewAccountName}" PlaceholderText="Örn: Vadesiz TL" Margin="0,0,0,10"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="{loc:Translate ManageAccounts_AccountName}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,10"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NewAccountName}" PlaceholderText="{loc:Translate ManageAccounts_EgChecking}" Margin="0,0,0,10"/>
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="IBAN (Opsiyonel):" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,10"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="{loc:Translate ManageAccounts_IbanOptional}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,10"/>
                 <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding NewIBAN, Converter={StaticResource IbanConverter}}" PlaceholderText="TR..." Margin="0,0,0,10"/>
 
-                <TextBlock Grid.Row="4" Grid.Column="0" Text="Açılış Bakiyesi:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,10"/>
-                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding NewInitialBalance}" PlaceholderText="Örn: 1000.00" Margin="0,0,0,10"/>
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="{loc:Translate ManageAccounts_InitialBalance}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,10"/>
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding NewInitialBalance}" PlaceholderText="{loc:Translate ManageAccounts_Eg1000}" Margin="0,0,0,10"/>
             </Grid>
         </Border>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="İptal" Width="90" Margin="0,0,10,0" Padding="10" Command="{Binding CancelEditCommand}" IsVisible="{Binding IsEditing}" Background="Transparent" Foreground="#E74C3C" FontWeight="SemiBold" BorderThickness="0" HorizontalContentAlignment="Center"/>
-            <Button Content="Kapat" Width="90" Margin="0,0,10,0" Padding="10" Command="{Binding CloseCommand}" Background="#ECF0F1" BorderThickness="0" HorizontalContentAlignment="Center"/>
-            <Button Content="{Binding SubmitButtonText}" Width="120" Padding="10" Command="{Binding AddAccountCommand}" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" HorizontalContentAlignment="Center"/>
+            <Button Content="{loc:Translate General_Cancel}" Margin="0,0,10,0" Padding="10" Command="{Binding CancelEditCommand}" IsVisible="{Binding IsEditing}" Background="Transparent" Foreground="#E74C3C" FontWeight="SemiBold" BorderThickness="0" HorizontalContentAlignment="Center"/>
+            <Button Content="{loc:Translate General_Close}" Margin="0,0,10,0" Padding="10" Command="{Binding CloseCommand}" Background="{DynamicResource CardSecondaryBackgroundBrush}" BorderThickness="0" HorizontalContentAlignment="Center"/>
+            <Button Content="{Binding SubmitButtonText}" Padding="10" Command="{Binding AddAccountCommand}" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" HorizontalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using FinTrack.Core.Models;
 using FinTrack.Data;
 using System.Linq;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -15,7 +16,7 @@ public partial class InvestmentDetailViewModel : ViewModelBase
     private readonly global::Avalonia.Controls.Window _ownerWindow;
     private readonly int _assetId;
 
-    [ObservableProperty] private string _assetNameText = "Yükleniyor...";
+    [ObservableProperty] private string _assetNameText = LocalizationService.GetString("InvestmentDetail_Loading");
     [ObservableProperty] private string _assetSymbolText = "(-) ";
     [ObservableProperty] private string _assetCategoryText = "";
     [ObservableProperty] private string _totalAmountText = "0";
@@ -47,7 +48,7 @@ public partial class InvestmentDetailViewModel : ViewModelBase
 
         AssetNameText = asset.Name;
         AssetSymbolText = $"({asset.Symbol})";
-        AssetCategoryText = asset.Category ?? "Diğer";
+        AssetCategoryText = asset.Category ?? LocalizationService.GetString("Global_Other");
         TotalAmountText = asset.TotalAmount.ToString("N4");
         decimal currentPrice = FinTrack.Core.Services.PricingService.GetCurrentPrice(asset.Symbol, asset.AverageCost);
 

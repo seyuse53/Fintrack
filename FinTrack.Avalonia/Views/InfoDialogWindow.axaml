@@ -1,28 +1,29 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         x:Class="FinTrack.Avalonia.Views.InfoDialogWindow"
-        Title="Bilgi" Width="400" SizeToContent="Height"
+        Title="{loc:Translate Global_Info}" SizeToContent="WidthAndHeight" MaxWidth="500"
         WindowStartupLocation="CenterOwner" CanResize="False"
         Background="Transparent"
         TransparencyLevelHint="Transparent"
-        SystemDecorations="None"
+        WindowDecorations="None"
         ExtendClientAreaToDecorationsHint="True">
-    <Border Margin="15" Background="{DynamicResource SystemRegionBrush}" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1"
+    <Border Margin="15" Background="{DynamicResource SystemRegionBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1"
             BoxShadow="0 4 15 0 #20000000">
-        <StackPanel Margin="20">
+        <StackPanel Margin="10">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                <Viewbox Width="28" Height="28">
+                <Viewbox>
                     <!-- Information Icon (Blue) -->
                     <Path Data="M11,9H13V11H11V9M11,13H13V17H11V13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" Fill="#3498DB"/>
                 </Viewbox>
-                <TextBlock x:Name="TitleText" Text="Bilgi" FontSize="17" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                <TextBlock x:Name="TitleText" Text="{loc:Translate Global_Info}" FontSize="17" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,0,0"/>
             </StackPanel>
 
             <TextBlock x:Name="MessageText" Text="Bilgi Mesajı" 
                        FontSize="14" TextWrapping="Wrap" Margin="0,0,0,25" LineHeight="20"/>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="OkButton" Content="Tamam" Width="100" Height="32" 
+                <Button x:Name="OkButton" Content="{loc:Translate Global_OK}" 
                         Click="Ok_Click" Background="#3498DB" Foreground="White" FontWeight="SemiBold" BorderThickness="0" CornerRadius="6"
                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             </StackPanel>

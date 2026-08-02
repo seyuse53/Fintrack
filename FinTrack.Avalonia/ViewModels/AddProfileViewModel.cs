@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrack.Core.Services;
 using System;
 using System.Linq;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -17,12 +18,14 @@ public partial class AddProfileViewModel : ViewModelBase
     [ObservableProperty]
     private bool _hasError;
 
+    public event EventHandler? OnComplete;
+
     [RelayCommand]
     private void Save()
     {
         if (string.IsNullOrWhiteSpace(ProfileName))
         {
-            ErrorMessage = "Profil adı boş olamaz.";
+            ErrorMessage = LocalizationService.GetString("AddProfile_ErrorEmpty");
             HasError = true;
             return;
         }
@@ -30,7 +33,7 @@ public partial class AddProfileViewModel : ViewModelBase
         var existingProfiles = FinTrack.Core.Services.SettingsManager.GetProfiles();
         if (existingProfiles.Contains(ProfileName, System.StringComparer.OrdinalIgnoreCase))
         {
-            ErrorMessage = $"'{ProfileName}' isminde bir profil zaten mevcut. Lütfen farklı bir profil ismi belirleyin.";
+            ErrorMessage = string.Format(LocalizationService.GetString("AddProfile_ErrorExists"), ProfileName);
             HasError = true;
             return;
         }
@@ -39,7 +42,37 @@ public partial class AddProfileViewModel : ViewModelBase
         // a file picker can be added later if needed.
         SettingsManager.CreateProfile(ProfileName, null);
         
-        // TODO: Navigate back to LoginView or Signal completion
         HasError = false;
+        OnComplete?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void LinkExistingProfile(string dbPath)
+    {
+        string fileName = System.IO.Path.GetFileNameWithoutExtension(dbPath);
+        string newProfileName = fileName.StartsWith("fintrack_") ? fileName.Substring(9) : fileName;
+        
+        if (string.IsNullOrWhiteSpace(ProfileName))
+        {
+            ProfileName = newProfileName;
+        }
+
+        var existingProfiles = SettingsManager.GetProfiles();
+        if (existingProfiles.Contains(ProfileName, StringComparer.OrdinalIgnoreCase))
+        {
+            ErrorMessage = string.Format(LocalizationService.GetString("AddProfile_ErrorExists"), ProfileName);
+            HasError = true;
+            return;
+        }
+
+        SettingsManager.CreateProfile(ProfileName, dbPath);
+        
+        HasError = false;
+        OnComplete?.Invoke(this, EventArgs.Empty);
+    }
+
+    [RelayCommand]
+    private void Cancel()
+    {
+        OnComplete?.Invoke(this, EventArgs.Empty);
     }
 }

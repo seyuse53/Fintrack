@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrack.Core.Models;
 using FinTrack.Data;
 using FinTrack.Data.Services;
+using FinTrack.Avalonia.Localization;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinTrack.Avalonia.ViewModels
@@ -17,6 +18,7 @@ namespace FinTrack.Avalonia.ViewModels
         private readonly AppDbContext _db;
         private readonly BudgetService _budgetService;
         private readonly InflationService _inflationService;
+        private bool _isDisposed;
 
         private int _year;
         private int _month;
@@ -28,7 +30,7 @@ namespace FinTrack.Avalonia.ViewModels
         private string _monthYearText = "";
 
         [ObservableProperty]
-        private string _cpiInfoText = "Yükleniyor...";
+        private string _cpiInfoText = LocalizationService.GetString("Budget_Loading");
 
         [ObservableProperty]
         private bool _isCpiLoading;
@@ -69,10 +71,28 @@ namespace FinTrack.Avalonia.ViewModels
             _month = DateTime.Now.Month;
         }
 
+        public override void Dispose()
+        {
+            _isDisposed = true;
+            base.Dispose();
+            _db?.Dispose();
+        }
+
+        private bool _isInitializing;
         public async Task InitializeAsync()
         {
-            await LoadCategoriesAsync();
-            await RefreshAllAsync();
+            if (_isInitializing || _isDisposed) return;
+            _isInitializing = true;
+            try
+            {
+                await LoadCategoriesAsync();
+                if (_isDisposed) return;
+                await RefreshAllAsync();
+            }
+            finally
+            {
+                _isInitializing = false;
+            }
         }
 
         private async Task LoadCategoriesAsync()
@@ -87,12 +107,15 @@ namespace FinTrack.Avalonia.ViewModels
 
         private async Task RefreshAllAsync()
         {
+            if (_isDisposed) return;
             MonthYearText = $"{MonthNames[_month - 1]} {_year}";
 
             CpiInfoText = "📈 TÜİK TÜFE yükleniyor...";
             IsCpiLoading = true;
 
             var cpiResult = await _inflationService.GetCpiRateWithPeriodAsync(_year, _month);
+            if (_isDisposed) return;
+
             _currentCpi = cpiResult?.Rate;
             _cpiActualYear = cpiResult?.ActualYear ?? _year;
             _cpiActualMonth = cpiResult?.ActualMonth ?? _month;
@@ -139,6 +162,7 @@ namespace FinTrack.Avalonia.ViewModels
         [RelayCommand]
         private async Task PrevMonthAsync()
         {
+            if (_isDisposed) return;
             _month--;
             if (_month < 1) { _month = 12; _year--; }
             await RefreshAllAsync();
@@ -147,6 +171,7 @@ namespace FinTrack.Avalonia.ViewModels
         [RelayCommand]
         private async Task NextMonthAsync()
         {
+            if (_isDisposed) return;
             _month++;
             if (_month > 12) { _month = 1; _year++; }
             await RefreshAllAsync();
@@ -155,11 +180,15 @@ namespace FinTrack.Avalonia.ViewModels
         [RelayCommand]
         private async Task RefreshCpiAsync()
         {
+            if (_isDisposed) return;
             IsCpiLoading = true;
             CpiInfoText = "🔄 TÜİK'ten veri çekiliyor...";
 
             double? newRate = await _inflationService.RefreshFromTuikAsync(_year, _month);
+            if (_isDisposed) return;
+            
             _currentCpi = newRate ?? await _inflationService.GetCpiRateAsync(_year, _month);
+            if (_isDisposed) return;
 
             UpdateCpiBar();
             RefreshBudgetCards();
@@ -222,7 +251,7 @@ namespace FinTrack.Avalonia.ViewModels
                         ? lastYear * (1 + (decimal)(_currentCpi.Value / 100.0)) 
                         : lastYear;
                     
-                    SuggestedLimitText = $"💡 Öneri (Geçen Yıl + Enflasyon): ₺{suggested:N0}";
+                    SuggestedLimitText = string.Format(LocalizationService.GetString("Budget_SuggestionFormat"), suggested);
                     _suggestedAmount = suggested;
                     HasSuggestion = true;
                 }
@@ -269,8 +298,8 @@ namespace FinTrack.Avalonia.ViewModels
         };
 
         public string SpendingVsLimit => _s.Budget.MonthlyLimit > 0
-            ? $"₺{_s.Spending:N0} / ₺{_s.Budget.MonthlyLimit:N0}"
-            : $"₺{_s.Spending:N0} (limit yok)";
+            ? string.Format(LocalizationService.GetString("Budget_NoLimit").Replace(" (limit yok)", ""), _s.Spending) + " / " + _s.Budget.MonthlyLimit.ToString("C0")
+            : string.Format(LocalizationService.GetString("Budget_NoLimit"), _s.Spending);
 
         public double ProgressPercent => Math.Min(_s.ProgressRatio * 100, 100);
 
@@ -288,8 +317,8 @@ namespace FinTrack.Avalonia.ViewModels
             get
             {
                 if (_s.LastYearSpending == 0)
-                    return $"📅 {MonthNamesShort[_month - 1]} {_year - 1}: Veri yok";
-                return $"📅 {MonthNamesShort[_month - 1]} {_year - 1}: ₺{_s.LastYearSpending:N0}";
+                    return string.Format(LocalizationService.GetString("Budget_NoData"), MonthNamesShort[_month - 1], _year - 1);
+                return string.Format(LocalizationService.GetString("Budget_LastYearFormat"), MonthNamesShort[_month - 1], _year - 1, _s.LastYearSpending);
             }
         }
 
@@ -298,16 +327,16 @@ namespace FinTrack.Avalonia.ViewModels
             get
             {
                 if (_s.LastYearSpending == 0) return string.Empty;
-                if (!_s.CpiRate.HasValue)
-                    return "📈 Enflasyon verisi mevcut değil";
+                if (_s.CpiRate is null)
+                    return LocalizationService.GetString("Budget_NoInflationData");
 
-                string adj = $"₺{_s.InflationAdjustedLastYear:N0} (TÜFE %{_s.CpiRate.Value:F1})";
-                if (!_s.RealDifferencePercent.HasValue) return $"📈 {adj}";
+                string adj = string.Format(LocalizationService.GetString("Budget_InflationAdj"), _s.InflationAdjustedLastYear, _s.CpiRate.Value);
+                if (!_s.RealDifferencePercent.HasValue) return "💡 " + adj;
 
-                double diff = _s.RealDifferencePercent.Value;
-                string sign = diff >= 0 ? "+" : "";
-                string verdict = diff <= 0 ? "✅ Tasarruf!" : "⚠️ Artış";
-                return $"📈 {adj} → {sign}{diff:F1}% {verdict}";
+                decimal diff = (decimal)_s.RealDifferencePercent.Value;
+                string sign = diff > 0 ? "+" : "";
+                string verdict = diff <= 0 ? LocalizationService.GetString("Budget_Saved") : LocalizationService.GetString("Budget_Increased");
+                return $"💡 {adj}   {sign}{diff:F1}% {verdict}";
             }
         }
 

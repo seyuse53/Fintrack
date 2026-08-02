@@ -1,44 +1,45 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             xmlns:loc="using:FinTrack.Avalonia.Localization"
              x:Class="FinTrack.Avalonia.Views.ReportsView"
              x:DataType="vm:ReportsViewModel">
              
-    <Grid Margin="30" RowDefinitions="Auto,Auto,*">
+    <Grid Margin="10" RowDefinitions="Auto,Auto,*">
 
         <!-- Filtre Çubuğu -->
-        <Border Grid.Row="0" Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Margin="0,0,0,20">
+        <Border Grid.Row="0" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="8" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="15" Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Başlangıç Tarihi:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,10,0"/>
-                <CalendarDatePicker SelectedDate="{Binding StartDate}" Width="150" Margin="0,0,20,0"/>
+                <TextBlock Text="{loc:Translate Reports_StartDate}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,10,0"/>
+                <CalendarDatePicker SelectedDate="{Binding StartDate}" Width="150" Margin="0,0,10,0"/>
                 
-                <TextBlock Text="Bitiş Tarihi:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,10,0"/>
-                <CalendarDatePicker SelectedDate="{Binding EndDate}" Width="150" Margin="0,0,20,0"/>
+                <TextBlock Text="{loc:Translate Reports_EndDate}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,10,0"/>
+                <CalendarDatePicker SelectedDate="{Binding EndDate}" Width="150" Margin="0,0,10,0"/>
 
-                <Button Content="🔍 Analiz Et" Command="{Binding FetchDataCommand}" 
+                <Button Content="{loc:Translate Reports_Analyze}" Command="{Binding FetchDataCommand}" 
                         Padding="20,8" Background="#3498DB" Foreground="White" FontWeight="Bold" BorderThickness="0" CornerRadius="18" Cursor="Hand"/>
             </StackPanel>
         </Border>
 
         <!-- Özet Kartları -->
-        <Grid Grid.Row="1" Margin="0,0,0,20" ColumnDefinitions="*,20,*,20,*">
-            <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+        <Grid Grid.Row="1" Margin="0,0,0,10" ColumnDefinitions="*,20,*,20,*">
+            <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="15">
                 <StackPanel>
-                    <TextBlock Text="Dönem Geliri" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{loc:Translate Reports_PeriodIncome}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding TotalIncomeText}" FontSize="20" FontWeight="Bold" Foreground="#27AE60"/>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+            <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="15">
                 <StackPanel>
-                    <TextBlock Text="Dönem Gideri" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{loc:Translate Reports_PeriodExpense}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding TotalExpenseText}" FontSize="20" FontWeight="Bold" Foreground="#E74C3C"/>
                 </StackPanel>
             </Border>
 
-            <Border Grid.Column="4" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+            <Border Grid.Column="4" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="15">
                 <StackPanel>
-                    <TextBlock Text="Net Tasarruf" FontSize="13" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                    <TextBlock Text="{loc:Translate Reports_NetSavings}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding NetBalanceText}" FontSize="20" FontWeight="Bold" Foreground="#2980B9"/>
                 </StackPanel>
             </Border>
@@ -47,22 +48,22 @@
         <!-- İçerik Sekmeleri -->
         <TabControl Grid.Row="2" Background="Transparent" BorderThickness="0">
             <!-- 1. HARCAMA ANALİZİ -->
-            <TabItem Header="📊 Harcama Dağılımı">
+            <TabItem Header="{loc:Translate Reports_TabExpense}">
                 <Grid Margin="0,15,0,0" ColumnDefinitions="400,20,*">
                     <!-- Bar Chart Area -->
-                    <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                    <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10">
                         <StackPanel>
-                            <TextBlock Text="En Çok Harcanan Kategoriler" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+                            <TextBlock Text="{loc:Translate Reports_TopExpenseCategories}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,10"/>
                             <ItemsControl ItemsSource="{Binding TopCategories}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Margin="0,0,0,15">
                                             <Grid>
-                                                <TextBlock Text="{Binding CategoryName}" FontWeight="SemiBold" HorizontalAlignment="Left" Foreground="#34495E"/>
-                                                <TextBlock Text="{Binding FormattedAmount}" FontWeight="Bold" HorizontalAlignment="Right" Foreground="#2C3E50"/>
+                                                <TextBlock Text="{Binding CategoryName}" FontWeight="SemiBold" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                <TextBlock Text="{Binding FormattedAmount}" FontWeight="Bold" HorizontalAlignment="Right" Foreground="{DynamicResource PrimaryTextBrush}"/>
                                             </Grid>
-                                            <ProgressBar Value="{Binding Percentage}" Minimum="0" Maximum="100" Height="12" Margin="0,5,0,2" Foreground="{Binding ColorHex}" Background="#ECF0F1" CornerRadius="6"/>
-                                            <TextBlock Text="{Binding Percentage, StringFormat='{}{0:F1}%'}" FontSize="11" Foreground="#95A5A6" HorizontalAlignment="Right"/>
+                                            <ProgressBar Value="{Binding Percentage}" Minimum="0" Maximum="100" Height="12" Margin="0,5,0,2" Foreground="{Binding ColorHex}" Background="{DynamicResource CardSecondaryBackgroundBrush}" CornerRadius="6"/>
+                                            <TextBlock Text="{Binding Percentage, StringFormat='{}{0:F1}%'}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Right"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -71,16 +72,16 @@
                     </Border>
 
                     <!-- Full Breakdown Grid -->
-                    <Border Grid.Column="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+                    <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="15">
                         <Grid RowDefinitions="Auto,10,*">
-                            <TextBlock Grid.Row="0" Text="Tüm Giderlerin Dökümü" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                            <TextBlock Grid.Row="0" Text="{loc:Translate Reports_AllExpenses}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
                             <DataGrid Grid.Row="2" ItemsSource="{Binding FullBreakdown}" AutoGenerateColumns="False" IsReadOnly="True" 
                                       GridLinesVisibility="None" HeadersVisibility="Column" Background="Transparent" RowBackground="Transparent" BorderThickness="0">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Kategori" Binding="{Binding CategoryName}" Width="*"/>
-                                    <DataGridTextColumn Header="İşlem Sayısı" Binding="{Binding Count}" Width="100"/>
-                                    <DataGridTextColumn Header="Toplam Tutar" Binding="{Binding FormattedAmount}" Width="150" FontWeight="Bold"/>
-                                    <DataGridTextColumn Header="Pay" Binding="{Binding Percentage, StringFormat='{}{0:F1}%'}" Width="80"/>
+                                    <DataGridTextColumn Header="{loc:Translate Reports_Category}" Binding="{Binding CategoryName}" Width="*"/>
+                                    <DataGridTextColumn Header="{loc:Translate Reports_TxCount}" Binding="{Binding Count}" Width="100"/>
+                                    <DataGridTextColumn Header="{loc:Translate Reports_TotalAmount}" Binding="{Binding FormattedAmount}" Width="150" FontWeight="Bold"/>
+                                    <DataGridTextColumn Header="{loc:Translate Reports_Share}" Binding="{Binding Percentage, StringFormat='{}{0:F1}%'}" Width="80"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
@@ -89,22 +90,22 @@
             </TabItem>
 
             <!-- 2. GELİR ANALİZİ -->
-            <TabItem Header="💵 Gelir Dağılımı">
+            <TabItem Header="{loc:Translate Reports_TabIncome}">
                 <Grid Margin="0,15,0,0" ColumnDefinitions="400,20,*">
                     <!-- Bar Chart Area -->
-                    <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                    <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10">
                         <StackPanel>
-                            <TextBlock Text="En Çok Gelir Getiren Kategoriler" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+                            <TextBlock Text="{loc:Translate Reports_TopIncomeCategories}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,10"/>
                             <ItemsControl ItemsSource="{Binding TopIncomeCategories}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Margin="0,0,0,15">
                                             <Grid>
-                                                <TextBlock Text="{Binding CategoryName}" FontWeight="SemiBold" HorizontalAlignment="Left" Foreground="#34495E"/>
-                                                <TextBlock Text="{Binding FormattedAmount}" FontWeight="Bold" HorizontalAlignment="Right" Foreground="#2C3E50"/>
+                                                <TextBlock Text="{Binding CategoryName}" FontWeight="SemiBold" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                <TextBlock Text="{Binding FormattedAmount}" FontWeight="Bold" HorizontalAlignment="Right" Foreground="{DynamicResource PrimaryTextBrush}"/>
                                             </Grid>
-                                            <ProgressBar Value="{Binding Percentage}" Minimum="0" Maximum="100" Height="12" Margin="0,5,0,2" Foreground="{Binding ColorHex}" Background="#ECF0F1" CornerRadius="6"/>
-                                            <TextBlock Text="{Binding Percentage, StringFormat='{}{0:F1}%'}" FontSize="11" Foreground="#95A5A6" HorizontalAlignment="Right"/>
+                                            <ProgressBar Value="{Binding Percentage}" Minimum="0" Maximum="100" Height="12" Margin="0,5,0,2" Foreground="{Binding ColorHex}" Background="{DynamicResource CardSecondaryBackgroundBrush}" CornerRadius="6"/>
+                                            <TextBlock Text="{Binding Percentage, StringFormat='{}{0:F1}%'}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Right"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -113,16 +114,16 @@
                     </Border>
 
                     <!-- Full Breakdown Grid -->
-                    <Border Grid.Column="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15">
+                    <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="15">
                         <Grid RowDefinitions="Auto,10,*">
-                            <TextBlock Grid.Row="0" Text="Tüm Gelirlerin Dökümü" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                            <TextBlock Grid.Row="0" Text="{loc:Translate Reports_AllIncomes}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
                             <DataGrid Grid.Row="2" ItemsSource="{Binding FullIncomeBreakdown}" AutoGenerateColumns="False" IsReadOnly="True" 
                                       GridLinesVisibility="None" HeadersVisibility="Column" Background="Transparent" RowBackground="Transparent" BorderThickness="0">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Kategori" Binding="{Binding CategoryName}" Width="*"/>
-                                    <DataGridTextColumn Header="İşlem Sayısı" Binding="{Binding Count}" Width="100"/>
-                                    <DataGridTextColumn Header="Toplam Tutar" Binding="{Binding FormattedAmount}" Width="150" FontWeight="Bold"/>
-                                    <DataGridTextColumn Header="Pay" Binding="{Binding Percentage, StringFormat='{}{0:F1}%'}" Width="80"/>
+                                    <DataGridTextColumn Header="{loc:Translate Reports_Category}" Binding="{Binding CategoryName}" Width="*"/>
+                                    <DataGridTextColumn Header="{loc:Translate Reports_TxCount}" Binding="{Binding Count}" Width="100"/>
+                                    <DataGridTextColumn Header="{loc:Translate Reports_TotalAmount}" Binding="{Binding FormattedAmount}" Width="150" FontWeight="Bold"/>
+                                    <DataGridTextColumn Header="{loc:Translate Reports_Share}" Binding="{Binding Percentage, StringFormat='{}{0:F1}%'}" Width="80"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </Grid>
@@ -131,10 +132,10 @@
             </TabItem>
 
             <!-- 3. TREND ANALİZİ -->
-            <TabItem Header="📈 Trendler (6 Ay)">
-                <Border Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="30" Margin="0,15,0,0">
+            <TabItem Header="{loc:Translate Reports_TabTrends}">
+                <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10" Margin="0,15,0,0">
                     <Grid RowDefinitions="Auto,*">
-                        <TextBlock Grid.Row="0" Text="Aylık Gelir vs Gider Karşılaştırması" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,30"/>
+                        <TextBlock Grid.Row="0" Text="{loc:Translate Reports_MonthlyComparison}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,30"/>
                         
                         <!-- Simple Manual Charting with ItemsControl -->
                         <ItemsControl Grid.Row="1" ItemsSource="{Binding MonthlyTrends}" HorizontalAlignment="Center">
@@ -155,7 +156,7 @@
                                             <Border Width="25" Background="#E74C3C" VerticalAlignment="Bottom" CornerRadius="4,4,0,0"
                                                     Height="{Binding ExpenseHeight}" ToolTip.Tip="{Binding ExpenseAmount, StringFormat='Gider: ₺{0:N2}'}"/>
                                         </StackPanel>
-                                        <TextBlock Text="{Binding MonthLabel}" HorizontalAlignment="Center" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,10,0,0"/>
+                                        <TextBlock Text="{Binding MonthLabel}" HorizontalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,10,0,0"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -165,22 +166,22 @@
             </TabItem>
 
             <!-- 3. YATIRIM ANALİZİ -->
-            <TabItem Header="💎 Yatırım Dağılımı">
+            <TabItem Header="{loc:Translate Reports_TabInvestments}">
                 <Grid Margin="0,15,0,0" ColumnDefinitions="*,20,*">
 
-                    <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+                    <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10">
                         <StackPanel>
-                            <TextBlock Text="Portföy Dağılımı (Varlık Türü)" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,20"/>
+                            <TextBlock Text="{loc:Translate Reports_PortfolioAllocation}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,10"/>
                             <ItemsControl ItemsSource="{Binding InvestmentAllocations}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Margin="0,0,0,15">
                                             <Grid>
-                                                <TextBlock Text="{Binding AssetCategory}" FontWeight="SemiBold" HorizontalAlignment="Left" Foreground="#34495E"/>
-                                                <TextBlock Text="{Binding FormattedValue}" FontWeight="Bold" HorizontalAlignment="Right" Foreground="#2C3E50"/>
+                                                <TextBlock Text="{Binding AssetCategory}" FontWeight="SemiBold" HorizontalAlignment="Left" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                <TextBlock Text="{Binding FormattedValue}" FontWeight="Bold" HorizontalAlignment="Right" Foreground="{DynamicResource PrimaryTextBrush}"/>
                                             </Grid>
-                                            <ProgressBar Value="{Binding Percentage}" Minimum="0" Maximum="100" Height="12" Margin="0,5,0,2" Foreground="#F1C40F" Background="#ECF0F1" CornerRadius="6"/>
-                                            <TextBlock Text="{Binding Percentage, StringFormat='{}{0:F1}%'}" FontSize="11" Foreground="#95A5A6" HorizontalAlignment="Right"/>
+                                            <ProgressBar Value="{Binding Percentage}" Minimum="0" Maximum="100" Height="12" Margin="0,5,0,2" Foreground="#F1C40F" Background="{DynamicResource CardSecondaryBackgroundBrush}" CornerRadius="6"/>
+                                            <TextBlock Text="{Binding Percentage, StringFormat='{}{0:F1}%'}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Right"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -190,16 +191,16 @@
 
                     <Grid Grid.Column="2" RowDefinitions="*,10,*">
                         
-                        <Border Grid.Row="0" Background="#2980B9" CornerRadius="12" Padding="25">
+                        <Border Grid.Row="0" Background="#2980B9" CornerRadius="12" Padding="10">
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock Text="TOPLAM PORTFÖY DEĞERİ" Foreground="White" FontSize="14" Opacity="0.8" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{loc:Translate Reports_TotalPortfolioValue}" Foreground="White" FontSize="14" Opacity="0.8" HorizontalAlignment="Center"/>
                                 <TextBlock Text="{Binding TotalPortfolioValueText}" Foreground="White" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Border>
                         
-                        <Border Grid.Row="2" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="25">
+                        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10">
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock Text="TOPLAM KÂR / ZARAR" Foreground="#7F8C8D" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{loc:Translate Reports_TotalProfitLoss}" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="14" HorizontalAlignment="Center"/>
                                 <TextBlock Text="{Binding TotalInvestmentProfitText}" Foreground="{Binding TotalInvestmentProfitColor}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="Wrap"/>
                             </StackPanel>
                         </Border>

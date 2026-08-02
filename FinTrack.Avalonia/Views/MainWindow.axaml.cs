@@ -36,19 +36,21 @@ public partial class MainWindow : Window
 
     private void UpdateWindowSize(ViewModelBase? currentView)
     {
-        if (currentView is LoginViewModel)
+        if (currentView is LoginViewModel || currentView is AddProfileViewModel)
         {
-            // Giriş ekranı için pencereyi küçük, şık ve sabit yapalım
+            // Giriş ve profil ekleme ekranları için pencereyi küçük, şık ve sabit yapalım
             CanResize = false;
             Width = 420;
-            Height = 460;
-            Title = "KT FinTrack Erişim";
+            MinHeight = 460;
+            SizeToContent = global::Avalonia.Controls.SizeToContent.Height;
+            Title = currentView is LoginViewModel ? "KT FinTrack Erişim" : "KT FinTrack - Yeni Profil";
             CenterWindow();
         }
         else
         {
             // Ana uygulama ekranı için pencereyi büyük ve yeniden boyutlandırılabilir yapalım
             CanResize = true;
+            SizeToContent = global::Avalonia.Controls.SizeToContent.Manual;
             Width = 1200;
             Height = 700;
             Title = "KT FinTrack - Kişisel Finans Takip";

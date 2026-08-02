@@ -8,6 +8,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
+using FinTrack.Core.Helpers;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -38,8 +39,13 @@ public partial class DashboardViewModel : ViewModelBase
 
     public DashboardViewModel()
     {
-        _context = App.Services?.GetService<AppDbContext>();
-        _ = LoadDataAsync();
+        _context = AppDbContext.CreateNew();
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        _context?.Dispose();
     }
 
     public async Task LoadDataAsync(int? year = null, int? month = null)
@@ -64,10 +70,14 @@ public partial class DashboardViewModel : ViewModelBase
             }
 
             // --- FIX FOR INCORRECT CREDIT CARD DEBT CATEGORY ---
-            var badBalances = await _context.Transactions
+            var badBalancesDb = await _context.Transactions
                 .Include(t => t.Category)
-                .Where(t => t.Description != null && t.Description.Contains("Geçmiş Borç Dengelemesi") && t.Category != null && t.Category.Type == TransactionType.Income)
+                .Where(t => t.Category != null && t.Category.Type == TransactionType.Income)
                 .ToListAsync();
+
+            var badBalances = badBalancesDb
+                .Where(t => t.Description != null && t.Description.Contains("Geçmiş Borç Dengelemesi"))
+                .ToList();
 
             if (badBalances.Any())
             {
@@ -150,7 +160,8 @@ public partial class DashboardViewModel : ViewModelBase
 
                 if (troyCard != null)
                 {
-                    var oldBalancing = await _context.Transactions.Where(t => t.Description != null && t.Description.Contains("AHE HATUN Geçmiş")).ToListAsync();
+                    var allTrans = await _context.Transactions.ToListAsync();
+                    var oldBalancing = allTrans.Where(t => t.Description != null && t.Description.Contains("AHE HATUN Geçmiş")).ToList();
                     if (oldBalancing.Any()) {
                         _context.Transactions.RemoveRange(oldBalancing);
                     }
@@ -209,7 +220,8 @@ public partial class DashboardViewModel : ViewModelBase
 
                 if (troyCard != null)
                 {
-                    var oldBalancing = await _context.Transactions.Where(t => t.Description != null && t.Description.Contains("AHE BENİM Geçmiş")).ToListAsync();
+                    var allTrans2 = await _context.Transactions.ToListAsync();
+                    var oldBalancing = allTrans2.Where(t => t.Description != null && t.Description.Contains("AHE BENİM Geçmiş")).ToList();
                     if (oldBalancing.Any()) {
                         _context.Transactions.RemoveRange(oldBalancing);
                     }
@@ -228,7 +240,7 @@ public partial class DashboardViewModel : ViewModelBase
             DateTime startDate = GetLastBusinessDayOfMonth(prevYear, prevMonth).Date;
             DateTime endDate = GetLastBusinessDayOfMonth(selectedYear, selectedMonth).Date;
 
-            System.Diagnostics.Debug.WriteLine($"[Dashboard] Ay: {selectedMonth}/{selectedYear} | Aralık: {startDate:dd.MM.yyyy} - {endDate:dd.MM.yyyy}");
+            AppLogger.Info($"[Dashboard] Ay: {selectedMonth}/{selectedYear} | Aralık: {startDate:dd.MM.yyyy} - {endDate:dd.MM.yyyy}");
 
             var transactions = await _context.Transactions
                 .Include(t => t.Category)
@@ -239,13 +251,13 @@ public partial class DashboardViewModel : ViewModelBase
                 .ThenByDescending(t => t.Id)
                 .ToListAsync();
 
-            System.Diagnostics.Debug.WriteLine($"[Dashboard] Toplam işlem: {transactions.Count}");
+            AppLogger.Info($"[Dashboard] Toplam işlem: {transactions.Count}");
 
             var incomeItems = transactions.Where(t => t.Category?.Type == TransactionType.Income).ToList();
             var expenseItems = transactions.Where(t => t.Category?.Type == TransactionType.Expense).ToList();
             var transferItems = transactions.Where(t => t.Category?.Type != TransactionType.Income && t.Category?.Type != TransactionType.Expense).ToList();
 
-            System.Diagnostics.Debug.WriteLine($"[Dashboard] Gelir: {incomeItems.Count}, Gider: {expenseItems.Count}, Transfer: {transferItems.Count}");
+            AppLogger.Info($"[Dashboard] Gelir: {incomeItems.Count}, Gider: {expenseItems.Count}, Transfer: {transferItems.Count}");
 
             // Hesapla: Toplam Varlık (Nakit + Banka)
             var cashAndBankTransactions = await _context.Transactions
@@ -300,7 +312,7 @@ public partial class DashboardViewModel : ViewModelBase
         }
         catch(Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine(ex.Message);
+            AppLogger.Error(ex.Message);
         }
     }
 

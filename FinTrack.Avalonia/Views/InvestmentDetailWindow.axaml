@@ -1,21 +1,22 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window Width="1000" Height="700" xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         xmlns:controls="using:FinTrack.Avalonia.Controls"
         x:Class="FinTrack.Avalonia.Views.InvestmentDetailWindow"
         x:DataType="vm:InvestmentDetailViewModel"
         Icon="avares://FinTrack.Avalonia/Assets/avalonia-logo.ico"
-        Title="Yatırım Detayı" Height="780" Width="900"
-        WindowStartupLocation="CenterOwner" Background="#F4F6F9">
-    <Grid Margin="25" RowDefinitions="Auto,15,Auto,15,*,Auto,Auto">
+        Title="Yatırım Detayı"
+        WindowStartupLocation="CenterOwner" Background="{DynamicResource CardSecondaryBackgroundBrush}">
+    <Grid Margin="10" RowDefinitions="Auto,15,Auto,15,*,Auto,Auto">
 
         <!-- Varlık Bilgi Kartı -->
-        <Border Grid.Row="0" Background="White" CornerRadius="12" Padding="25" BorderBrush="#E0E0E0" BorderThickness="1">
+        <Border Grid.Row="0" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
             <Grid ColumnDefinitions="*,Auto">
                 <StackPanel Grid.Column="0">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding AssetNameText}" FontSize="22" FontWeight="Bold" Foreground="#2C3E50"/>
-                        <TextBlock Text="{Binding AssetSymbolText}" FontSize="16" Foreground="#95A5A6" VerticalAlignment="Bottom" Margin="10,0,0,3"/>
+                        <TextBlock Text="{Binding AssetNameText}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        <TextBlock Text="{Binding AssetSymbolText}" FontSize="16" Foreground="{DynamicResource SecondaryTextBrush}" VerticalAlignment="Bottom" Margin="10,0,0,3"/>
                     </StackPanel>
                     <TextBlock Text="{Binding AssetCategoryText}" FontSize="13" Foreground="#8E44AD" FontWeight="SemiBold" Margin="0,4,0,0"/>
                 </StackPanel>
@@ -23,15 +24,15 @@
                 <StackPanel Grid.Column="1" HorizontalAlignment="Right">
                     <Grid ColumnDefinitions="Auto,25,Auto,25,Auto">
                         <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                            <TextBlock Text="Toplam Adet" FontSize="11" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                            <TextBlock Text="{Binding TotalAmountText}" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Translate InvestmentDetail_TotalAmount}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding TotalAmountText}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2" HorizontalAlignment="Center">
-                            <TextBlock Text="Ort. Maliyet" FontSize="11" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                            <TextBlock Text="{Binding AvgCostText}" FontSize="18" FontWeight="Bold" Foreground="#34495E" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Translate InvestmentDetail_AvgCost}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding AvgCostText}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Grid.Column="4" HorizontalAlignment="Center">
-                            <TextBlock Text="Güncel Fiyat" FontSize="11" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Translate InvestmentDetail_CurrentPrice}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center"/>
                             <TextBlock Text="{Binding CurrentPriceText}" FontSize="18" FontWeight="Bold" Foreground="#2980B9" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
@@ -40,15 +41,15 @@
         </Border>
 
         <!-- Sparkline Fiyat Grafiği (PHASE 7) -->
-        <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="20" BorderBrush="#E0E0E0" BorderThickness="1">
+        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
             <Grid RowDefinitions="Auto,10,160">
                 <Grid Grid.Row="0">
-                    <TextBlock Text="📊 Fiyat Grafiği" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" VerticalAlignment="Center"/>
+                    <TextBlock Text="{loc:Translate InvestmentDetail_PriceChart}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <RadioButton Content="1A" GroupName="Period" Margin="0,0,5,0"/>
                         <RadioButton Content="3A" GroupName="Period" IsChecked="True" Margin="0,0,5,0"/>
                         <RadioButton Content="1Y" GroupName="Period" Margin="0,0,5,0"/>
-                        <RadioButton Content="Tümü" GroupName="Period"/>
+                        <RadioButton Content="{loc:Translate InvestmentDetail_All}" GroupName="Period"/>
                     </StackPanel>
                 </Grid>
 
@@ -58,21 +59,21 @@
         </Border>
 
         <!-- İşlem Geçmişi -->
-        <Border Grid.Row="4" Background="White" CornerRadius="12" Padding="20" BorderBrush="#E0E0E0" BorderThickness="1">
+        <Border Grid.Row="4" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
             <Grid RowDefinitions="Auto,10,*">
-                <TextBlock Grid.Row="0" Text="📋 İşlem Geçmişi" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
+                <TextBlock Grid.Row="0" Text="{loc:Translate InvestmentDetail_History}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
                 <DataGrid Grid.Row="2" ItemsSource="{Binding Transactions}" AutoGenerateColumns="False" IsReadOnly="True"
                           GridLinesVisibility="Horizontal"
-                          HeadersVisibility="Column" Background="White" RowBackground="White"
+                          HeadersVisibility="Column" Background="{DynamicResource CardBackgroundBrush}" RowBackground="{DynamicResource CardBackgroundBrush}"
                           BorderThickness="0">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat='dd.MM.yyyy'}" Width="110"/>
-                        <DataGridTextColumn Header="Tür" Binding="{Binding Type}" Width="80"/>
-                        <DataGridTextColumn Header="Adet" Binding="{Binding Amount, StringFormat=N2}" Width="90"/>
-                        <DataGridTextColumn Header="Birim Fiyat" Binding="{Binding UnitPrice, StringFormat='₺{0:N2}'}" Width="110"/>
-                        <DataGridTextColumn Header="Komisyon" Binding="{Binding Fee, StringFormat='₺{0:N2}'}" Width="90"/>
-                        <DataGridTextColumn Header="Toplam" Binding="{Binding TotalCost, StringFormat='₺{0:N2}'}" Width="120"/>
-                        <DataGridTextColumn Header="Gram Altın" Binding="{Binding GramGoldEquivalent, StringFormat='{}{0:N2} gr'}" Width="100"/>
+                        <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat='dd.MM.yyyy'}"/>
+                        <DataGridTextColumn Header="Tür" Binding="{Binding Type}"/>
+                        <DataGridTextColumn Header="Adet" Binding="{Binding Amount, StringFormat=N2}"/>
+                        <DataGridTextColumn Header="Birim Fiyat" Binding="{Binding UnitPrice, StringFormat='₺{0:N2}'}"/>
+                        <DataGridTextColumn Header="Komisyon" Binding="{Binding Fee, StringFormat='₺{0:N2}'}"/>
+                        <DataGridTextColumn Header="Toplam" Binding="{Binding TotalCost, StringFormat='₺{0:N2}'}"/>
+                        <DataGridTextColumn Header="Gram Altın" Binding="{Binding GramGoldEquivalent, StringFormat='{}{0:N2} gr'}"/>
                         <DataGridTextColumn Header="Notlar" Binding="{Binding Notes}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
@@ -80,30 +81,30 @@
         </Border>
 
         <!-- Alt Özet -->
-        <Border Grid.Row="5" Background="White" CornerRadius="12" Padding="20" Margin="0,15,0,0" BorderBrush="#E0E0E0" BorderThickness="1">
+        <Border Grid.Row="5" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" Margin="0,15,0,0" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
             <Grid ColumnDefinitions="*,*,*,*">
                 <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                    <TextBlock Text="Toplam Alım" FontSize="11" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{loc:Translate InvestmentDetail_TotalBuy}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center"/>
                     <TextBlock Text="{Binding TotalBuyText}" FontSize="16" FontWeight="Bold" Foreground="#E74C3C" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                    <TextBlock Text="Toplam Satış" FontSize="11" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{loc:Translate InvestmentDetail_TotalSell}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center"/>
                     <TextBlock Text="{Binding TotalSellText}" FontSize="16" FontWeight="Bold" Foreground="#27AE60" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="2" HorizontalAlignment="Center">
-                    <TextBlock Text="Komisyon Toplamı" FontSize="11" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding TotalFeeText}" FontSize="16" FontWeight="Bold" Foreground="#95A5A6" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{loc:Translate InvestmentDetail_TotalFee}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding TotalFeeText}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="3" HorizontalAlignment="Center">
-                    <TextBlock Text="Net Kar/Zarar" FontSize="11" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding NetProfitText}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{loc:Translate InvestmentDetail_NetProfit}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding NetProfitText}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </Border>
 
         <!-- Butonlar -->
         <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-            <Button Content="Kapat" Width="100" Padding="10" Command="{Binding CloseCommand}" Background="#BDC3C7" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" CornerRadius="6" HorizontalContentAlignment="Center"/>
+            <Button Content="{loc:Translate Global_Close}" Padding="10" Command="{Binding CloseCommand}" Background="#BDC3C7" Foreground="White" FontWeight="Bold" BorderThickness="0" Cursor="Hand" CornerRadius="6" HorizontalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

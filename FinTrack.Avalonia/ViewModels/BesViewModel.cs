@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using FinTrack.Avalonia.Localization;
+using FinTrack.Core.Helpers;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -39,11 +41,16 @@ public partial class BesViewModel : ViewModelBase
 
     public BesViewModel()
     {
-        _context = App.Services?.GetService<AppDbContext>();
-        _ = InitializeAsync();
+        _context = AppDbContext.CreateNew();
     }
 
-    private async Task InitializeAsync()
+    public override void Dispose()
+    {
+        base.Dispose();
+        _context?.Dispose();
+    }
+
+    public async Task InitializeAsync()
     {
         await LoadDataAsync();
         
@@ -92,9 +99,8 @@ public partial class BesViewModel : ViewModelBase
                     .SumAsync(t => t.GramGoldEquivalent ?? 0);
 
                 decimal vestingPct = 0;
-                string timeLeft = "Belirtilmemiş";
-                string timeInSystem = "Belirtilmemiş";
-                decimal monthlyAvg = 0;
+                string timeLeft = LocalizationService.GetString("Bes_NotSpecified");
+                string timeInSystem = LocalizationService.GetString("Bes_NotSpecified");
                 int monthsIn = 1;
                 
                 if (asset.BesStartDate.HasValue)
@@ -104,7 +110,7 @@ public partial class BesViewModel : ViewModelBase
                     
                     int yIn = monthsIn / 12;
                     int mIn = monthsIn % 12;
-                    timeInSystem = $"{yIn} Yıl {mIn} Ay";
+                    timeInSystem = string.Format(LocalizationService.GetString("Bes_DurationFormat"), yIn, mIn);
 
                     var yearsIn = monthsIn / 12.0;
 
@@ -134,7 +140,7 @@ public partial class BesViewModel : ViewModelBase
                 {
                     if (DateTime.Now >= asset.BesRetirementDate.Value)
                     {
-                        timeLeft = "Emeklilik Hakkı Kazanıldı!";
+                        timeLeft = LocalizationService.GetString("Bes_RetirementEarned");
                     }
                     else
                     {
@@ -142,7 +148,7 @@ public partial class BesViewModel : ViewModelBase
                         int totalMonths = (int)(span.TotalDays / 30.436875);
                         int y = totalMonths / 12;
                         int m = totalMonths % 12;
-                        timeLeft = $"{y} yıl {m} ay";
+                        timeLeft = string.Format(LocalizationService.GetString("Bes_TimeLeftFormat"), y, m);
                     }
                 }
 
@@ -194,7 +200,7 @@ public partial class BesViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"BES verileri çekilemedi: {ex.Message}");
+            AppLogger.Error($"BES verileri çekilemedi: {ex.Message}");
         }
     }
 

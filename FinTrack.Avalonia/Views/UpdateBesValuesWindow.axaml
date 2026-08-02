@@ -1,16 +1,16 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window SizeToContent="WidthAndHeight" xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         x:Class="FinTrack.Avalonia.Views.UpdateBesValuesWindow"
         x:DataType="vm:UpdateBesValuesViewModel"
-        Title="BES Değerlerini Güncelle"
-        Width="700" Height="650"
+        Title="{loc:Translate UpdateBes_Title}"
         WindowStartupLocation="CenterOwner"
         CanResize="True"
-        Background="#F4F6F9"
+        Background="{DynamicResource CardSecondaryBackgroundBrush}"
         ExtendClientAreaToDecorationsHint="True">
 
-    <Border CornerRadius="12" Background="White" Margin="10" Padding="25">
+    <Border CornerRadius="12" Background="{DynamicResource CardBackgroundBrush}" Margin="10" Padding="10">
         <Border.Effect>
             <DropShadowEffect BlurRadius="15" Opacity="0.1" OffsetY="5"/>
         </Border.Effect>
@@ -18,28 +18,28 @@
         <Grid RowDefinitions="Auto,*,Auto" MaxWidth="650">
             <!-- Header -->
             <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
-                <TextBlock Text="BES Değerlerini Güncelle" FontSize="20" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding AssetName}" FontSize="14" Foreground="#7F8C8D" HorizontalAlignment="Center"/>
+                <TextBlock Text="{loc:Translate UpdateBes_Title}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding AssetName}" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center"/>
             </StackPanel>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
-                <StackPanel Spacing="20">
+                <StackPanel Spacing="10">
                     <!-- Contract No -->
                     <StackPanel>
-                        <TextBlock Text="Müşteri/Sözleşme No" FontSize="14" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <TextBox Text="{Binding BesContractNo}" Background="#F8F9F9" BorderBrush="#E0E0E0" CornerRadius="6" Height="40" FontSize="16" Watermark="Örn: 13481845992"/>
+                        <TextBlock Text="{loc:Translate UpdateBes_ContractNoLabel}" FontSize="14" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding BesContractNo}" Background="{DynamicResource CardSecondaryBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" CornerRadius="6" FontSize="16" PlaceholderText="Örn: 13481845992"/>
                     </StackPanel>
 
                     <!-- Birth Date & Retirement Age -->
                     <Grid ColumnDefinitions="*,15,*">
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Doğum Tarihi" FontSize="14" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                            <DatePicker SelectedDate="{Binding ParticipantBirthDate}" Background="#F8F9F9" BorderBrush="#E0E0E0" CornerRadius="6" Height="40" FontSize="16" HorizontalAlignment="Stretch"/>
-                            <TextBlock Text="Yaşınıza göre emeklilik tarihi otomatik hesaplanır." FontSize="11" Foreground="#95A5A6" Margin="0,5,0,0"/>
+                            <TextBlock Text="{loc:Translate UpdateBes_BirthDate}" FontSize="14" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <DatePicker SelectedDate="{Binding ParticipantBirthDate}" Background="{DynamicResource CardSecondaryBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" CornerRadius="6" FontSize="16" HorizontalAlignment="Stretch"/>
+                            <TextBlock Text="{loc:Translate UpdateBes_BirthDateDesc}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,5,0,0"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2">
-                            <TextBlock Text="Emeklilik Yaşı" FontSize="14" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                            <NumericUpDown Value="{Binding RetirementAge}" Minimum="40" Maximum="80" Background="#F8F9F9" BorderBrush="#E0E0E0" CornerRadius="6" Height="40" FontSize="16"/>
+                            <TextBlock Text="{loc:Translate UpdateBes_RetirementAge}" FontSize="14" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <NumericUpDown Value="{Binding RetirementAge}" Minimum="40" Maximum="80" Background="{DynamicResource CardSecondaryBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" CornerRadius="6" FontSize="16"/>
                         </StackPanel>
                     </Grid>
 
@@ -47,14 +47,14 @@
                     <Grid ColumnDefinitions="*,15,*">
                         <!-- Start Date -->
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Sözleşme Yürürlük Tarihi" FontSize="14" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                            <DatePicker SelectedDate="{Binding BesStartDate}" Background="#F8F9F9" BorderBrush="#E0E0E0" CornerRadius="6" Height="40" FontSize="16" HorizontalAlignment="Stretch"/>
+                            <TextBlock Text="{loc:Translate UpdateBes_StartDate}" FontSize="14" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <DatePicker SelectedDate="{Binding BesStartDate}" Background="{DynamicResource CardSecondaryBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" CornerRadius="6" FontSize="16" HorizontalAlignment="Stretch"/>
                         </StackPanel>
 
                         <!-- Retirement Date -->
                         <StackPanel Grid.Column="2">
-                            <TextBlock Text="Emeklilik Tarihi" FontSize="14" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                            <DatePicker SelectedDate="{Binding BesRetirementDate}" Background="#F8F9F9" BorderBrush="#E0E0E0" CornerRadius="6" Height="40" FontSize="16" HorizontalAlignment="Stretch"/>
+                            <TextBlock Text="{loc:Translate UpdateBes_RetirementDate}" FontSize="14" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <DatePicker SelectedDate="{Binding BesRetirementDate}" Background="{DynamicResource CardSecondaryBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" CornerRadius="6" FontSize="16" HorizontalAlignment="Stretch"/>
                         </StackPanel>
                     </Grid>
 
@@ -64,28 +64,28 @@
                     <Grid ColumnDefinitions="*,15,*">
                         <!-- Custom Current Value -->
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Güncel Fon Değeri (TL)" FontSize="14" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <TextBlock Text="{loc:Translate UpdateBes_CurrentValue}" FontSize="14" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
                             <NumericUpDown Value="{Binding CustomCurrentValue}" FormatString="N2" Increment="1000" Minimum="0"
-                                           Background="#F8F9F9" BorderBrush="#E0E0E0" CornerRadius="6" Height="40" FontSize="16"/>
-                            <TextBlock Text="Boş bırakırsanız otomatik hesaplanır." FontSize="11" Foreground="#95A5A6" Margin="0,5,0,0"/>
+                                           Background="{DynamicResource CardSecondaryBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" CornerRadius="6" FontSize="16"/>
+                            <TextBlock Text="{loc:Translate UpdateBes_CurrentValueDesc}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,5,0,0"/>
                         </StackPanel>
 
                         <!-- Custom State Contribution -->
                         <StackPanel Grid.Column="2">
-                            <TextBlock Text="Devlet Katkısı (TL)" FontSize="14" Foreground="#34495E" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <TextBlock Text="{loc:Translate UpdateBes_StateContribution}" FontSize="14" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="SemiBold" Margin="0,0,0,5"/>
                             <NumericUpDown Value="{Binding CustomStateContribution}" FormatString="N2" Increment="500" Minimum="0"
-                                           Background="#F8F9F9" BorderBrush="#E0E0E0" CornerRadius="6" Height="40" FontSize="16"/>
-                            <TextBlock Text="Otomatik hakediş hesaplanır." FontSize="11" Foreground="#95A5A6" Margin="0,5,0,0"/>
+                                           Background="{DynamicResource CardSecondaryBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" CornerRadius="6" FontSize="16"/>
+                            <TextBlock Text="{loc:Translate UpdateBes_StateContributionDesc}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,5,0,0"/>
                         </StackPanel>
                     </Grid>
                 </StackPanel>
             </ScrollViewer>
 
-            <Grid Grid.Row="2" ColumnDefinitions="*,10,*" Margin="0,20,0,0">
-                <Button Grid.Column="0" Content="İptal" Command="{Binding CancelCommand}" 
+            <Grid Grid.Row="2" ColumnDefinitions="*,10,*" Margin="0,10,0,0">
+                <Button Grid.Column="0" Content="{loc:Translate Global_Cancel}" Command="{Binding CancelCommand}" 
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                        Background="#ECF0F1" Foreground="#7F8C8D" CornerRadius="6" Padding="12"/>
-                <Button Grid.Column="2" Content="Kaydet" Command="{Binding SaveCommand}" 
+                        Background="{DynamicResource CardSecondaryBackgroundBrush}" Foreground="{DynamicResource SecondaryTextBrush}" CornerRadius="6" Padding="12"/>
+                <Button Grid.Column="2" Content="{loc:Translate Global_Save}" Command="{Binding SaveCommand}" 
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                         Background="#27AE60" Foreground="White" FontWeight="Bold" CornerRadius="6" Padding="12"/>
             </Grid>

@@ -14,7 +14,7 @@ public partial class EditTransactionWindow : Window
 
     public EditTransactionWindow(int transactionId) : this()
     {
-        var context = App.Services?.GetService<AppDbContext>();
+        var context = AppDbContext.CreateNew();
         if (context != null)
         {
             var vm = new EditTransactionViewModel(context, this, transactionId);

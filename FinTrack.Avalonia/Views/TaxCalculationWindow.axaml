@@ -1,19 +1,20 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window Width="900" Height="650" xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         x:Class="FinTrack.Avalonia.Views.TaxCalculationWindow"
         x:DataType="vm:TaxCalculationViewModel"
-        Title="Vergi Raporu" Height="700" Width="950"
-        WindowStartupLocation="CenterOwner" Background="#F4F6F9">
+        Title="{loc:Translate Tax_Title}"
+        WindowStartupLocation="CenterOwner" Background="{DynamicResource CardSecondaryBackgroundBrush}">
         
-    <Grid Margin="25" RowDefinitions="Auto,15,Auto,20,*,Auto">
+    <Grid Margin="10" RowDefinitions="Auto,15,Auto,20,*,Auto">
 
         <!-- Başlık + Yıl Seçimi -->
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
-            <TextBlock Text="📊 Yatırım Vergi Raporu" FontSize="22" FontWeight="Bold" Foreground="#2C3E50" VerticalAlignment="Center"/>
+            <TextBlock Text="{loc:Translate Tax_Title}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="Yıl:" FontSize="14" FontWeight="SemiBold" Foreground="#7F8C8D" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                <ComboBox Width="100" FontSize="14" Padding="10,6" 
+                <TextBlock Text="{loc:Translate Tax_Year}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <ComboBox FontSize="14" Padding="10,6" 
                           ItemsSource="{Binding Years}" SelectedItem="{Binding SelectedYear}"/>
             </StackPanel>
         </Grid>
@@ -22,64 +23,64 @@
         <Grid Grid.Row="2" ColumnDefinitions="*,15,*,15,*,15,*">
 
             <!-- Toplam Kazanç -->
-            <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="20" BoxShadow="0 2 10 0 #0D000000">
+            <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" BoxShadow="0 2 10 0 #0D000000">
                 <StackPanel>
-                    <TextBlock Text="Toplam Kazanç" FontSize="12" Foreground="#7F8C8D" FontWeight="SemiBold"/>
+                    <TextBlock Text="{loc:Translate Tax_TotalGain}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="SemiBold"/>
                     <TextBlock Text="{Binding TotalGainText}" FontSize="22" FontWeight="Bold" Foreground="{Binding TotalGainColorHex}" Margin="0,5,0,0"/>
                 </StackPanel>
             </Border>
 
             <!-- Tahmini Vergi -->
-            <Border Grid.Column="2" Background="White" CornerRadius="12" Padding="20" BoxShadow="0 2 10 0 #0D000000">
+            <Border Grid.Column="2" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" BoxShadow="0 2 10 0 #0D000000">
                 <StackPanel>
-                    <TextBlock Text="Tahmini Vergi" FontSize="12" Foreground="#7F8C8D" FontWeight="SemiBold"/>
+                    <TextBlock Text="{loc:Translate Tax_EstimatedTax}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="SemiBold"/>
                     <TextBlock Text="{Binding TotalTaxText}" FontSize="22" FontWeight="Bold" Foreground="#E74C3C" Margin="0,5,0,0"/>
                 </StackPanel>
             </Border>
 
             <!-- Temettü Geliri -->
-            <Border Grid.Column="4" Background="White" CornerRadius="12" Padding="20" BoxShadow="0 2 10 0 #0D000000">
+            <Border Grid.Column="4" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" BoxShadow="0 2 10 0 #0D000000">
                 <StackPanel>
-                    <TextBlock Text="Temettü Geliri (Brüt)" FontSize="12" Foreground="#7F8C8D" FontWeight="SemiBold"/>
+                    <TextBlock Text="{loc:Translate Tax_DividendIncome}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="SemiBold"/>
                     <TextBlock Text="{Binding TotalDividendText}" FontSize="22" FontWeight="Bold" Foreground="#F39C12" Margin="0,5,0,0"/>
                 </StackPanel>
             </Border>
 
             <!-- Net Getiri -->
-            <Border Grid.Column="6" Background="White" CornerRadius="12" Padding="20" BoxShadow="0 2 10 0 #0D000000">
+            <Border Grid.Column="6" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" BoxShadow="0 2 10 0 #0D000000">
                 <StackPanel>
-                    <TextBlock Text="Net Getiri (Vergi Sonrası)" FontSize="12" Foreground="#7F8C8D" FontWeight="SemiBold"/>
+                    <TextBlock Text="{loc:Translate Tax_NetReturn}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="SemiBold"/>
                     <TextBlock Text="{Binding NetReturnText}" FontSize="22" FontWeight="Bold" Foreground="{Binding NetReturnColorHex}" Margin="0,5,0,0"/>
                 </StackPanel>
             </Border>
         </Grid>
 
         <!-- Detay Tablosu -->
-        <Border Grid.Row="4" Background="White" CornerRadius="12" Padding="20" BoxShadow="0 2 10 0 #0A000000">
+        <Border Grid.Row="4" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" BoxShadow="0 2 10 0 #0A000000">
             <Grid RowDefinitions="Auto,10,*">
 
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <TextBlock Text="📋 İşlem Detayları" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
-                    <TextBlock Text="{Binding TransactionCountText}" FontSize="13" Foreground="#95A5A6" VerticalAlignment="Bottom" Margin="10,0,0,3"/>
+                    <TextBlock Text="{loc:Translate Tax_TxDetails}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                    <TextBlock Text="{Binding TransactionCountText}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" VerticalAlignment="Bottom" Margin="10,0,0,3"/>
                 </StackPanel>
 
                 <DataGrid Grid.Row="2" ItemsSource="{Binding TaxDetails}" AutoGenerateColumns="False" IsReadOnly="True"
-                          GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="White" RowBackground="White" BorderThickness="0">
+                          GridLinesVisibility="Horizontal" HeadersVisibility="Column" Background="{DynamicResource CardBackgroundBrush}" RowBackground="{DynamicResource CardBackgroundBrush}" BorderThickness="0">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Tarih" Binding="{Binding Date, StringFormat='dd.MM.yyyy'}" Width="85"/>
-                        <DataGridTextColumn Header="Varlık" Binding="{Binding AssetName}" Width="120"/>
-                        <DataGridTemplateColumn Header="Tür" Width="90">
+                        <DataGridTextColumn Header="{loc:Translate Tax_Date}" Binding="{Binding Date, StringFormat='dd.MM.yyyy'}"/>
+                        <DataGridTextColumn Header="{loc:Translate Tax_Asset}" Binding="{Binding AssetName}"/>
+                        <DataGridTemplateColumn Header="{loc:Translate Tax_Type}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding TypeText}" FontWeight="Bold" Foreground="{Binding TypeColorHex}" VerticalAlignment="Center"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Adet" Binding="{Binding Amount, StringFormat=N2}" Width="70"/>
-                        <DataGridTextColumn Header="Alım Maliyeti" Binding="{Binding BuyCost, StringFormat='₺{0:N2}'}" Width="110"/>
-                        <DataGridTextColumn Header="Satış Geliri" Binding="{Binding SellRevenue, StringFormat='₺{0:N2}'}" Width="100"/>
+                        <DataGridTextColumn Header="{loc:Translate Tax_Amount}" Binding="{Binding Amount, StringFormat=N2}"/>
+                        <DataGridTextColumn Header="{loc:Translate Tax_BuyCost}" Binding="{Binding BuyCost, StringFormat='₺{0:N2}'}"/>
+                        <DataGridTextColumn Header="{loc:Translate Tax_SellRevenue}" Binding="{Binding SellRevenue, StringFormat='₺{0:N2}'}"/>
                         
-                        <DataGridTemplateColumn Header="Kazanç" Width="100">
+                        <DataGridTemplateColumn Header="{loc:Translate Tax_Gain}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding GainText}" FontWeight="Bold" Foreground="{Binding GainColorHex}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -87,9 +88,9 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         
-                        <DataGridTextColumn Header="Vergi Oranı" Binding="{Binding TaxRateText}" Width="90"/>
+                        <DataGridTextColumn Header="{loc:Translate Tax_TaxRate}" Binding="{Binding TaxRateText}"/>
                         
-                        <DataGridTemplateColumn Header="Tahmini Vergi" Width="110">
+                        <DataGridTemplateColumn Header="{loc:Translate Tax_EstimatedTax}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding TaxAmount, StringFormat='₺{0:N2}'}" FontWeight="SemiBold" Foreground="#E74C3C" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -106,10 +107,10 @@
             <Border Background="#FEF9E7" CornerRadius="8" Padding="12" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="⚠️" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                    <TextBlock Text="Bu rapor bilgilendirme amaçlıdır, kesin vergi tavsiyesi niteliğinde değildir." FontSize="12" Foreground="#8D6E0F" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock Text="{loc:Translate Tax_Warning}" FontSize="12" Foreground="#8D6E0F" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
-            <Button x:Name="CloseButton" Content="Kapat" HorizontalAlignment="Right" Width="100" Padding="10" Background="#BDC3C7" Foreground="White" FontWeight="Bold" BorderThickness="0" CornerRadius="6" Cursor="Hand" HorizontalContentAlignment="Center"/>
+            <Button x:Name="CloseButton" Content="{loc:Translate Global_Close}" HorizontalAlignment="Right" Padding="10" Background="#BDC3C7" Foreground="White" FontWeight="Bold" BorderThickness="0" CornerRadius="6" Cursor="Hand" HorizontalContentAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>

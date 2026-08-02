@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using FinTrack.Core.Models;
 using FinTrack.Data;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -18,10 +19,10 @@ public partial class SellInvestmentViewModel : ViewModelBase
     private InvestmentAsset? _asset;
 
     [ObservableProperty]
-    private string _assetInfoText = "Yükleniyor...";
+    private string _assetInfoText = LocalizationService.GetString("SellInvestment_Loading");
 
     [ObservableProperty]
-    private string _availableAmountText = "Satılabilir Miktar: 0";
+    private string _availableAmountText = string.Format(LocalizationService.GetString("SellInvestment_Available"), 0);
 
     [ObservableProperty]
     private string _avgCostInfoText = "";
@@ -67,16 +68,16 @@ public partial class SellInvestmentViewModel : ViewModelBase
         _asset = await _context.InvestmentAssets.FindAsync(_assetId);
         if (_asset == null)
         {
-            ShowError("Varlık bulunamadı.");
+            ShowError(LocalizationService.GetString("SellInvestment_ErrNotFound"));
             return;
         }
 
-        AssetInfoText = $"Varlık: {_asset.Name} ({_asset.Symbol})";
-        AvailableAmountText = $"Satılabilir Miktar: {_asset.TotalAmount:N4}";
-        AvgCostInfoText = $"Ort. Maliyet: ₺{_asset.AverageCost:N2}";
+        AssetInfoText = string.Format(LocalizationService.GetString("SellInvestment_AssetInfo"), _asset.Name, _asset.Symbol);
+        AvailableAmountText = string.Format(LocalizationService.GetString("SellInvestment_Available"), _asset.TotalAmount);
+        AvgCostInfoText = string.Format(LocalizationService.GetString("SellInvestment_AvgCost"), _asset.AverageCost);
 
         Accounts.Clear();
-        Accounts.Add(new PaymentItemViewModel { Label = "💵 Nakit (İsteğe Bağlı)", Bank = null, Card = null });
+        Accounts.Add(new PaymentItemViewModel { Label = LocalizationService.GetString("SellInvestment_OptCash"), Bank = null, Card = null });
 
         var banks = await _context.BankAccounts.Where(b => b.IsActive).ToListAsync();
         foreach (var bank in banks)
@@ -140,7 +141,7 @@ public partial class SellInvestmentViewModel : ViewModelBase
 
         if (amount <= 0 || amount > _asset.TotalAmount || unitPrice < 0 || fee < 0)
         {
-            ShowError("Geçerli bir miktar (sahip olduğunuz kadar) ve fiyat giriniz.");
+            ShowError(LocalizationService.GetString("SellInvestment_ErrInvalid"));
             return;
         }
 
@@ -159,7 +160,7 @@ public partial class SellInvestmentViewModel : ViewModelBase
                 Fee = fee,
                 TotalCost = revenue, // Total Revenue
                 Date = SelectedDate ?? DateTime.Today,
-                Notes = $"Satış: {amount} {_asset.Symbol} @ {unitPrice:C2} (Masraf: {fee:C2}, K/Z: {profitLoss:C2})",
+                Notes = string.Format(LocalizationService.GetString("SellInvestment_DescFormat"), amount, _asset.Symbol, unitPrice, fee, profitLoss),
                 LinkedBankAccountId = SelectedAccount?.Bank?.Id
             };
 

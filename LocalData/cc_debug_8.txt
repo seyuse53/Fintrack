@@ -1,1 +1,136 @@
 Card Family: Asıl Kart MASTER (8)
+Tx 96: Date=24.03.2026, Cat='Market & Mutfak' (Expense), Amount=1240,0, Effective=1240,0
+Tx 97: Date=27.03.2026, Cat='Market & Mutfak' (Expense), Amount=345,0, Effective=345,0
+Tx 98: Date=7.04.2026, Cat='Market & Mutfak' (Expense), Amount=52,95, Effective=52,95
+Tx 99: Date=9.04.2026, Cat='Market & Mutfak' (Expense), Amount=395,0, Effective=395,0
+Tx 100: Date=10.04.2026, Cat='Market & Mutfak' (Expense), Amount=330,0, Effective=330,0
+Tx 101: Date=11.04.2026, Cat='Giyim' (Expense), Amount=190,0, Effective=190,0
+Tx 102: Date=13.04.2026, Cat='Market & Mutfak' (Expense), Amount=59,9, Effective=59,9
+Tx 103: Date=15.04.2026, Cat='Market & Mutfak' (Expense), Amount=57,0, Effective=57,0
+Tx 104: Date=16.04.2026, Cat='Market & Mutfak' (Expense), Amount=59,9, Effective=59,9
+Tx 105: Date=17.04.2026, Cat='Market & Mutfak' (Expense), Amount=300,0, Effective=300,0
+Tx 106: Date=19.04.2026, Cat='Aidat' (Expense), Amount=2705,0, Effective=2705,0
+Tx 107: Date=20.04.2026, Cat='Market & Mutfak' (Expense), Amount=305,0, Effective=305,0
+Tx 108: Date=21.04.2026, Cat='Market & Mutfak' (Expense), Amount=263,0, Effective=263,0
+Tx 109: Date=24.03.2026, Cat='Aidat' (Expense), Amount=717,29, Effective=717,29
+Tx 110: Date=26.03.2026, Cat='Aidat' (Expense), Amount=470,53, Effective=470,53
+Tx 111: Date=3.04.2026, Cat='Market & Mutfak' (Expense), Amount=330,0, Effective=330,0
+Tx 112: Date=11.04.2026, Cat='Ulaşım' (Expense), Amount=601,0, Effective=601,0
+Tx 113: Date=12.04.2026, Cat='Market & Mutfak' (Expense), Amount=1300,0, Effective=1300,0
+Tx 114: Date=21.04.2026, Cat='Market & Mutfak' (Expense), Amount=330,0, Effective=330,0
+Tx 115: Date=23.03.2026, Cat='Aidat' (Expense), Amount=5080,96, Effective=5080,96
+Tx 116: Date=23.03.2026, Cat='Market & Mutfak' (Expense), Amount=105,0, Effective=105,0
+Tx 117: Date=23.03.2026, Cat='Market & Mutfak' (Expense), Amount=273,98, Effective=273,98
+Tx 118: Date=23.03.2026, Cat='Market & Mutfak' (Expense), Amount=71,0, Effective=71,0
+Tx 119: Date=24.03.2026, Cat='Market & Mutfak' (Expense), Amount=39,9, Effective=39,9
+Tx 120: Date=24.03.2026, Cat='Aidat' (Expense), Amount=1000,82, Effective=1000,82
+Tx 121: Date=25.03.2026, Cat='Market & Mutfak' (Expense), Amount=84,0, Effective=84,0
+Tx 122: Date=25.03.2026, Cat='Aidat' (Expense), Amount=126,98, Effective=126,98
+Tx 123: Date=26.03.2026, Cat='Sağlık' (Expense), Amount=516,71, Effective=516,71
+Tx 124: Date=26.03.2026, Cat='Market & Mutfak' (Expense), Amount=120,0, Effective=120,0
+Tx 125: Date=26.03.2026, Cat='Market & Mutfak' (Expense), Amount=36,0, Effective=36,0
+Tx 126: Date=31.03.2026, Cat='Market & Mutfak' (Expense), Amount=145,0, Effective=145,0
+Tx 127: Date=31.03.2026, Cat='Market & Mutfak' (Expense), Amount=104,49, Effective=104,49
+Tx 128: Date=1.04.2026, Cat='Market & Mutfak' (Expense), Amount=102,0, Effective=102,0
+Tx 129: Date=1.04.2026, Cat='Market & Mutfak' (Expense), Amount=60,0, Effective=60,0
+Tx 130: Date=1.04.2026, Cat='Aidat' (Expense), Amount=69,99, Effective=69,99
+Tx 131: Date=2.04.2026, Cat='Market & Mutfak' (Expense), Amount=259,85, Effective=259,85
+Tx 132: Date=2.04.2026, Cat='Market & Mutfak' (Expense), Amount=45,0, Effective=45,0
+Tx 133: Date=3.04.2026, Cat='Aidat' (Expense), Amount=79,96, Effective=79,96
+Tx 134: Date=6.04.2026, Cat='Market & Mutfak' (Expense), Amount=150,0, Effective=150,0
+Tx 135: Date=7.04.2026, Cat='Market & Mutfak' (Expense), Amount=417,02, Effective=417,02
+Tx 136: Date=7.04.2026, Cat='Ev & Yaşam' (Expense), Amount=299,98, Effective=299,98
+Tx 137: Date=8.04.2026, Cat='Market & Mutfak' (Expense), Amount=70,0, Effective=70,0
+Tx 138: Date=8.04.2026, Cat='Market & Mutfak' (Expense), Amount=54,99, Effective=54,99
+Tx 139: Date=8.04.2026, Cat='Market & Mutfak' (Expense), Amount=187,0, Effective=187,0
+Tx 140: Date=8.04.2026, Cat='Market & Mutfak' (Expense), Amount=259,98, Effective=259,98
+Tx 141: Date=9.04.2026, Cat='Market & Mutfak' (Expense), Amount=202,0, Effective=202,0
+Tx 142: Date=9.04.2026, Cat='Aidat' (Expense), Amount=242,97, Effective=242,97
+Tx 143: Date=10.04.2026, Cat='Market & Mutfak' (Expense), Amount=50,0, Effective=50,0
+Tx 144: Date=10.04.2026, Cat='Market & Mutfak' (Expense), Amount=110,0, Effective=110,0
+Tx 145: Date=10.04.2026, Cat='Aidat' (Expense), Amount=222,02, Effective=222,02
+Tx 146: Date=13.04.2026, Cat='Aidat' (Expense), Amount=199,98, Effective=199,98
+Tx 147: Date=13.04.2026, Cat='Ev & Yaşam' (Expense), Amount=159,98, Effective=159,98
+Tx 148: Date=13.04.2026, Cat='Market & Mutfak' (Expense), Amount=404,78, Effective=404,78
+Tx 149: Date=14.04.2026, Cat='Market & Mutfak' (Expense), Amount=150,0, Effective=150,0
+Tx 150: Date=14.04.2026, Cat='Market & Mutfak' (Expense), Amount=55,0, Effective=55,0
+Tx 151: Date=15.04.2026, Cat='Market & Mutfak' (Expense), Amount=220,0, Effective=220,0
+Tx 152: Date=15.04.2026, Cat='Market & Mutfak' (Expense), Amount=269,85, Effective=269,85
+Tx 153: Date=16.04.2026, Cat='Market & Mutfak' (Expense), Amount=105,0, Effective=105,0
+Tx 154: Date=16.04.2026, Cat='Aidat' (Expense), Amount=86,25, Effective=86,25
+Tx 155: Date=17.04.2026, Cat='Market & Mutfak' (Expense), Amount=80,0, Effective=80,0
+Tx 156: Date=17.04.2026, Cat='Market & Mutfak' (Expense), Amount=172,0, Effective=172,0
+Tx 157: Date=18.04.2026, Cat='Aidat' (Expense), Amount=189,99, Effective=189,99
+Tx 158: Date=19.04.2026, Cat='Market & Mutfak' (Expense), Amount=260,0, Effective=260,0
+Tx 159: Date=20.04.2026, Cat='Aidat' (Expense), Amount=249,99, Effective=249,99
+Tx 160: Date=20.04.2026, Cat='Market & Mutfak' (Expense), Amount=156,0, Effective=156,0
+Tx 161: Date=21.04.2026, Cat='Market & Mutfak' (Expense), Amount=565,8, Effective=565,8
+Tx 219: Date=21.04.2026, Cat='Market & Mutfak' (Expense), Amount=61,99, Effective=61,99
+Tx 220: Date=23.04.2026, Cat='Market & Mutfak' (Expense), Amount=604,5, Effective=604,5
+Tx 221: Date=23.04.2026, Cat='Market & Mutfak' (Expense), Amount=280,0, Effective=280,0
+Tx 222: Date=23.04.2026, Cat='Eğlence' (Expense), Amount=1020,0, Effective=1020,0
+Tx 223: Date=23.04.2026, Cat='Ev & Yaşam' (Expense), Amount=9059,89, Effective=9059,89
+Tx 224: Date=23.04.2026, Cat='Market & Mutfak' (Expense), Amount=1765,0, Effective=1765,0
+Tx 225: Date=24.04.2026, Cat='Market & Mutfak' (Expense), Amount=61,99, Effective=61,99
+Tx 226: Date=24.04.2026, Cat='Market & Mutfak' (Expense), Amount=329,25, Effective=329,25
+Tx 227: Date=24.04.2026, Cat='Market & Mutfak' (Expense), Amount=389,99, Effective=389,99
+Tx 228: Date=25.04.2026, Cat='Market & Mutfak' (Expense), Amount=417,5, Effective=417,5
+Tx 229: Date=25.04.2026, Cat='Market & Mutfak' (Expense), Amount=637,62, Effective=637,62
+Tx 230: Date=26.04.2026, Cat='Market & Mutfak' (Expense), Amount=430,0, Effective=430,0
+Tx 231: Date=26.04.2026, Cat='Market & Mutfak' (Expense), Amount=699,2, Effective=699,2
+Tx 232: Date=26.04.2026, Cat='Market & Mutfak' (Expense), Amount=279,0, Effective=279,0
+Tx 233: Date=27.04.2026, Cat='Market & Mutfak' (Expense), Amount=59,9, Effective=59,9
+Tx 234: Date=28.04.2026, Cat='Market & Mutfak' (Expense), Amount=61,99, Effective=61,99
+Tx 235: Date=28.04.2026, Cat='Market & Mutfak' (Expense), Amount=60,0, Effective=60,0
+Tx 236: Date=29.04.2026, Cat='Market & Mutfak' (Expense), Amount=355,0, Effective=355,0
+Tx 237: Date=30.04.2026, Cat='Market & Mutfak' (Expense), Amount=61,99, Effective=61,99
+Tx 238: Date=3.05.2026, Cat='Market & Mutfak' (Expense), Amount=100,0, Effective=100,0
+Tx 239: Date=4.05.2026, Cat='Market & Mutfak' (Expense), Amount=70,9, Effective=70,9
+Tx 240: Date=5.05.2026, Cat='Market & Mutfak' (Expense), Amount=61,99, Effective=61,99
+Tx 241: Date=6.05.2026, Cat='Market & Mutfak' (Expense), Amount=51,95, Effective=51,95
+Tx 242: Date=7.05.2026, Cat='Market & Mutfak' (Expense), Amount=61,99, Effective=61,99
+Tx 243: Date=8.05.2026, Cat='Market & Mutfak' (Expense), Amount=61,99, Effective=61,99
+Tx 244: Date=10.05.2026, Cat='Market & Mutfak' (Expense), Amount=25,0, Effective=25,0
+Tx 245: Date=10.05.2026, Cat='Market & Mutfak' (Expense), Amount=275,0, Effective=275,0
+Tx 246: Date=12.05.2026, Cat='Market & Mutfak' (Expense), Amount=61,99, Effective=61,99
+Tx 247: Date=13.05.2026, Cat='Market & Mutfak' (Expense), Amount=119,8, Effective=119,8
+Tx 248: Date=15.05.2026, Cat='Market & Mutfak' (Expense), Amount=385,0, Effective=385,0
+Tx 249: Date=23.04.2026, Cat='Ev & Yaşam' (Expense), Amount=720,0, Effective=720,0
+Tx 250: Date=24.04.2026, Cat='Eğitim' (Expense), Amount=425,0, Effective=425,0
+Tx 251: Date=4.05.2026, Cat='Market & Mutfak' (Expense), Amount=330,0, Effective=330,0
+Tx 252: Date=15.05.2026, Cat='Market & Mutfak' (Expense), Amount=330,0, Effective=330,0
+Tx 253: Date=23.03.2026, Cat='Ev & Yaşam' (Expense), Amount=5080,96, Effective=5080,96
+Tx 254: Date=21.04.2026, Cat='Market & Mutfak' (Expense), Amount=121,98, Effective=121,98
+Tx 255: Date=22.04.2026, Cat='Market & Mutfak' (Expense), Amount=151,0, Effective=151,0
+Tx 256: Date=22.04.2026, Cat='Market & Mutfak' (Expense), Amount=102,0, Effective=102,0
+Tx 257: Date=22.04.2026, Cat='Ev & Yaşam' (Expense), Amount=199,99, Effective=199,99
+Tx 258: Date=24.04.2026, Cat='Market & Mutfak' (Expense), Amount=185,0, Effective=185,0
+Tx 259: Date=24.04.2026, Cat='Market & Mutfak' (Expense), Amount=130,97, Effective=130,97
+Tx 260: Date=24.04.2026, Cat='Market & Mutfak' (Expense), Amount=197,5, Effective=197,5
+Tx 261: Date=27.04.2026, Cat='Market & Mutfak' (Expense), Amount=99,75, Effective=99,75
+Tx 262: Date=28.04.2026, Cat='Market & Mutfak' (Expense), Amount=757,12, Effective=757,12
+Tx 263: Date=29.04.2026, Cat='Ev & Yaşam' (Expense), Amount=100,0, Effective=100,0
+Tx 264: Date=2.05.2026, Cat='Market & Mutfak' (Expense), Amount=310,0, Effective=310,0
+Tx 265: Date=4.05.2026, Cat='Market & Mutfak' (Expense), Amount=534,45, Effective=534,45
+Tx 266: Date=5.05.2026, Cat='Market & Mutfak' (Expense), Amount=156,0, Effective=156,0
+Tx 267: Date=5.05.2026, Cat='Market & Mutfak' (Expense), Amount=199,95, Effective=199,95
+Tx 268: Date=5.05.2026, Cat='Market & Mutfak' (Expense), Amount=139,42, Effective=139,42
+Tx 269: Date=6.05.2026, Cat='Market & Mutfak' (Expense), Amount=154,0, Effective=154,0
+Tx 270: Date=6.05.2026, Cat='Market & Mutfak' (Expense), Amount=149,9, Effective=149,9
+Tx 271: Date=6.05.2026, Cat='Market & Mutfak' (Expense), Amount=344,99, Effective=344,99
+Tx 272: Date=7.05.2026, Cat='Market & Mutfak' (Expense), Amount=191,0, Effective=191,0
+Tx 273: Date=7.05.2026, Cat='Market & Mutfak' (Expense), Amount=75,0, Effective=75,0
+Tx 274: Date=10.05.2026, Cat='Market & Mutfak' (Expense), Amount=380,0, Effective=380,0
+Tx 275: Date=11.05.2026, Cat='Market & Mutfak' (Expense), Amount=940,93, Effective=940,93
+Tx 276: Date=12.05.2026, Cat='Market & Mutfak' (Expense), Amount=140,0, Effective=140,0
+Tx 277: Date=12.05.2026, Cat='Market & Mutfak' (Expense), Amount=345,38, Effective=345,38
+Tx 278: Date=12.05.2026, Cat='Market & Mutfak' (Expense), Amount=338,2, Effective=338,2
+Tx 279: Date=12.05.2026, Cat='Market & Mutfak' (Expense), Amount=99,99, Effective=99,99
+Tx 280: Date=13.05.2026, Cat='Market & Mutfak' (Expense), Amount=100,0, Effective=100,0
+Tx 281: Date=14.05.2026, Cat='Market & Mutfak' (Expense), Amount=104,0, Effective=104,0
+Tx 282: Date=14.05.2026, Cat='Market & Mutfak' (Expense), Amount=391,17, Effective=391,17
+Tx 283: Date=14.05.2026, Cat='Market & Mutfak' (Expense), Amount=178,1, Effective=178,1
+Tx 284: Date=15.05.2026, Cat='Market & Mutfak' (Expense), Amount=141,5, Effective=141,5
+Tx 285: Date=18.05.2026, Cat='Market & Mutfak' (Expense), Amount=105,0, Effective=105,0
+Tx 286: Date=20.05.2026, Cat='Sağlık' (Expense), Amount=197,94, Effective=197,94
+Tx 287: Date=21.05.2026, Cat='Market & Mutfak' (Expense), Amount=80,9, Effective=80,9

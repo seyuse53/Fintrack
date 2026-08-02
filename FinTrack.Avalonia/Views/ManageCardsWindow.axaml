@@ -1,59 +1,59 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window Width="800" Height="600" xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:FinTrack.Avalonia.ViewModels"
         xmlns:models="using:FinTrack.Core.Models"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-        Width="800" Height="600"
         WindowStartupLocation="CenterOwner"
         x:Class="FinTrack.Avalonia.Views.ManageCardsWindow"
         x:DataType="vm:ManageCardsViewModel"
-        Title="Kartları Yönet"
-        Background="#F4F6F9"
+        Title="{loc:Translate Cards_ManageCards}"
+        Background="{DynamicResource CardSecondaryBackgroundBrush}"
         Icon="/Assets/app_icon.ico">
 
-    <Grid ColumnDefinitions="*,*" Margin="20">
+    <Grid ColumnDefinitions="*,*" Margin="10">
         
         <!-- Left Side: Add/Edit Card -->
-        <Border Grid.Column="0" Background="White" CornerRadius="12" Padding="20" Margin="0,0,10,0" BorderBrush="#E0E0E0" BorderThickness="1">
+        <Border Grid.Column="0" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" Margin="0,0,10,0" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
             <Grid RowDefinitions="Auto,*,Auto">
-                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,20">
-                    <TextBlock Grid.Column="0" Text="{Binding FormTitle}" FontSize="16" FontWeight="Bold" Foreground="#34495E" VerticalAlignment="Center"/>
-                    <Button Grid.Column="1" Content="İptal" Command="{Binding CancelEditCommand}" IsVisible="{Binding IsEditing}" Background="Transparent" Foreground="#E74C3C" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                    <TextBlock Grid.Column="0" Text="{Binding FormTitle}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Content="{loc:Translate General_Cancel}" Command="{Binding CancelEditCommand}" IsVisible="{Binding IsEditing}" Background="Transparent" Foreground="#E74C3C" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </Grid>
                 
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                    <StackPanel Spacing="15">
+                    <StackPanel Spacing="10">
                         
                         <StackPanel>
-                            <TextBlock Text="Banka Adı" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
-                            <ComboBox ItemsSource="{Binding AvailableBanks}" SelectedItem="{Binding NewBankName}" IsEnabled="{Binding IsParentNotSelected}" HorizontalAlignment="Stretch" Padding="10" PlaceholderText="Banka Seçiniz..."/>
+                            <TextBlock Text="{loc:Translate ManageAccounts_BankName}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
+                            <ComboBox ItemsSource="{Binding AvailableBanks}" SelectedItem="{Binding NewBankName}" IsEnabled="{Binding IsParentNotSelected}" HorizontalAlignment="Stretch" Padding="10" PlaceholderText="{loc:Translate ManageAccounts_SelectBank}"/>
                         </StackPanel>
 
                         <StackPanel>
-                            <TextBlock Text="Kart Adı (Etiket)" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
-                            <TextBox Text="{Binding NewCardLabel}" Padding="10" PlaceholderText="Örn: Asıl Kart, Sanal Kart"/>
+                            <TextBlock Text="{loc:Translate ManageCards_CardNameLabel}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding NewCardLabel}" Padding="10" PlaceholderText="{loc:Translate ManageCards_EgMainVirtual}"/>
                         </StackPanel>
 
                         <StackPanel>
-                            <TextBlock Text="Limit (₺)" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                            <TextBlock Text="{loc:Translate ManageCards_Limit}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                             <TextBox Text="{Binding NewLimitText}" IsEnabled="{Binding IsParentNotSelected}" Padding="10" PlaceholderText="0,00"/>
                         </StackPanel>
 
                         <Grid ColumnDefinitions="*,10,*">
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="Hesap Kesim (Gün)" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                                <TextBlock Text="{loc:Translate ManageCards_StatementDay}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                                 <NumericUpDown Value="{Binding NewStatementDay}" IsEnabled="{Binding IsParentNotSelected}" Minimum="1" Maximum="31" Padding="5"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2">
-                                <TextBlock Text="Son Ödeme (Gün)" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                                <TextBlock Text="{loc:Translate ManageCards_PaymentDueDay}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                                 <NumericUpDown Value="{Binding NewPaymentDueDay}" IsEnabled="{Binding IsParentNotSelected}" Minimum="1" Maximum="31" Padding="5"/>
                             </StackPanel>
                         </Grid>
 
                         <StackPanel>
-                            <TextBlock Text="Bağlı Olduğu Kart (Opsiyonel)" FontSize="12" FontWeight="SemiBold" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                            <TextBlock Text="{loc:Translate ManageCards_LinkedCardOptional}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                             <ComboBox ItemsSource="{Binding AvailableParentCards}" SelectedItem="{Binding SelectedParentCard}" HorizontalAlignment="Stretch" Padding="10">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
@@ -70,31 +70,31 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <Button Grid.Row="2" Content="{Binding SubmitButtonText}" Command="{Binding AddCardCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#27AE60" Foreground="White" Padding="10" FontWeight="Bold" Margin="0,20,0,0"/>
+                <Button Grid.Row="2" Content="{Binding SubmitButtonText}" Command="{Binding AddCardCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#27AE60" Foreground="White" Padding="10" FontWeight="Bold" Margin="0,10,0,0"/>
             </Grid>
         </Border>
 
         <!-- Right Side: Existing Cards -->
-        <Border Grid.Column="1" Background="White" CornerRadius="12" Padding="20" Margin="10,0,0,0" BorderBrush="#E0E0E0" BorderThickness="1">
+        <Border Grid.Column="1" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" Padding="10" Margin="10,0,0,0" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
             <Grid RowDefinitions="Auto,*">
-                <TextBlock Grid.Row="0" Text="MEVCUT KARTLAR" FontSize="16" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,20"/>
+                <TextBlock Grid.Row="0" Text="{loc:Translate ManageCards_ExistingCards}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,10"/>
                 
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding Cards}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="models:CreditCardAccount">
-                                <Border Background="#F8F9FA" CornerRadius="8" Padding="15" Margin="0,0,0,10" BorderBrush="#ECF0F1" BorderThickness="1">
+                                <Border Background="{DynamicResource CardSecondaryBackgroundBrush}" CornerRadius="8" Padding="15" Margin="0,0,0,10" BorderBrush="#ECF0F1" BorderThickness="1">
                                     <Grid ColumnDefinitions="*,Auto,Auto,Auto">
                                         <StackPanel Grid.Column="0">
-                                            <TextBlock Text="{Binding BankName}" FontSize="12" Foreground="#95A5A6" FontWeight="SemiBold"/>
-                                            <TextBlock Text="{Binding CardLabel}" FontSize="16" FontWeight="Bold" Foreground="#2C3E50"/>
-                                            <TextBlock Text="{Binding Limit, StringFormat='Limit: {0:C0}'}" FontSize="12" Foreground="#34495E" Margin="0,2,0,0"/>
-                                            <TextBlock Text="Durum: Pasif" FontSize="11" Foreground="#E74C3C" IsVisible="{Binding !IsActive}" Margin="0,2,0,0" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding BankName}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding CardLabel}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                            <TextBlock Text="{Binding Limit, StringFormat='Limit: {0:C0}'}" FontSize="12" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,2,0,0"/>
+                                            <TextBlock Text="{loc:Translate ManageCards_StatusInactive}" FontSize="11" Foreground="#E74C3C" IsVisible="{Binding !IsActive}" Margin="0,2,0,0" FontWeight="Bold"/>
                                         </StackPanel>
 
                                         <!-- Toggle Active Buttons -->
                                         <Button Grid.Column="1" 
-                                                Content="Pasif Yap"
+                                                Content="{loc:Translate ManageAccounts_MakeInactive}"
                                                 Command="{Binding $parent[Window].((vm:ManageCardsViewModel)DataContext).ToggleActiveStatusCommand}" 
                                                 CommandParameter="{Binding}"
                                                 IsVisible="{Binding IsActive}"
@@ -104,7 +104,7 @@
                                                 VerticalAlignment="Center"/>
                                                 
                                         <Button Grid.Column="1" 
-                                                Content="Aktif Yap"
+                                                Content="{loc:Translate ManageAccounts_MakeActive}"
                                                 Command="{Binding $parent[Window].((vm:ManageCardsViewModel)DataContext).ToggleActiveStatusCommand}" 
                                                 CommandParameter="{Binding}"
                                                 IsVisible="{Binding !IsActive}"
@@ -115,7 +115,7 @@
 
                                         <!-- Edit Button -->
                                         <Button Grid.Column="2" 
-                                                Content="Düzenle" 
+                                                Content="{loc:Translate General_Edit}" 
                                                 Command="{Binding $parent[Window].((vm:ManageCardsViewModel)DataContext).EditCardCommand}" 
                                                 CommandParameter="{Binding}"
                                                 Background="Transparent" 
@@ -125,7 +125,7 @@
 
                                         <!-- Delete Button -->
                                         <Button Grid.Column="3" 
-                                                Content="Sil" 
+                                                Content="{loc:Translate General_Delete}" 
                                                 Command="{Binding $parent[Window].((vm:ManageCardsViewModel)DataContext).DeleteCardCommand}" 
                                                 CommandParameter="{Binding}"
                                                 Background="Transparent" 

@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using FinTrack.Core.Models;
 using FinTrack.Data;
 using Microsoft.EntityFrameworkCore;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels
 {
@@ -43,7 +44,7 @@ namespace FinTrack.Avalonia.ViewModels
         private string _totalPortfolioValueText = "₺0,00";
 
         [ObservableProperty]
-        private string _totalInvestmentProfitText = "Analiz Ediliyor...";
+        private string _totalInvestmentProfitText = LocalizationService.GetString("Reports_Analyzing");
 
         [ObservableProperty]
         private string _totalInvestmentProfitColor = "#7F8C8D";
@@ -62,13 +63,29 @@ namespace FinTrack.Avalonia.ViewModels
             _context = context;
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            _context?.Dispose();
+        }
+
+        private bool _isInitializing;
         public async Task InitializeAsync()
         {
-            var now = DateTime.Now;
-            StartDate = new DateTime(now.Year, now.Month, 1);
-            EndDate = now.Date;
+            if (_isInitializing) return;
+            _isInitializing = true;
+            try
+            {
+                var now = DateTime.Now;
+                StartDate = new DateTime(now.Year, now.Month, 1);
+                EndDate = now.Date;
 
-            await FetchDataAsync();
+                await FetchDataAsync();
+            }
+            finally
+            {
+                _isInitializing = false;
+            }
         }
 
         [RelayCommand]
@@ -128,7 +145,7 @@ namespace FinTrack.Avalonia.ViewModels
             decimal totalIncome = incomes.Sum(i => i.Amount);
 
             var breakdown = incomes
-                .GroupBy(i => i.Category?.Name ?? "Diğer")
+                .GroupBy(i => i.Category?.Name ?? LocalizationService.GetString("Global_Other"))
                 .Select(g => new BreakdownItem
                 {
                     CategoryName = g.Key,
@@ -156,7 +173,7 @@ namespace FinTrack.Avalonia.ViewModels
             decimal totalExpense = expenses.Sum(e => e.Amount);
 
             var breakdown = expenses
-                .GroupBy(e => e.Category?.Name ?? "Diğer")
+                .GroupBy(e => e.Category?.Name ?? LocalizationService.GetString("Global_Other"))
                 .Select(g => new BreakdownItem
                 {
                     CategoryName = g.Key,
@@ -230,7 +247,7 @@ namespace FinTrack.Avalonia.ViewModels
             if (!assets.Any()) return;
 
             var allocation = assets
-                .GroupBy(a => a.Category ?? "Diğer")
+                .GroupBy(a => a.Category ?? LocalizationService.GetString("Global_Other"))
                 .Select(g => new InvestmentAllocationItem
                 {
                     AssetCategory = g.Key,

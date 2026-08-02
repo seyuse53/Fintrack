@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using FinTrack.Core.Models;
 using FinTrack.Data;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -76,7 +77,7 @@ public partial class EditTransactionViewModel : ViewModelBase
 
         // Load Payment Methods
         PaymentMethods.Clear();
-        PaymentMethods.Add(new PaymentItemViewModel { Label = "💵 Nakit", Card = null, Bank = null });
+        PaymentMethods.Add(new PaymentItemViewModel { Label = LocalizationService.GetString("AddTransaction_Cash"), Card = null, Bank = null });
 
         var bankAccounts = await _context.BankAccounts.Where(b => b.IsActive).OrderBy(b => b.BankName).ThenBy(b => b.AccountName).ToListAsync();
         foreach (var bank in bankAccounts)
@@ -121,13 +122,13 @@ public partial class EditTransactionViewModel : ViewModelBase
         string cleanAmount = AmountText.Replace(".", "").Replace(",", ".");
         if (!decimal.TryParse(cleanAmount, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) || (!IsTransfer && amount <= 0))
         {
-            ShowError("Lütfen geçerli bir tutar giriniz.");
+            ShowError(LocalizationService.GetString("Global_ErrInvalidAmount"));
             return;
         }
 
         if (SelectedCategory == null)
         {
-            ShowError("Lütfen bir kategori seçiniz.");
+            ShowError(LocalizationService.GetString("AddTransaction_ErrCategory"));
             return;
         }
 
@@ -136,7 +137,7 @@ public partial class EditTransactionViewModel : ViewModelBase
             var transaction = await _context.Transactions.FindAsync(_transactionId);
             if (transaction == null)
             {
-                ShowError("İşlem bulunamadı.");
+                ShowError(LocalizationService.GetString("EditTransaction_ErrNotFound"));
                 return;
             }
 
@@ -166,7 +167,7 @@ public partial class EditTransactionViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            ShowError($"İşlem güncellenirken hata oluştu: {ex.Message}");
+            ShowError(string.Format(LocalizationService.GetString("EditTransaction_ErrUpdate"), ex.Message));
         }
     }
 

@@ -5,6 +5,30 @@
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="CardBackgroundBrush">White</SolidColorBrush>
+                    <SolidColorBrush x:Key="CardSecondaryBackgroundBrush">#F8F9FA</SolidColorBrush>
+                    <SolidColorBrush x:Key="PrimaryTextBrush">#2C3E50</SolidColorBrush>
+                    <SolidColorBrush x:Key="SecondaryTextBrush">#7F8C8D</SolidColorBrush>
+                    <SolidColorBrush x:Key="CardBorderBrush">#E0E0E0</SolidColorBrush>
+                    <SolidColorBrush x:Key="RowBackgroundBrush">White</SolidColorBrush>
+                </ResourceDictionary>
+                
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="CardBackgroundBrush">#1E1E1E</SolidColorBrush>
+                    <SolidColorBrush x:Key="CardSecondaryBackgroundBrush">#2D2D30</SolidColorBrush>
+                    <SolidColorBrush x:Key="PrimaryTextBrush">#F3F4F6</SolidColorBrush>
+                    <SolidColorBrush x:Key="SecondaryTextBrush">#9CA3AF</SolidColorBrush>
+                    <SolidColorBrush x:Key="CardBorderBrush">#3F3F46</SolidColorBrush>
+                    <SolidColorBrush x:Key="RowBackgroundBrush">#1E1E1E</SolidColorBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>

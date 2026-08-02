@@ -1,30 +1,31 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         x:Class="FinTrack.Avalonia.Views.ErrorDialogWindow"
-        Title="Hata" Width="450" SizeToContent="Height"
+        Title="{loc:Translate Global_Error}" SizeToContent="WidthAndHeight" MaxWidth="500"
         WindowStartupLocation="CenterOwner" CanResize="False"
         Background="Transparent"
         TransparencyLevelHint="Transparent"
-        SystemDecorations="None"
+        WindowDecorations="None"
         ExtendClientAreaToDecorationsHint="True">
-    <Border Margin="15" Background="{DynamicResource SystemRegionBrush}" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1"
+    <Border Margin="15" Background="{DynamicResource SystemRegionBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1"
             BoxShadow="0 4 15 0 #20000000">
-        <StackPanel Margin="20">
+        <StackPanel Margin="10">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                <Viewbox Width="32" Height="32">
+                <Viewbox>
                     <Path Data="M13,14H11V8H13M13,18H11V16H13M1,21H23L12,2L1,21Z" Fill="#E74C3C"/>
                 </Viewbox>
-                <TextBlock x:Name="TitleText" Text="Hata" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                <TextBlock x:Name="TitleText" Text="{loc:Translate Global_Error}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" Margin="12,0,0,0"/>
             </StackPanel>
 
-            <TextBlock x:Name="MessageText" Text="Bir hata oluştu." 
+            <TextBlock x:Name="MessageText" Text="{loc:Translate ErrorDialog_Msg}" 
                        FontSize="14" TextWrapping="Wrap" Margin="0,0,0,15" LineHeight="22"/>
 
             <TextBlock x:Name="DetailsText" Text="Teknik detaylar..." 
-                       FontSize="12" Foreground="#7F8C8D" TextWrapping="Wrap" Margin="0,0,0,25" LineHeight="18" FontStyle="Italic"/>
+                       FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="0,0,0,25" LineHeight="18" FontStyle="Italic"/>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="CloseButton" Content="Kapat" Width="100" Height="34" 
+                <Button x:Name="CloseButton" Content="{loc:Translate Global_Close}" 
                         Click="Close_Click" Background="#E74C3C" Foreground="White" FontWeight="SemiBold" BorderThickness="0" CornerRadius="6"
                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             </StackPanel>

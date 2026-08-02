@@ -7,6 +7,7 @@ using FinTrack.Core.Models;
 using FinTrack.Core.Services;
 using FinTrack.Data;
 using Microsoft.EntityFrameworkCore;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.Views;
 
@@ -52,7 +53,7 @@ public partial class CategoryEditWindow : Window
                 .OrderBy(c => c.Name)
                 .ToList();
 
-            parents.Insert(0, new Category { Id = 0, Name = "-- Yok (Ana Kategori) --" });
+            parents.Insert(0, new Category { Id = 0, Name = LocalizationService.GetString("CategoryEdit_NoParent") });
             AvailableParents = parents;
             ParentCategoryComboBox.ItemsSource = AvailableParents;
 
@@ -76,9 +77,8 @@ public partial class CategoryEditWindow : Window
         string newName = CategoryNameTextBox.Text?.Trim() ?? "";
         if (string.IsNullOrWhiteSpace(newName))
         {
-            var parentWindow = this;
-            var warnDialog = new ConfirmDialog("Uyarı", "Lütfen bir kategori adı girin.", "Tamam", "");
-            await warnDialog.ShowDialog<bool?>(parentWindow);
+            var warnDialog = new ConfirmDialog(LocalizationService.GetString("Global_Warning"), LocalizationService.GetString("CategoryEdit_ErrEmptyName"), LocalizationService.GetString("Global_OK"), "");
+            await warnDialog.ShowDialog<bool?>(this);
             return;
         }
 

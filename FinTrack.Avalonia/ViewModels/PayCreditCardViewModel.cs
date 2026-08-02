@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -45,7 +46,7 @@ public partial class PayCreditCardViewModel : ViewModelBase
     public PayCreditCardViewModel(int cardId)
     {
         _cardId = cardId;
-        _context = App.Services?.GetService<AppDbContext>();
+        _context = AppDbContext.CreateNew();
         _ = LoadDataAsync();
     }
 
@@ -56,7 +57,7 @@ public partial class PayCreditCardViewModel : ViewModelBase
         var card = await _context.CreditCardAccounts.FindAsync(_cardId);
         if (card != null)
         {
-            CardTitle = $"{card.BankName} - {card.CardLabel} Borç Ödeme";
+            CardTitle = string.Format(LocalizationService.GetString("PayCard_TitleFormat"), card.BankName, card.CardLabel);
         }
 
         var dbAccounts = await _context.BankAccounts
@@ -69,7 +70,7 @@ public partial class PayCreditCardViewModel : ViewModelBase
             Accounts.Clear();
             
             // Add Cash
-            Accounts.Add(new TransferAccountItem { AccountId = null, DisplayName = "Cüzdan (Nakit)", Icon = "💵" });
+            Accounts.Add(new TransferAccountItem { AccountId = null, DisplayName = LocalizationService.GetString("Global_WalletCash"), Icon = "💵" });
 
             // Add Bank Accounts
             foreach (var acc in dbAccounts)
@@ -93,35 +94,34 @@ public partial class PayCreditCardViewModel : ViewModelBase
 
         if (SelectedSourceAccount == null)
         {
-            ShowError("Lütfen ödemenin yapılacağı hesabı seçiniz.");
+            ShowError(LocalizationService.GetString("PayCard_ErrSource"));
             return;
         }
 
         string cleanAmount = AmountText.Replace(".", "").Replace(",", ".");
         if (!decimal.TryParse(cleanAmount, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) || amount <= 0)
         {
-            ShowError("Geçerli bir tutar giriniz.");
+            ShowError(LocalizationService.GetString("Global_ErrInvalidAmount"));
             return;
         }
 
         var date = SelectedDate ?? DateTime.Now;
 
-        // Find or create "Kredi Kartı Ödemesi" transfer category
-        var transferCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Type == TransactionType.Transfer && c.Name == "Kredi Kartı Ödemesi");
+        var transferCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Type == TransactionType.Transfer && c.Name == LocalizationService.GetString("PayCard_DefaultDesc"));
         if (transferCategory == null)
         {
             // Try fallback
             transferCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Type == TransactionType.Transfer);
             if (transferCategory == null)
             {
-                transferCategory = new Category { Name = "Kredi Kartı Ödemesi", Type = TransactionType.Transfer };
+                transferCategory = new Category { Name = LocalizationService.GetString("PayCard_DefaultDesc"), Type = TransactionType.Transfer };
                 _context.Categories.Add(transferCategory);
                 await _context.SaveChangesAsync();
             }
         }
 
         string groupId = Guid.NewGuid().ToString();
-        string desc = string.IsNullOrWhiteSpace(Description) ? "Kredi Kartı Ödemesi" : Description;
+        string desc = string.IsNullOrWhiteSpace(Description) ? LocalizationService.GetString("PayCard_DefaultDesc") : Description;
 
         // Outgoing transaction from Bank (-)
         var outTrans = new Transaction

@@ -7,8 +7,8 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <ApplicationIcon>Assets\app_icon.ico</ApplicationIcon>
-    <Version>2.0.15</Version>
-    <AssemblyVersion>2.0.15.0</AssemblyVersion>
+    <Version>2.2.5</Version>
+    <AssemblyVersion>2.2.5.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

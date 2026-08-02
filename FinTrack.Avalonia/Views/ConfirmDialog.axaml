@@ -1,31 +1,34 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         x:Class="FinTrack.Avalonia.Views.ConfirmDialog"
-        Title="Onay Gerekli" Width="420" SizeToContent="Height"
+        Title="{loc:Translate Global_Warning}" SizeToContent="WidthAndHeight" MaxWidth="500"
         WindowStartupLocation="CenterOwner" CanResize="False"
-        Background="#F5F5F7">
+        Background="{DynamicResource CardSecondaryBackgroundBrush}">
 
-    <Border Margin="15" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1"
+    <Border Margin="15" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1"
             BoxShadow="0 2 10 0 #20000000">
-        <StackPanel Margin="25">
+        <StackPanel Margin="10">
             <!-- Header -->
             <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
                 <TextBlock x:Name="IconText" Text="ℹ️" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <TextBlock x:Name="TitleText" Text="Dikkat" FontSize="17" FontWeight="Bold" Foreground="#333" VerticalAlignment="Center"/>
+                <TextBlock x:Name="TitleText" Text="{loc:Translate Global_Warning}" FontSize="17" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
             </StackPanel>
 
             <!-- Message -->
-            <TextBlock x:Name="MessageText" Text="İşlemi onaylıyor musunuz?" 
-                       FontSize="14" Foreground="#444" TextWrapping="Wrap" Margin="0,0,0,25" LineHeight="22"/>
+            <TextBlock x:Name="MessageText" Text="{loc:Translate ConfirmDialog_Msg}" 
+                       FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="0,0,0,25" LineHeight="22"/>
 
             <!-- Buttons -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
-                <Button x:Name="CancelButton" Content="Vazgeç" MinWidth="90" Height="34" 
-                        Background="Transparent" BorderBrush="#DDD" Foreground="#666" CornerRadius="6"
-                        Click="Cancel_Click" IsVisible="True"/>
+                <Button x:Name="CancelButton" Content="{loc:Translate Global_GiveUp}" MinWidth="90" 
+                        Background="{DynamicResource CardBackgroundBrush}" Foreground="{DynamicResource PrimaryTextBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" 
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CornerRadius="6" Cursor="Hand"
+                        Click="Cancel_Click"/>
 
-                <Button x:Name="ConfirmButton" Content="Tamam" MinWidth="120" Height="34" 
-                        Background="#007ACC" Foreground="White" FontWeight="SemiBold" BorderThickness="0" CornerRadius="6"
+                <Button x:Name="ConfirmButton" Content="{loc:Translate Global_OK}" MinWidth="120" 
+                        Background="#E74C3C" Foreground="White" FontWeight="Bold" BorderThickness="0" 
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CornerRadius="6" Cursor="Hand"
                         Click="Confirm_Click"/>
             </StackPanel>
         </StackPanel>

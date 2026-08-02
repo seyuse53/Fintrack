@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using FinTrack.Core.Helpers;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -146,18 +147,19 @@ public partial class InvestmentsViewModel : ViewModelBase
 
     public InvestmentsViewModel()
     {
-        _context = App.Services?.GetService<AppDbContext>();
-        _ = InitializeAsync();
+        _context = AppDbContext.CreateNew();
     }
 
-    private async Task InitializeAsync()
+    public override void Dispose()
     {
-        await LoadDataAsync();
-        _ = FetchPricesAsync(); // Arka planda otomatik fiyat çek
+        base.Dispose();
+        _context?.Dispose();
     }
 
     public async Task LoadDataAsync()
     {
+        _ = FetchPricesAsync(); // Arka planda otomatik fiyat çek
+
         if (_context == null) return;
 
         try
@@ -204,7 +206,7 @@ public partial class InvestmentsViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Yatırımlar çekilemedi: {ex.Message}");
+            AppLogger.Error($"Yatırımlar çekilemedi: {ex.Message}");
         }
     }
 
@@ -337,7 +339,7 @@ public partial class InvestmentsViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Fiyat çekme hatası: {ex.Message}");
+            AppLogger.Error($"Fiyat çekme hatası: {ex.Message}");
         }
     }
 

@@ -1,0 +1,88 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        xmlns:models="using:FinTrack.Core.Models"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
+        mc:Ignorable="d" d:DesignWidth="1050" d:DesignHeight="700"
+        Width="1050" Height="700" WindowStartupLocation="CenterOwner" CanResize="True" Background="{DynamicResource CardSecondaryBackgroundBrush}"
+        x:Class="FinTrack.Avalonia.Views.ImportPreviewWindow"
+        x:DataType="vm:ImportPreviewViewModel"
+        Title="{loc:Translate ImportPreview_Title}"
+        Icon="/Assets/app_icon.ico">
+
+    <Grid Margin="10" RowDefinitions="Auto,*,Auto">
+        
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="{loc:Translate ImportPreview_Title}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+            <TextBlock Text="{loc:Translate ImportPreview_Desc}" 
+                       FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,5,0,0" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <!-- Main Content (Scrollable List) -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,15">
+            <ItemsControl ItemsSource="{Binding Items}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ImportItemViewModel">
+                        <Border CornerRadius="8" BorderThickness="1" Padding="10" Margin="0,0,0,8"
+                                Background="{Binding RowBackground}"
+                                BorderBrush="{Binding RowBorderBrush}">
+                            <Grid ColumnDefinitions="Auto,Auto,*,*,Auto,Auto" VerticalAlignment="Center">
+                                
+                                <!-- Selection Checkbox -->
+                                <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                
+                                <!-- Transaction Date -->
+                                <CalendarDatePicker Grid.Column="1" SelectedDate="{Binding Date}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                
+                                <!-- Description -->
+                                <TextBox Grid.Column="2" Text="{Binding Description}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                
+                                <!-- Category Picker -->
+                                <ComboBox Grid.Column="3" ItemsSource="{Binding AvailableCategories}" 
+                                          SelectedItem="{Binding SelectedCategory}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,10,0">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Category">
+                                            <TextBlock Text="{Binding FullDisplayName}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                
+                                <!-- Amount -->
+                                <TextBlock Grid.Column="4" Text="{Binding AmountText}" Foreground="{Binding ForegroundColor}" 
+                                           FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0" TextAlignment="Right"/>
+                                
+                                <!-- Duplicate Badge -->
+                                <Border Grid.Column="5" Background="#FBEEE6" BorderBrush="#F5CBA7" BorderThickness="1" CornerRadius="4" Padding="6,4" Margin="5,0,0,0" 
+                                        VerticalAlignment="Center" IsVisible="{Binding IsDuplicate}" ToolTip.Tip="{Binding DuplicateReason}">
+                                    <TextBlock Text="{loc:Translate ImportPreview_Matched}" FontSize="10" Foreground="#E67E22" FontWeight="Bold"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Footer Buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto,Auto,Auto">
+            <!-- Summary Info -->
+            <TextBlock Grid.Column="0" Text="{loc:Translate ImportPreview_DupeWarning}" 
+                       FontSize="11" Foreground="#E67E22" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            
+            <!-- Total Amount -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                <TextBlock Text="{loc:Translate ImportPreview_SelectedTotal}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding TotalSelectedAmountText}" FontSize="16" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <Button Grid.Column="2" Content="{loc:Translate Global_Cancel}" Padding="8" Command="{Binding CancelCommand}" 
+                    Background="#BDC3C7" Foreground="White" FontWeight="Bold" BorderThickness="0" CornerRadius="6" Cursor="Hand" HorizontalContentAlignment="Center" Margin="0,0,10,0"/>
+            
+            <Button Grid.Column="3" Content="{loc:Translate ImportPreview_ImportSelected}" Padding="10,5" Command="{Binding ImportSelectedCommand}" 
+                    Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" CornerRadius="6" HorizontalContentAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>

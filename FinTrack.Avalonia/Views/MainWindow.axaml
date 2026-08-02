@@ -1,15 +1,15 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window SizeToContent="WidthAndHeight" xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:FinTrack.Avalonia.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
-        Width="1200" Height="700"
         WindowStartupLocation="CenterScreen"
         x:Class="FinTrack.Avalonia.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         Icon="avares://FinTrack.Avalonia/Assets/avalonia-logo.ico"
-        Title="KT FinTrack - Kişisel Finans Takip">
+        Title="{loc:Translate Global_AppTitle}">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>

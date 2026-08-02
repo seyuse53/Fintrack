@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -52,7 +53,7 @@ public partial class TransferViewModel : ViewModelBase
 
     public TransferViewModel(int? initialSourceAccountId = null)
     {
-        _context = App.Services?.GetService<AppDbContext>();
+        _context = AppDbContext.CreateNew();
         _initialSourceAccountId = initialSourceAccountId;
         _ = LoadAccountsAsync();
     }
@@ -71,7 +72,7 @@ public partial class TransferViewModel : ViewModelBase
             Accounts.Clear();
             
             // Add Cash
-            Accounts.Add(new TransferAccountItem { AccountId = null, DisplayName = "Cüzdan (Nakit)", Icon = "💵" });
+            Accounts.Add(new TransferAccountItem { AccountId = null, DisplayName = LocalizationService.GetString("Global_WalletCash"), Icon = "💵" });
 
             // Add Bank Accounts
             foreach (var acc in dbAccounts)
@@ -100,36 +101,36 @@ public partial class TransferViewModel : ViewModelBase
 
         if (SelectedSourceAccount == null || SelectedDestinationAccount == null)
         {
-            ShowError("Lütfen kaynak ve hedef hesapları seçiniz.");
+            ShowError(LocalizationService.GetString("Transfer_ErrAccounts"));
             return;
         }
 
         if (SelectedSourceAccount.AccountId == SelectedDestinationAccount.AccountId)
         {
-            ShowError("Kaynak ve hedef hesaplar aynı olamaz.");
+            ShowError(LocalizationService.GetString("Transfer_ErrSameAccount"));
             return;
         }
 
         string cleanAmount = AmountText.Replace(".", "").Replace(",", ".");
         if (!decimal.TryParse(cleanAmount, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) || amount <= 0)
         {
-            ShowError("Geçerli bir tutar giriniz.");
+            ShowError(LocalizationService.GetString("Global_ErrInvalidAmount"));
             return;
         }
 
         var date = SelectedDate ?? DateTime.Now;
 
         // Find or create Transfer category
-        var transferCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Type == TransactionType.Transfer && c.Name == "Transfer");
+        var transferCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Type == TransactionType.Transfer && c.Name == LocalizationService.GetString("Transfer_DefaultDesc"));
         if (transferCategory == null)
         {
-            transferCategory = new Category { Name = "Transfer", Type = TransactionType.Transfer };
+            transferCategory = new Category { Name = LocalizationService.GetString("Transfer_DefaultDesc"), Type = TransactionType.Transfer };
             _context.Categories.Add(transferCategory);
             await _context.SaveChangesAsync();
         }
 
         string groupId = Guid.NewGuid().ToString();
-        string desc = string.IsNullOrWhiteSpace(Description) ? "Para Transferi" : Description;
+        string desc = string.IsNullOrWhiteSpace(Description) ? LocalizationService.GetString("Transfer_DefaultDesc") : Description;
 
         // Outgoing transaction (-)
         var outTrans = new Transaction

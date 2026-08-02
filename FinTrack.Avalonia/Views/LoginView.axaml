@@ -3,21 +3,25 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             xmlns:loc="using:FinTrack.Avalonia.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="FinTrack.Avalonia.Views.LoginView"
              x:DataType="vm:LoginViewModel">
 
-    <Grid Background="#F5F5F5">
-        <Border BorderBrush="#DDDDDD" BorderThickness="1" CornerRadius="5" Background="White" Padding="30"
+    <Grid Background="{DynamicResource CardSecondaryBackgroundBrush}" RowDefinitions="*,Auto">
+        <Border Grid.Row="0" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" CornerRadius="5" Background="{DynamicResource CardBackgroundBrush}" Padding="10"
                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                Width="380">
-            <StackPanel Spacing="15">
-                <Image Source="avares://FinTrack.Avalonia/Assets/logo.png" Width="280" Height="100" Margin="0,0,0,10" Stretch="Uniform" />
-                <TextBlock Text="KT FinTrack'e Giriş Yapın" FontSize="20" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" IsVisible="{Binding !IsFirstLaunch}"/>
-                <TextBlock Text="Yeni Profil Kurulumu" FontSize="20" FontWeight="Bold" Foreground="#333333" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" IsVisible="{Binding IsFirstLaunch}"/>
+                Width="380" Margin="0,20,0,10">
+            <StackPanel Spacing="10">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Image Grid.Column="0" Source="avares://FinTrack.Avalonia/Assets/logo.png" Width="280" Height="100" Margin="0,0,0,10" Stretch="Uniform" />
+                    <Button Grid.Column="1" Content="🌐 TR/EN" Command="{Binding ToggleLanguageCommand}" Background="Transparent" Foreground="#2980B9" FontWeight="Bold" ToolTip.Tip="Dili Değiştir / Change Language" VerticalAlignment="Top"/>
+                </Grid>
+                <TextBlock Text="{loc:Translate Login_Title}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" IsVisible="{Binding !IsFirstLaunch}"/>
+                <TextBlock Text="{loc:Translate Login_NewProfile}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center" TextWrapping="Wrap" Margin="0,0,0,10" IsVisible="{Binding IsFirstLaunch}"/>
 
                 <!-- Profil Seçimi -->
-                <TextBlock Text="Profil Seçin:" Foreground="#555555" Margin="0,0,0,-10"/>
+                <TextBlock Text="{loc:Translate Login_SelectProfile}" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,-10"/>
                 <Grid ColumnDefinitions="*,Auto,Auto">
                     <ComboBox Grid.Column="0" ItemsSource="{Binding Profiles}" 
                               SelectedItem="{Binding SelectedProfile}"
@@ -25,42 +29,101 @@
                     
                     <Button Grid.Column="1" Content="+" Width="32" Height="32" Margin="5,0,0,0"
                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                            ToolTip.Tip="Yeni Profil Ekle"/>
+                            Command="{Binding AddProfileCommand}"
+                            ToolTip.Tip="{loc:Translate Login_Tooltip_AddProfile}"/>
                     
                     <Button Grid.Column="2" Content="-" Width="32" Height="32" Margin="5,0,0,0"
                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                             Background="#F39C12" Foreground="White" FontWeight="Bold"
-                            ToolTip.Tip="Profili Listeden Kaldır"/>
+                            Command="{Binding RemoveProfileCommand}"
+                            ToolTip.Tip="{loc:Translate Login_Tooltip_RemoveProfile}"/>
                 </Grid>
 
-                <TextBlock Text="Şifrenizi Girin:" Foreground="#555555" Margin="0,0,0,-10"/>
+                <TextBlock Text="{loc:Translate Login_EnterPassword}" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,-10"/>
                 <TextBox Text="{Binding Password}" PasswordChar="•" Height="32" FontSize="16" VerticalContentAlignment="Center"/>
 
-                <StackPanel IsVisible="{Binding IsFirstLaunch}" Spacing="15">
-                    <TextBlock Text="Şifrenizi Tekrar Girin:" Foreground="#555555" Margin="0,0,0,-10"/>
+                <StackPanel IsVisible="{Binding IsFirstLaunch}" Spacing="10">
+                    <TextBlock Text="{loc:Translate Login_EnterPasswordAgain}" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,-10"/>
                     <TextBox Text="{Binding ConfirmPassword}" PasswordChar="•" Height="32" FontSize="16" VerticalContentAlignment="Center"/>
                 </StackPanel>
 
-                <TextBlock Text="{Binding ErrorMessage}" Foreground="#E74C3C" IsVisible="{Binding HasError}" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="#E74C3C" IsVisible="{Binding HasError}" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding InfoMessage}" Foreground="#27AE60" IsVisible="{Binding HasInfo}" TextWrapping="Wrap" HorizontalAlignment="Center"/>
 
-                <Button Content="Giriş" Command="{Binding LoginCommand}" IsVisible="{Binding !IsFirstLaunch}"
+                <Button Content="{loc:Translate Login_Button_Login}" Command="{Binding LoginCommand}" IsVisible="{Binding !IsFirstLaunch}"
                         IsDefault="True"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="38"
                         Background="#007ACC" Foreground="White" FontSize="16" FontWeight="Bold" CornerRadius="3" Margin="0,10,0,10"/>
                 
-                <Button Content="Kurulumu Tamamla" Command="{Binding LoginCommand}" IsVisible="{Binding IsFirstLaunch}"
+                <Button Content="{loc:Translate Login_Button_CompleteSetup}" Command="{Binding LoginCommand}" IsVisible="{Binding IsFirstLaunch}"
                         IsDefault="True"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="38"
                         Background="#27AE60" Foreground="White" FontSize="16" FontWeight="Bold" CornerRadius="3" Margin="0,10,0,10"/>
 
-                <Grid ColumnDefinitions="*,*">
-                    <Button Grid.Column="0" Content="Şifremi Unuttum" Background="Transparent" Foreground="#007ACC" Padding="0" Cursor="Hand" HorizontalAlignment="Left" BorderThickness="0"/>
-                    <Button Grid.Column="1" Content="Profili Sil" Background="Transparent" Foreground="#E74C3C" Padding="0" Cursor="Hand" HorizontalAlignment="Right" BorderThickness="0"/>
+                <Grid ColumnDefinitions="*,*" IsVisible="{Binding !IsFirstLaunch}">
+                    <Button Grid.Column="0" Content="{loc:Translate Login_Button_ForgotPassword}" Command="{Binding ForgotPasswordCommand}" Background="Transparent" Foreground="#007ACC" Padding="0" Cursor="Hand" HorizontalAlignment="Left" BorderThickness="0"/>
+                    <Button Grid.Column="1" Content="{loc:Translate Login_Button_DeleteProfile}" Command="{Binding DeleteProfileCommand}" Background="Transparent" Foreground="#E74C3C" Padding="0" Cursor="Hand" HorizontalAlignment="Right" BorderThickness="0"/>
                 </Grid>
+                
+                <!-- Şifremi Unuttum Paneli -->
+                <StackPanel IsVisible="{Binding IsForgotPasswordVisible}" Spacing="10" Margin="0,10,0,0">
+                    <Border Height="1" Background="{DynamicResource CardBorderBrush}" Margin="0,5"/>
+                    <TextBlock Text="{loc:Translate Login_PasswordReset}" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                    <TextBox Text="{Binding RecoveryCode}" PlaceholderText="{loc:Translate Login_RecoveryCodePlaceholder}" Height="32" FontSize="14" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding NewRecoveryPassword}" PasswordChar="•" PlaceholderText="{loc:Translate Login_NewPasswordPlaceholder}" Height="32" FontSize="14" VerticalContentAlignment="Center"/>
+                    <TextBox Text="{Binding ConfirmNewRecoveryPassword}" PasswordChar="•" PlaceholderText="{loc:Translate Login_NewPasswordConfirmPlaceholder}" Height="32" FontSize="14" VerticalContentAlignment="Center"/>
+                    <Grid ColumnDefinitions="*,*">
+                        <Button Grid.Column="0" Content="{loc:Translate Login_Button_Cancel}" Command="{Binding CancelForgotPasswordCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#95A5A6" Foreground="White" Margin="0,0,5,0"/>
+                        <Button Grid.Column="1" Content="{loc:Translate Login_Button_Reset}" Command="{Binding ResetPasswordCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#007ACC" Foreground="White" Margin="5,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Profili Sil Paneli (Kalıcı) -->
+                <StackPanel IsVisible="{Binding IsDeleteProfileVisible}" Spacing="10" Margin="0,10,0,0">
+                    <Border Height="1" Background="{DynamicResource CardBorderBrush}" Margin="0,5"/>
+                    <TextBlock Text="{loc:Translate Login_DeleteProfilePermanent}" FontWeight="Bold" Foreground="#E74C3C"/>
+                    <TextBlock Text="{loc:Translate Login_DeleteProfileWarning}" Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap" FontSize="12"/>
+                    
+                    <TextBox Text="{Binding DeleteProfilePassword}" PasswordChar="•" PlaceholderText="{loc:Translate Login_EnterPassword}" Height="32" FontSize="14" VerticalContentAlignment="Center"/>
+                    
+                    <Grid ColumnDefinitions="*,*">
+                        <Button Grid.Column="0" Content="{loc:Translate Login_Button_Cancel}" Command="{Binding CancelDeleteProfileCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#95A5A6" Foreground="White" Margin="0,0,5,0"/>
+                        <Button Grid.Column="1" Content="{loc:Translate Login_Button_DeleteProfile}" Command="{Binding ConfirmDeleteProfileCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#E74C3C" Foreground="White" Margin="5,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Profili Kaldır Paneli (Sadece Listeden) -->
+                <StackPanel IsVisible="{Binding IsRemoveProfileVisible}" Spacing="10" Margin="0,10,0,0">
+                    <Border Height="1" Background="{DynamicResource CardBorderBrush}" Margin="0,5"/>
+                    <TextBlock Text="{loc:Translate Login_RemoveProfileTitle}" FontWeight="Bold" Foreground="#F39C12"/>
+                    <TextBlock Text="{loc:Translate Login_DeleteProfileWarningShort}" Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap" FontSize="12"/>
+                    
+                    <Grid ColumnDefinitions="*,*">
+                        <Button Grid.Column="0" Content="{loc:Translate Login_Button_Cancel}" Command="{Binding CancelRemoveProfileCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#95A5A6" Foreground="White" Margin="0,0,5,0"/>
+                        <Button Grid.Column="1" Content="{loc:Translate Login_Tooltip_RemoveProfile}" Command="{Binding ConfirmRemoveProfileCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#F39C12" Foreground="White" Margin="5,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Kurtarma Kodu Gösterim Paneli -->
+                <StackPanel IsVisible="{Binding IsRecoveryCodeVisible}" Spacing="10" Margin="0,10,0,0">
+                    <Border Height="1" Background="{DynamicResource CardBorderBrush}" Margin="0,5"/>
+                    <TextBlock Text="🔑 Kurtarma Kodunuz" FontWeight="Bold" FontSize="16" Foreground="#27AE60" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Bu kodu güvenli bir yere kaydedin! Şifrenizi unutursanız hesabınızı kurtarabilmek için bu koda ihtiyacınız olacak." 
+                               Foreground="#E67E22" TextWrapping="Wrap" FontSize="12" HorizontalAlignment="Center" TextAlignment="Center"/>
+                    <Border Background="#F0FFF0" BorderBrush="#27AE60" BorderThickness="2" CornerRadius="5" Padding="15" Margin="0,5">
+                        <SelectableTextBlock Text="{Binding RecoveryCodeDisplay}" FontSize="18" FontWeight="Bold" 
+                                             Foreground="#2C3E50" HorizontalAlignment="Center" TextAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="⚠️ Bu kod bir daha gösterilmeyecektir!" 
+                               Foreground="#E74C3C" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                    <Button Content="✓ Anladım, Kodu Kaydettim" Command="{Binding AcknowledgeRecoveryCodeCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Height="38"
+                            Background="#27AE60" Foreground="White" FontSize="14" FontWeight="Bold" CornerRadius="3" Margin="0,5,0,0"/>
+                </StackPanel>
             </StackPanel>
         </Border>
         
         <!-- Sürüm Bilgisi -->
-        <TextBlock Text="v2.0.0-beta.6" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20" Foreground="#999999" FontSize="12" FontWeight="SemiBold"/>
+        <TextBlock Grid.Row="1" Text="v2.1.3" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="SemiBold"/>
     </Grid>
 </UserControl>

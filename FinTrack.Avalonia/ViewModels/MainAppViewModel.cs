@@ -1,8 +1,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System;
 using System.Collections.ObjectModel;
 using FinTrack.Data;
 using Microsoft.Extensions.DependencyInjection;
+using FinTrack.Avalonia.Localization;
+using System.ComponentModel;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -12,7 +15,9 @@ public partial class MainAppViewModel : ViewModelBase
     private ViewModelBase? _currentView;
 
     [ObservableProperty]
-    private string _viewTitle = "Ana Ekran (Özet)";
+    private string _viewTitle = string.Empty;
+
+    private string _currentViewKey = "Main_Title_Dashboard";
 
     [ObservableProperty]
     private bool _isDateFilterVisible = true;
@@ -35,17 +40,47 @@ public partial class MainAppViewModel : ViewModelBase
     public MainAppViewModel()
     {
         CurrentView = new DashboardViewModel();
+        _currentViewKey = "Main_Title_Dashboard";
+        
         SetupInitialFilters();
+        UpdateViewTitle();
+
+        LocalizationService.Instance.PropertyChanged += OnLocalizationPropertyChanged;
     }
 
-    private void SetupInitialFilters()
+    private void OnLocalizationPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        var culture = new System.Globalization.CultureInfo("tr-TR");
+        if (e.PropertyName == nameof(LocalizationService.LanguageVersion))
+        {
+            UpdateViewTitle();
+            UpdateFiltersLanguage();
+        }
+    }
+
+    private void UpdateViewTitle()
+    {
+        ViewTitle = LocalizationService.GetString(_currentViewKey);
+    }
+
+    private void UpdateFiltersLanguage()
+    {
+        var lang = FinTrack.Core.Services.SettingsManager.GetLanguagePreference();
+        var culture = new System.Globalization.CultureInfo(lang == "en" ? "en-US" : "tr-TR");
+        
+        int prevSelected = SelectedMonthIndex;
+        Months.Clear();
         foreach (var month in culture.DateTimeFormat.MonthNames)
         {
             if (!string.IsNullOrEmpty(month))
                 Months.Add(char.ToUpper(month[0]) + month.Substring(1));
         }
+        if (prevSelected >= 0 && prevSelected < Months.Count)
+            SelectedMonthIndex = prevSelected;
+    }
+
+    private void SetupInitialFilters()
+    {
+        UpdateFiltersLanguage();
 
         int currentYear = System.DateTime.Now.Year;
         for (int i = currentYear - 5; i < currentYear + 5; i++)
@@ -62,9 +97,11 @@ public partial class MainAppViewModel : ViewModelBase
     {
         if (CurrentView is not DashboardViewModel)
         {
+            (CurrentView as IDisposable)?.Dispose();
             var dashboard = new DashboardViewModel();
             CurrentView = dashboard;
-            ViewTitle = "Ana Ekran (Özet)";
+            _currentViewKey = "Main_Title_Dashboard";
+            UpdateViewTitle();
             IsDateFilterVisible = true;
             _ = dashboard.LoadDataAsync(SelectedYear, SelectedMonthIndex + 1);
         }
@@ -75,9 +112,13 @@ public partial class MainAppViewModel : ViewModelBase
     {
         if (CurrentView is not AccountsViewModel)
         {
-            CurrentView = new AccountsViewModel();
-            ViewTitle = "Hesaplarım";
+            (CurrentView as IDisposable)?.Dispose();
+            var vm = new AccountsViewModel();
+            CurrentView = vm;
+            _currentViewKey = "Main_Title_Accounts";
+            UpdateViewTitle();
             IsDateFilterVisible = false;
+            _ = vm.LoadDataAsync();
         }
     }
 
@@ -86,9 +127,13 @@ public partial class MainAppViewModel : ViewModelBase
     {
         if (CurrentView is not CardsViewModel)
         {
-            CurrentView = new CardsViewModel();
-            ViewTitle = "Kartlarım";
+            (CurrentView as IDisposable)?.Dispose();
+            var vm = new CardsViewModel();
+            CurrentView = vm;
+            _currentViewKey = "Main_Title_Cards";
+            UpdateViewTitle();
             IsDateFilterVisible = false;
+            _ = vm.LoadDataAsync();
         }
     }
 
@@ -97,9 +142,13 @@ public partial class MainAppViewModel : ViewModelBase
     {
         if (CurrentView is not InvestmentsViewModel)
         {
-            CurrentView = new InvestmentsViewModel();
-            ViewTitle = "Yatırımlar";
+            (CurrentView as IDisposable)?.Dispose();
+            var vm = new InvestmentsViewModel();
+            CurrentView = vm;
+            _currentViewKey = "Main_Title_Investments";
+            UpdateViewTitle();
             IsDateFilterVisible = false;
+            _ = vm.LoadDataAsync();
         }
     }
 
@@ -108,9 +157,13 @@ public partial class MainAppViewModel : ViewModelBase
     {
         if (CurrentView is not BesViewModel)
         {
-            CurrentView = new BesViewModel();
-            ViewTitle = "Bireysel Emeklilik (BES)";
+            (CurrentView as IDisposable)?.Dispose();
+            var vm = new BesViewModel();
+            CurrentView = vm;
+            _currentViewKey = "Main_Title_Bes";
+            UpdateViewTitle();
             IsDateFilterVisible = false;
+            _ = vm.InitializeAsync();
         }
     }
 
@@ -119,9 +172,11 @@ public partial class MainAppViewModel : ViewModelBase
     {
         if (CurrentView is not BudgetViewModel)
         {
-            var db = App.Services?.GetService<AppDbContext>();
+            (CurrentView as IDisposable)?.Dispose();
+            var db = AppDbContext.CreateNew();
             if (db != null) CurrentView = new BudgetViewModel(db);
-            ViewTitle = "Bütçe Yönetimi";
+            _currentViewKey = "Main_Title_Budget";
+            UpdateViewTitle();
             IsDateFilterVisible = false;
         }
     }
@@ -131,10 +186,12 @@ public partial class MainAppViewModel : ViewModelBase
     {
         if (CurrentView is not ReportsViewModel)
         {
-            var db = App.Services?.GetService<AppDbContext>();
+            (CurrentView as IDisposable)?.Dispose();
+            var db = AppDbContext.CreateNew();
             if (db != null) CurrentView = new ReportsViewModel(db);
-            ViewTitle = "Raporlar ve Analiz";
-            IsDateFilterVisible = false;
+            _currentViewKey = "Main_Title_Reports";
+            UpdateViewTitle();
+            IsDateFilterVisible = true;
         }
     }
 
@@ -143,8 +200,10 @@ public partial class MainAppViewModel : ViewModelBase
     {
         if (CurrentView is not SettingsViewModel)
         {
-            CurrentView = new SettingsViewModel();
-            ViewTitle = "Ayarlar";
+            var vm = new SettingsViewModel();
+            CurrentView = vm;
+            _currentViewKey = "Main_Title_Settings";
+            UpdateViewTitle();
             IsDateFilterVisible = false;
         }
     }

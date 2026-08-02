@@ -42,41 +42,59 @@ namespace FinTrack.Core.Services
             if (string.IsNullOrEmpty(base64Key))
                 return plainText; // Might happen during Entity Framework Design-Time Migrations
             
-            byte[] key = Convert.FromBase64String(base64Key);
-            byte[] iv = new byte[IvSize];
-            byte[] encrypted;
+            base64Key = base64Key.Replace("\0", "").Trim();
+            if (string.IsNullOrEmpty(base64Key))
+                return plainText;
 
-            using (var rng = RandomNumberGenerator.Create())
+            try
             {
-                rng.GetBytes(iv);
-            }
+                byte[] key = Convert.FromBase64String(base64Key);
 
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = key;
-                aesAlg.IV = iv;
+                // AES requires exactly 16, 24, or 32 byte keys
+                if (key.Length != 16 && key.Length != 24 && key.Length != 32)
+                    return plainText;
 
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+                byte[] iv = new byte[IvSize];
+                byte[] encrypted;
 
-                using (var msEncrypt = new System.IO.MemoryStream())
+                using (var rng = RandomNumberGenerator.Create())
                 {
-                    using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    rng.GetBytes(iv);
+                }
+
+                using (Aes aesAlg = Aes.Create())
+                {
+                    aesAlg.Key = key;
+                    aesAlg.IV = iv;
+
+                    ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                    using (var msEncrypt = new System.IO.MemoryStream())
                     {
-                        using (var swEncrypt = new System.IO.StreamWriter(csEncrypt))
+                        using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                         {
-                            swEncrypt.Write(plainText);
+                            using (var swEncrypt = new System.IO.StreamWriter(csEncrypt))
+                            {
+                                swEncrypt.Write(plainText);
+                            }
+                            encrypted = msEncrypt.ToArray();
                         }
-                        encrypted = msEncrypt.ToArray();
                     }
                 }
+
+                // Combine IV and Encrypted data to be able to decrypt it later
+                byte[] result = new byte[iv.Length + encrypted.Length];
+                Buffer.BlockCopy(iv, 0, result, 0, iv.Length);
+                Buffer.BlockCopy(encrypted, 0, result, iv.Length, encrypted.Length);
+
+                return Convert.ToBase64String(result);
             }
-
-            // Combine IV and Encrypted data to be able to decrypt it later
-            byte[] result = new byte[iv.Length + encrypted.Length];
-            Buffer.BlockCopy(iv, 0, result, 0, iv.Length);
-            Buffer.BlockCopy(encrypted, 0, result, iv.Length, encrypted.Length);
-
-            return Convert.ToBase64String(result);
+            catch
+            {
+                // Return plaintext if encryption fails for any reason
+                // The database itself is already encrypted by SQLCipher.
+                return plainText;
+            }
         }
 
         public static string Decrypt(string cipherText, string base64Key)
@@ -87,10 +105,19 @@ namespace FinTrack.Core.Services
             if (string.IsNullOrEmpty(base64Key))
                 return cipherText;
 
+            base64Key = base64Key.Replace("\0", "").Trim();
+            if (string.IsNullOrEmpty(base64Key))
+                return cipherText;
+
             try
             {
                 byte[] fullCipher = Convert.FromBase64String(cipherText);
                 byte[] key = Convert.FromBase64String(base64Key);
+
+                // AES requires exactly 16, 24, or 32 byte keys
+                if (key.Length != 16 && key.Length != 24 && key.Length != 32)
+                    return cipherText;
+
                 byte[] iv = new byte[IvSize];
                 byte[] cipher = new byte[fullCipher.Length - IvSize];
 
@@ -129,12 +156,19 @@ namespace FinTrack.Core.Services
             }
         }
         
-        // Helper to derive a stable 256-bit key from a user password or recovery code
-        public static string DeriveKeyFromPassword(string password)
+        // Legacy helper: derives a 256-bit key from a user password without a salt (for backward compatibility)
+        public static string DeriveKeyFromPasswordLegacy(string password)
         {
-            // Using SHA256 ensures we always get exactly 32 bytes (256 bits) from any length string
             byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes(password));
             return Convert.ToBase64String(hash);
+        }
+
+        // New helper: derives a stable 256-bit key using PBKDF2 with a salt
+        public static string DeriveKeyFromPassword(string password, string saltBase64)
+        {
+            byte[] saltBytes = Convert.FromBase64String(saltBase64);
+            byte[] keyBytes = Rfc2898DeriveBytes.Pbkdf2(password, saltBytes, 100000, HashAlgorithmName.SHA256, 32);
+            return Convert.ToBase64String(keyBytes);
         }
 
         // Generate a random salt for password hashing

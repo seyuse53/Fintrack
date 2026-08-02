@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using FinTrack.Core.Models;
 using FinTrack.Data;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -22,10 +23,18 @@ public partial class AddInvestmentViewModel : ViewModelBase
     private string _name = "";
 
     public ObservableCollection<string> Categories { get; } = new() 
-    { "Altın", "Döviz", "Hisse Senedi", "Kripto Para", "Fon", "BES", "Diğer" };
+    { 
+        LocalizationService.GetString("Category_Gold"), 
+        LocalizationService.GetString("Category_ForeignCurrency"), 
+        LocalizationService.GetString("Category_Stock"), 
+        LocalizationService.GetString("Category_Crypto"), 
+        LocalizationService.GetString("Category_Fund"), 
+        LocalizationService.GetString("Category_BES"), 
+        LocalizationService.GetString("Global_Other") 
+    };
 
     [ObservableProperty]
-    private string _selectedCategory = "Altın";
+    private string _selectedCategory = LocalizationService.GetString("Category_Gold");
 
     [ObservableProperty]
     private ObservableCollection<SymbolItem> _availableSymbols = new();
@@ -119,7 +128,7 @@ public partial class AddInvestmentViewModel : ViewModelBase
     {
         Accounts.Clear();
         // Load simple placeholder for Cash
-        Accounts.Add(new PaymentItemViewModel { Label = "💵 Nakit", Bank = null, Card = null });
+        Accounts.Add(new PaymentItemViewModel { Label = $"💵 {LocalizationService.GetString("Global_Cash")}", Bank = null, Card = null });
 
         var banks = await _context.BankAccounts.Where(b => b.IsActive).ToListAsync();
         foreach (var bank in banks)
@@ -168,7 +177,7 @@ public partial class AddInvestmentViewModel : ViewModelBase
         HasError = false;
         if (string.IsNullOrWhiteSpace(Symbol) || string.IsNullOrWhiteSpace(Name))
         {
-            ShowError("Sembol ve İsim zorunludur.");
+            ShowError(LocalizationService.GetString("AddInvestment_ErrEmpty"));
             return;
         }
 
@@ -178,7 +187,7 @@ public partial class AddInvestmentViewModel : ViewModelBase
 
         if (amount <= 0 || unitPrice < 0 || fee < 0)
         {
-            ShowError("Lütfen geçerli değerler giriniz.");
+            ShowError(LocalizationService.GetString("AddInvestment_ErrInvalid"));
             return;
         }
 
@@ -220,18 +229,18 @@ public partial class AddInvestmentViewModel : ViewModelBase
                 Fee = fee,
                 TotalCost = totalCost,
                 Date = SelectedDate ?? DateTime.Today,
-                Notes = $"Varlık alımı: {amount} {Symbol.ToUpper()} @ {unitPrice:C2} (Masraf: {fee:C2})",
+                Notes = string.Format(LocalizationService.GetString("AddInvestment_DescFormat"), amount, Symbol.ToUpper(), unitPrice, fee),
                 LinkedBankAccountId = SelectedAccount?.Bank?.Id,
                 LinkedCreditCardAccountId = SelectedAccount?.Card?.Id
             };
 
-            if (SelectedCategory == "BES")
+            if (SelectedCategory == LocalizationService.GetString("Category_BES"))
             {
                 var gramGoldPrice = await FinTrack.Core.Services.GoldPriceService.GetGramGoldPriceAsync(transaction.Date);
                 if (gramGoldPrice.HasValue && gramGoldPrice.Value > 0)
                 {
                     transaction.GramGoldEquivalent = Math.Round(totalCost / gramGoldPrice.Value, 2);
-                    transaction.Notes += $" ({transaction.GramGoldEquivalent} Gram Altın karşılığı)";
+                    transaction.Notes += string.Format(LocalizationService.GetString("AddInvestment_GoldFormat"), transaction.GramGoldEquivalent);
                 }
             }
 

@@ -1,0 +1,41 @@
+<Window Width="700" Height="500" xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
+        WindowStartupLocation="CenterOwner"
+        x:Class="FinTrack.Avalonia.Views.CategoryDetailWindow"
+        x:DataType="vm:DashboardBudgetItem"
+        Title="{loc:Translate CategoryDetail_Title}"
+        Background="#F5F7FA">
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="10">
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="{loc:Translate CategoryDetail_Title}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <TextBlock Text="{loc:Translate CategoryDetail_Selected}" FontSize="15" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                <TextBlock Text="{Binding CategoryName}" FontSize="15" Foreground="{DynamicResource SecondaryTextBrush}" Margin="5,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+        
+        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="8" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
+            <DataGrid ItemsSource="{Binding Details}" AutoGenerateColumns="False" IsReadOnly="True" CanUserResizeColumns="True"
+                      GridLinesVisibility="Horizontal" Background="Transparent" RowBackground="Transparent" BorderThickness="0" Margin="10">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="{loc:Translate Global_Date}" Binding="{Binding DateStr}"/>
+                    <DataGridTextColumn Header="{loc:Translate Global_Desc}" Binding="{Binding Description}" Width="*"/>
+                    <DataGridTextColumn Header="{loc:Translate Global_Account}" Binding="{Binding AccountName}"/>
+                    <DataGridTemplateColumn Header="{loc:Translate Global_Amount}">
+                        <DataTemplate x:DataType="vm:BudgetDetailItem">
+                            <TextBlock Text="{Binding FormattedAmount}" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+        
+        <Button Grid.Row="2" Content="{loc:Translate Global_Close}" Click="CloseButton_Click" HorizontalAlignment="Right" Margin="0,15,0,0" Padding="35,10" Background="#E0E0E0" Foreground="{DynamicResource PrimaryTextBrush}" CornerRadius="4" Cursor="Hand"/>
+    </Grid>
+</Window>

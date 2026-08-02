@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -63,10 +64,10 @@ public partial class ManageCardsViewModel : ViewModelBase
     private bool _isEditing = false;
 
     [ObservableProperty]
-    private string _formTitle = "YENİ KART EKLE";
+    private string _formTitle = LocalizationService.GetString("ManageCards_AddTitle");
 
     [ObservableProperty]
-    private string _submitButtonText = "Kart Ekle";
+    private string _submitButtonText = LocalizationService.GetString("ManageCards_AddButton");
 
     private CreditCardAccount? _editingCard = null;
 
@@ -101,7 +102,7 @@ public partial class ManageCardsViewModel : ViewModelBase
 
     public ManageCardsViewModel()
     {
-        _context = App.Services?.GetService<AppDbContext>();
+        _context = AppDbContext.CreateNew();
         _ = LoadCardsAsync();
     }
 
@@ -127,7 +128,7 @@ public partial class ManageCardsViewModel : ViewModelBase
             AvailableParentCards.Clear();
             // A card can be linked to another card (typically parent/master card)
             // Adding a dummy option for "None"
-            AvailableParentCards.Add(new CreditCardAccount { Id = -1, BankName = "-", CardLabel = "Bağlı Kart Yok (Ana Kart)" });
+            AvailableParentCards.Add(new CreditCardAccount { Id = -1, BankName = "-", CardLabel = LocalizationService.GetString("ManageCards_NoLinkedCard") });
             
             foreach (var mc in masterCards)
                 AvailableParentCards.Add(mc);
@@ -143,7 +144,7 @@ public partial class ManageCardsViewModel : ViewModelBase
 
         if (string.IsNullOrWhiteSpace(NewBankName) || string.IsNullOrWhiteSpace(NewCardLabel))
         {
-            ShowError("Banka Adı ve Kart Adı zorunludur.");
+            ShowError(LocalizationService.GetString("ManageCards_ErrNameReq"));
             return;
         }
 
@@ -153,20 +154,20 @@ public partial class ManageCardsViewModel : ViewModelBase
             string cleanLimit = NewLimitText.Replace(".", "").Replace(",", ".");
             if (!decimal.TryParse(cleanLimit, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out limit))
             {
-                ShowError("Geçerli bir limit giriniz.");
+                ShowError(LocalizationService.GetString("ManageCards_ErrInvalidLimit"));
                 return;
             }
         }
 
         if (NewStatementDay < 1 || NewStatementDay > 31)
         {
-            ShowError("Hesap kesim günü 1 ile 31 arasında olmalıdır.");
+            ShowError(LocalizationService.GetString("ManageCards_ErrStatementDay"));
             return;
         }
 
         if (NewPaymentDueDay < 1 || NewPaymentDueDay > 31)
         {
-            ShowError("Son ödeme günü 1 ile 31 arasında olmalıdır.");
+            ShowError(LocalizationService.GetString("ManageCards_ErrDueDay"));
             return;
         }
 
@@ -232,8 +233,8 @@ public partial class ManageCardsViewModel : ViewModelBase
     {
         _editingCard = card;
         IsEditing = true;
-        FormTitle = "KARTI DÜZENLE";
-        SubmitButtonText = "Güncelle";
+        FormTitle = LocalizationService.GetString("ManageCards_EditTitle");
+        SubmitButtonText = LocalizationService.GetString("ManageAccounts_UpdateButton");
 
         NewBankName = card.BankName;
         NewCardLabel = card.CardLabel;
@@ -253,8 +254,8 @@ public partial class ManageCardsViewModel : ViewModelBase
     {
         _editingCard = null;
         IsEditing = false;
-        FormTitle = "YENİ KART EKLE";
-        SubmitButtonText = "Kart Ekle";
+        FormTitle = LocalizationService.GetString("ManageCards_AddTitle");
+        SubmitButtonText = LocalizationService.GetString("ManageCards_AddButton");
 
         NewBankName = string.Empty;
         NewCardLabel = string.Empty;
@@ -288,7 +289,7 @@ public partial class ManageCardsViewModel : ViewModelBase
         bool hasTransactions = await _context.Transactions.AnyAsync(t => t.CreditCardAccountId == card.Id);
         if (hasTransactions)
         {
-            ShowError("Bu karta ait işlemler bulunduğu için kart silinemez. Bunun yerine kartı pasif yapabilirsiniz.");
+            ShowError(LocalizationService.GetString("ManageCards_ErrHasTx"));
             return;
         }
 
@@ -296,7 +297,7 @@ public partial class ManageCardsViewModel : ViewModelBase
         bool hasChildCards = await _context.CreditCardAccounts.AnyAsync(c => c.ParentCardId == card.Id);
         if (hasChildCards)
         {
-            ShowError("Bu karta bağlı ek/sanal kartlar bulunduğu için silinemez. Önce bağlı kartları silmelisiniz.");
+            ShowError(LocalizationService.GetString("ManageCards_ErrHasChild"));
             return;
         }
 

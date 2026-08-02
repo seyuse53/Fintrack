@@ -9,6 +9,8 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using FinTrack.Avalonia.Localization;
+using FinTrack.Core.Helpers;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -45,7 +47,7 @@ public partial class AccountDetailViewModel : ViewModelBase
 
     public AccountDetailViewModel(int? accountId)
     {
-        _context = App.Services?.GetService<AppDbContext>();
+        _context = AppDbContext.CreateNew();
         _accountId = accountId;
         _ = LoadDataAsync();
     }
@@ -60,7 +62,7 @@ public partial class AccountDetailViewModel : ViewModelBase
         if (_accountId == null)
         {
             // Cash Account
-            AccountTitle = "Cüzdan (Nakit) Detayları";
+            AccountTitle = LocalizationService.GetString("AccountDetail_WalletTitle");
 
             var cashTransactions = await _context.Transactions
                 .Include(t => t.Category)
@@ -87,13 +89,23 @@ public partial class AccountDetailViewModel : ViewModelBase
                     currentBalance -= Math.Abs(t.Amount);
                 }
 
+                string desc = t.Description ?? LocalizationService.GetString("Global_Other");
+                if (desc.StartsWith("G:"))
+                {
+                    string dek = FinTrack.Core.Services.SettingsManager.ActiveDataKey ?? "";
+                    if (!string.IsNullOrEmpty(dek))
+                    {
+                        desc = FinTrack.Core.Services.CryptoProvider.Decrypt(desc.Substring(2), dek);
+                    }
+                }
+
                 items.Add(new AccountDetailItem
                 {
                     TransactionId = t.Id,
                     IsInvestment = false,
                     Date = t.Date,
-                    Description = t.Description ?? "Nakit İşlem",
-                    CategoryName = t.Category?.Name ?? "Diğer",
+                    Description = desc,
+                    CategoryName = t.Category?.Name ?? LocalizationService.GetString("Global_Other"),
                     Icon = t.Category?.TypeIcon ?? "💵",
                     AmountText = $"{sign}₺{Math.Abs(t.Amount):N2}",
                     ForegroundColor = color
@@ -106,7 +118,7 @@ public partial class AccountDetailViewModel : ViewModelBase
             var account = await _context.BankAccounts.FindAsync(_accountId);
             if (account != null)
             {
-                AccountTitle = $"{account.BankName} - {account.AccountName} Detayları";
+                AccountTitle = $"{account.BankName} - {account.AccountName}";
             }
 
             var bankTransactions = await _context.Transactions
@@ -134,13 +146,23 @@ public partial class AccountDetailViewModel : ViewModelBase
                     currentBalance -= Math.Abs(t.Amount);
                 }
 
+                string desc = t.Description ?? LocalizationService.GetString("Global_Other");
+                if (desc.StartsWith("G:"))
+                {
+                    string dek = FinTrack.Core.Services.SettingsManager.ActiveDataKey ?? "";
+                    if (!string.IsNullOrEmpty(dek))
+                    {
+                        desc = FinTrack.Core.Services.CryptoProvider.Decrypt(desc.Substring(2), dek);
+                    }
+                }
+
                 items.Add(new AccountDetailItem
                 {
                     TransactionId = t.Id,
                     IsInvestment = false,
                     Date = t.Date,
-                    Description = t.Description ?? "Hesap İşlemi",
-                    CategoryName = t.Category?.Name ?? "Diğer",
+                    Description = desc,
+                    CategoryName = t.Category?.Name ?? LocalizationService.GetString("Global_Other"),
                     Icon = t.Category?.TypeIcon ?? "🏦",
                     AmountText = $"{sign}₺{Math.Abs(t.Amount):N2}",
                     ForegroundColor = color
@@ -169,8 +191,8 @@ public partial class AccountDetailViewModel : ViewModelBase
                     TransactionId = inv.Id,
                     IsInvestment = true,
                     Date = inv.Date,
-                    Description = $"Yatırım: {(inv.Type == InvestmentTransactionType.Buy ? "Alış" : "Satış")} - {inv.Amount} adet",
-                    CategoryName = "Yatırım",
+                    Description = string.Format(LocalizationService.GetString("AddInvestment_DescFormat"), inv.Amount, _context.InvestmentAssets.Find(inv.InvestmentAssetId)?.Symbol, inv.UnitPrice, inv.Fee),
+                    CategoryName = LocalizationService.GetString("Global_Other"),
                     Icon = "📈",
                     AmountText = $"{sign}₺{Math.Abs(inv.TotalCost):N2}",
                     ForegroundColor = color
@@ -220,14 +242,14 @@ public partial class AccountDetailViewModel : ViewModelBase
                 bool hasGroup = !string.IsNullOrEmpty(transaction.GroupId);
                 bool isTransfer = transaction.Category?.Type == TransactionType.Transfer;
 
-                string confirmMessage = "Bu işlemi kalıcı olarak silmek istediğinize emin misiniz?";
+                string confirmMessage = LocalizationService.GetString("AccountDetail_DeleteConfirm");
                 if (hasGroup && isTransfer)
                 {
-                    confirmMessage = "Bu bir transfer/ödeme işlemidir. Sildiğinizde karşı hesaptaki bağlantılı kayıt da otomatik olarak silinecektir.\n\nEmin misiniz?";
+                    confirmMessage = LocalizationService.GetString("AccountDetail_TransferDeleteConfirm");
                 }
                 else if (hasGroup)
                 {
-                    confirmMessage = "Bu işlem bir taksit grubuna aittir. Sildiğinizde bu gruba ait tüm taksitler silinecektir.\n\nEmin misiniz?";
+                    confirmMessage = LocalizationService.GetString("AccountDetail_InstallmentDeleteConfirm");
                 }
 
                 if (ConfirmDeleteFunc != null)
@@ -253,7 +275,7 @@ public partial class AccountDetailViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Delete error: {ex.Message}");
+            AppLogger.Error($"Delete error: {ex.Message}");
         }
     }
 

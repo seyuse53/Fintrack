@@ -1,0 +1,1063 @@
+﻿> [!IMPORTANT]
+> **Hybrid Ã‡alÄ±ÅŸma Stratejisi:** Bu proje geliÅŸtirilirken derleme (dotnet build), Ã§alÄ±ÅŸtÄ±rma (F5) ve manuel hata ayÄ±klama sÃ¼reÃ§leri kullanÄ±cÄ± tarafÄ±ndan Visual Studio Ã¼zerinden yÃ¼rÃ¼tÃ¼lÃ¼r. AI asistanÄ± mimari, mantÄ±k ve karmaÅŸÄ±k kod yazÄ±mÄ±na odaklanÄ±r.
+
+> [!NOTE]
+> **GÃ¼venlik ve Åifreleme Notu:** FinTrack veritabanÄ± SQLCipher ile tam ÅŸifrelidir. VeritabanÄ±na eriÅŸim sÄ±rasÄ±nda alÄ±nan "file is not a database" gibi hatalar, ÅŸifreleme anahtarÄ±nÄ±n (ActiveDataKey) eksik olduÄŸunun gÃ¶stergesidir. Bu bir aÃ§Ä±k deÄŸil, aksine verilerinizin ÅŸifresiz eriÅŸime kapalÄ± olduÄŸunun en bÃ¼yÃ¼k kanÄ±tÄ±dÄ±r.
+
+All notable changes to this project will be documented in this file.
+
+
+---
+
+## ğŸ“‹ FinTrack GeliÅŸtirme PlanÄ± (Update Plan)
+
+Bu dokÃ¼man, FinTrack projesine eklenecek yeni Ã¶zellikleri, geliÅŸtirme fikirlerini ve tamamlanan aÅŸamalarÄ± tek bir Ã§atÄ± altÄ±nda takip etmek iÃ§in oluÅŸturulmuÅŸtur.
+
+### ğŸš€ Tamamlanan Ã–zellikler
+
+## [2.2.2] - 2026-07-29 â€” Kategori, Hesap Detay ve Ã‡eÅŸitli Pencerelerin Ã‡evirisi (Faz 5C)
+
+### Added
+- `ImportPreviewWindow` (Ekstre Ã–nizleme), `UpdateAvailableWindow` (GÃ¼ncelleme UyarÄ±) pencereleri lokalize edildi.
+- `CategoryDetailWindow`, `CategoryEditWindow`, `AccountDetailWindow`, `CardDetailWindow`, `InvestmentDetailWindow` gibi tÃ¼m detay ve dÃ¼zenleme modallarÄ±nÄ±n UI bileÅŸenleri i18n altyapÄ±sÄ±na geÃ§irildi.
+- Detay pencerelerinin ViewModel'lerinde yer alan iÅŸlem tanÄ±mlarÄ±, tÃ¼rler ve onay uyarÄ± metinleri TÃ¼rkÃ§e/Ä°ngilizce Ã§ift dile uygun olacak ÅŸekilde yapÄ±landÄ±rÄ±ldÄ±.
+
+## [2.2.1] - 2026-07-29 â€” YatÄ±rÄ±m Pencereleri ve Diyaloglar Ã‡evirisi (Faz 5B)
+
+### Added
+- YatÄ±rÄ±m ekleme (`AddInvestmentWindow`), satma (`SellInvestmentWindow`) ve dÃ¼zenleme (`EditInvestmentAssetWindow`) pencerelerindeki tÃ¼m metinler i18n ile uyumlu hale getirildi. Ä°lgili view modellerdeki kategori, hata ve Ã¶nizleme metinleri de Ã§evirildi.
+- Genel sistem diyaloglarÄ± olan `ConfirmDialog`, `ErrorDialogWindow` ve `InfoDialogWindow` pencerelerindeki statik metinler lokalize edildi. "Tamam", "Ä°ptal", "Evet", "HayÄ±r" gibi ortak butonlar merkezi key yapÄ±sÄ±na (`Global_`) baÄŸlandÄ±.
+
+## [2.2.0] - 2026-07-29 â€” Temel Ä°ÅŸlem ve Transfer EkranlarÄ± Ã‡evirisi (Faz 5A)
+
+### Added
+- Ä°ÅŸlem ekleme (`AddTransactionWindow`), dÃ¼zenleme (`EditTransactionWindow`), transfer (`TransferWindow`) ve kredi kartÄ± Ã¶deme (`PayCreditCardWindow`) ekranlarÄ±ndaki metinler lokalizasyon altyapÄ±sÄ±na geÃ§irildi.
+- Her sayfada kullanÄ±lan ortak terimler (Tarih, Tutar, Kategori, AÃ§Ä±klama, Ä°ptal, Kaydet vb.) iÃ§in `Global_` Ã¶n ekine sahip merkezi `String` key'leri eklendi, bÃ¶ylece tekrarlÄ± kullanÄ±mlar azaltÄ±ldÄ±.
+
+## [2.1.9] - 2026-07-29 â€” BÃ¼tÃ§e, Raporlar ve Vergi EkranlarÄ± Ã‡evirisi (Faz 4C)
+
+### Added
+- BÃ¼tÃ§e yÃ¶netimi (BudgetView.axaml & BudgetViewModel.cs), Raporlar (ReportsView.axaml & ReportsViewModel.cs) ve Vergi hesaplama (TaxCalculationWindow.axaml & TaxCalculationViewModel.cs) ekranlarÄ±ndaki tÃ¼m metinler Ã§oklu dil (Ä°ngilizce) sistemine dahil edildi.
+- Ä°lgili tÃ¼m anahtarlar Strings.resx ve Strings.en.resx dosyalarÄ±na eklendi.
+
+### Changed
+- ReportsViewModel ve TaxCalculationViewModel iÃ§indeki kategori atamalarÄ±nda "DiÄŸer" ibaresi dil desteÄŸine gÃ¶re dinamikleÅŸtirildi.
+
+## [2.1.8] - 2026-07-29 â€” Ana Ekran (Dashboard) Ã‡evirisi (Faz 3)
+
+### Added
+- **Dashboard Ã‡evirisi (Faz 3)**: Ana Ekranda (Dashboard) yer alan tÃ¼m Ã¶zet kart baÅŸlÄ±klarÄ± ve tablo (Gelir/Gider/Transfer) baÅŸlÄ±klarÄ± Ã§oklu dil sistemine (i18n) entegre edildi. Para biriminin (â‚º) her koÅŸulda sabit kalmasÄ± ve tarih (ay) formatlarÄ±nÄ±n dil deÄŸiÅŸimine anÄ±nda tepki vermesi saÄŸlandÄ±.
+
+### Fixed
+- **BÃ¼tÃ§e EkranÄ±ndan HÄ±zlÄ± GeÃ§iÅŸlerde Ã‡Ã¶kme HatasÄ± (ObjectDisposedException)**: BÃ¼tÃ§e ekranÄ± aÃ§Ä±ldÄ±ÄŸÄ±nda arka planda TÃœÄ°K API'den enflasyon verisi Ã§ekilirken (TÃœFE), veri inmeden Ana Ekrana (veya baÅŸka bir sekmeye) hÄ±zlÄ±ca geÃ§ildiÄŸinde Entity Framework'Ã¼n `ObjectDisposedException` fÄ±rlatarak uygulamanÄ±n tamamen Ã§Ã¶kmesine yol aÃ§an sorun Ã§Ã¶zÃ¼ldÃ¼. `InflationService` yeniden yapÄ±landÄ±rÄ±larak, uzun sÃ¼ren arka plan API Ã§aÄŸrÄ±larÄ±nda ViewModel'in veritabanÄ± baÄŸlantÄ±sÄ± yerine kendi kÄ±sa Ã¶mÃ¼rlÃ¼ ve izole (short-lived) veritabanÄ± baÄŸlantÄ±larÄ±nÄ± kullanmasÄ± saÄŸlandÄ±.
+
+
+
+## [2.1.9] - 2026-07-29 — Ayarlar (Settings) ve Dil Seçimi Eklentisi (Faz 6)
+
+### Added
+- Ayarlar sayfası (SettingsView) Türkçe ve İngilizce dillerine yerelleştirildi.
+- Ayarlar -> Görünüm sekmesine 'Dil Seçimi' açılır kutusu (ComboBox) eklendi.
+- SettingsViewModel içine dil değiştirme mantığı (SelectedLanguage, AvailableLanguages) eklendi ve anlık değişim uyarı dialogu bağlandı.
+
+### Changed
+- i18n-plan.md güncellenerek Faz 6 tamamlandı olarak işaretlendi ve Faz 7'ye (Aktif Faz) geçildi.
+
+
+## [2.1.7] - 2026-07-28 â€” Ana MenÃ¼ (Sidebar) ve Ãœst Bar Ã‡evirisi
+
+### Added
+- **Ana MenÃ¼ Ã‡evirisi (Faz 1)**: UygulamanÄ±n ana menÃ¼sÃ¼ (Sidebar) ve Ã¼st bilgi Ã§ubuÄŸu (TopBar) tamamen Ã§oklu dil destekli (TÃ¼rkÃ§e/Ä°ngilizce) hale getirildi. 
+- **Dinamik BaÅŸlÄ±klar**: Sayfa baÅŸlÄ±klarÄ±nÄ±n (ViewTitle) ve tarih filtrelerindeki ay isimlerinin seÃ§ilen dile gÃ¶re (veya dili anÄ±nda deÄŸiÅŸtirdiÄŸinizde) otomatik gÃ¼ncellenmesi saÄŸlandÄ±.
+
+## [2.1.6] - 2026-07-28 â€” Ã‡oklu Dil (Ä°ngilizce) AltyapÄ±sÄ± ve GiriÅŸ EkranÄ±
+
+### Added
+- **i18n AltyapÄ±sÄ± (Faz 0)**: FinTrack iÃ§in Ä°ngilizce ve TÃ¼rkÃ§e dil desteÄŸi altyapÄ±sÄ± kuruldu. `LocalizationService` ve `TranslateExtension` sÄ±nÄ±flarÄ± oluÅŸturuldu. AnÄ±nda dil deÄŸiÅŸtirme desteÄŸi (uygulamayÄ± yeniden baÅŸlatmadan) iÃ§in `IValueConverter` ve `LanguageVersion` tabanlÄ± reaktif (reactive) yapÄ± kuruldu (Avalonia Indexer bug'Ä±nÄ± aÅŸmak iÃ§in).
+- **Dil DosyalarÄ±**: `Strings.resx` (VarsayÄ±lan/TÃ¼rkÃ§e) ve `Strings.en.resx` (Ä°ngilizce) dosyalarÄ± projeye dÃ¢hil edildi.
+- **GiriÅŸ EkranÄ± Ã‡evirisi (Faz 2)**: GiriÅŸ ekranÄ± (LoginView) tamamen Ã§oklu dil destekli hale getirildi ve anÄ±nda dil deÄŸiÅŸtirmeyi test edebilmek iÃ§in arayÃ¼ze `ğŸŒ TR/EN` butonu eklendi.
+
+## [2.1.5] - 2026-07-28 â€” VeritabanÄ± Tablo EksikliÄŸi ve Ä°Ã§e Aktarma HatasÄ± Ã‡Ã¶zÃ¼mÃ¼
+
+### Fixed
+- **Eksik Tablo (InvestmentTransactions / Categories) HatasÄ±**: KullanÄ±cÄ±larÄ±n uygulamaya giriÅŸ yaparken, JSON iÃ§e aktarma yaparken veya yeni bir profilde "BÃ¼tÃ§e" sayfasÄ±na geÃ§erken aldÄ±ÄŸÄ± `SQLite Error 1: 'no such table...'` hatalarÄ± tamamen giderildi.
+- **KÃ¶k Neden Ã‡Ã¶zÃ¼mÃ¼ (Tam OnarÄ±m)**: Yeni bir profil (boÅŸ veritabanÄ±) oluÅŸturulduÄŸunda, Entity Framework Core'un standart `Migrate()` komutu ÅŸifreleme altyapÄ±sÄ±yla (SQLCipher) Ã§akÄ±ÅŸarak tablolarÄ±n hiÃ§birini oluÅŸturamadan Ã§Ã¶kÃ¼yordu. Bu sorunu aÅŸmak iÃ§in `LoginViewModel` iÃ§erisine bir gÃ¼venlik aÄŸÄ± eklendi: EÄŸer `Migrate()` baÅŸarÄ±sÄ±z olursa ve veritabanÄ± tamamen boÅŸsa (`Categories` tablosu yoksa), sistem otomatik olarak `context.Database.EnsureCreated()` komutunu tetikleyerek ÅŸifreli baÄŸlantÄ± Ã¼zerinden veritabanÄ±ndaki **tÃ¼m tablolarÄ±n** eksiksiz ve kusursuz bir ÅŸekilde oluÅŸturulmasÄ±nÄ± saÄŸlÄ±yor. AyrÄ±ca eski veritabanlarÄ±ndan kalan eksik tablolar iÃ§in de manuel onarÄ±m (CREATE TABLE) scriptleri sisteme dahil edildi.
+
+## [2.1.4] - 2026-07-28 â€” GiriÅŸ EkranÄ± AkÄ±ÅŸ DÃ¼zeltmeleri ve Kurtarma Kodu GÃ¶sterimi
+
+### Added
+- **Kurtarma Kodu GÃ¶sterimi (KRÄ°TÄ°K)**: Ä°lk profil kurulumu sÄ±rasÄ±nda oluÅŸturulan kurtarma kodu artÄ±k kullanÄ±cÄ±ya inline panel olarak gÃ¶steriliyor. KullanÄ±cÄ± kodu gÃ¼venli bir yere kaydettiÄŸini onaylamadan uygulamaya geÃ§emiyor. Daha Ã¶nce bu kod `// TODO` yorumu altÄ±nda gÃ¶sterilmeden geÃ§iliyordu.
+
+### Fixed
+- **Profil OluÅŸturma SonrasÄ± Otomatik SeÃ§im**: Yeni profil oluÅŸturulduktan sonra giriÅŸ ekranÄ±na dÃ¶nÃ¼ldÃ¼ÄŸÃ¼nde, yeni profil otomatik olarak seÃ§ili geliyor. Daha Ã¶nce listedeki ilk profil seÃ§iliyordu ve kullanÄ±cÄ± yeni profilini elle seÃ§mek zorunda kalÄ±yordu.
+- **Pencere Boyutu DÃ¼zeltmesi**: Profil ekleme (AddProfileView) ekranÄ±na geÃ§ildiÄŸinde pencere artÄ±k 1200x700'e geniÅŸlemiyor; giriÅŸ ekranÄ±yla aynÄ± kompakt boyutta kalÄ±yor.
+
+### Changed
+- **SÃ¼rÃ¼m NumarasÄ± GÃ¼ncellemesi**: GiriÅŸ ekranÄ±ndaki sÃ¼rÃ¼m gÃ¶stergesi `v2.0.0-beta.6`'dan `v2.1.3`'e gÃ¼ncellendi.
+
+## [2.1.3] - 2026-07-26 â€” Lisans Telif HakkÄ± GÃ¼ncellemesi
+
+### Changed
+- **Lisans Sahibi**: Lisans (`LICENSE`) dosyasÄ±ndaki telif hakkÄ± sahibi bilgisi (Copyright) `seyuse53` yerine, TÃ¼rkÃ§e karakter iÃ§ermeyecek ÅŸekilde `Kurtulus Technology` olarak gÃ¼ncellendi.
+
+## [2.1.2] - 2026-07-26 â€” KapsamlÄ± GÃ¼venlik Ä°yileÅŸtirmeleri ve UI DÃ¼zeltmeleri
+
+### Added
+- **GeliÅŸmiÅŸ Åifreleme (PBKDF2 & Salt)**: Åifre tÃ¼retme (Key Derivation) mekanizmasÄ±na tuzlama (Salt) desteÄŸi eklendi. Ana parola ve kurtarma parolasÄ± iÃ§in `Settings` iÃ§erisine baÄŸÄ±msÄ±z `PasswordSalt` ve `RecoverySalt` alanlarÄ± eklendi.
+
+### Fixed
+- **Bellek SÄ±zÄ±ntÄ±sÄ± (Memory Leak)**: Uygulama kilitlendiÄŸinde (Auto-Lock) veritabanÄ± ÅŸifreleme anahtarÄ±nÄ±n (DEK) bellekten silinmeme zafiyeti (Kritik AÃ§Ä±k) `ClearActiveKey` metodu eklenerek giderildi.
+- **Ä°zole Anahtar Yedekleme**: YanlÄ±ÅŸlÄ±kla veritabanÄ±yla aynÄ± klasÃ¶re kaydedilen `.keys` dosyasÄ±, gÃ¼venlik nedeniyle iÅŸletim sistemi dÃ¼zeyinde korunan `%LOCALAPPDATA%\FinTrack` klasÃ¶rÃ¼ne taÅŸÄ±ndÄ±.
+- **Kaynak Kod TemizliÄŸi**: GeÃ§miÅŸteki kriz yÃ¶netimi iÃ§in eklenmiÅŸ olan `_oldBrokenPassphrase` (Hardcoded ÅŸifre) sabiti ve baÄŸlÄ± gÃ¶Ã§ kodlarÄ± tamamen silindi.
+- **Proje TemizliÄŸi**: KÃ¶k dizinde yer kaplayan geÃ§miÅŸten kalma 23 adet debug script/log dosyasÄ± ve 2 adet test klasÃ¶rÃ¼ silinerek proje arÄ±ndÄ±rÄ±ldÄ±.
+- **SÄ±fÄ±r UyarÄ± (Zero Warnings)**: Derleme esnasÄ±nda oluÅŸan CS8600 (Nullable), CS0219 (Gereksiz DeÄŸiÅŸken), SYSLIB0060 (Obsolete Constructor) ve AVLN5001 (Obsolete WindowDecorations/Watermark) uyarÄ±larÄ± onarÄ±ldÄ±.
+
+### Changed
+- **Kesintisiz GeÃ§iÅŸ (Seamless Migration)**: Eski saltsÄ±z veritabanÄ± anahtarlarÄ±na sahip kullanÄ±cÄ±larÄ±n, herhangi bir iÅŸlem yapmasÄ±na gerek kalmadan ilk giriÅŸlerinde otomatik olarak yeni Salt/PBKDF2 altyapÄ±sÄ±na yÃ¼kseltilmesi saÄŸlandÄ±.
+- **Esnek UI (HesaplarÄ± YÃ¶net)**: HesaplarÄ± YÃ¶net (`ManageAccountsWindow`) penceresi sabit boyuttan Ã§Ä±karÄ±larak esnek, geniÅŸletilebilir (resizable) hale getirildi ve gÃ¶rÃ¼ntÃ¼ bozulmamasÄ± iÃ§in (500x500) minimum boyut sÄ±nÄ±rÄ± konuldu.
+
+## [2.1.1] - 2026-07-26 â€” Åifreli Banka AdÄ± KeÅŸfi ve Koruyucu Kural
+
+### Fixed
+- **KalÄ±ntÄ± Åifreli BankName Tespiti**: HesaplarÄ±m ekranÄ±nda bir banka hesabÄ±nÄ±n adÄ±nÄ±n dÃ¼z metin yerine ÅŸifreli Base64 formatÄ±nda (`SvrehhLBRI...`) gÃ¶sterildiÄŸi tespit edildi. Bu sorun, geÃ§miÅŸte (beta.23) BankName alanlarÄ±nÄ±n AES ile ÅŸifrelenmesi ve ardÄ±ndan anahtar bozulma krizi (beta.45) nedeniyle `DecryptBankNames` migrasyonunun bu kaydÄ± Ã§Ã¶zemeyip ÅŸifreli bÄ±rakmasÄ±ndan kaynaklanmaktadÄ±r. SÄ±fÄ±rdan oluÅŸturulan yeni profillerde bu sorun oluÅŸmaz, Ã§Ã¼nkÃ¼ gÃ¼ncel kodda BankName/IBAN alanlarÄ±na ÅŸifreleme uygulanmamaktadÄ±r.
+
+### Changed
+- **AGENTS.md Koruyucu Kural Eklendi**: Gelecekte aynÄ± hatanÄ±n tekrarÄ±nÄ± Ã¶nlemek amacÄ±yla, `BankAccount.BankName`, `BankAccount.IBAN` ve `CreditCardAccount.BankName` alanlarÄ±na alan bazlÄ± ÅŸifreleme (ValueConverter veya CryptoProvider.Encrypt) uygulanmasÄ±nÄ± **aÃ§Ä±kÃ§a yasaklayan** yeni bir kural (Madde 4 - Knowledge Base) AGENTS.md dosyasÄ±na eklendi. SQLCipher zaten veritabanÄ± dÃ¼zeyinde tam ÅŸifreleme saÄŸladÄ±ÄŸÄ±ndan ek alan ÅŸifrelemeye gerek olmadÄ±ÄŸÄ± belgelendi.
+- **Veri GÃ¼venliÄŸi Ä°lkeleri (Kural 4) GÃ¼Ã§lendirildi**: Eski "Kod ve TasarÄ±m StandartlarÄ±" baÅŸlÄ±ÄŸÄ±, kapsamlÄ± bir **Veri GÃ¼venliÄŸi Ä°lkeleri (KRÄ°TÄ°K)** kuralÄ±na yÃ¼kseltildi. Eklenen yeni alt maddeler: (1) Hassas verilerin (DEK, ÅŸifreler, IBAN, API anahtarlarÄ±) log Ã§Ä±ktÄ±larÄ±na yazÄ±lmasÄ± yasaÄŸÄ±, (2) VeritabanÄ± yapÄ±sÄ± deÄŸiÅŸikliklerinde ÅŸifreleme stratejisi deÄŸerlendirmesi zorunluluÄŸu, (3) GÃ¼venlik-kritik sÄ±nÄ±flara (`CryptoProvider`, `SettingsManager`, `EncryptionService`, `AppDbContext.OnConfiguring`) yapÄ±lacak deÄŸiÅŸikliklerde yan etki analizi ve risk bildirimi zorunluluÄŸu.
+
+## [2.1.0] - 2026-07-17 â€” KararlÄ± SÃ¼rÃ¼m (Stable Release) ve JSON Export/Import Ã–zelliÄŸi
+
+### Added
+- **JSON DÄ±ÅŸa Aktar (Export)**: KullanÄ±cÄ±larÄ±n mevcut finansal verilerini (hesaplar, bÃ¼tÃ§eler, iÅŸlemler vb.) ÅŸifresiz ve dÃ¼zenlenebilir dÃ¼z metin (JSON) formatÄ±nda dÄ±ÅŸa aktarabilmesini saÄŸlayan Ã¶zellik eklendi.
+- **JSON Ä°Ã§e Aktar (Import)**: DÄ±ÅŸa aktarÄ±lÄ±p (gerekirse) Notepad ile dÃ¼zenlenebilen temiz JSON dosyasÄ±nÄ±n, veritabanÄ±nÄ± sÄ±fÄ±rlayarak yerine temiz bir sayfa olarak yÃ¼klenmesini saÄŸlayan Ä°Ã§e Aktarma Ã¶zelliÄŸi eklendi.
+- `SettingsViewModel` ve `SettingsView` iÃ§erisine FileDialogs (Dosya SeÃ§ici Pencere) destekleri entegre edilerek Yedekleme sekmesine ÅŸÄ±k butonlar yerleÅŸtirildi.
+
+## [2.0.0-beta.47] - 2026-07-17 â€” "G:" Ã–n Ekli Åifreli Banka Ä°simleri DÃ¼zeltmesi
+
+### Fixed
+- **"G:" Ã–n Ekli Åifreli Verilerin Ã‡Ã¶zÃ¼lememesi**: BazÄ± banka hesaplarÄ±nÄ±n BankName ve IBAN alanlarÄ± veritabanÄ±nda `G:base64ciphertext` formatÄ±nda saklanÄ±yordu. Ã–nceki `DecryptBankNames` migrasyonu bu "G:" Ã¶n ekini soyamadÄ±ÄŸÄ± iÃ§in `CryptoProvider.Decrypt` Ã§aÄŸrÄ±sÄ± Base64 parse hatasÄ±na dÃ¼ÅŸÃ¼p ÅŸifreli metni olduÄŸu gibi bÄ±rakÄ±yordu. Yeni `TryDecryptValue` yardÄ±mcÄ± metodu eklenerek hem "G:" Ã¶n ekli hem de Ã¶n eksiz (raw base64) ÅŸifreli veriler doÄŸru ÅŸekilde Ã§Ã¶zÃ¼lmesi saÄŸlandÄ±.
+- **AkÄ±llÄ± Åifreli Veri Tespiti**: Eski sÃ¼rÃ¼mdeki kaba uzunluk kontrolÃ¼ (`Length > 20`) yerine, Base64 karakterleri (+, /, =) ve metin yapÄ±sÄ±nÄ± analiz eden `IsLikelyEncrypted` metodu eklendi. GerÃ§ek IBAN'lar (TR ile baÅŸlayan 26 karakter) ve normal banka isimleri yanlÄ±ÅŸlÄ±kla ÅŸifre Ã§Ã¶zmeye gÃ¶nderilmiyor.
+
+## [2.0.0-beta.46] - 2026-07-16 â€” Banka HesaplarÄ± Ä°Ã§in KalÄ±cÄ± Åifre Ã‡Ã¶zÃ¼mÃ¼ ve Entity Framework Hata DÃ¼zeltmesi
+
+### Fixed
+- **Dashboard AÃ§Ä±lÄ±ÅŸ HatasÄ± (LINQ Translation Error)**: Banka isimlerini ve IBAN'larÄ± on-the-fly (anlÄ±k) ÅŸifre Ã§Ã¶zmek iÃ§in eklenen Entity Framework `ValueConverter` tanÄ±mlamalarÄ±nÄ±n, uygulama iÃ§indeki `OrderBy(b => b.BankName)` ve `Contains()` gibi LINQ sorgularÄ±nÄ± bozarak (SQL server-side deÄŸerlendirme hatasÄ±) Dashboard aÃ§Ä±lÄ±rken uygulamanÄ±n Ã§Ã¶kmesine (`InvalidOperationException`) yol aÃ§tÄ±ÄŸÄ± tespit edildi.
+- **KalÄ±cÄ± DÃ¼zeltme (Data Decryption Migration)**: ValueConverter yaklaÅŸÄ±mÄ± tamamen iptal edildi. Bunun yerine, uygulamaya baÅŸarÄ±lÄ± giriÅŸ yapÄ±ldÄ±ktan hemen sonra veritabanÄ±ndaki ÅŸifreli kalmÄ±ÅŸ BankName ve IBAN kayÄ±tlarÄ±nÄ± kalÄ±cÄ± olarak ÅŸifresiz hale dÃ¶nÃ¼ÅŸtÃ¼ren (Decrypt) ve dÃ¼z metin kaydeden bir Migration sÃ¼reci (`DecryptBankNames`) eklendi. BÃ¶ylece hem LINQ hatalarÄ± Ã§Ã¶zÃ¼ldÃ¼ hem de arayÃ¼zde doÄŸru isimlerin gÃ¶rÃ¼nmesi saÄŸlandÄ±.
+
+## [2.0.0-beta.45] - 2026-07-16 â€” Åifreleme AnahtarÄ± BozulmasÄ± ve Veri EriÅŸim Krizinin Ã‡Ã¶zÃ¼mÃ¼
+
+### Fixed
+- **EncryptedDataKey BozulmasÄ± Tespit ve OnarÄ±m**: Settings dosyasÄ±ndaki `EncryptedDataKey` deÄŸerinin bozulduÄŸu (AES ile Ã§Ã¶zÃ¼lemez hale geldiÄŸi) tespit edildi. Yedek settings dosyasÄ±ndan (`settings_PrivateFinTrack2026.json`) gerÃ§ek 32-byte DEK (`ICwM9+...`) kurtarÄ±larak `EncryptedDataKey` yeniden ÅŸifrelendi ve onarÄ±ldÄ±.
+- **CryptoProvider Ã‡Ã¶kme HatasÄ± Giderildi**: `CryptoProvider.Encrypt` metodu geÃ§ersiz AES anahtar boyutunda (72 byte) exception fÄ±rlatarak uygulamayÄ± Ã§Ã¶kertiyordu. Hem `Encrypt` hem `Decrypt` metodlarÄ±na AES key boyut doÄŸrulamasÄ± (16/24/32 byte) ve try-catch korumasÄ± eklendi. GeÃ§ersiz anahtarla ÅŸifreleme yerine plaintext dÃ¶ndÃ¼rÃ¼lmesi saÄŸlandÄ±.
+- **SQLCipher PRAGMA Rekey Migrasyonu**: VeritabanÄ± eski (bozuk) passphrase ile ÅŸifrelenmiÅŸ durumdaydÄ±. `AppDbContext.OnConfiguring` metoduna tek seferlik otomatik migration eklendi: yeni DEK ile DB aÃ§Ä±lamazsa eski passphrase ile aÃ§Ä±p `PRAGMA rekey` ile yeni DEK'e geÃ§iÅŸ yapÄ±lÄ±yor.
+
+### Changed
+- **KÃ¶k Neden Analizi**: `VerifyPasswordAndLoadKey` fonksiyonunda DEK Ã§Ã¶zme baÅŸarÄ±sÄ±z olduÄŸunda `CryptoProvider.Decrypt`'in catch bloÄŸu ÅŸifreli veriyi (72 byte blob) olduÄŸu gibi `ActiveDataKey`'e atÄ±yordu. SQLCipher bu blob'u passphrase olarak kabul edip DB'yi aÃ§abiliyordu, ancak `Description` alanÄ±nÄ±n ValueConverter'Ä± aynÄ± blob ile AES ÅŸifreleme yapmaya Ã§alÄ±ÅŸÄ±nca Ã§Ã¶kÃ¼yordu.
+
+## [2.0.0-beta.44] - 2026-07-15 â€” Ekstre Ä°Ã§e AktarÄ±mÄ±nda AkÄ±llÄ± Referans (EÅŸleÅŸtirme) Sistemi
+
+### Changed
+- **Ekstre MÃ¼kerrer KontrolÃ¼**: Ä°Ã§e aktarÄ±m sÄ±rasÄ±nda yapÄ±lan "MÃ¼kerrer?" kontrolÃ¼nÃ¼n mantÄ±ÄŸÄ± tamamen deÄŸiÅŸtirildi. ArtÄ±k yapay zekanÄ±n bulduÄŸu aÃ§Ä±klama ile kullanÄ±cÄ±nÄ±n manuel girdiÄŸi aÃ§Ä±klamanÄ±n birebir eÅŸleÅŸmesi beklenmiyor (Ã§Ã¼nkÃ¼ banka aÃ§Ä±klamalarÄ± her zaman farklÄ±dÄ±r). Bunun yerine sadece "Tarih" ve "Tutar" Ã¼zerinden kesin eÅŸleÅŸme aranÄ±yor.
+- **Elle Girilen Veriyi Referans Alma**: EÄŸer aynÄ± gÃ¼n, aynÄ± tutarda bir iÅŸlem veritabanÄ±nda zaten varsa, sistem bunu "âš ï¸ EÅŸleÅŸen KayÄ±t" olarak iÅŸaretliyor ve o satÄ±rÄ±n onay (seÃ§im) tikini **otomatik olarak kaldÄ±rÄ±yor**. BÃ¶ylece kullanÄ±cÄ±nÄ±n daha Ã¶nceden manuel ve Ã¶zenle girdiÄŸi kayÄ±t (kategorisiyle birlikte) **referans alÄ±nÄ±p korunuyor**, ekstredeki ham veri onun Ã¼zerine yazÄ±lmÄ±yor.
+- **DetaylÄ± Bilgilendirme**: KullanÄ±cÄ± "âš ï¸ EÅŸleÅŸen KayÄ±t" rozetinin Ã¼zerine fare ile geldiÄŸinde, sistemin bunu hangi manuel kayÄ±tla (Tarih, AÃ§Ä±klama, Tutar) eÅŸleÅŸtirdiÄŸini ÅŸeffaf bir ÅŸekilde gÃ¶rebiliyor.
+
+## [2.0.0-beta.43] - 2026-07-15 â€” Log Hata DÃ¼zeltmeleri ve Performans Ä°yileÅŸtirmesi
+
+### Fixed
+- **Dashboard Ã‡Ã¶kme HatasÄ± (Year/Month)**: Dashboard (Ana Ekran) yÃ¼klenirken, bazÄ± senaryolarda tarih (yÄ±l) parametresinin eksik/geÃ§ersiz gitmesi sonucu `Year must be between 1 and 9999` hatasÄ±na yol aÃ§an bir istisna (Exception) giderildi. ArtÄ±k geÃ§ersiz veya eksik bir tarih gelirse sistem otomatik olarak gÃ¼ncel yÄ±lÄ± ve ayÄ± baz alarak kusursuz ÅŸekilde yÃ¼klenmeye devam ediyor.
+- **EF Core VeritabanÄ± Migrasyon UyarÄ±sÄ±**: GiriÅŸ yapÄ±ldÄ±ÄŸÄ±nda Entity Framework'Ã¼n `PendingModelChangesWarning` (bekleyen model deÄŸiÅŸiklikleri) uyarÄ±sÄ± fÄ±rlatarak login sÃ¼recini engellemesi sorunu, uyarÄ± gizlenerek (Suppress) Ã§Ã¶zÃ¼ldÃ¼.
+
+## [2.0.0-beta.42] - 2026-07-15 â€” Yapay Zeka (Gemini) JSON AyrÄ±ÅŸtÄ±rma Ä°yileÅŸtirmesi
+
+### Fixed
+- **Ekstre YÃ¼kleme HatasÄ± (Entegrasyon HatasÄ±)**: Yapay zeka modelinin (Gemini) ekstreyi analiz ettikten sonra bazen yanÄ±tÄ± bir kod bloÄŸu (```json ... ```) veya ekstra aÃ§Ä±klamalarla sarmalayarak gÃ¶ndermesi sonucu sistemin hata verip ekstreyi iÃ§eri aktaramama sorunu Ã§Ã¶zÃ¼ldÃ¼. Sisteme, yapay zekadan dÃ¶nen karmaÅŸÄ±k metnin iÃ§inden saf JSON verisini (sadece '{' ve '}' arasÄ±nÄ±) bulup ayÄ±klayabilen akÄ±llÄ± bir filtre eklendi. AyrÄ±ca Gemini'nin obje `{...}` yerine dÃ¼mdÃ¼z bir dizi `[...]` dÃ¶nmesi durumu da yakalanarak sorunsuz ayrÄ±ÅŸtÄ±rÄ±lmasÄ± saÄŸlandÄ±.
+
+## [2.0.0-beta.41] - 2026-07-15 â€” Kredi KartÄ± Devreden Bakiye MantÄ±ÄŸÄ±
+
+### Changed
+- **Kredi KartÄ± Ekstre HesaplamasÄ±**: Kart detaylarÄ±ndaki dÃ¶nemsel ekstrelerin "Kalan" hesaplama mantÄ±ÄŸÄ± tamamen yenilendi. ArtÄ±k kredi kartÄ± ekstreleri tamamen gerÃ§eÄŸe uygun ÅŸekilde Ã§alÄ±ÅŸÄ±yor; eski dÃ¶nemlerden kalan borÃ§lar yeni dÃ¶neme "Devreden" olarak ekleniyor. BÃ¶ylece Ã¶rneÄŸin MayÄ±s ayÄ±nda yaptÄ±ÄŸÄ±nÄ±z bir Ã¶deme sadece MayÄ±s'Ä±n deÄŸil, tÃ¼m geÃ§miÅŸ dÃ¶nemlerin biriken borcunu sÄ±fÄ±rlayarak en gÃ¼ncel "Kalan" bakiyenin her zaman doÄŸru Ã§Ä±kmasÄ±nÄ± saÄŸlÄ±yor. Kutu baÅŸlÄ±klarÄ±na "Devreden" tutar gÃ¶sterimi de eklendi.
+
+## [2.0.0-beta.40] - 2026-07-15 â€” Detay Pencereleri BoyutlandÄ±rma ve DÃ¼zen Ä°yileÅŸtirmesi
+
+### Changed
+- **Kart ve Hesap DetaylarÄ± EkranÄ±**: Kredi KartÄ± ve Banka HesabÄ± detay pencereleri (CardDetailWindow ve AccountDetailWindow) artÄ±k kullanÄ±cÄ± tarafÄ±ndan yeniden boyutlandÄ±rÄ±labilir (Resizable) hale getirildi. 
+- **Asimetrik DÃ¼zen DÃ¼zeltmesi**: Kredi KartÄ± DetaylarÄ± ekranÄ±ndaki ekstreyi listeleyen bÃ¶lÃ¼mÃ¼n (Expander) saÄŸ tarafta boÅŸluk bÄ±rakÄ±p asimetrik durmasÄ±na sebep olan hizalama sorunu Ã§Ã¶zÃ¼ldÃ¼. ArtÄ±k listeler pencerenin tam geniÅŸliÄŸine esneyerek ekranÄ± bÃ¼tÃ¼nÃ¼yle kullanacak ÅŸekilde hizalanÄ±yor.
+
+## [2.0.0-beta.39] - 2026-07-15 â€” Ekstre Ä°Ã§e AktarÄ±mÄ±nda AkÄ±llÄ± Kategori Filtreleme
+
+### Changed
+- **Ekstre Ä°Ã§e AktarÄ±m Ã–nizleme (Import Preview)**: Yapay zeka tarafÄ±ndan Ã§Ã¶zÃ¼mlenen ekstreyi onaylama ekranÄ±nda, her bir iÅŸlem satÄ±rÄ± iÃ§in gÃ¶sterilen "Kategori" seÃ§imi aÃ§Ä±lÄ±r kutusu (ComboBox) akÄ±llÄ± hale getirildi. ArtÄ±k o satÄ±rdaki iÅŸlem bir "Gider" ise (tutar negatifse) sadece Gider kategorileri listelenecek; eÄŸer bir "Gelir" ise sadece Gelir kategorileri listelenecek. Bu sayede kullanÄ±cÄ±nÄ±n yanlÄ±ÅŸlÄ±kla gidere gelir kategorisi seÃ§mesinin Ã¶nÃ¼ne geÃ§ildi ve liste karmaÅŸasÄ± azaltÄ±ldÄ±.
+
+## [2.0.0-beta.38] - 2026-07-15 â€” HesaplarÄ±m SÄ±ralama DÃ¼zeltmesi
+
+### Fixed
+- **Hesap Listesi SÄ±ralamasÄ±**: Banka hesaplarÄ±nÄ±n "HesaplarÄ±m" ve "HesaplarÄ± YÃ¶net" ekranlarÄ±ndaki alfabetik sÄ±ralama mantÄ±ÄŸÄ± dÃ¼zeltildi. VeritabanÄ± (SQLite) kaynaklÄ± TÃ¼rkÃ§e karakter sÄ±ralama sorunu Ã§Ã¶zÃ¼lerek verilerin bellek Ã¼zerinde C# standartlarÄ±nda (BankName ve AccountName'e gÃ¶re) tam uyumlu, gruplu ve dÃ¼zgÃ¼n bir alfabetik sÄ±raya girmesi saÄŸlandÄ±.
+
+## [2.0.0-beta.37] - 2026-07-15 â€” Ana Ekran Dinamik Renklendirme
+
+### Changed
+- **Fark-Kalan GÃ¶sterimi**: Ana Ekranda (Ã–zet) yer alan gelir-gider tablosunun en altÄ±ndaki "Fark-Kalan" satÄ±rÄ± dinamik hale getirildi. ArtÄ±k kalan tutar pozitifse veya sÄ±fÄ±rsa (gelir, giderden bÃ¼yÃ¼k veya eÅŸitse) yeÅŸil renk; negatifse (gider, geliri aÅŸmÄ±ÅŸsa) kÄ±rmÄ±zÄ± renk alarak kullanÄ±cÄ±nÄ±n bÃ¼tÃ§e durumunu bir bakÄ±ÅŸta anlamasÄ± saÄŸlandÄ±.
+
+## [2.0.0-beta.36] - 2026-07-15 â€” IBAN DoÄŸrulama ve Hesap Silme DÃ¼zeltmeleri
+
+### Fixed
+- **Hesap Silme HatasÄ±**: KullanÄ±cÄ±lar aÃ§Ä±lÄ±ÅŸ bakiyesi ile yeni bir hesap oluÅŸturduklarÄ±nda, sistemin otomatik olarak "AÃ§Ä±lÄ±ÅŸ Bakiyesi" iÅŸlemi oluÅŸturmasÄ± nedeniyle "iÅŸlem bulunan hesaplar silinemez" uyarÄ±sÄ± verilip hesabÄ±n silinmesine engel olan mantÄ±k hatasÄ± giderildi. ArtÄ±k hesaba ait sadece aÃ§Ä±lÄ±ÅŸ bakiyesi iÅŸlemi varsa hesap (ve baÄŸlÄ± iÅŸlem) silinebilecek.
+- **IBAN Benzersizlik KontrolÃ¼**: Yeni bir banka hesabÄ± eklerken veya dÃ¼zenlerken sistemde zaten kayÄ±tlÄ± olan bir IBAN numarasÄ±nÄ±n tekrar kaydedilmesine izin veren eksiklik giderildi. ArtÄ±k mÃ¼kerrer IBAN giriÅŸlerinde sistem uyarÄ± verecek.
+
+## [2.0.0-beta.35] - 2026-07-15 â€” Pencere BoyutlandÄ±rma Ä°yileÅŸtirmesi
+
+### Changed
+- **HesaplarÄ± YÃ¶net Penceresi**: KullanÄ±cÄ±larÄ±n Ã§ok sayÄ±da hesabÄ± daha rahat listeleyip gÃ¶rebilmesi iÃ§in HesaplarÄ± YÃ¶net (`ManageAccountsWindow`) penceresinin yeniden boyutlandÄ±rÄ±labilir (Resizable) olmasÄ± saÄŸlandÄ±.
+
+## [2.0.0-beta.34] - 2026-07-15 â€” Ä°ÅŸlem SonrasÄ± Bakiye GÃ¶sterimi
+
+### Added
+- **Ä°ÅŸlem SonrasÄ± Bakiye/BorÃ§ GÃ¶sterimi**: Hesap DetaylarÄ± ve Kredi KartÄ± DetaylarÄ± ekranlarÄ±ndaki iÅŸlem listelerine, her bir iÅŸlemin hemen altÄ±na (tutarÄ±n altÄ±na) o anki gÃ¼ncel bakiye veya kalan borÃ§ bilgisi (iÅŸlem sonrasÄ± bakiye) eklendi. BÃ¶ylece iÅŸlemlerin hesap bakiyesine anlÄ±k etkisi Ã§ok daha rahat takip edilebilecek.
+
+## [2.0.0-beta.33] - 2026-07-15 â€” MerkezileÅŸtirilmiÅŸ Loglama ve Kod TemizliÄŸi
+
+### Added
+- **MerkezileÅŸtirilmiÅŸ Loglama**: Proje genelinde kullanÄ±lan `System.Diagnostics.Debug.WriteLine` bazlÄ± geÃ§ici hata kayÄ±t yÃ¶ntemleri temizlendi. Yerine `FinTrack.Core.Helpers.AppLogger` sÄ±nÄ±fÄ± eklendi ve tÃ¼m hatalar (ve info mesajlarÄ±) LocalAppData altÄ±ndaki `FinTrack\Logs` klasÃ¶rÃ¼ne (.log dosyasÄ±na) kaydedilecek ÅŸekilde yapÄ±landÄ±rÄ±ldÄ±.
+
+### Removed
+- **Ã–lÃ¼ Kodlar**: `AvaloniaSparklineControl.cs` iÃ§erisinde uzun sÃ¼redir kullanÄ±lmayan ve yorum satÄ±rÄ±na alÄ±nmÄ±ÅŸ olan grafik etiketleri (Labels) kod bloÄŸu temizlendi.
+
+## [2.0.0-beta.32] - 2026-07-12 â€” Minimum Åifre GÃ¼cÃ¼ PolitikasÄ± ve SÃ¼reli DeÄŸiÅŸim
+
+### Added
+- **Minimum Åifre KarmaÅŸÄ±klÄ±ÄŸÄ±**: VeritabanÄ± ve profil ÅŸifresi oluÅŸturulurken / deÄŸiÅŸtirilirken; en az 8 karakter uzunluÄŸunda olmasÄ±, iÃ§erisinde en az 1 bÃ¼yÃ¼k harf, 1 kÃ¼Ã§Ã¼k harf, 1 rakam ve 1 Ã¶zel karakter (Ã¶rn: !@#$%^&*) barÄ±ndÄ±rmasÄ± zorunluluÄŸu getirildi. Bu sayede "1234" veya "qwert" gibi kolay tahmin edilebilir ÅŸifrelerin kullanÄ±lmasÄ± engellendi.
+- **CanlÄ± Åifre GÃ¼cÃ¼ GÃ¶stergesi**: Åifre belirleme ve deÄŸiÅŸtirme ekranlarÄ±na ÅŸifrenizin gÃ¼cÃ¼nÃ¼ (ZayÄ±f, Orta, GÃ¼Ã§lÃ¼) anlÄ±k olarak gÃ¶steren, kÄ±rmÄ±zÄ±, sarÄ± ve yeÅŸil renklerde dolan gÃ¶rsel bir ilerleme Ã§ubuÄŸu eklendi.
+- **Åifre GeÃ§erlilik SÃ¼resi (Zorunlu Yenileme)**: Yeni ÅŸifre belirlerken veya ÅŸifrenizi deÄŸiÅŸtirirken ÅŸifrenizin geÃ§erlilik sÃ¼resini (3, 6, 9 veya 12 Ay) seÃ§me opsiyonu sunuldu. BelirlediÄŸiniz sÃ¼re dolduÄŸunda, uygulama giriÅŸ yapmanÄ±za izin vermeden Ã¶nce gÃ¼venlik iÃ§in sizden yeni bir ÅŸifre belirlemenizi isteyecek (Zorunlu Åifre Yenileme EkranÄ±).
+
+## [2.0.0-beta.31] - 2026-07-11 â€” BankacÄ±lÄ±k SÄ±nÄ±fÄ± Kriptografi (PBKDF2 & AES-GCM) ve Kesintisiz GeÃ§iÅŸ
+
+### Added
+- **PBKDF2 Åifre TÃ¼retme (V2)**: KullanÄ±cÄ± parolalarÄ±nÄ±n doÄŸrulanmasÄ± iÃ§in sadece SHA-256 (V1) kullanan mevcut sistem yerine, Ã§ok daha gÃ¼venli olan `Rfc2898DeriveBytes` (PBKDF2) entegre edildi. 100.000 iterasyonlu bu yeni algoritma sayesinde kaba kuvvet (brute-force) saldÄ±rÄ±larÄ±na karÅŸÄ± Ã¼st dÃ¼zey koruma saÄŸlandÄ±.
+- **AES-GCM Åifreleme (V2)**: VeritabanÄ± ÅŸifreleme motoru AES-CBC'den, kimlik doÄŸrulamalÄ± ÅŸifreleme saÄŸlayan (Authenticated Encryption) **AES-GCM** moduna yÃ¼kseltildi. BÃ¶ylece ÅŸifreli verilerin deÄŸiÅŸtirilip deÄŸiÅŸtirilmediÄŸi (integrity) matematiksel olarak kanÄ±tlanabilir hale geldi.
+
+### Changed
+- **Kesintisiz GeÃ§iÅŸ (Seamless Migration)**: Mevcut kullanÄ±cÄ± verilerinin bozulmamasÄ± iÃ§in otomatik bir "Geriye Uyumluluk" mekanizmasÄ± geliÅŸtirildi:
+  - Eski AES-CBC verileri, okunurken arka planda yeni AES-GCM standardÄ±na Ã§evrilerek kaydedilecek.
+  - KullanÄ±cÄ±lar mevcut ÅŸifreleriyle her zamanki gibi giriÅŸ yapabilecek, sistem giriÅŸ anÄ±nda altyapÄ±yÄ± gÃ¶rÃ¼nmez bir ÅŸekilde PBKDF2 standartlarÄ±na yÃ¼kseltecek.
+
+
+
+## [2.0.0-beta.30] - 2026-07-11 â€” Transfer Ä°ÅŸlemlerinde KarÅŸÄ± Hesap GÃ¶sterimi
+
+### Added
+- **ArayÃ¼zde KarÅŸÄ± Bacak GÃ¶sterimi**: Transfer tipi iÅŸlemlerde, paranÄ±n "nereye" gittiÄŸi veya "nereden" geldiÄŸinin anlaÅŸÄ±labilmesi iÃ§in iÅŸlem listelerine (hesap detaylarÄ± ve kredi kartÄ± detaylarÄ± ekranlarÄ±) otomatik olarak karÅŸÄ± hesabÄ±n adÄ± (Ã¶rn. Hedef: Nakit, Kaynak: Garanti BBVA) eklendi.
+- **DetaylÄ± Transfer GÃ¶rÃ¼ntÃ¼leme**: Ä°ÅŸlem dÃ¼zenleme ekranÄ±nda (`EditTransactionWindow`), dÃ¼zenlenmekte olan iÅŸlemin bir transfer olmasÄ± durumunda o transferin diÄŸer ucundaki hesabÄ±n hangisi olduÄŸu salt okunur ve ÅŸeffaf bir bilgi alanÄ± (`PairedAccountInfo`) olarak gÃ¶sterilmeye baÅŸlandÄ±.
+
+
+
+## [2.0.0-beta.29] - 2026-07-11 â€” Ana Ekran Kategori DetaylarÄ± Penceresi
+
+### Added
+- **Dashboard Kategori DetaylarÄ± EkranÄ±**: Ana Ekranda (Dashboard) listelenen gelir ve gider kategorilerinin (Ã¶rn. Kredi KartÄ± Ã–demesi, Market vb.) satÄ±rlarÄ±na tÄ±klandÄ±ÄŸÄ±nda, o kalemi oluÅŸturan hesap hareketlerinin tamamÄ±nÄ± detaylarÄ±yla (Tarih, AÃ§Ä±klama, Hesap, Tutar) gÃ¶steren ferah ve yeni bir detay penceresi (CategoryDetailWindow) eklendi.
+- **Dinamik SÃ¼tun BoyutlandÄ±rma ve Hibrit Esneklik**: Hem Kategori detaylarÄ± penceresinde hem de Raporlar kÄ±smÄ±ndaki "Ä°ÅŸlem DÃ¶kÃ¼mÃ¼" tablolarÄ±nda, kullanÄ±cÄ±larÄ±n fareyle sÃ¼tun geniÅŸliklerini dilediÄŸi gibi ayarlayabilmesine (Resize) olanak saÄŸlandÄ±. SaÄŸ tarafta gereksiz beyaz boÅŸluk kalmamasÄ± iÃ§in sadece "AÃ§Ä±klama" sÃ¼tunlarÄ±na otomatik ekranÄ± doldurma (Star Sizing) gÃ¶revi verildi.
+
+### Fixed
+- **Compiled Bindings (x:DataType) HatasÄ± Ã‡Ã¶zÃ¼mÃ¼**: Avalonia'nÄ±n XAML tarafÄ±ndaki katÄ± derleme gÃ¼venlik standartlarÄ± gereÄŸi, CategoryDetailWindow oluÅŸturulurken alÄ±nan "Cannot parse a compiled binding without an explicit x:DataType" hatasÄ±, doÄŸru ViewModel referanslarÄ±nÄ±n tanÄ±mlanmasÄ±yla giderildi.
+
+
+## [2.0.0-beta.28] - 2026-07-11 â€” Raporlar EkranÄ±na Ä°ÅŸlem DÃ¶kÃ¼mÃ¼ (Dashboard GÃ¶rÃ¼nÃ¼mÃ¼) & Piyasa Ã–zeti Ä°yileÅŸtirmesi
+
+### Added
+- **Raporlar EkranÄ±na Ä°ÅŸlem DÃ¶kÃ¼mÃ¼ Sekmesi Eklendi**: "Raporlar ve Analiz" ekranÄ±nda yer alan sekmelerin arasÄ±na, seÃ§ilen tarih aralÄ±ÄŸÄ±nda gerÃ§ekleÅŸen tÃ¼m iÅŸlemleri Dashboard (Ana Ekran) mantÄ±ÄŸÄ±yla (sol tarafta gelirler, saÄŸ tarafta giderler) listeleyen yeni bir "Ä°ÅŸlem DÃ¶kÃ¼mÃ¼" sekmesi entegre edildi. Bu yeni gÃ¶rÃ¼nÃ¼mde; iÅŸlem tarihi, aÃ§Ä±klamasÄ±, iÅŸlem kategorisi, iÅŸlem tutarÄ± ve iÅŸlemin gerÃ§ekleÅŸtiÄŸi hesap/kart bilgisi satÄ±r bazÄ±nda detaylÄ± bir ÅŸekilde kullanÄ±cÄ±ya sunuldu.
+
+### Fixed
+- **Dashboard CanlÄ± Kur Ã–zeti AsenkronlaÅŸtÄ±rÄ±ldÄ±**: Ana ekrandaki yeÅŸil bilgi Ã§ubuÄŸuna entegre edilen canlÄ± piyasa verileri (USD, EUR, XAU, XU100) Ã§ekim iÅŸlemi, uygulamanÄ±n (UI) akÄ±cÄ±lÄ±ÄŸÄ±nÄ± bozmamasÄ± iÃ§in "Task.Run" ile tamamen arka planda Ã§alÄ±ÅŸacak asenkron yapÄ±ya kavuÅŸturuldu. AyrÄ±ca aylar arasÄ±nda hÄ±zlÄ± geÃ§iÅŸ yapÄ±ldÄ±ÄŸÄ±nda arka planda bekleyen isteklerin aynÄ± metni tekrarlÄ± olarak ekrana yazmasÄ± (double-write bug) 'Contains' kontrolÃ¼ ile giderildi.
+- **Kredi KartÄ± Ã–demesi Ã‡ift SayÄ±m (Double-Count) HatasÄ± Ã‡Ã¶zÃ¼ldÃ¼**: Planlanan sÃ¼tununa deÄŸer Ã§ekilirken, hesaplar arasÄ± transfer iÅŸleminde paranÄ±n hem Ã§Ä±kan hesaptan hem de giren hesaptan iki kez toplanmasÄ±na neden olan mantÄ±k hatasÄ± giderildi; sadece Vadesiz Hesaptan Ã§Ä±kan (CreditCardAccountId == null && Amount < 0) iÅŸlemler baz alÄ±ndÄ±.
+- **SÄ±ralama MantÄ±ÄŸÄ± DÃ¼zeltildi**: Dashboard gÃ¶rÃ¼nÃ¼mÃ¼nde, gerÃ§ekleÅŸen verinin olmadÄ±ÄŸÄ± gelecek aylar seÃ§ildiÄŸinde (ActualAmount=0) tablolarÄ±n sÄ±ralamasÄ±nÄ±n rastgele Ã§alÄ±ÅŸmasÄ± sorunu giderildi; sÄ±ralama algoritmasÄ± "GerÃ§ekleÅŸen tutar yoksa Planlanan tutara gÃ¶re sÄ±rala" kuralÄ±yla gÃ¼ncellendi.
+- **Enflasyon MantÄ±ÄŸÄ± GeniÅŸletildi**: Kredi kartÄ± ekstreleri de dahil tÃ¼m harcamalarÄ±n yÄ±llÄ±k bazda enflasyondan etkileneceÄŸi gerÃ§ek hayat senaryosuna uyumlu olarak, transfer iÅŸlemlerindeki enflasyon muafiyeti kaldÄ±rÄ±larak, Kredi KartÄ± Ã–demesi ve Ekstre Ã–demesi kalemlerine de yÄ±llÄ±k enflasyon artÄ±ÅŸÄ±nÄ±n otomatik yansÄ±masÄ± saÄŸlandÄ±.
+
+## [2.0.0-beta.27] - 2026-07-11 â€” Ana Ekran (Dashboard) BÃ¼tÃ§e GÃ¶rÃ¼nÃ¼mÃ¼ Ä°yileÅŸtirmesi
+
+### Changed
+- **Dashboard GÃ¶rÃ¼nÃ¼mÃ¼ Yenilendi**: Ana ekranÄ±n alt kÄ±smÄ±nda yer alan "iÅŸlem tabanlÄ±" 3 sÃ¼tunlu liste gÃ¶rÃ¼nÃ¼mÃ¼ tamamen kaldÄ±rÄ±larak, yerine Excel ÅŸablonundaki bÃ¼tÃ§e planlamasÄ±na uygun ÅŸekilde **Kategori BazlÄ± 2 SÃ¼tunlu (Alacak ve BorÃ§)** tablo gÃ¶rÃ¼nÃ¼mÃ¼ne geÃ§ildi.
+- Her kategori iÃ§in "Planlanan" deÄŸeri Ã¶ncelikle sistemdeki bÃ¼tÃ§e limitlerinden Ã§ekildi. EÄŸer bir limit atanmamÄ±ÅŸsa, **geÃ§en yÄ±lÄ±n aynÄ± ayÄ±ndaki gerÃ§ekleÅŸen tutara yÄ±llÄ±k enflasyon oranÄ± eklenerek** otomatik ve mantÄ±klÄ± bir "Planlanan" tutar oluÅŸturuldu (hem gelir hem de gider kalemleri iÃ§in).
+- Transfer iÅŸlemlerinin yarattÄ±ÄŸÄ± bilgi kirliliÄŸi giderilerek, transferler nakit akÄ±ÅŸ yÃ¶nÃ¼ne gÃ¶re Alacak ve BorÃ§ tablolarÄ±na "Transfer GiriÅŸi / Ã‡Ä±kÄ±ÅŸÄ±" baÅŸlÄ±klarÄ± altÄ±nda dÃ¼zenli olarak entegre edildi.
+
+### Fixed
+- **BÃ¼tÃ§e Takvim AlgoritmasÄ± Ã‡eliÅŸkisi Giderildi**: BÃ¼tÃ§e (Budget) sekmesindeki aylÄ±k harcama hesaplamalarÄ±nÄ±n, Dashboard (Ana Ekran) gibi "Bir Ã¶nceki ayÄ±n son iÅŸ gÃ¼nÃ¼ ile bu ayÄ±n son iÅŸ gÃ¼nÃ¼" mantÄ±ÄŸÄ±nÄ± kullanmak yerine standart takvim ayÄ±nÄ± (AyÄ±n 1'ini) kullandÄ±ÄŸÄ± tespit edildi. BÃ¼tÃ§e hesaplamalarÄ± ve Dashboard'un "geÃ§en yÄ±lÄ±n aynÄ± ayÄ±" sorgularÄ±, FinTrack standart ay hesaplama (GetLastBusinessDayOfMonth) rutinine geÃ§irilerek tÃ¼m sistemde veri bÃ¼tÃ¼nlÃ¼ÄŸÃ¼ saÄŸlandÄ±.
+
+## [2.0.0-beta.26] - 2026-07-11 â€” Kredi KartÄ± Ekstre GeÃ§miÅŸi ve BorÃ§ Ã–deme Ä°yileÅŸtirmesi (GÃ¶rev 1-2)
+
+### Added
+- **AylÄ±k Ekstre GeÃ§miÅŸi GÃ¶rÃ¼nÃ¼mÃ¼**: Kredi KartÄ± DetaylarÄ± ekranÄ±nda iÅŸlemler artÄ±k dÃ¼z bir liste yerine, hesap kesim tarihlerine gÃ¶re (ekstre dÃ¶nemi bazÄ±nda) kronolojik olarak gruplanarak (Expander yapÄ±sÄ±nda) gÃ¶steriliyor.
+- **Ekstre Ã–zet Bilgileri**: Her ekstre dÃ¶neminin baÅŸlÄ±ÄŸÄ±nda o dÃ¶neme ait "Toplam Harcama", "Ã–deme" ve "Kalan Net BorÃ§" miktarlarÄ± ayrÄ± ayrÄ± listeleniyor.
+- **BorÃ§ Ã–deme Otomasyonu**: "BorÃ§ Ã–de" ekranÄ±nda aktif dÃ¶neme ait borÃ§ hesaplanarak gÃ¶sterildi ve tek tÄ±kla dÃ¶nem borcunu doldurmayÄ± saÄŸlayan "TamamÄ±nÄ± Ã–de" (FillFullAmount) butonu eklendi.
+- **Yetersiz Bakiye KorumasÄ±**: Kredi kartÄ± borcu Ã¶denirken, seÃ§ilen kaynaÄŸÄ±n (nakit veya banka hesabÄ±) bakiyesi yetersiz ise kullanÄ±cÄ±ya "GÃ¼ncel Bakiye: â‚ºX.XXX,XX" bilgisi ile uyarÄ± verilmesi ve eksi bakiyeye dÃ¼ÅŸme durumunda iÅŸlem onayÄ± (ConfirmDialog) istenmesi saÄŸlandÄ±.
+
+## [2.0.0-beta.25] - 2026-07-10 â€” Anahtar DosyasÄ±nÄ±n GÃ¼venli Konuma TaÅŸÄ±nmasÄ± (GÃ¶rev 6)
+
+### Added
+- **Ä°zole Anahtar DepolamasÄ±**: VeritabanÄ± ÅŸifreleme bilgilerini iÃ§eren `.keys` dosyasÄ± artÄ±k veritabanÄ± ile aynÄ± klasÃ¶rde (Belgelerim) tutulmak yerine iÅŸletim sisteminin koruduÄŸu `%LOCALAPPDATA%\FinTrack\` gizli sistem klasÃ¶rÃ¼ne taÅŸÄ±ndÄ±.
+- **GÃ¼venlik (SeÃ§enek A)**: Bu sayede yedekleme klasÃ¶rÃ¼nÃ¼n veya veritabanÄ± dosyasÄ±nÄ±n kopyalanmasÄ± durumunda anahtar dosyasÄ±nÄ±n da sÄ±zdÄ±rÄ±lmasÄ± engellendi ("SandÄ±k" ve "Anahtar" fiziksel olarak ayrÄ±ldÄ±).
+- **Otomatik Temizlik**: Uygulama aÃ§Ä±ldÄ±ÄŸÄ±nda eski konumdaki `.keys` dosyasÄ± tespit edilirse otomatik olarak yeni yerine taÅŸÄ±nÄ±p eski konumdan siliniyor.
+
+## [2.0.0-beta.24] - 2026-07-10 â€” Bellek GÃ¼venliÄŸi Ä°yileÅŸtirmesi (GÃ¶rev 5)
+
+### Added
+- **Bellek GÃ¼venliÄŸi (In-Memory Protection)**: Uygulama kilitlendiÄŸinde (Auto-Lock veya manuel kilitleme) veri ÅŸifreleme anahtarÄ± (DEK - Data Encryption Key) bellekte (RAM) aÃ§Ä±k halde tutulmayÄ±p anÄ±nda temizleniyor (`SettingsManager.ClearActiveKey()`). Bu sayede kilit ekranÄ±ndayken bilgisayara yapÄ±labilecek bellek dump (memory dump) saldÄ±rÄ±larÄ±na karÅŸÄ± veritabanÄ± ÅŸifresi tamamen gÃ¼venceye alÄ±ndÄ±. Anahtar, kullanÄ±cÄ± ÅŸifresiyle yeniden giriÅŸ yapÄ±ldÄ±ÄŸÄ±nda tekrar oluÅŸturuluyor.
+
+
+## [2.0.0-beta.23] - 2026-07-10 â€” IBAN ve Banka AdÄ± AlanlarÄ±na Otomatik Åifreleme (GÃ¶rev 4)
+
+### Added
+- **Hassas Veri Åifreleme**: Banka hesaplarÄ±na ait IBAN ve Banka AdÄ± (BankName) alanlarÄ± artÄ±k veritabanÄ±nda dÃ¼z metin olarak deÄŸil, AES-256-CBC standardÄ±nda ÅŸifrelenmiÅŸ (encrypted) olarak saklanÄ±yor.
+- **Otomatik Migration (GeÃ§iÅŸ)**: Mevcut ÅŸifresiz IBAN ve Banka AdÄ± kayÄ±tlarÄ±nÄ±n sisteme ilk giriÅŸ yapÄ±ldÄ±ÄŸÄ±nda otomatik olarak ÅŸifreli formata dÃ¶nÃ¼ÅŸtÃ¼rÃ¼lmesi saÄŸlandÄ±. Bu iÅŸlem her cihazda sadece bir kez Ã§alÄ±ÅŸacak ÅŸekilde ayarlandÄ±.
+
+
+## [2.0.0-beta.22] - 2026-07-10 â€” Gemini API Hata MesajÄ± ve Gecikme Ä°yileÅŸtirmesi
+
+### Fixed
+- **Gemini API YÃ¼ksek Talep HatasÄ±**: Gemini servislerindeki yoÄŸunluk sebebiyle (503 Service Unavailable) oluÅŸan hatalar iÃ§in tekrar deneme sÃ¼resi uzatÄ±ldÄ± (max 5 deneme, artan bekleme sÃ¼resi).
+- **KullanÄ±cÄ± Deneyimi**: KarmaÅŸÄ±k JSON hata mesajÄ± yerine kullanÄ±cÄ±ya dostÃ§a ("Google Gemini sunucularÄ± ÅŸu an Ã§ok yoÄŸun...") hata mesajÄ± gÃ¶sterilmesi saÄŸlandÄ±.
+
+
+## [2.0.0-beta.21] - 2026-07-09 â€” Gemini API Retry MekanizmasÄ±
+
+### Fixed
+- **Gemini 503/429 HatalarÄ±**: Gemini API'ye ardÄ±ÅŸÄ±k ekstre yÃ¼klendiÄŸinde yoÄŸunluk sebebiyle (High Demand - 503 veya 429) uygulamanÄ±n hata vermesi sorunu dÃ¼zeltildi. API Ã§aÄŸrÄ±larÄ±na otomatik yeniden deneme (retry) mekanizmasÄ± eklendi. ArtÄ±k API meÅŸgul olduÄŸunda 3 defaya kadar artan sÃ¼relerle bekleyip arka planda tekrar deneyecek.
+
+## [2.0.0-beta.20] - 2026-07-07 â€” Kredi KartÄ± Ekstre YÃ¼kleme Ä°yileÅŸtirmeleri
+
+### Added
+- **YÃ¼kleme Bildirimi (Loading Indicator)**: Kredi kartÄ± ekstresi yÃ¼klenirken ve yapay zeka ile analiz edilirken, arka plandaki iÅŸlemin devam ettiÄŸini kullanÄ±cÄ±ya gÃ¶steren tam sayfa bir yÃ¼kleme animasyonu (Loading Overlay) eklendi.
+
+## [2.0.0-beta.19] - 2026-07-06 â€” Kredi KartÄ± Limit ve BorÃ§ Hesaplama DÃ¼zeltmeleri
+
+### Added
+- **Toplam Kalan Limit GÃ¶sterimi**: KartlarÄ±m sayfasÄ±ndaki en Ã¼st Ã¶zet kutusuna, tÃ¼m kartlarÄ±n harcanabilir limitlerini toplayarak gÃ¶steren dinamik bir "Toplam Kalan Limit" bÃ¶lÃ¼mÃ¼ eklendi.
+
+### Fixed
+- **YatÄ±rÄ±m Ä°ÅŸlemlerinin Borca YansÄ±mama HatasÄ±**: Kredi kartÄ± veya sanal kart Ã¼zerinden gerÃ§ekleÅŸtirilen AltÄ±n, BES, Fon gibi "YatÄ±rÄ±m" alÄ±mlarÄ±nÄ±n (InvestmentTransactions), ilgili kartÄ±n dÃ¶nem iÃ§i borcuna eklenmemesi ve limitinden dÃ¼ÅŸÃ¼lmemesi problemi Ã§Ã¶zÃ¼ldÃ¼. ArtÄ±k tÃ¼m sanal/asÄ±l kart yatÄ±rÄ±mlarÄ±, limitleri ve borÃ§larÄ± kusursuz olarak etkiliyor.
+
+## [2.0.0-beta.18] - 2026-07-06 â€” Gemini API ModÃ¼lÃ¼ GÃ¼ncellemesi ve Ã–nizleme Ä°yileÅŸtirmeleri
+
+### Added
+- **Ekstre Toplam Tutar GÃ¶sterimi**: Ä°Ã§e aktarma Ã¶nizleme ekranÄ±nÄ±n (ImportPreviewWindow) alt kÄ±smÄ±na, sadece seÃ§ili (tikli) iÅŸlemlerin net toplamÄ±nÄ± hesaplayan ve anlÄ±k gÃ¼ncellenen dinamik bir "SeÃ§ilen Toplam" gÃ¶stergesi eklendi.
+- **KullanÄ±m KÄ±lavuzu GÃ¼ncellemesi**: Ayarlar ekranÄ±ndaki KÄ±lavuz sekmesine "ğŸ¤– Gemini API Kurulumu ve Ä°Ã§e Aktarma" baÅŸlÄ±ÄŸÄ±yla detaylÄ± bir kurulum rehberi eklendi. AyrÄ±ca Gemini API ayarlarÄ±na bu kÄ±lavuza hÄ±zlÄ± geÃ§iÅŸ saÄŸlayan bir kÄ±sayol butonu entegre edildi.
+
+### Changed
+- **Gemini API Model YÃ¼kseltmesi (Hata Ã‡Ã¶zÃ¼mÃ¼)**: Google'Ä±n `gemini-1.5-flash` model ismini eski kabul edip kaldÄ±rmasÄ±ndan kaynaklÄ± "Not Found" hatasÄ± giderildi. Analiz motorunun hatasÄ±z Ã§alÄ±ÅŸmasÄ± ve Google gÃ¼ncellemelerinden etkilenmemesi iÃ§in arka plan modeli `gemini-flash-latest` olarak gÃ¼ncellendi.
+
+## [2.0.0-beta.17] - 2026-07-04 â€” Gemini API ile Kredi KartÄ± Ekstresi Ä°Ã§e Aktarma
+
+### Added
+- **Gemini Yapay Zeka Servisi (GeminiParserService)**: Kredi kartÄ± ekstre dosyalarÄ±nÄ± (PDF ve resim/ekran gÃ¶rÃ¼ntÃ¼sÃ¼ formatlarÄ±nda) Gemini 1.5 Flash API aracÄ±lÄ±ÄŸÄ±yla analiz edip yapÄ±landÄ±rÄ±lmÄ±ÅŸ iÅŸlem verisi olarak dÃ¶ndÃ¼ren asenkron servis katmanÄ± entegre edildi.
+- **GÃ¼venli Gemini API AyarÄ±**: Ayarlar -> API ve Vergi sekmesine Gemini API anahtarÄ±nÄ±n girilebileceÄŸi ÅŸifreli maskeye sahip yeni bir kart tasarÄ±mÄ± ve saklama altyapÄ±sÄ± eklendi.
+- **Ekstre YÃ¼kleme Butonu**: Kredi KartlarÄ±m ekranÄ±nda her bir kart iÃ§in doÄŸrudan "Ekstre YÃ¼kle" butonu eklendi; dosya seÃ§ici entegre edilerek yÃ¼kleme ve analiz akÄ±ÅŸÄ± baÅŸlatÄ±ldÄ±.
+- **Ä°Ã§e Aktarma Ã–nizleme EkranÄ± (ImportPreviewWindow)**: Yapay zekadan dÃ¶nen harcamalarÄ±n listelendiÄŸi, tarih, aÃ§Ä±klama ve kategorilerin dÃ¼zenlenebildiÄŸi, mÃ¼kerrer kayÄ±t analizinin yapÄ±ldÄ±ÄŸÄ± ve onaylanan harcamalarÄ±n tek tÄ±kla veritabanÄ±na aktarÄ±ldÄ±ÄŸÄ± modern bir Ã¶nizleme ekranÄ± geliÅŸtirildi.
+
+## [2.0.0-beta.16] - 2026-06-21 â€” GÃ¼venlik FonksiyonlarÄ±nÄ±n Avalonia'ya TaÅŸÄ±nmasÄ±
+
+### Added
+- **GeliÅŸmiÅŸ Profil YÃ¶netimi (+ ve - ButonlarÄ±)**: GiriÅŸ ekranÄ±ndaki (+) butonuyla uygulama iÃ§inden hiÃ§ ayrÄ±lmadan yeni profil oluÅŸturma veya "GÃ¶zat" ile mevcut `.db` veritabanÄ±nÄ± sisteme baÄŸlama entegre edildi. (-) butonu ile de profilin veri tabanÄ± silinmeden sadece cihazdan kaldÄ±rÄ±larak baÄŸlantÄ±sÄ±nÄ±n kesilmesi saÄŸlandÄ±. SeÃ§ilen dosyanÄ±n adÄ±nÄ±n otomatik profil adÄ±na iÅŸlenmesi eklendi.
+- **Åifremi Unuttum (Kurtarma) ve Ã‡ift DoÄŸrulama**: Avalonia'nÄ±n giriÅŸ ekranÄ±na modern bir alt-panel (inline) olarak ÅŸifre kurtarma mekanizmasÄ± entegre edildi. Yeni ÅŸifre belirlenirken yanlÄ±ÅŸ yazÄ±mlarÄ± Ã¶nlemek adÄ±na ÅŸifreyi iki kez sorma (doÄŸrulama) ÅŸartÄ± getirildi.
+- **GÃ¼venli Profil Silme (KalÄ±cÄ± Silme)**: WPF sÃ¼rÃ¼mÃ¼ndeki 3 aÅŸamalÄ± profil silme ve `ConfirmPassword` mantÄ±ÄŸÄ± yeniden uyarlandÄ±. GiriÅŸ ekranÄ± Ã¼zerinden yanlÄ±ÅŸlÄ±kla profil silinmesini Ã¶nlemek adÄ±na "KalÄ±cÄ± Olarak Sil" iÅŸlemi Ã¶ncesi ana ÅŸifre doÄŸrulamasÄ± isteyen Ã¶zel kÄ±rmÄ±zÄ± uyarÄ± ekranÄ± tasarlandÄ±.
+- **Kurtarma Kodu (Recovery Code) GÃ¶sterimi**: Yeni bir profil oluÅŸturulduÄŸunda kullanÄ±cÄ±ya verilen (ve uygulamanÄ±n WPF sÃ¼rÃ¼mÃ¼nde bulunan) kritik "Kurtarma Kodu"nun, Avalonia kurulum ekranÄ±nda gÃ¶rÃ¼nmemesi ve kullanÄ±cÄ±ya verilmemesi hatasÄ± (TODO) dÃ¼zeltildi. Kod, kopyalanabilir ve ÅŸÄ±k bir panelde kullanÄ±cÄ± onayÄ±ndan geÃ§erek teslim edilecek formata dÃ¶nÃ¼ÅŸtÃ¼rÃ¼ldÃ¼.
+- **ArayÃ¼z Entegrasyonu (Inline UI)**: TÃ¼m bu gÃ¼venlik fonksiyonlarÄ± harici popup pencereler aÃ§mak yerine, doÄŸrudan LoginView iÃ§erisinde ÅŸÄ±k, akÄ±cÄ± ve Ã§ok daha modern bir geÃ§iÅŸle (inline panel mantÄ±ÄŸÄ±yla) saÄŸlandÄ±.
+
+## [2.0.0-beta.15] - 2026-06-21 â€” Kredi KartÄ± Detay EkranÄ± GeliÅŸtirmeleri
+
+### Added
+- **Kart DetaylarÄ± Yeni ArayÃ¼zÃ¼**: Kredi KartÄ± DetaylarÄ± ekranÄ±, Banka Hesap DetaylarÄ± ekranÄ± ile gÃ¶rsel olarak aynÄ± standartlara Ã§ekildi. Daha okunabilir, kart tabanlÄ± modern bir listeleme tasarÄ±mÄ±na geÃ§ildi.
+- **Ä°ÅŸlem DÃ¼zenleme ve Silme**: Kredi kartÄ± detaylarÄ±ndaki her bir iÅŸleme "DÃ¼zenle" (âœï¸) ve "Sil" (ğŸ—‘ï¸) butonlarÄ± eklendi.
+- **AkÄ±llÄ± Silme ve Senkronizasyon**: Bir kredi kartÄ± iÅŸlemi silinirken, eÄŸer o iÅŸlem bir transfer veya taksit grubuna aitse, baÄŸlantÄ±lÄ± tÃ¼m kayÄ±tlarÄ±n (Ã¶rn: karÅŸÄ± hesaptaki para Ã§Ä±kÄ±ÅŸÄ± veya diÄŸer aylardaki taksitler) aynÄ± anda otomatik olarak silinmesi gÃ¼vence altÄ±na alÄ±ndÄ±.
+- **Limit ve Kalan Limit GÃ¶rÃ¼ntÃ¼leme**: Kart detaylarÄ± Ã¼st bilgi paneline "GÃ¼ncel BorÃ§" miktarÄ±nÄ±n yanÄ±na "Limit" ve "Kalan Limit" gÃ¶stergeleri eklendi. Ek kartlarda limit "0" girilmiÅŸse, sistemin otomatik olarak asÄ±l kartÄ±n limitini bularak doÄŸru hesaplama yapmasÄ± saÄŸlandÄ±.
+
+
+## [2.0.0-beta.14] - 2026-06-21 â€” Kredi KartÄ± AÃ§Ä±lÄ±ÅŸ Bakiyesi ve Kategori OptimizasyonlarÄ±
+
+### Fixed
+- **Kredi KartÄ± Devreden BorÃ§ (Eksi Bakiye) HatasÄ±**: KullanÄ±cÄ±larÄ±n kredi kartÄ±nÄ± sisteme ilk eklediklerinde geÃ§miÅŸ borÃ§larÄ±nÄ± "AÃ§Ä±lÄ±ÅŸ Bakiyesi" (Gelir tipi) kategorisi ile girmelerinden kaynaklanan, kartÄ±n devasa eksi bakiyelere (Ã¶rn: -â‚º624.900) dÃ¼ÅŸmesi sorunu Ã§Ã¶zÃ¼ldÃ¼.
+- **Otomatik Kategori DÃ¶nÃ¼ÅŸÃ¼mÃ¼**: Kredi kartlarÄ±nda "AÃ§Ä±lÄ±ÅŸ Bakiyesi" kullanÄ±lmÄ±ÅŸ eski kayÄ±tlarÄ± otomatik tespit edip, bunu "AÃ§Ä±lÄ±ÅŸ Borcu" adlÄ± yeni bir Gider (Expense) kategorisine taÅŸÄ±yan akÄ±llÄ± bir yama (migration mantÄ±ÄŸÄ±) `CardsViewModel` iÃ§erisine eklendi.
+- **Sistem Kategorilerinin Rolleri DÃ¼zeltildi**: `AppDbContext` iÃ§erisinde yanlÄ±ÅŸ tiplerle tanÄ±mlanmÄ±ÅŸ olan "Kredi KartÄ± Nakit Ã‡ekim" (Gelir'den Gider'e) ve "Ekstre Ã–demesi" (Gider'den Transfer'e) kategorilerinin yapÄ±sal tanÄ±mlarÄ± dÃ¼zeltilerek kredi kartÄ± dÃ¶ngÃ¼sÃ¼nÃ¼n matematiksel olarak kusursuz Ã§alÄ±ÅŸmasÄ± saÄŸlandÄ±. 
+- **VeritabanÄ± Kendi Kendini Onarma**: Eski ve bozuk kategorilerle girilmiÅŸ iÅŸlemlerin arka planda fark edilmeden otomatik olarak dÃ¼zeltilmesi saÄŸlandÄ±. KullanÄ±cÄ±nÄ±n herhangi bir manuel iÅŸlem yapmasÄ±na gerek kalmadan hesap ekstresi borÃ§larÄ± gerÃ§ek deÄŸerlerine kavuÅŸturuldu.
+
+## [2.0.0-beta.13] - 2026-06-20 â€” BES DetaylÄ± Takip ve HakediÅŸ Sistemi
+
+### Added
+- **BES SÃ¶zleÅŸme DetaylarÄ±**: Bireysel Emeklilik (BES) varlÄ±klarÄ±na "SÃ¶zleÅŸmeyi GÃ¼ncelle" butonu ve penceresi eklendi. SÃ¶zleÅŸme numarasÄ±, yÃ¼rÃ¼rlÃ¼k tarihi, doÄŸum tarihi ve emeklilik yaÅŸÄ± gibi kritik bilgiler sisteme entegre edildi.
+- **Dinamik HakediÅŸ HesaplamasÄ±**: Girilen sÃ¶zleÅŸme yÃ¼rÃ¼rlÃ¼k tarihine gÃ¶re sistem otomatik olarak emekliliÄŸe kalan sÃ¼reyi hesaplar. Devlet KatkÄ±sÄ± hakediÅŸ oranÄ±nÄ± (%15, %35, %60, %100) ve bu orana denk gelen tutarÄ± anlÄ±k olarak gÃ¶sterir.
+- **GerÃ§ekÃ§i Devlet KatkÄ±sÄ± GÃ¶rÃ¼nÃ¼mÃ¼**: BES kartlarÄ±ndaki bÃ¼yÃ¼k yeÅŸil bilgi paneli revize edildi. ArtÄ±k brÃ¼t eklenen katkÄ±yÄ± deÄŸil, sÃ¼reye baÄŸlÄ± olarak anlÄ±k **Hakedilen Devlet KatkÄ±sÄ±** tutarÄ±nÄ± gÃ¶stererek kullanÄ±cÄ±lara en doÄŸru fon deÄŸerini sunar. AyrÄ±ca "SÃ¶zleÅŸme Ã–zeti" alanÄ±nda kullanÄ±cÄ±nÄ±n manuel girdiÄŸi brÃ¼t toplam Devlet KatkÄ±sÄ± net olarak listelendi.
+- **BES CanlÄ± AltÄ±n Getirisi Analizi**: BES kartlarÄ±ndaki "AltÄ±n KarÅŸÄ±lÄ±ÄŸÄ±" bÃ¶lÃ¼mÃ¼ tamamen yenilendi. Sadece anaparaya ait altÄ±n eÅŸdeÄŸeri deÄŸil, aynÄ± zamanda gÃ¼ncel fon deÄŸeri ve hakedilen devlet katkÄ±sÄ± toplamÄ±nÄ±n anlÄ±k gram altÄ±n karÅŸÄ±lÄ±ÄŸÄ± sisteme entegre edildi.
+- **AltÄ±n BazlÄ± KÃ¢r/Zarar GÃ¶stergesi**: Toplam gÃ¼ncel fonun gram altÄ±n deÄŸerinden, ilk yatÄ±rÄ±lan anaparaya karÅŸÄ±lÄ±k gelen altÄ±n deÄŸeri Ã§Ä±karÄ±larak "EÄŸer yatÄ±rÄ±mlarÄ±mÄ± altÄ±na yapsaydÄ±m ÅŸu an kaÃ§ gram kÃ¢r veya zarardaydÄ±m?" sorusunun yanÄ±tÄ± gÃ¶rselleÅŸtirildi. Analiz motorunun hesaplamalarÄ±nda yanÄ±lma payÄ±nÄ± sÄ±fÄ±ra indirmek iÃ§in anlÄ±k XAU (Gram AltÄ±n) kurunun PricingService Ã¼zerinden canlÄ± Ã§ekilmesi saÄŸlandÄ±.
+- **DetaylÄ± Analiz GÃ¶stergeleri (Footer Metrics)**: BES kartlarÄ±nÄ±n alt kÄ±smÄ±ndaki istatistikler yenilendi. AnlamsÄ±z "Ã–deme SayÄ±sÄ±" yerine, sÃ¶zleÅŸme baÅŸlangÄ±Ã§ tarihine gÃ¶re otomatik hesaplanan **Sistemde SÃ¼re** (Ã–rn: "4 YÄ±l 2 Ay") getirildi. AyrÄ±ca, gÃ¼ncel fon deÄŸeri ve hakedilen devlet katkÄ±sÄ± toplamÄ±nÄ±n sistemde kalÄ±nan aya bÃ¶lÃ¼nmesiyle **AylÄ±k Ort. Birikim** hesaplamasÄ± eklendi.
+- **VeritabanÄ± KalÄ±cÄ±lÄ±ÄŸÄ±**: DoÄŸum tarihi, emeklilik yaÅŸÄ±, fon deÄŸerleri ve Ã¶zel tutarlar SQLite (Åifreli veritabanÄ±) altyapÄ±sÄ±na kalÄ±cÄ± olarak eklendi, bÃ¶ylece oturumlar arasÄ±nda hiÃ§bir veri kaybÄ± yaÅŸanmaz.
+- **ArayÃ¼z (UI) Revizyonu**: GÃ¼ncelleme penceresi, tÃ¼m ekran Ã§Ã¶zÃ¼nÃ¼rlÃ¼klerine uyum saÄŸlayacak ÅŸekilde dinamik grid mimarisine geÃ§irildi ve tasarÄ±m FinTrack standartlarÄ±na gÃ¶re (mavi/yeÅŸil tonlar, altÄ±n sarÄ±sÄ±) modernleÅŸtirildi.
+
+### Fixed
+- **Kredi KartÄ± Eksi Bakiye ve HatalÄ± BorÃ§ YansÄ±masÄ±**: GeliÅŸtirme/test sÃ¼recinde "GeÃ§miÅŸ BorÃ§ Dengelemesi" adÄ±yla eklenen ve Ã¶denmiÅŸ eski BES alÄ±mlarÄ±nÄ± gÃ¼ncel kredi kartÄ± borcu (eksi bakiye) gibi gÃ¶steren hatalÄ± oto-kayÄ±t altyapÄ±sÄ± tamamen kaldÄ±rÄ±ldÄ±. YanlÄ±ÅŸ eklenmiÅŸ kayÄ±tlarÄ±n kalÄ±cÄ± olarak temizlenmesi saÄŸlandÄ±.
+- **Sanal/Ek Kart Ä°ÅŸlemlerinin Gizlenme Sorunu**: Kart DetaylarÄ± penceresine girildiÄŸinde sadece AsÄ±l Kart ile yapÄ±lan doÄŸrudan iÅŸlemlerin listelenmesi hatasÄ± dÃ¼zeltildi. ArtÄ±k "Detaylar" sayfasÄ±, ana karta baÄŸlÄ± tÃ¼m Sanal ve Ek Kart harcamalarÄ±nÄ± aynÄ± havuzda toplayarak gerÃ§ekÃ§i ve tam bir ekstre dÃ¶kÃ¼mÃ¼ sunuyor.
+
+## [2.0.0-beta.12] - 2026-06-20 â€” Taksitli Ä°ÅŸlemler ve Puan YÃ¶netimi
+
+### Added
+- **Taksitli Ä°ÅŸlemler AltyapÄ±sÄ±**: Ä°ÅŸlem Ekleme ekranÄ±nda Kredi KartÄ± seÃ§ildiÄŸinde aktifleÅŸen "Taksitli Ä°ÅŸlem" fonksiyonu gÃ¶rÃ¼nÃ¼r hale getirildi. 2'den 12'ye kadar taksit seÃ§enekleriyle, girilen tutarÄ± otomatik olarak aylara bÃ¶lÃ¼p ileri tarihli ayrÄ± iÅŸlemler oluÅŸturan algoritma entegre edildi.
+- **Kredi KartÄ± BorÃ§ ve Limit Hesaplama Revizyonu**: Taksitli iÅŸlemlerin ve ileri tarihli harcamalarÄ±n Kredi KartÄ± limitinden anÄ±nda dÃ¼ÅŸmesi, ancak "GÃ¼ncel BorÃ§" kÄ±smÄ±na sadece iÃ§inde bulunulan ekstrenin (aylÄ±k taksitin) yansÄ±masÄ± saÄŸlandÄ±. BÃ¶ylece kart limiti ve gÃ¼ncel ekstre borcu matematiksel olarak tamamen ayrÄ±ÅŸtÄ±rÄ±ldÄ±.
+- **Puan / Bonus KullanÄ±mÄ± Sistemi**: Puan bakiyesi takibi gerektirmeyen "Kategori BazlÄ±" basit puan yÃ¶netim sistemi (B PlanÄ±) oluÅŸturuldu. Sisteme "Puan KullanÄ±mÄ±" adÄ±nda Ã¶zel bir gelir kategorisi tanÄ±mlandÄ± ve uygulama aÃ§Ä±lÄ±ÅŸÄ±nda otomatik olarak veritabanÄ±na eklenmesi (auto-seed) saÄŸlandÄ±. ArtÄ±k harcama girilirken, puanla Ã¶denen miktar bu kategori ile kaydedilip kredi kartÄ± borcundan dinamik olarak dÃ¼ÅŸÃ¼lebiliyor.
+
+
+## [2.0.0-beta.11] - 2026-06-20 â€” Ayarlar ve SÃ¼rÃ¼m GeÃ§miÅŸi (Markdown Entegrasyonu)
+
+### Added
+- **Uygulama Ä°Ã§i SÃ¼rÃ¼m GeÃ§miÅŸi (Changelog)**: `changelog.md` dosyasÄ±nÄ±n iÃ§eriÄŸi, uygulamanÄ±n "Ayarlar > HakkÄ±nda" sekmesine dinamik olarak entegre edildi. ArtÄ±k yeni sÃ¼rÃ¼mler Ã§Ä±ktÄ±ÄŸÄ±nda sÃ¼rÃ¼m notlarÄ± doÄŸrudan uygulama iÃ§erisinden okunabiliyor.
+- **Markdown.Avalonia DesteÄŸi**: SÃ¼rÃ¼m geÃ§miÅŸindeki metinlerin dÃ¼mdÃ¼z gÃ¶rÃ¼nmesi engellendi. `Markdown.Avalonia` paketi entegre edilerek baÅŸlÄ±klar, kalÄ±n yazÄ±lar ve liste elemanlarÄ± tÄ±pkÄ± bir web sayfasÄ±ndaki gibi tam formatlÄ± (Rich Text) hale getirildi. Avalonia 12 uyumluluÄŸu iÃ§in `12.0.0-a3` Ã¶n sÃ¼rÃ¼mÃ¼ kullanÄ±ldÄ±.
+
+## [2.0.0-beta.10] - 2026-06-19 â€” Kredi KartlarÄ± ModÃ¼lÃ¼ OnarÄ±mÄ± ve GeliÅŸmiÅŸ Detaylar
+
+### Added
+- **Kart YÃ¶netimi EkranÄ± (`ManageCardsWindow`)**: Avalonia'da eksik olan yeni kredi kartÄ± ekleme ve yÃ¶netme Ã¶zelliÄŸi sÄ±fÄ±rdan oluÅŸturuldu. KartlarÄ±m sayfasÄ±ndaki "KartlarÄ± YÃ¶net" butonu iÅŸlevsel hale getirildi. ArtÄ±k banka adÄ±, limit, hesap kesim gÃ¼nÃ¼ ve baÄŸlÄ± kart (sanal/ek kart) Ã¶zellikleri belirtilerek sisteme yepyeni kredi kartlarÄ± eklenebilmektedir.
+- **Kredi KartÄ± DÃ¼zenleme Ã–zelliÄŸi**: Kart YÃ¶netimi ekranÄ±na mevcut kartlarÄ±n Ã¶zelliklerini (limit, banka adÄ±, tarihler vb.) gÃ¼ncelleyebilmek iÃ§in "DÃ¼zenle" fonksiyonu eklendi.
+- **BorÃ§ Ã–de EkranÄ± (`PayCreditCardWindow`)**: KartlarÄ±m sayfasÄ±ndaki "BorÃ§ Ã–de" butonu aktif edildi. Nakit veya banka hesabÄ± seÃ§ilerek kredi kartÄ±na Ã¶deme/transfer yapÄ±lmasÄ±nÄ± saÄŸlayan pencere eklendi. Bankadan para Ã§Ä±kÄ±ÅŸÄ± ve karta para giriÅŸi olacak ÅŸekilde senkronize Ã§alÄ±ÅŸan Ã§ift iÅŸlem mantÄ±ÄŸÄ± Avalonia altyapÄ±sÄ±na uygun hale getirildi.
+- **Kart DetaylarÄ± EkranÄ± (`CardDetailWindow`)**: KartlarÄ±m sayfasÄ±ndaki "Detaylar" butonu aktif edildi. Sadece ilgili kredi kartÄ±na ait harcama, Ã¶deme ve iade geÃ§miÅŸini tarih sÄ±rasÄ±na gÃ¶re gÃ¶steren yeni detay ekranÄ± eklendi. Harcamalar kÄ±rmÄ±zÄ± (-), Ã¶demeler yeÅŸil (+) renkte gÃ¶steriliyor.
+
+### Fixed
+- Yeni eklenen Kart YÃ¶netimi pencerelerindeki eksik ikon yolu dÃ¼zeltilerek, uygulamanÄ±n Ã§Ã¶kmesi (FileNotFoundException) sorunu giderildi (`app_icon.ico`).
+- Kart YÃ¶netimi sayfasÄ±ndaki Aktif/Pasif durum butonlarÄ±nÄ±n arayÃ¼zde bozuk formatta ("True/False") gÃ¶rÃ¼nmesi sorunu Ã§Ã¶zÃ¼ldÃ¼.
+
+### Fixed
+- **KartlarÄ±m EkranÄ±nÄ±n YÃ¼klenmemesi (BoÅŸ Ekran)**: Avalonia geÃ§iÅŸi sÄ±rasÄ±nda `CardsView.axaml` iÃ§erisinde eksik olan `StringConverters` namespace referansÄ± ve veri tipi uyumsuzluklarÄ± giderildi. ModÃ¼lÃ¼n Ã§Ã¶kmesi engellendi ve kartlar sorunsuz listelenebilir duruma geldi.
+- **Kredi KartÄ± Toplam BorÃ§ Hesaplama HatasÄ± (Ã‡ift Eksileme)**: `CardsViewModel` iÃ§erisindeki toplam borÃ§ hesaplamasÄ±nÄ±n sadece harcamalarÄ± deÄŸil, karta yapÄ±lan Ã¶demeleri de (pozitif tutar olarak) borca dahil etme mantÄ±ksal hatasÄ± giderildi. ArtÄ±k harcamalar borca eklenirken, yapÄ±lan Ã¶demeler borÃ§tan doÄŸru bir ÅŸekilde dÃ¼ÅŸÃ¼lÃ¼yor.
+- **TextBox.Watermark Eskime UyarÄ±sÄ±**: Avalonia 11 ile uyum iÃ§in, arayÃ¼zlerdeki tÃ¼m `Watermark` ifadeleri `PlaceholderText` olarak gÃ¼ncellendi.
+
+
+## [2.0.0-beta.9] - 2026-06-19 â€” BÃ¼tÃ§e ModÃ¼lÃ¼ Ä°yileÅŸtirmeleri ve AkÄ±llÄ± Ã–neri Sistemi
+
+### Added
+- **AkÄ±llÄ± BÃ¼tÃ§e Ã–nerisi**: BÃ¼tÃ§e yÃ¶netimi modÃ¼lÃ¼ne, seÃ§ilen kategoride geÃ§en yÄ±lÄ±n harcama verisi ve o verinin Ã¼zerine gÃ¼ncel TÃœFE oranÄ±nÄ± ekleyerek "geÃ§en yÄ±lÄ±n alÄ±m gÃ¼cÃ¼ne denk" bir limit Ã¶nerisi sunan satÄ±r iÃ§i asistan eklendi. "Uygula" butonu ile otomatik deÄŸer giriÅŸi saÄŸlandÄ±.
+
+### Fixed & Changed
+- **TÃœÄ°K API Hata ToleransÄ±**: `InflationService.cs` iÃ§erisindeki `HttpClient` zaman aÅŸÄ±mÄ± 10 saniyeden 3 saniyeye dÃ¼ÅŸÃ¼rÃ¼ldÃ¼. API kapalÄ± olduÄŸunda (Ã¶rn. 403 Forbidden) 12 aya kadar geri giderek 120 saniye arayÃ¼zÃ¼ dondurmasÄ± problemi Ã§Ã¶zÃ¼ldÃ¼; sistem artÄ±k ilk hatada doÄŸrudan "Fallback" veri tablosuna geÃ§erek UI'Ä± kilitlenmekten kurtarÄ±yor.
+- **TÃœFE Fallback Tablosu GÃ¼ncellendi**: "TÃœFE verisi Ocak 2026'da takÄ±lÄ± kalÄ±yor" ÅŸikayeti Ã¼zerine arka plandaki `FallbackTable`, Haziran 2026 verilerini kapsayacak ÅŸekilde geniÅŸletildi. "2025->2026" kafa karÄ±ÅŸtÄ±rÄ±cÄ± gÃ¶rÃ¼nÃ¼mÃ¼ "[Ocak 2026 (YÄ±llÄ±k)]" gibi daha net bir ibareyle sadeleÅŸtirildi.
+- **Kategori BÃ¼tÃ§e SÄ±nÄ±rÄ± Senkronizasyonu**: KullanÄ±cÄ± aÃ§Ä±lÄ±r menÃ¼den bir kategori deÄŸiÅŸtirdiÄŸinde, daha Ã¶nceden var olan limitin "AylÄ±k Limit (â‚º)" kutusuna otomatik olarak dÃ¼ÅŸmeme sorunu `OnSelectedCategoryChanged` metodunun eklenmesiyle giderildi.
+
+## [2.0.0-beta.8] - 2026-06-15 â€” UX, GÃ¶rsel Ä°yileÅŸtirmeler ve Logo GÃ¼ncellemesi
+
+### Added
+- **Yeni Logo ve Marka GÃ¼ncellemesi**: Uygulama adÄ± "KT FinTrack" olarak gÃ¼ncellendi ve bu isme uygun tamamen yeni, yÃ¼ksek Ã§Ã¶zÃ¼nÃ¼rlÃ¼klÃ¼ vektÃ¶rel bir logo tasarlandÄ±. Pencereler, gÃ¶rev Ã§ubuÄŸu ve uygulama `.exe` ikonlarÄ± dahil her yere entegre edildi.
+- **KÃ¢r/Zarar Dinamik Renklendirmesi**: `InvestmentsView` iÃ§erisindeki "Net KÃ¢r / Zarar" ve listedeki tÃ¼m yatÄ±rÄ±m getirisi alanlarÄ±na dinamik bir renk dÃ¶nÃ¼ÅŸtÃ¼rÃ¼cÃ¼ (`ProfitColorConverter`) yazÄ±ldÄ±. Eksi deÄŸerler otomatik olarak **kÄ±rmÄ±zÄ±**, artÄ± deÄŸerler **yeÅŸil** renkte gÃ¶steriliyor.
+
+### Fixed & Changed
+- **Logo Ã‡Ã¶zÃ¼nÃ¼rlÃ¼k ve BoÅŸluk Sorunu**: YÃ¼ksek Ã§Ã¶zÃ¼nÃ¼rlÃ¼klÃ¼ logonun etrafÄ±ndaki gereksiz ÅŸeffaf/beyaz (padding) alanlar kÄ±rpÄ±larak temizlendi. Bu sayede giriÅŸ ekranÄ±ndaki logo, ayrÄ±lan alanÄ± tam doldurarak Ã§ok daha belirgin hale getirildi.
+- **KÃ¢r/Zarar GÃ¶sterimi (TaÅŸma Ã‡Ã¶zÃ¼mÃ¼)**: YatÄ±rÄ±m portfÃ¶yÃ¼ndeki "Net KÃ¢r / Zarar" kartÄ±nda yÃ¼zdelik kÄ±smÄ±n taÅŸmasÄ± sorunu, yÃ¼zdelik ifadenin (`%X,X`) alt satÄ±ra alÄ±nÄ±p parantezlerden arÄ±ndÄ±rÄ±lmasÄ±yla Ã§Ã¶zÃ¼ldÃ¼ ve "En Ã‡ok KazandÄ±ran" kartÄ±yla biÃ§imsel uyum saÄŸlandÄ±.
+- **SÃ¼rÃ¼m NumarasÄ± KonumlandÄ±rmasÄ±**: GiriÅŸ ekranÄ±nda saÄŸ altta gÃ¶zden kaybolan sÃ¼rÃ¼m bilgisi, ekranÄ±n tam alt-orta kÄ±smÄ±na simetrik olarak yerleÅŸtirildi.
+- **Avalonia Alt Pencere Ä°kon HatasÄ±**: `System.ArgumentException: Unable to load bitmap from provided data` ÅŸeklinde ortaya Ã§Ä±kan, alt pencerelerde (Ã¶rn. `InvestmentDetailWindow`) hatalÄ± ikon yÃ¼klenmesinden kaynaklÄ± Ã§Ã¶kme hatasÄ± giderildi; tÃ¼m `.axaml` ikon yollarÄ± tam tanÄ±mlÄ± formata dÃ¶nÃ¼ÅŸtÃ¼rÃ¼ldÃ¼.
+
+## [2.0.0-beta.7] - 2026-06-15 â€” Faz 17: Raporlar ve GeliÅŸmiÅŸ Analiz ModÃ¼lÃ¼
+
+### Added
+- **YatÄ±rÄ±m KÃ¢r / Zarar HesaplamasÄ±**: Raporlar sekmesindeki "HenÃ¼z desteklenmiyor" ibaresi kaldÄ±rÄ±larak, yatÄ±rÄ±mlarÄ±n portfÃ¶ydeki gÃ¼ncel deÄŸerleri (`LastKnownPrice` tabanlÄ±) Ã¼zerinden net kÃ¢r/zarar hesaplamasÄ± aktif edildi. SonuÃ§lar dinamik renklendirme (yeÅŸil/kÄ±rmÄ±zÄ±) ile arayÃ¼ze yansÄ±tÄ±ldÄ±.
+- **Gelir DaÄŸÄ±lÄ±mÄ± Sekmesi**: Harcama daÄŸÄ±lÄ±mÄ± gÃ¶rÃ¼nÃ¼mÃ¼nÃ¼n yanÄ±na yepyeni bir "Gelir DaÄŸÄ±lÄ±mÄ±" sekmesi eklendi. DÃ¶nemsel gelir kalemleri yÃ¼zdelik ilerleme Ã§ubuklarÄ± ve dÃ¶kÃ¼m listesiyle eklendi.
+- **AkÄ±llÄ± Kategori Renklendirmesi**: Ã–nceden sadece birkaÃ§ spesifik kategoriye renk atamasÄ± yapÄ±lÄ±rken, yeni eklenen HSL ve hash-tabanlÄ± algoritma sayesinde kullanÄ±cÄ±larÄ±n girdiÄŸi tÃ¼m Ã¶zel kategorilere o kelimeye has kalÄ±cÄ± ve canlÄ± renkler atanmasÄ± saÄŸlandÄ±.
+- **Dinamik Trend Analizi**: "Trendler (6 Ay)" sekmesi, sabit olarak bugÃ¼nden Ã¶nceki 6 ayÄ± hesaplamak yerine, kullanÄ±cÄ±nÄ±n seÃ§tiÄŸi "BitiÅŸ Tarihi" filtresini baz alarak dinamik bir zaman Ã§izelgesi sunacak ÅŸekilde gÃ¼ncellendi.
+
+## [2.0.0-beta.6] - 2026-06-14 â€” Faz 16: Kripto Para OptimizasyonlarÄ± ve Esnek PortfÃ¶y YÃ¶netimi
+
+### Added
+- **Kripto Para ve KÃ¼sÃ¼rat Hassasiyeti**: PEPE, FLOKI gibi dÃ¼ÅŸÃ¼k deÄŸerli kripto paralarda yuvarlama sorunlarÄ±nÄ± Ã¶nlemek adÄ±na fiyat ve maliyet gÃ¶sterimleri 8 ondalÄ±k basamaklÄ± (0.00000000) detaylÄ± yapÄ±ya kavuÅŸturuldu.
+- **Dinamik Kripto KazÄ±yÄ±cÄ± (AkÄ±llÄ± Fallback)**: "S" (Sonic) gibi ana piyasa ekranÄ±nda yer almayan kripto paralar iÃ§in, arka planda doÄŸrudan coinin Ã¶zel sayfasÄ±na giderek fiyatÄ± tespit edebilen akÄ±llÄ± eÅŸleÅŸtirme (slug) algoritmasÄ± eklendi.
+- **KiÅŸiselleÅŸtirilmiÅŸ Otomatik Tamamlama (Autocomplete)**: YatÄ±rÄ±m Ekleme ekranÄ±ndaki sembol arama kutusu, artÄ±k global varlÄ±klardan Ã¶nce kullanÄ±cÄ±nÄ±n *kendi portfÃ¶yÃ¼ndeki* varlÄ±klarÄ± tarayÄ±p listenin en Ã¼stÃ¼ne getiriyor. Yeni iÅŸlem eklemek Ã§ok daha hÄ±zlÄ± hale getirildi.
+- **SÄ±nÄ±rsÄ±z VarlÄ±k DesteÄŸi**: Listelerde bulunmayan yepyeni bir varlÄ±ÄŸÄ±n bile sadece adÄ±nÄ± ve sembolÃ¼nÃ¼ yazarak alÄ±nabilmesi, sistemin de bu yeni varlÄ±ÄŸÄ± hafÄ±zasÄ±na alÄ±p anÄ±nda fiyat bulmasÄ± (Web Scraping) gÃ¼vence altÄ±na alÄ±ndÄ±.
+
+### Fixed (Deployment)
+- **Tek Dosya Derleme (Single-File Publish) ve Ä°kon**: Avalonia geÃ§iÅŸi sonrasÄ± `.exe` dosyasÄ±nÄ±n taÅŸÄ±nabilirliÄŸini bozan dÄ±ÅŸa baÄŸÄ±mlÄ± kÃ¼tÃ¼phaneler (`SkiaSharp`, `SQLCipher`) `IncludeNativeLibrariesForSelfExtract` Ã¶zelliÄŸiyle doÄŸrudan `.exe` iÃ§erisine gÃ¶mÃ¼ldÃ¼.
+- **Windows GÃ¶rev Ã‡ubuÄŸu Ä°konu**: Windows kÄ±sayollarÄ±nda ve gÃ¶rev Ã§ubuÄŸunda eksik Ã§Ä±kan uygulama ikonu `.csproj` dosyasÄ±na `ApplicationIcon` Ã¶zelliÄŸi eklenerek dÃ¼zeltildi.
+
+## [2.0.0-beta.5] - 2026-06-14 â€” Faz 15: GerÃ§ek Fiyat HafÄ±zasÄ± ve GeÃ§miÅŸ GrafiÄŸi
+
+### Added
+- **Fiyat HafÄ±zasÄ± (LastKnownPrice)**: VarlÄ±klarÄ±n veritabanÄ±na daha Ã¶nce eklenen `LastKnownPrice` sÃ¼tunlarÄ± aktif edildi. Uygulama aÃ§Ä±ldÄ±ÄŸÄ±nda veya YatÄ±rÄ±mlar sekmesine girildiÄŸinde artÄ±k maliyet fiyatÄ±na sÄ±fÄ±rlanmak yerine son bilinen gÃ¼ncel fiyatlar ekrana yansÄ±tÄ±lÄ±yor.
+- **Otomatik Fiyat GÃ¼ncellemesi**: KullanÄ±cÄ±nÄ±n "FiyatlarÄ± Ã‡ek" butonuna basmasÄ±na gerek kalmadan, uygulama aÃ§Ä±ldÄ±ÄŸÄ± an arka planda sessiz bir API tetikleyicisi fiyatlarÄ± eÅŸitleyecek ÅŸekilde programlandÄ±.
+- **GerÃ§ek ZamanlÄ± Fiyat GeÃ§miÅŸi (PriceHistory)**: Yeni veya eski yatÄ±rÄ±mlarÄ±n Ã§ekilen her anlÄ±k fiyatÄ±, veritabanÄ±ndaki `PriceHistory` tablosuna gÃ¼nlÃ¼k (Low, High, Close) formatÄ±nda kaydedilmeye baÅŸlandÄ±. 
+- **Veri OdaklÄ± Grafikler (Sparklines)**: Uygulamadaki rastgele Ã§izilen Ã§izgisel fiyat grafikleri tamamen iptal edildi. ArtÄ±k tÃ¼m grafikler `PriceHistory` tablosunda gÃ¼n gÃ¼n biriktirilen sizin gerÃ§ek fiyat hareketlerinizi (GeÃ§miÅŸ) kullanarak ekrana yansÄ±tÄ±lÄ±yor.
+
+### Fixed
+- **Ä°ÅŸlem GeÃ§miÅŸi Tablo GÃ¶rÃ¼nÃ¼mÃ¼**: Avalonia platformunda eksik kalan `DataGrid` (Tablo) stil kÃ¼tÃ¼phanesi sisteme entegre edildi, bÃ¶ylece yatÄ±rÄ±m detaylarÄ±ndaki "Ä°ÅŸlem GeÃ§miÅŸi" gÃ¶rÃ¼nÃ¼r kÄ±lÄ±ndÄ±.
+- **Tarih SÃ¼tunu Kesilmesi**: Ä°ÅŸlem detay tablosundaki (DataGrid) "Tarih" sÃ¼tunu ve diÄŸer sÃ¼tun geniÅŸlikleri piksel olarak iyileÅŸtirildi; yÄ±l verilerinin (`24.03.2024` yerine `24.03.202` gÃ¶rÃ¼nmesi) kesilmesi engellendi.
+- **Manuel Ortalama DÃ¼zeltme**: KullanÄ±cÄ±nÄ±n geÃ§miÅŸ portfÃ¶y kayÄ±tlarÄ±na yÃ¶nelik "AÃ§Ä±lÄ±ÅŸ/Ortalama Maliyet" ve geÃ§miÅŸ alÄ±m fiyatlarÄ± veritabanÄ±nda toplu olarak istenen gÃ¼ncel deÄŸerlerle senkronize edildi.
+
+## [2.0.0-beta.4] - 2026-06-14 â€” Faz 14: AkÄ±llÄ± Fiyat SaÄŸlayÄ±cÄ±larÄ± ve Dinamik Sembol Arama
+
+### Added
+- **Web Scraper (KazÄ±yÄ±cÄ±) Entegrasyonu**: Kategori bazlÄ± fiyat API ayarlarÄ±na yeni bir "Web Scraper" seÃ§eneÄŸi eklendi. Arka planda Borsa.Doviz.com, Altin.Doviz.com ve Kur.Doviz.com sitelerinin canlÄ± sayfalarÄ±ndan fiyat Ã§eken dinamik bir yapÄ± kuruldu.
+- **Dinamik Ã–zel API GÃ¶rÃ¼nÃ¼rlÃ¼ÄŸÃ¼**: API ayarlarÄ±nda "Ã–zel API" seÃ§ildiÄŸinde anÄ±nda ekranda "Ã–zel API URL" metin kutusunun belirmesini saÄŸlayan dinamik (IsVisible) tetikleyici eklendi.
+- **Kategori BazlÄ± Scraper Ä°simlendirmesi**: API seÃ§im listesinde artÄ±k her kategori kendi kaynaÄŸÄ±nÄ± net bir biÃ§imde (Ã–rn: Web Scraper (Altin.Doviz.com)) gÃ¶steriyor.
+- **Dinamik Sembol Arama (AutoComplete)**: YatÄ±rÄ±m Ekleme/SatÄ±n Alma ekranÄ±na Avalonia `AutoCompleteBox` entegre edildi. "Hisse", "AltÄ±n" veya "DÃ¶viz" seÃ§ildiÄŸinde, saÄŸlayÄ±cÄ±lardan o saniye tÃ¼m gÃ¼ncel semboller (Hisseler, Kur Ã‡eÅŸitleri) Ã§ekiliyor. Sembol aramasÄ± yapÄ±lÄ±p listeden bir varlÄ±k seÃ§ildiÄŸinde (Ã–rn: FENER) sembol ve uzun ismi otomatik dolduruluyor.
+
+## [2.0.0-beta.3] - 2026-06-14 â€” Faz 13: Ä°ÅŸlem DÃ¼zenleme, DetaylÄ± Bakiyeler ve SÄ±ralama Ä°yileÅŸtirmeleri
+
+### Added
+- **Ä°ÅŸlem DÃ¼zenleme ve Silme**: Hesap detaylarÄ± ekranÄ±na (`AccountDetailWindow`) her iÅŸlem satÄ±rÄ± iÃ§in DÃ¼zenle (âœï¸) ve Sil (ğŸ—‘ï¸) butonlarÄ± eklendi. Ä°ÅŸlem DÃ¼zenleme iÃ§in modern bir ekran (`EditTransactionWindow` ve `EditTransactionViewModel`) oluÅŸturuldu.
+- **MaaÅŸ GÃ¼nÃ¼ne GÃ¶re Dinamik Dashboard**: AylÄ±k Ã¶zet ve iÅŸlem listelerinde, ilgili ayÄ±n baÅŸlangÄ±cÄ±nÄ± bir Ã¶nceki ayÄ±n son iÅŸ gÃ¼nÃ¼ ve bitiÅŸini ise iÃ§inde bulunulan ayÄ±n son iÅŸ gÃ¼nÃ¼ yapacak ÅŸekilde dinamik tarih sÄ±nÄ±rlarÄ± entegre edildi (`GetLastBusinessDayOfMonth`).
+- **Toplam VarlÄ±k HesaplamasÄ±**: Dashboard Ã¼zerinde dinamik olarak nakit, banka ve yatÄ±rÄ±m bakiyelerini iÃ§eren gerÃ§ek "Toplam VarlÄ±k" hesaplamasÄ± aktifleÅŸtirildi.
+- **KararlÄ± AynÄ± GÃ¼n SÄ±ralamasÄ±**: AynÄ± gÃ¼n iÃ§erisinde girilen veya dÃ¼zenlenen iÅŸlemlerin sÄ±ralamasÄ±nda, tarih ve saat eÅŸitliÄŸi durumunda veri tabanÄ± kayÄ±t sÄ±rasÄ±nÄ± (`Id` alanÄ±) ikincil sÄ±ralama Ã¶lÃ§Ã¼tÃ¼ olarak kullanan `ThenByDescending(t => t.Id)` mantÄ±ÄŸÄ± eklendi.
+- **CanlÄ± Borsa FiyatlarÄ± (API) Entegrasyonu**: YatÄ±rÄ±mlar ekranÄ±ndaki "FiyatlarÄ± Ã‡ek (API)" butonu aktifleÅŸtirilerek, hisse senetleri (Yahoo Finance) ve altÄ±n/dÃ¶viz (GenelPara) verilerinin akÄ±llÄ± rotalama servisi Ã¼zerinden anlÄ±k olarak Ã§ekilmesi ve kÃ¢r/zarar durumunun hesaplanmasÄ± saÄŸlandÄ±.
+- **YatÄ±rÄ±m Ä°ÅŸlem GeÃ§miÅŸi (Detay) EkranÄ±**: YatÄ±rÄ±mlar tablosundaki her hisse iÃ§in "Ä°ÅŸlemler" butonu aktif edildi. Bu buton sayesinde o hisseye ait geÃ§miÅŸteki tÃ¼m alÄ±m/satÄ±m iÅŸlemlerinin (tarih, fiyat, lot adedi, masraf ve toplam tutar) detaylÄ± olarak incelenebildiÄŸi `InvestmentDetailWindow` eriÅŸilebilir hale getirildi.
+
+### Fixed & Improved
+- **Senkronize Transfer YÃ¶netimi**: Bir transfer iÅŸlemi dÃ¼zenlendiÄŸinde veya silindiÄŸinde, aynÄ± "Grup ID"ye sahip karÅŸÄ± hesaptaki baÄŸlantÄ±lÄ± kaydÄ±n (tarih, tutar, aÃ§Ä±klama ve silinme durumu) otomatik olarak arka planda eÅŸzamanlanmasÄ± saÄŸlandÄ±. Silme Ã¶ncesi Ã¶zel uyarÄ± diyaloÄŸu eklendi.
+- **AnlÄ±k ArayÃ¼z Yenileme (Refresh)**: Hesap detaylarÄ± (`AccountDetailWindow`) ekranÄ±nda iÅŸlem yapÄ±lÄ±p (dÃ¼zenleme/silme) pencere kapatÄ±ldÄ±ÄŸÄ±nda, arka plandaki "HesaplarÄ±m" ekranÄ±nÄ±n menÃ¼ deÄŸiÅŸtirmeye gerek kalmadan kendi kendini anÄ±nda tazelemesi saÄŸlandÄ±.
+- **HesaplarÄ±m EkranÄ± Scrollbar DÃ¼zeltmesi**: Banka hesaplarÄ± listesinde ekranÄ±n altÄ±na taÅŸan hesaplara ulaÅŸÄ±lamama sorunu, `StackPanel` yerine `Grid` kullanÄ±larak Ã§Ã¶zÃ¼ldÃ¼ ve listeye otomatik `VerticalScrollBar` kazandÄ±rÄ±ldÄ±.
+- **Dashboard DataGrid YÃ¼kleme SorunlarÄ±**: WPF'ten kalan ve Avalonia'da listenin boÅŸ gÃ¶rÃ¼nmesine neden olan DataGrid ÅŸablonlarÄ±, modern ItemsControl ÅŸablonlarÄ± ile yenilenerek gelir, gider ve transfer listelerinin dÃ¼zgÃ¼n gÃ¶rÃ¼nmesi saÄŸlandÄ±.
+
+## [2.0.0-beta.2] - 2026-06-14 â€” Faz 12: Hesap YÃ¶netimi ve Transferler
+
+### Added
+- **HesaplarÄ± YÃ¶net EkranÄ±**: Yeni banka hesaplarÄ±nÄ±n eklenebildiÄŸi (AÃ§Ä±lÄ±ÅŸ Bakiyesi ve IBAN desteÄŸi ile), mevcut hesaplarÄ±n aktif/pasif durumlarÄ±nÄ±n deÄŸiÅŸtirilebildiÄŸi ve silinebildiÄŸi modÃ¼ler pencere eklendi (`ManageAccountsWindow`).
+- **Hesaplar ArasÄ± Transfer**: Nakit (CÃ¼zdan) ve banka hesaplarÄ± arasÄ±nda tutar aktarÄ±mÄ±nÄ± saÄŸlayan; arka planda giden ve gelen iki ayrÄ± iÅŸlem oluÅŸturan Transfer ekranÄ± yapÄ±ldÄ± (`TransferWindow`).
+- **Hesap DetaylarÄ± EkranÄ±**: SeÃ§ilen banka hesabÄ±nÄ±n veya cÃ¼zdanÄ±n tÃ¼m geÃ§miÅŸ iÅŸlemlerini (gelir, gider, transfer ve yatÄ±rÄ±m alÄ±ÅŸ/satÄ±ÅŸ) listeleyen ve gÃ¼ncel bakiyesini gÃ¶steren detay sayfasÄ± oluÅŸturuldu (`AccountDetailWindow`).
+- **IBAN FormatlayÄ±cÄ± (IbanConverter)**: IBAN alanlarÄ±na deÄŸer girilirken veya okunurken dÃ¶rderli gruplar halinde otomatik boÅŸluk bÄ±rakan Avalonia IValueConverter yazÄ±ldÄ±. Avalonia'nÄ±n cursor atlama sorunlarÄ±nÄ± engellemek adÄ±na doÄŸrudan Binding katmanÄ±na uygulandÄ±.
+- **Tutar AlanlarÄ±nda Otomatik Formatlama**: Para Transferi (`TransferWindow`) ve Yeni Ä°ÅŸlem Ekle (`AddTransactionWindow`) ekranlarÄ±ndaki tutar kutularÄ±na odak kaybolduÄŸunda (Lost Focus) otomatik olarak binlik ayracÄ± ve `,00` kuruÅŸ hanesi getiren (`30.000,00` gibi) formatlama desteÄŸi eklendi.
+- **GÃ¼venli Tutar Ã‡Ã¶zÃ¼mleme**: Girilen formatlanmÄ±ÅŸ deÄŸerlerin veritabanÄ±na sorunsuz ÅŸekilde kaydedilebilmesi iÃ§in asenkron iÅŸlemler katmanÄ±ndaki sayÄ± Ã§Ã¶zÃ¼mleme (parsing) altyapÄ±sÄ± nokta ve virgÃ¼l iÃ§eren girdileri doÄŸru algÄ±layacak ÅŸekilde gÃ¼Ã§lendirildi.
+
+## [2.0.0-beta.1] - 2026-05-21 â€” Faz 11: Diyaloglar, Tema ve WPF'in EmekliliÄŸi
+
+### Added
+- **Modern Hata ve Bilgi DiyaloglarÄ±**: `ErrorDialogWindow` ve `InfoDialogWindow` Avalonia altyapÄ±sÄ±na taÅŸÄ±ndÄ±. YuvarlatÄ±lmÄ±ÅŸ kÃ¶ÅŸeler, kutu gÃ¶lgeleri ve yÃ¼ksek kontrastlÄ± modern bir arayÃ¼z (UI) tasarÄ±mÄ± uygulandÄ±.
+- **Tema SeÃ§imi (Dark/Light Mode)**: `SettingsView` ekranÄ±na "ğŸ¨ GÃ¶rÃ¼nÃ¼m" sekmesi eklendi. Sistem, AydÄ±nlÄ±k ve KaranlÄ±k tema seÃ§enekleri sunularak uygulamanÄ±n tasarÄ±m renginin anlÄ±k olarak ve kalÄ±cÄ± bir ÅŸekilde (`settings.json` aracÄ±lÄ±ÄŸÄ±yla) deÄŸiÅŸebilmesi saÄŸlandÄ±.
+- **WPF Projesinin Emekliye AyrÄ±lmasÄ±**: TÃ¼m uygulama baÅŸtan aÅŸaÄŸÄ± cross-platform Avalonia mimarisine taÅŸÄ±ndÄ±ÄŸÄ± iÃ§in, eski `FinTrack.WPF` projesi Ã§Ã¶zÃ¼mden (solution) tamamen Ã§Ä±karÄ±ldÄ± ve kaynak kodlarÄ± silindi. FinTrack artÄ±k sadece Windows'ta deÄŸil, Linux ve macOS platformlarÄ±nda da Ã§alÄ±ÅŸmaya tam uyumlu hale geldi.
+
+## [2.0.0-alpha.6] - 2026-05-21 â€” Faz 10: Platform Servisleri ve Cross-Platform Adaptasyonu
+
+### Added
+- **Otomatik Kilitleme Servisi (AutoLock)**: Uygulama belli bir sÃ¼re (kullanÄ±cÄ± belirler) hareketsiz kaldÄ±ÄŸÄ±nda ekranÄ± kilitleyen yapÄ± cross-platform hale getirildi. `CrossPlatformAutoLockService.cs` ile Avalonia `InputElement.AddClassHandler<TopLevel>` yapÄ±sÄ± kullanÄ±larak fare ve klavye girdileri iÅŸletim sisteminden baÄŸÄ±msÄ±z (Windows, Linux, Android) dinlenir hale getirildi.
+- **Cross-Platform GÃ¼ncelleyici ModÃ¼lÃ¼ (GitHub Updater)**: WPF sÃ¼rÃ¼mÃ¼ndeki arka planda Ã§alÄ±ÅŸan ve sadece Windows'ta `.bat` script ile uygulamanÄ±n `.exe` dosyasÄ±nÄ± Ã¼zerine yazan gÃ¼ncelleyici iptal edildi. Yerine, Linux ve Android ile de tamamen uyumlu olacak ÅŸekilde, sÃ¼rÃ¼m uyarÄ±sÄ± gÃ¶steren (`UpdateAvailableWindow.axaml`) ve iÅŸlemi "kullanÄ±cÄ±nÄ±n varsayÄ±lan tarayÄ±cÄ±sÄ±nda indirme sayfasÄ±nÄ± aÃ§arak" gÃ¼venli yoldan halleden yapÄ± kuruldu.
+- **GÃ¼venli Dosya Yolu ReferanslarÄ±**: UygulamanÄ±n SQLite veritabanÄ± yolu, yedeklemeler ve ayar dosyalarÄ± `.NET`'in kendi `Environment.SpecialFolder` enum'larÄ±nÄ± kullanarak (Ã¶rneÄŸin Linux'ta `~/.local/share` veya Windows'ta `%APPDATA%`) platform baÄŸÄ±msÄ±z hale getirildi. Ek iÅŸlem gerektirmeden tam uyumluluk doÄŸrulandÄ±.
+
+## [2.0.0-alpha.5] - 2026-05-21 â€” Faz 9: Ayarlar EkranÄ± ve Kategori YÃ¶netimi
+
+### Added
+- **ModÃ¼ler Ayarlar EkranÄ± (Faz 9)**: `SettingsView.axaml` ve `SettingsViewModel.cs` kullanÄ±larak WPF'teki ayarlar ekranÄ± Avalonia'ya taÅŸÄ±ndÄ±. GÃ¼venlik, Kategoriler, Yedekleme, API & Vergi, KÄ±lavuz ve HakkÄ±nda sekmelerini iÃ§eren sol dikey menÃ¼ tabanlÄ± modern bir tasarÄ±m oluÅŸturuldu.
+- **Kategori HiyerarÅŸisi YÃ¶netimi**: Avalonia UI Ã¼zerinde `CategoryEditWindow.axaml` ile alt/Ã¼st kategori iliÅŸkilerini dÃ¼zenleme, kategorileri gizleme ve gÃ¶rÃ¼nÃ¼r yapma yetenekleri kazandÄ±rÄ±ldÄ±. Listelerde alt kategoriler iÃ§in indentasyon (boÅŸluk) ve Ã¶zel stiller (italik/normal) eklendi.
+- **Bulut Yedekleme AltyapÄ±sÄ±**: Ayarlar ekranÄ±nda veritabanÄ± klasÃ¶rÃ¼ ve otomatik yedekleme dizini (Google Drive vb.) seÃ§imi iÃ§in Avalonia'nÄ±n native `StorageProvider.OpenFolderPickerAsync` API'si entegre edildi.
+- **Genel Onay DiyaloÄŸu (`ConfirmDialog`)**: Dinamik baÅŸlÄ±k ikonlarÄ±na (UyarÄ±, Hata, BaÅŸarÄ±lÄ± vs.) ve yÃ¼ksek kontrastlÄ± (kÄ±rmÄ±zÄ±/mavi) buton desteÄŸine sahip platform baÄŸÄ±msÄ±z bilgilendirme/onay ekranÄ± eklendi.
+- **Ã–zel UI DÃ¶nÃ¼ÅŸtÃ¼rÃ¼cÃ¼ler**: Ayarlar ekranÄ±ndaki karmaÅŸÄ±k UI mantÄ±ÄŸÄ± (Income/Expense renkleri, seÃ§ili sekme gÃ¶rÃ¼nÃ¼rlÃ¼ÄŸÃ¼ vb.) iÃ§in `SettingsConverters.cs` altÄ±nda Ã¶zel Avalonia `IValueConverter` sÄ±nÄ±flarÄ± yazÄ±ldÄ±.
+- **Ana MenÃ¼ Navigasyonu**: `MainAppView` Ã¼zerindeki Ayarlar butonu aktif hale getirilip `SwitchToSettingsCommand` ile ana ekran akÄ±ÅŸÄ±na baÄŸlandÄ±.
+
+## [2.0.0-alpha.4] - 2026-05-19 â€” Faz 8: BÃ¼tÃ§e, Raporlar ve Vergi Entegrasyonu
+
+### Added
+- **BÃ¼tÃ§e YÃ¶netim EkranÄ± (Faz 8)**: `BudgetView.axaml` ve `BudgetViewModel.cs` sÄ±fÄ±rdan yazÄ±ldÄ±. Kategori bazlÄ± harcama limitleri, enflasyon (TÃœÄ°K TÃœFE) oranÄ± gÃ¼ncellemesi ve asenkron MVVM iÅŸlemleri kuruldu.
+- **Raporlama ModÃ¼lÃ¼**: Tarih bazlÄ± gider analizleri, yÃ¼zdelik ilerleme durumlarÄ± ve 6 aylÄ±k trend barlarÄ± `ReportsView.axaml` ve `ReportsViewModel.cs` ile tamamlandÄ±.
+- **YatÄ±rÄ±m Vergi Raporu**: VarlÄ±k satÄ±ÅŸ kÃ¢rlarÄ± ve temettÃ¼ gelirlerine gÃ¶re yÄ±la ait vergi dÃ¶kÃ¼mÃ¼nÃ¼ (`DataGrid`) gÃ¶steren `TaxCalculationWindow` entegre edildi.
+- **Navigasyon BaÄŸlantÄ±sÄ±**: Sol menÃ¼ (Sidebar) Ã¼zerinden BÃ¼tÃ§e ve Raporlar sayfalarÄ± aktif edildi, YatÄ±rÄ±mlar ekranÄ± Ã¼zerinden Vergi Raporu modal penceresi tetiklendi.
+
+### Fixed
+- **Tarih Filtresi DeÄŸiÅŸiklik Tetikleyicisi**: Ana ekranda (Dashboard) Ã¼st kÄ±sÄ±mdan ay veya yÄ±l filtresi deÄŸiÅŸtirildiÄŸinde verilerin gÃ¼ncellenmemesi sorunu, `MainAppViewModel`'e property change hook'larÄ± (`OnSelectedMonthIndexChanged` & `OnSelectedYearChanged`) eklenerek ve seÃ§ilen tarihler asenkron olarak `DashboardViewModel.LoadDataAsync` metoduna beslenerek dÃ¼zeltildi.
+- **CalendarDatePicker TÃ¼r UyuÅŸmazlÄ±ÄŸÄ±**: Raporlar ve Analiz ekranÄ±nda baÅŸlangÄ±Ã§ ve bitiÅŸ tarihlerini seÃ§erken oluÅŸan `InvalidCastException` hatasÄ±, `ReportsViewModel` tarihlerinin `DateTime?` tipine Ã§ekilmesiyle giderildi.
+- **CS8604 Nullability HatasÄ±**: `ShowDialog` metodundaki olasÄ± null referans uyarÄ±sÄ± giderildi.
+- **AVLN5001 EskimiÅŸ API UyarÄ±sÄ±**: `AddTransactionWindow.axaml` Ã¼zerindeki `Watermark` Ã¶zniteliÄŸi `PlaceholderText` ile deÄŸiÅŸtirildi.
+
+## [2.0.0-alpha.3] - 2026-05-19 â€” UX Ä°yileÅŸtirmeleri ve Hata DÃ¼zeltmeleri
+
+### Added
+- **Genel YatÄ±rÄ±m PortfÃ¶yÃ¼**: Ana ekranda (Dashboard) yer alan "Kripto PortfÃ¶yÃ¼" kartÄ±, tÃ¼m yatÄ±rÄ±m varlÄ±klarÄ±nÄ± (AltÄ±n, DÃ¶viz, Hisse, Kripto vb.) kapsayacak ÅŸekilde "YatÄ±rÄ±m PortfÃ¶yÃ¼" olarak geniÅŸletildi. WPF ve Avalonia UI projelerinde tam entegrasyon saÄŸlandÄ±.
+- **Nakit (Kasa) GÃ¶rÃ¼nÃ¼rlÃ¼ÄŸÃ¼**: "YatÄ±rÄ±m AlÄ±ÅŸÄ±" ekranÄ±ndaki "Ã–deme KaynaÄŸÄ± (Ä°steÄŸe BaÄŸlÄ±)" seÃ§eneÄŸi, kullanÄ±cÄ±nÄ±n mevcut nakit bakiyesini (CÃ¼zdan/Kasa) doÄŸrudan gÃ¶rebileceÄŸi ve seÃ§ebileceÄŸi ÅŸekilde gÃ¼ncellendi.
+- **Modern Hata Bildirimleri**: Yeni profil ekleme ekranÄ±ndaki (WPF) tÃ¼m standart Windows pop-up (MessageBox) pencereleri uygulamanÄ±n premium temasÄ±na uygun `InfoDialogWindow` tasarÄ±mÄ±yla yenilendi.
+- **Avalonia SatÄ±r Ä°Ã§i DoÄŸrulama (Inline Validation)**: Avalonia UI profil ekleme ekranÄ±na modern ve ÅŸÄ±k tasarÄ±mlÄ± satÄ±r iÃ§i hata mesajÄ± uyarÄ± sistemi eklendi.
+
+### Fixed
+- **Profil Ãœzerine Yazma (Sessiz Hata) Sorunu**: Zaten var olan bir profil ismi (veya mevcut veritabanÄ± adÄ±) ile yeni profil aÃ§Ä±lmaya Ã§alÄ±ÅŸÄ±ldÄ±ÄŸÄ±nda, sistemin iÅŸlemi baÅŸarÄ±lÄ± gÃ¶sterip arka planda hiÃ§bir ÅŸey yapmamasÄ±na sebep olan hata giderildi. ArtÄ±k "Bu isimde bir profil zaten mevcut" ÅŸeklinde bilgilendirici uyarÄ± verilerek isim Ã§akÄ±ÅŸmalarÄ± engelleniyor.
+
+## [2.0.0-alpha.2] - 2026-05-19 â€” Faz 6 & 7: YatÄ±rÄ±m ModÃ¼lleri ve Sparkline Grafik Entegrasyonu
+
+### Added
+- **YatÄ±rÄ±m ArayÃ¼zleri ve YÃ¶netimi (Faz 6)**: WPF'teki tÃ¼m yatÄ±rÄ±m diyaloglarÄ± Avalonia iÃ§in asenkron MVVM yapÄ±sÄ±nda sÄ±fÄ±rdan yazÄ±ldÄ±:
+  - `ManageInvestmentsWindow`: VarlÄ±k ekleme ve detaylarÄ± takip etme ana merkezi.
+  - `AddInvestmentWindow` & `SellInvestmentWindow`: VarlÄ±k alÄ±m-satÄ±m ve anlÄ±k net kar/zarar hesaplama pencereleri.
+  - `EditInvestmentAssetWindow` & `InvestmentDetailWindow`: VarlÄ±k bilgilerini dÃ¼zenleme ve ayrÄ±ntÄ±lÄ± iÅŸlem geÃ§miÅŸi pencereleri.
+- **YÃ¼ksek PerformanslÄ± Sparkline KontrolÃ¼ (Faz 7)**: WPF'in DirectX/DrawingVisual altyapÄ±sÄ± yerine Avalonia'nÄ±n native `DrawingContext` ve `StreamGeometry` API'leri kullanÄ±larak sÄ±fÄ±rdan `AvaloniaSparklineControl` yazÄ±ldÄ±. Trend renklendirme (yeÅŸil/kÄ±rmÄ±zÄ±), gradyan dolgu ve interaktif crosshair/tooltip Ã¶zellikleri eklendi.
+- **Tarih SeÃ§ici Ä°yileÅŸtirmesi (CalendarDatePicker)**: Ekranda Ã§ok geniÅŸ yer kaplayan ve taÅŸma yapan varsayÄ±lan `DatePicker` kontrolleri, ÅŸÄ±k bir takvim aÃ§Ä±lÄ±r kutusu sunan `CalendarDatePicker` ile deÄŸiÅŸtirildi.
+- **KaydÄ±rÄ±labilir Form YapÄ±sÄ± (ScrollViewer)**: YatÄ±rÄ±m pencerelerine `ScrollViewer` entegre edilerek kÃ¼Ã§Ã¼k ekranlarda form elemanlarÄ±nÄ±n Ã¼st Ã¼ste binmesi engellendi ve pencere yÃ¼kseklikleri dinamik hale getirildi.
+
+### Fixed
+- **Tarih DÃ¶nÃ¼ÅŸÃ¼m HatasÄ± (`InvalidCastException`)**: `CalendarDatePicker`'Ä±n `SelectedDate` Ã¶zelliÄŸi (`DateTime?`) ile Viewmodel'deki `DateTimeOffset?` arasÄ±nda oluÅŸan runtime tip uyuÅŸmazlÄ±ÄŸÄ± giderildi; tÃ¼m seÃ§ili tarihler `DateTime?` tipine geÃ§irildi.
+- **VeritabanÄ± Ã‡akÄ±ÅŸmalarÄ± ve Dosya Kilidi**: Derleme sÄ±rasÄ±nda Visual Studio veya uygulamanÄ±n aÃ§Ä±k kalmasÄ±ndan kaynaklanan dll eriÅŸim kilidi sorunlarÄ± giderildi.
+- **DataGrid HatalarÄ±**: Avalonia v11 DataGrid kontrolÃ¼nde desteklenmeyen legacy WPF Ã¶zellikleri (`CanUserAddRows`, `AlternatingRowBackground` vb.) AXAML kodlarÄ±ndan temizlendi.
+- **Namespace Ã‡akÄ±ÅŸmalarÄ±**: `Interactivity` kÃ¼tÃ¼phanesinin Ã§akÄ±ÅŸmalarÄ±nÄ± Ã¶nlemek iÃ§in kod tarafÄ±nda global namespace yÃ¶nlendirmeleri saÄŸlandÄ±.
+
+## [2.0.0-alpha.1] - 2026-05-10 â€” Avalonia UI Ã‡apraz Platform GeÃ§iÅŸi (Faz 1-5)
+
+### Added
+- **Proje AltyapÄ±sÄ± (Faz 0)**: `FinTrack.Avalonia` adÄ±nda yeni bir UI projesi eklendi. .NET 10.0, Avalonia 12.0.2 ve CommunityToolkit.Mvvm paketleri kuruldu. Mevcut `FinTrack.Core` ve `FinTrack.Data` projeleriyle sorunsuz Ã§alÄ±ÅŸacak ÅŸekilde baÄŸlandÄ±.
+- **MVVM AltyapÄ±sÄ± (Faz 1)**: WPF tarafÄ±ndaki Code-Behind mimarisinden tamamen vazgeÃ§ilip, tÃ¼m sayfalar iÃ§in `ViewModelBase` kalÄ±bÄ± ve Observable Ã¶zellikler oluÅŸturuldu. Dependency Injection Ã¼zerinden `AppDbContext` entegrasyonu saÄŸlandÄ±.
+- **GiriÅŸ EkranÄ± (Faz 2)**: `LoginView` ve `AddProfileView` tasarÄ±mlarÄ± WPF versiyonuna birebir sadÄ±k kalÄ±narak Avalonia'da yeniden yaratÄ±ldÄ±. Ä°lk kurulum ve ÅŸifre doÄŸrulama mantÄ±klarÄ± MVVM'e baÄŸlandÄ±.
+- **Ana Pencere ve Navigasyon (Faz 3)**: UygulamanÄ±n kabuk (Shell) yapÄ±sÄ± oluÅŸturuldu. SPA (Tek Sayfa UygulamasÄ±) mantÄ±ÄŸÄ± ile `LoginViewModel` ve `MainAppViewModel` arasÄ±nda pÃ¼rÃ¼zsÃ¼z geÃ§iÅŸ saÄŸlandÄ±. Sol navigasyon (Sidebar) ve global arama/tarih filtresi menÃ¼leri aktarÄ±ldÄ±.
+- **Dashboard (Faz 4)**: `DashboardView` oluÅŸturuldu. `Avalonia.Controls.DataGrid` kullanÄ±larak Gelir, Gider ve Transfer listeleri sayfaya baÄŸlandÄ±. Genel bakiye ve kategori bazlÄ± harcama hesaplamalarÄ± asenkron MVVM komutlarÄ± ile UI'Ä± kilitlemeden Ã§alÄ±ÅŸacak ÅŸekilde ayarlandÄ±.
+- **HesaplarÄ±m ve KartlarÄ±m (Faz 5)**: `AccountsView` ve `CardsView` ekranlarÄ± sÄ±fÄ±rdan oluÅŸturuldu. Ekstre tarihleri, kalan limitler, asÄ±l ve ek kart bakiyeleri dinamik olarak hesaplanarak arayÃ¼ze (DataBinding) yansÄ±tÄ±ldÄ±. Nakit hesaplamasÄ± ayrÄ±ntÄ±lÄ± fonksiyon ile garanti altÄ±na alÄ±ndÄ±.
+
+## [1.3.0] - 2026-05-09 â€” Faz 3: Performans Grafikleri, Sermaye ArtÄ±rÄ±mÄ± & Vergi Hesaplama
+
+### Added
+- **SparklineControl (DrawingVisual)**: WPF'in DirectX hÄ±zlandÄ±rmalÄ± `DrawingVisual` + `StreamGeometry` altyapÄ±sÄ±yla sÄ±fÄ±r baÄŸÄ±mlÄ±lÄ±klÄ±, yÃ¼ksek performanslÄ± fiyat grafiÄŸi kontrolÃ¼ oluÅŸturuldu. Gradient fill, trend renklendirme (yeÅŸil=kÃ¢r, kÄ±rmÄ±zÄ±=zarar), mouse tooltip, min/max/son fiyat etiketleri destekleniyor.
+- **InvestmentDetailWindow Sparkline GrafiÄŸi**: VarlÄ±k detay penceresine `PriceHistory` tablosundan beslenen interaktif fiyat grafiÄŸi eklendi. 1 Ay / 3 Ay / 1 YÄ±l / TÃ¼mÃ¼ periyod seÃ§enekleri ile farklÄ± zaman aralÄ±klarÄ± gÃ¶rÃ¼ntÃ¼lenebiliyor.
+- **Mini Sparkline (PortfÃ¶y KartlarÄ±)**: Her yatÄ±rÄ±m varlÄ±k kartÄ±nÄ±n alt kÄ±smÄ±na 7 gÃ¼nlÃ¼k mini sparkline Ã§izgisi eklendi. Tek bakÄ±ÅŸta fiyat trendi gÃ¶rÃ¼lebiliyor.
+- **Sermaye ArtÄ±rÄ±mÄ± (`CapitalActionWindow`)**: Bedelsiz sermaye artÄ±rÄ±mÄ± (%50 bedelsiz â†’ lot artar, maliyet sÄ±fÄ±r), Bedelli sermaye artÄ±rÄ±mÄ± (rÃ¼Ã§han hakkÄ± kullanÄ±mÄ± + maliyet gÃ¼ncelleme) ve Hisse BÃ¶lÃ¼nmesi (1'e 2, 1'e 3 vb.) iÃ§in ayrÄ±ntÄ±lÄ± kayÄ±t penceresi oluÅŸturuldu. SonuÃ§ Ã¶nizleme paneli ile yeni miktar ve ortalama maliyet Ã¶nceden gÃ¶steriliyor.
+- **Yeni Ä°ÅŸlem TÃ¼rleri**: `InvestmentTransactionType` enum'Ä±na `BonusShare` (Bedelsiz), `RightsIssue` (Bedelli) ve `Split` (BÃ¶lÃ¼nme) deÄŸerleri eklendi. Ä°ÅŸlem geÃ§miÅŸinde Ã¶zel ikonlarla (ğŸ”„/ğŸ“‹/âœ‚ï¸) gÃ¶rÃ¼ntÃ¼leniyor.
+- **Vergi Hesaplama Raporu (`TaxCalculationWindow`)**: YÄ±l bazlÄ± satÄ±ÅŸ kazancÄ± ve temettÃ¼ geliri vergi projeksiyonu. Ã–zet kartlarÄ± (Toplam KazanÃ§, Tahmini Vergi, TemettÃ¼ Geliri, Net Getiri) ve detaylÄ± iÅŸlem tablosu.
+- **DeÄŸiÅŸtirilebilir Vergi OranlarÄ±**: `Ayarlar > API ve Entegrasyonlar` sekmesine kategori bazlÄ± vergi oranlarÄ± (Hisse %0, MKYO %10, TemettÃ¼ %15, DÃ¶viz %0, AltÄ±n %0, Kripto %0, Yurt DÄ±ÅŸÄ± %0) bÃ¶lÃ¼mÃ¼ eklendi. `settings.json`'a kaydediliyor.
+- **SettingsManager GeniÅŸletildi**: `TaxRate*` property'leri, `GetTaxRateForCategory()`, `GetDividendTaxRate()`, `SaveTaxSettings()` metodlarÄ± eklendi.
+
+### Changed
+- **InvestmentDetailWindow**: Tam yeniden tasarÄ±m â€” sparkline grafiÄŸi, periyod butonlarÄ±, "Sermaye Ä°ÅŸlemi" butonu ve geniÅŸletilmiÅŸ iÅŸlem geÃ§miÅŸi tablosu (yeni tÃ¼rler dahil).
+- **InvestmentsView**: "ğŸ“Š Vergi Raporu" butonu eklendi, her karta mini sparkline baÄŸlandÄ±.
+
+### Design Decisions
+- **Harici KÃ¼tÃ¼phane Yok**: Grafik Ã§izimi tamamen WPF built-in `DrawingVisual` ile yapÄ±ldÄ± â€” LiveCharts/OxyPlot gibi aÄŸÄ±r paketler eklenmedi.
+- **Migration Gerekmez**: Enum deÄŸerleri integer olarak saklandÄ±ÄŸÄ±ndan yeni iÅŸlem tÃ¼rleri DB ÅŸemasÄ±nÄ± deÄŸiÅŸtirmez.
+- **TÃ¼rkiye 2026 Vergi KurallarÄ±**: BIST hisse alÄ±m-satÄ±m stopajÄ± %0, MKYO %10 (1 yÄ±l altÄ±), temettÃ¼ %15 varsayÄ±lan olarak ayarlandÄ±.
+
+---
+
+## [1.2.0] - 2026-05-08 â€” Faz 2: Fiyat KalÄ±cÄ±lÄ±ÄŸÄ±, API Ã‡oklu Kaynak & TemettÃ¼
+
+### Added
+- **Fiyat GeÃ§miÅŸi Tablosu (`PriceHistory`)**: YatÄ±rÄ±m varlÄ±klarÄ±nÄ±n gÃ¼nlÃ¼k kapanÄ±ÅŸ (Close), en dÃ¼ÅŸÃ¼k (Low) ve en yÃ¼ksek (High) fiyatlarÄ±nÄ± kalÄ±cÄ± olarak saklayan yeni veritabanÄ± tablosu eklendi. Sembol + Tarih bazlÄ± `Unique Index` ile gÃ¼nde 1 kayÄ±t kuralÄ± uygulandÄ±.
+- **GenelPara API Entegrasyonu**: DÃ¶viz ve altÄ±n fiyatlarÄ±nÄ± TRY bazlÄ± olarak Ã§eken yeni API saÄŸlayÄ±cÄ±sÄ± eklendi (`api.genelpara.com`). USD, EUR, GBP gibi dÃ¶vizler ve Gram/Ã‡eyrek/YarÄ±m/Tam altÄ±n destekleniyor.
+- **Kategori BazlÄ± AkÄ±llÄ± API Rotalama (`FetchPriceSmartAsync`)**: Her varlÄ±k kategorisi (DÃ¶viz, AltÄ±n, Hisse, Kripto, Fon, DiÄŸer) iÃ§in ayrÄ± fiyat saÄŸlayÄ±cÄ± seÃ§ilebilen akÄ±llÄ± rotalama sistemi eklendi. DÃ¶vizâ†’GenelPara, Hisseâ†’Yahoo Finance gibi kombinasyonlar yazÄ±lÄ±mdan deÄŸiÅŸiklik gerektirmeden ayarlanabiliyor.
+- **Dinamik API AyarlarÄ± UI**: Ayarlar > "ğŸŒ API ve Entegrasyonlar" sekmesi tamamen yenilendi. Eski tek dropdown yerine 6 adet kategori bazlÄ± (ğŸ’± DÃ¶viz, ğŸ¥‡ AltÄ±n, ğŸ“ˆ Hisse, ğŸª™ Kripto, ğŸ¦ Fon, ğŸ“¦ DiÄŸer) saÄŸlayÄ±cÄ± seÃ§im ComboBox'Ä± ve Ã¶nerilen ayarlar bilgi kutusu eklendi.
+- **TemettÃ¼ (Dividend) Takibi**: Yeni `Dividend` iÅŸlem tÃ¼rÃ¼, `AddDividendWindow` ile stopaj hesaplamalÄ± ve net gelir Ã¶nizlemeli temettÃ¼ kayÄ±t penceresi eklendi.
+- **Dashboard PortfÃ¶y Entegrasyonu**: "Toplam VarlÄ±k" kartÄ±na yatÄ±rÄ±m portfÃ¶y deÄŸeri (ğŸ“ˆ PortfÃ¶y: â‚º...) otomatik entegre edildi.
+- **SettingsManager GeniÅŸletildi**: `ApiProviderType.GenelPara` enum deÄŸeri, `GetProviderForCategory()`, `SaveCategoryProviders()` metodlarÄ± ve 6 adet kategori bazlÄ± provider property (`DovizProvider`, `AltinProvider`, `HisseProvider`, `KriptoProvider`, `FonProvider`, `DigerProvider`) eklendi.
+- **VeritabanÄ± Migrasyonu**: `AddPriceHistoryTable` migrasyonu baÅŸarÄ±yla oluÅŸturuldu ve uygulandÄ±.
+
+### Changed
+- **Fiyat Ã‡ekme MantÄ±ÄŸÄ±**: `InvestmentsView` artÄ±k `FetchRealTimePriceAsync` yerine `FetchPriceSmartAsync` kullanÄ±yor. Her varlÄ±k kendi kategorisine gÃ¶re doÄŸru API'den fiyat Ã§eker.
+- **API Butonu GÃ¶rÃ¼nÃ¼rlÃ¼ÄŸÃ¼**: "ğŸŒ FiyatlarÄ± Ã‡ek" butonu artÄ±k Manuel olmayan herhangi bir kategori provider'Ä± varsa otomatik gÃ¶rÃ¼nÃ¼r.
+- **Fiyat Kaynak Takibi**: `PriceHistory` tablosundaki `Source` alanÄ±, verinin hangi API'den geldiÄŸini ("Yahoo", "GenelPara", "Manuel") kaydediyor.
+
+### Design Decisions
+- **Hibrit API Stratejisi**: DÃ¶viz/AltÄ±n iÃ§in GenelPara (TRY bazlÄ±, hesaplama gerektirmez), Hisse iÃ§in Yahoo Finance (BIST .IS uzantÄ±sÄ±) Ã¶nerilir.
+- **GÃ¼nlÃ¼k KayÄ±t Prensibi**: PriceHistory veri hacmini kontrol altÄ±nda tutmak iÃ§in gÃ¼nde 1 kayÄ±t (Close/Low/High) yaklaÅŸÄ±mÄ± benimsendi.
+- **Ayarlar `settings.json` Ãœzerinden**: TÃ¼m API tercihleri JSON Ã¼zerinden yÃ¶netiliyor, yazÄ±lÄ±m deÄŸiÅŸikliÄŸi gerektirmiyor.
+
+---
+
+- **[x] Askeri DÃ¼zey VeritabanÄ± Åifreleme (PBKDF2 & Salt)**
+  *Tarih: 2026-03-01*
+  FinTrack veritabanÄ± daha Ã¶nce standart yÃ¶ntemlerle ÅŸifrelenirken, gÃ¼venlik seviyesi artÄ±rÄ±larak yeni endÃ¼stri standardÄ± olan PBKDF2 algoritmasÄ±na geÃ§irildi. Kaba kuvvet (brute-force) saldÄ±rÄ±larÄ±na karÅŸÄ± tam koruma saÄŸlandÄ±.
+
+- **[x] Otomatik Yedekleme (Auto-Backup) Sistemi**
+  *Tarih: 2026-03-01*
+  OlasÄ± veri kayÄ±plarÄ±nÄ± Ã¶nlemek adÄ±na kullanÄ±cÄ± uygulamayÄ± her kapattÄ±ÄŸÄ±nda veritabanÄ±nÄ±n ÅŸifreli bir yedeÄŸini istenilen bir klasÃ¶re (Ã¶rn. OneDrive, Google Drive) kopyalayan akÄ±llÄ± bir yedekleme sistemi ve ilk kurulum asistanÄ± eklendi.
+
+- **[x] Otomatik Kilitleme (Auto-Lock / GeliÅŸmiÅŸ GÃ¼venlik)**
+  *Tarih: 2026-03-01*
+  KullanÄ±cÄ± bilgisayar baÅŸÄ±ndan kalktÄ±ÄŸÄ±nda veya uygulama arka planda belirlenen sÃ¼re (varsayÄ±lan 3 dakika) boyunca hareketsiz kaldÄ±ÄŸÄ±nda ekranÄ± kilitleyen "Oturum Zaman AÅŸÄ±mÄ±" gÃ¼venlik modÃ¼lÃ¼ entegre edildi.
+
+- **[x] Uygulama Ä°Ã§i Otomatik GÃ¼ncelleme (Auto-Updater)**
+  *Tarih: 2026-03-01*
+  GitHub Releases API Ã¼zerine kurulu, tamamen maliyetsiz ve Ã§ok hÄ±zlÄ± bir uygulama iÃ§i gÃ¼ncelleme motoru entegre edildi. Uygulama aÃ§Ä±lÄ±ÅŸta yeni sÃ¼rÃ¼mÃ¼ denetleyip dilerse kendi kendini gÃ¼ncelleyebilir duruma getirildi.
+
+---
+
+### ğŸŸ¡ Sonraki AÅŸamalar Ä°Ã§in Planlanan Ã–zellikler (Faz 9 & SonrasÄ±)
+
+AÅŸaÄŸÄ±daki Ã¶zellikler, uygulamanÄ±n teknik altyapÄ±sÄ±, kullanÄ±cÄ± deneyimi ve platform baÄŸÄ±msÄ±zlÄ±ÄŸÄ± gÃ¶z Ã¶nÃ¼nde bulundurularak Ã¶nceliklendirilmiÅŸtir.
+
+- [x] **ğŸ” AkÄ±llÄ± Arama ve Filtreleme (Global Search)** (Faz 3 kapsamÄ±nda tamamlandÄ±)
+  Ä°ÅŸlem sayÄ±nÄ±z binlere ulaÅŸtÄ±ÄŸÄ±nda spesifik bir harcamayÄ± bulmak zorlaÅŸabilir. Ana ekrana veya sol menÃ¼ye her yerde Ã§alÄ±ÅŸan bir "HÄ±zlÄ± Arama Ã‡ubuÄŸu" eklenebilir. "Market", "1500" veya "Ocak" yazdÄ±ÄŸÄ±nÄ±zda anÄ±nda tÃ¼m veritabanÄ±nÄ± tarayÄ±p ilgili gelir/gider/transfer kayÄ±tlarÄ±nÄ± listeleyebilir.
+
+#### 2. ğŸ§ª Otomatik Testlerin (Unit Tests) KurulmasÄ±
+Gelecekte projeye eklenecek yeni Ã¶zelliklerin mevcut saÄŸlam yapÄ±yÄ± bozmadÄ±ÄŸÄ±ndan emin olmak (RegresyonlarÄ± Ã¶nlemek) iÃ§in `FinTrack.Tests` adÄ±nda bir xUnit test projesi oluÅŸturulabilir. Ã–zellikle yazdÄ±ÄŸÄ±mÄ±z `CryptoProvider` ve fatura/bÃ¼tÃ§e hesaplama mantÄ±klarÄ± otomatik testlere baÄŸlanmalÄ±dÄ±r. Bu adÄ±m, daha karmaÅŸÄ±k Ã¶zelliklere geÃ§meden projenin Ã§ekirdeÄŸini gÃ¼venceye alacaktÄ±r.
+
+#### 3. ğŸ“¥ Manuel Ä°Ã§e Aktarma (Data Import 1.0)
+Bankalardan indirilen standart CSV veya Excel (.xlsx) hesap dÃ¶kÃ¼mlerini okuyup uygulamaya aktarabilen temel bir iÃ§e aktarma altyapÄ±sÄ± kurulmalÄ±dÄ±r. Bu Ã¶zellik, gelecekteki "AkÄ±llÄ± Ekstre AktarÄ±mÄ±" vizyonunun temelini oluÅŸturur.
+
+#### 4. ğŸŒ™ KaranlÄ±k Mod (Dark Theme) DesteÄŸi
+Åu an uygulamamÄ±z premium ve aydÄ±nlÄ±k (Light) bir tasarÄ±ma sahip. KullanÄ±cÄ± deneyimini (UX) bir Ã¼st seviyeye taÅŸÄ±mak iÃ§in tek tuÅŸla geÃ§iÅŸ yapÄ±labilen tam bir KaranlÄ±k Mod (Dark Mode) entegre edilebilir. TÃ¼m grafikler, butonlar ve tablolar gÃ¶z yormayan koyu gri/gece mavisi tonlarÄ±na bÃ¼rÃ¼nÃ¼r.
+
+#### 5. ğŸ“„ GeliÅŸmiÅŸ DÄ±ÅŸa Aktarma (Excel / PDF Export)
+KullanÄ±cÄ±larÄ±nÄ±z raporlarÄ± veya hesap geÃ§miÅŸini baÅŸka platformlarda analiz etmek veya doÄŸrudan muhasebecilerle paylaÅŸmak isteyebilir. "Raporlar" veya "Ä°ÅŸlemler" sekmelerine iÅŸlemleri **Excel (.xlsx)**, **.csv** veya **PDF Rapor Ã‡Ä±ktÄ±sÄ±** olarak indirebilecekleri bir DÄ±ÅŸa Aktarma (Export) aracÄ± tasarlanabilir.
+
+#### 6. ğŸ”” Yinelenen Ä°ÅŸlemler ve HatÄ±rlatÄ±cÄ±lar (Recurring Transactions)
+Her ay aynÄ± gÃ¼n Ã¶denen "Kira", "Netflix", "Aidat" gibi sabit giderleri her seferinde manuel girmek yerine sisteme "Her ayÄ±n 15'inde bu harcamayÄ± otomatik ekle" kuralÄ± tanÄ±mlama sistemi geliÅŸtirilebilir. AyrÄ±ca fatura gÃ¼nÃ¼ yaklaÅŸÄ±nca ana ekranda ufak bir uyarÄ± ("YaklaÅŸan 3 Ã¶demeniz var") gÃ¶sterilebilir.
+
+#### 7. ğŸ”„ GerÃ§ek Cross-Platform (Ã‡apraz Platform) ArayÃ¼zÃ¼ne GeÃ§iÅŸ
+Åu anda `FinTrack.Core` ve `FinTrack.Data` katmanlarÄ±mÄ±z Windows'tan baÄŸÄ±msÄ±z (macOS ve Linux uyumlu) Ã§alÄ±ÅŸabilecek ÅŸekilde tasarlandÄ±. Ancak arayÃ¼zÃ¼mÃ¼z (FinTrack.WPF) sadece Windows'u destekliyor.
+Uygulama arayÃ¼zÃ¼nÃ¼ WPF ile birebir aynÄ± kod yapÄ±sÄ±na (XAML) sahip olan **Avalonia UI** Ã§erÃ§evesine taÅŸÄ±yabiliriz. TasarÄ±mÄ± bozmadan uygulamanÄ±n macOS ve Linux'ta da yerel (native) olarak Ã§alÄ±ÅŸmasÄ±nÄ± saÄŸlayabiliriz.
+
+### ğŸŒŸ Stratejik Vizyon ve Gelecek Fikirleri (Long-Term Roadmap)
+
+Bu bÃ¶lÃ¼m, FinTrack'in temel Ã¶zellikleri oturduktan sonra projeyi bir "AkÄ±llÄ± Finansal Asistan" seviyesine taÅŸÄ±yacak uzun vadeli vizyonu temsil eder.
+
+- **AkÄ±llÄ± Ekstre Ä°Ã§e AktarÄ±mÄ± (Smart Import 2.0)**
+  - **Yerel ML.NET Entegrasyonu:** Banka aÃ§Ä±klamalarÄ±nÄ± (Ã¶rn: "Migros", "Shell") otomatik kategorize eden, veriyi dÄ±ÅŸarÄ± gÃ¶ndermeyen yerel makine Ã¶ÄŸrenmesi modeli (Data Import 1.0 Ã¼zerine inÅŸa edilecektir).
+  - **Gizlilik Maskeleme:** Ä°Ã§e aktarma sÄ±rasÄ±nda kart numarasÄ± gibi hassas verilerin otomatik tespiti ve temizlenmesi.
+  - **MÃ¼kerrer KayÄ±t KontrolÃ¼:** Manuel girilen iÅŸlemlerle ekstre verilerinin Ã§akÄ±ÅŸmasÄ±nÄ± Ã¶nleyen akÄ±llÄ± eÅŸleÅŸtirme algoritmasÄ±.
+
+- **GeliÅŸmiÅŸ Finansal Hedef YÃ¶netimi (Goal Engine)**
+  - **Senaryo Analizleri (What-if):** "Her ay X miktar daha az harcarsam hedefime ne kadar erken ulaÅŸÄ±rÄ±m?" simÃ¼lasyonlarÄ±.
+  - **BorÃ§ Kar Topu (Debt Snowball):** Mevcut kredi kartÄ± ve kredi borÃ§larÄ±nÄ± en hÄ±zlÄ± bitirecek Ã¶deme stratejilerinin otomatik hesaplanmasÄ±.
+  - **Dinamik Birikim Ã–nerileri:** Harcama alÄ±ÅŸkanlÄ±klarÄ±na gÃ¶re "bu ayki tasarrufunu hedefine aktar" ÅŸeklinde akÄ±llÄ± bildirimler.
+
+- **GeliÅŸmiÅŸ GÃ¼venlik ve Gizlilik KatmanlarÄ±**
+  - **Biyometrik GiriÅŸ:** Windows Hello desteÄŸi ile parmak izi veya yÃ¼z tanÄ±ma entegrasyonu.
+  - **Mecburiyet Åifresi (Duress PIN):** BaskÄ± altÄ±nda giriÅŸ yapÄ±lmasÄ± durumunda "sahte/boÅŸ" veri profilini yÃ¼kleyen ikincil gÃ¼venlik katmanÄ±.
+  - **Ekran Koruma:** Uygulama arkaya alÄ±ndÄ±ÄŸÄ±nda veya ekran gÃ¶rÃ¼ntÃ¼sÃ¼ alÄ±nÄ±rken hassas verilerin otomatik bulanÄ±klaÅŸtÄ±rÄ±lmasÄ±.
+
+- **AI Harcama AsistanÄ± ve Analitik**
+  - **Abonelik Dedektifi:** Unutulan veya fiyatÄ± artan dijital aboneliklerin (SaaS) tespiti ve kullanÄ±cÄ±ya uyarÄ± verilmesi.
+  - **Nakit AkÄ±ÅŸÄ± Tahmini:** Mevcut harcama hÄ±zÄ±yla (Burn Rate) maaÅŸ gÃ¼nÃ¼ne kadar olan finansal saÄŸlÄ±ÄŸÄ±n tahmini.
+  - **AlÄ±m GÃ¼cÃ¼ Takibi:** VarlÄ±klarÄ±n dÃ¶viz, altÄ±n veya enflasyon karÅŸÄ±sÄ±ndaki gerÃ§ek deÄŸer deÄŸiÅŸim analizi.
+
+- **FinTrack Connect (E2EE Senkronizasyon)**
+  - **UÃ§tan Uca Åifreli EÅŸleme:** Merkezi bir sunucuya ihtiyaÃ§ duymadan, kullanÄ±cÄ±larÄ±n kendi bulut sÃ¼rÃ¼cÃ¼leri (OneDrive/Drive) Ã¼zerinden cihazlar arasÄ± gÃ¼venli veri senkronizasyonu.
+
+### ğŸ› ï¸ GeliÅŸtirme ve Mimari Prensipler
+
+Projenin sÃ¼rdÃ¼rÃ¼lebilirliÄŸi ve gÃ¼venliÄŸi iÃ§in aÅŸaÄŸÄ±daki prensipler uygulanacaktÄ±r:
+
+- **ModÃ¼ler DaÄŸÄ±tÄ±m:** UI aÄŸÄ±rlÄ±klÄ± geliÅŸtirmeler (Dark Mode) ile mantÄ±k aÄŸÄ±rlÄ±klÄ± geliÅŸtirmeler (Global Search) farklÄ± sprintlerde ele alÄ±narak test karmaÅŸasÄ± Ã¶nlenecek.
+- **Gizlilik OdaklÄ± Analiz:** KullanÄ±cÄ± alÄ±ÅŸkanlÄ±klarÄ± anonimleÅŸtirilmiÅŸ ve yerel Ã¶ncelikli yÃ¶ntemlerle izlenecek; dÄ±ÅŸ sunuculara veri aktarÄ±mÄ± minimumda ve kullanÄ±cÄ± onayÄ±yla yapÄ±lacak.
+- **Avalonia Dostu Kod YazÄ±mÄ±:** Planla### Added
+- **GeliÅŸmiÅŸ Kategori YÃ¶netimi**: Ayarlar menÃ¼sÃ¼ne Ã§ift panelli (GÃ¶rÃ¼nÃ¼r/Gizli) kategori yÃ¶netim sistemi eklendi.
+- **Alt Kategori (Hierarchy) DesteÄŸi**: Yeni kategori eklerken "Ãœst Kategori" seÃ§ebilme Ã¶zelliÄŸi getirildi. Kategoriler artÄ±k "Ana Kategori > Alt Kategori" ÅŸeklinde hiyerarÅŸik olarak listeleniyor.
+- **Kategori GÃ¶rÃ¼nÃ¼rlÃ¼k KontrolÃ¼ (Soft-Delete)**: Kategorileri silmek yerine gizleyebilme Ã¶zelliÄŸi eklendi. Gizlenen kategoriler harcama pencerelerinde gÃ¶rÃ¼nmez ancak geÃ§miÅŸ veriler korunur.
+- **GÃ¶rsel Kategori AyrÄ±mÄ±**: Kategori listelerine Gelir iÃ§in yeÅŸil (ğŸ’°), Gider iÃ§in kÄ±rmÄ±zÄ± (ğŸ’¸) renk belirteÃ§leri ve ikonlar eklendi.
+- **HiyerarÅŸik Ä°ndentasyon**: Alt kategoriler, baÄŸlÄ± olduklarÄ± ana kategorilerin altÄ±nda gÃ¶rsel olarak daha iÃ§ten baÅŸlayacak (Indent) ÅŸekilde dÃ¼zenlendi.
+
+### Fixed
+- **HiyerarÅŸik SÄ±ralama HatasÄ±**: Ayarlar sekmesindeki kategorilerin daÄŸÄ±nÄ±k gÃ¶rÃ¼nmesine sebep olan alfabetik sÄ±ralama mantÄ±ÄŸÄ±, ana ve alt kategorileri bir arada tutan akÄ±llÄ± sÄ±ralama sistemi ile deÄŸiÅŸtirildi.
+- **SQLCipher BaÄŸlantÄ± HatasÄ±**: Ayarlar sekmesinde veritabanÄ±na baÄŸlanÄ±rken oluÅŸan "file is not a database" (ÅŸifreleme anahtarÄ± eksikliÄŸi) sorunu, `ActiveDataKey` entegrasyonu ile giderildi.
+- **Kategori TÃ¼rÃ¼ Ä°yileÅŸtirmesi**: YÃ¶netim ekranlarÄ±ndan "Transfer" tÃ¼rÃ¼ kaldÄ±rÄ±larak Gelir/Gider odaklÄ± yapÄ± sadeleÅŸtirildi.
+- **Kategori Liste YÃ¼kleme Sorunu**: `SettingsView` Loaded olayÄ±nÄ±n baÄŸlanmasÄ±yla kategorilerin aÃ§Ä±lÄ±ÅŸta boÅŸ gelmesi sorunu giderildi.
+- **GÃ¶rsel TutarlÄ±lÄ±k**: Kategori gÃ¶rsel standartlarÄ± (ikon, renk, hiyerarÅŸi) "Yeni Ä°ÅŸlem" ve "DÃ¼zenle" pencereleriyle tam senkronize hale getirildi.
+
+## [1.0.1] - 2026-03-30
+
+### Added
+- **AkÄ±llÄ± Arama ve Filtreleme (Global Search)**: Ana ekrana `Ctrl+K` kÄ±sayoluyla da eriÅŸilebilen Ã§ok yÃ¶nlÃ¼, hap (pill) tasarÄ±mlÄ± arama Ã§ubuÄŸu eklendi. Ä°ÅŸlemler, banka hesaplarÄ±, kredi kartlarÄ± ve yatÄ±rÄ±m varlÄ±klarÄ± iÃ§erisinde milisaniyelik (300ms debounce) eÅŸzamanlÄ± arama yapÄ±labiliyor.
+- **Arama YÃ¶nlendirmeleri**: Arama sonuÃ§larÄ±ndaki herhangi bir karta tÄ±klandÄ±ÄŸÄ±nda, otomatik olarak o harcamanÄ±n "DÃ¼zenleme Pano"sunu veya o hesabÄ±n "Detay EkranÄ±nÄ±" aÃ§an akÄ±llÄ± navigasyon sistemi entegre edildi.
+- **Modern Hata ArayÃ¼zÃ¼**: VeritabanÄ± eriÅŸim/ÅŸifreleme hatalarÄ± gibi teknik `MessageBox` pencereleri iptal edildi. Yerine, Premium FinTrack tasarÄ±m diliyle kodlanmÄ±ÅŸ, detaylÄ± hata mesajÄ± sunan `ErrorDialogWindow` arayÃ¼zÃ¼ eklendi.
+
+### Fixed
+- **SQLCipher BaÄŸlantÄ± HatasÄ± (PRAGMA key)**: SQLite baÄŸlantÄ±sÄ± kurulurken ÅŸifrenin parametre bazlÄ± (prepared statement) gÃ¶nderilmesinden kaynaklanan `SQLite Error 1: near "$key": syntax error` hatasÄ± giderildi. Sistem, ÅŸifreyi doÄŸrudan veri dizisine gÃ¶merek (escaping) gÃ¼venli ve hatasÄ±z baÄŸlanan bir yapÄ±ya kavuÅŸturuldu.
+- **BaÄŸlantÄ± Havuzu (Connection Pool) Ã‡akÄ±ÅŸmasÄ±**: VeritabanÄ± profilden profile geÃ§erken (`ActiveDataKey` deÄŸiÅŸtiÄŸinde) ÅŸifreli ve ÅŸifresiz baÄŸlantÄ±larÄ±n Ã§akÄ±ÅŸmasÄ±nÄ± Ã¶nlemek iÃ§in anlÄ±k `ClearAllPools()` temizliÄŸi saÄŸlandÄ±.
+
+## [1.0.0] - 2026-03-22
+
+### Added
+- **Ä°ÅŸlem BazlÄ± AÃ§Ä±lÄ±ÅŸ Bakiyesi**: Hesap aÃ§Ä±lÄ±ÅŸ bakiyeleri artÄ±k statik bir deÄŸer yerine dÃ¼zenlenebilir, silinebilir ve gÃ¶rÃ¼ntÃ¼lenebilir birer "AÃ§Ä±lÄ±ÅŸ Bakiyesi" iÅŸlemi olarak takip ediliyor.
+- **Otomatik Veri Migrasyonu**: Mevcut tÃ¼m hesaplarÄ±n eski aÃ§Ä±lÄ±ÅŸ bakiyeleri, uygulama baÅŸlatÄ±ldÄ±ÄŸÄ±nda otomatik olarak iÅŸlem geÃ§miÅŸine aktarÄ±lÄ±yor.
+- **GeliÅŸmiÅŸ Kilit EkranÄ± GÃ¼venliÄŸi**: Uygulama kilidi devreye girdiÄŸinde iÃ§erik tamamen gizlenir (Collapsed) ve kilit ekranÄ± arka planÄ± tam opak hale getirilerek veri sÄ±zÄ±ntÄ±sÄ± engellenir.
+
+### Fixed
+- **Bakiye Hesaplama TutarlÄ±lÄ±ÄŸÄ±**: AÃ§Ä±lÄ±ÅŸ bakiyelerinin silinmesi veya deÄŸiÅŸmesi durumunda tÃ¼m hesap Ã¶zetlerinin ve dashboard verilerinin anlÄ±k gÃ¼ncellenmesi saÄŸlandÄ±.
+- **WPF BaÅŸlangÄ±Ã§ DÃ¶ngÃ¼sÃ¼ (Silent Exit)**: UygulamanÄ±n ÅŸifre girildikten sonra sessizce kapanmasÄ±na neden olan yaÅŸam dÃ¶ngÃ¼sÃ¼ (`ShutdownMode.OnLastWindowClose`) mantÄ±ksal hatasÄ± giderildi.
+- **VeritabanÄ± Migrasyon Ã‡akÄ±ÅŸmalarÄ±**: "AÃ§Ä±lÄ±ÅŸ Bakiyesi" kategorisi (Id: 30) artÄ±k sabit ID ile deÄŸil, uygulama aÃ§Ä±lÄ±ÅŸÄ±nda dinamik olarak oluÅŸturuluyor. Bu sayede yeni bir veritabanÄ±na geÃ§iÅŸte veya eski verilerin taÅŸÄ±nmasÄ±nda `Unique Constraint` hatasÄ± tamamen giderildi.
+- **Global Hata Denetimi**: UygulamanÄ±n en baÅŸÄ±nda (`App.xaml.cs`) unhandled exception yakalayÄ±cÄ± aktif edilerek, olasÄ± sistem hatalarÄ±nÄ±n sessizce yutulmasÄ± yerine kullanÄ±cÄ±ya detaylÄ± hata mesajÄ± verilmesi saÄŸlandÄ±.
+
+
+## [0.9.9] - 2026-03-16
+
+### Fixed
+- **Transfer Ä°ÅŸlemi Kategori EÅŸleÅŸmesi**: Banka transferleri ve kredi kartÄ± Ã¶demeleri aynÄ± iÅŸlem tÃ¼rÃ¼nÃ¼ (`Transfer`) paylaÅŸtÄ±ÄŸÄ± iÃ§in oluÅŸan kategori karÄ±ÅŸÄ±klÄ±ÄŸÄ± giderildi. ArtÄ±k sistem sadece tÃ¼re gÃ¶re deÄŸil, kategori adÄ±na da ("Hesaplar ArasÄ± Transfer" veya "Kredi KartÄ± Ã–demesi") bakarak doÄŸru eÅŸleÅŸtirmeyi yapÄ±yor. Bu sayede banka transferlerinin yanlÄ±ÅŸlÄ±kla "Kredi KartÄ± Ã–demesi" olarak etiketlenmesi engellendi.
+- **Transfer Ä°ÅŸlemleri GÃ¶rsel DÃ¼zeltmesi**: Kategori listelerinde, dÃ¼zenleme pencerelerinde ve yeni iÅŸlem ekleme menÃ¼lerinde `Transfer` tÃ¼rÃ¼ndeki kategorilerin sabit olarak "Gider" ("ğŸ’¸" kÄ±rmÄ±zÄ± ikon) gibi gÃ¶rÃ¼nmesine sebep olan Ã§ekirdek dÃ¼zeyindeki eÅŸleÅŸtirme hatasÄ± giderildi. ArtÄ±k kendi adlarÄ±yla ("Hesaplar ArasÄ± Transfer") ve mavi/yenileme ("ğŸ”„") ikonuyla ayrÄ±ÅŸÄ±yorlar. AyrÄ±ca aÃ§Ä±lÄ±r menÃ¼lerdeki (ComboBox) UI renk noktasÄ±nÄ±n kÄ±rmÄ±zÄ± (Gider) olarak takÄ±lÄ± kalmasÄ± DataTrigger eklenerek Ã§Ã¶zÃ¼ldÃ¼, artÄ±k mavi (Transfer) renkte listelenecekler.
+- **Transfer Ä°simlendirmesi**: "Transfer" olan genel isimlendirme, kullanÄ±cÄ± deneyimini iyileÅŸtirmek iÃ§in "Hesaplar ArasÄ± Transfer" olarak detaylandÄ±rÄ±ldÄ±.
+
+---
+
+## [0.9.8] - 2026-03-15
+
+### Added
+- **Kategori DÃ¼zenleme DesteÄŸi**: Kategori listelerinde (GÃ¶rÃ¼nÃ¼r/Gizli) saÄŸ tÄ±k menÃ¼sÃ¼ (Context Menu) Ã¼zerinden kategorileri anlÄ±k dÃ¼zenleme Ã¶zelliÄŸi eklendi.
+- **Kategori Edit Paneli (`CategoryEditWindow`)**: Kategorilerin adÄ±nÄ± deÄŸiÅŸtirme ve baÄŸlÄ± olduklarÄ± "Ãœst Kategori"yi (HiyerarÅŸi) gÃ¼ncelleyebilme imkanÄ± saÄŸlandÄ±.
+- **KapsamlÄ± KullanÄ±m KÄ±lavuzu**: Ayarlar menÃ¼sÃ¼ndeki kÄ±lavuz sekmesi; Nakit Kasa, AkÄ±llÄ± Arama, Taksit YÃ¶netimi ve Kategori HiyerarÅŸisi gibi tÃ¼m gÃ¼ncel Ã¶zellikleri iÃ§eren detaylÄ± rehberlerle zenginleÅŸtirildi.
+
+### Fixed
+- **XAML Parse & InvalidCastException**: Kategori listelerindeki saÄŸ tÄ±k menÃ¼sÃ¼nÃ¼n (ContextMenu) BAML eÅŸleÅŸme hatasÄ± sebebiyle uygulama aÃ§Ä±lÄ±ÅŸÄ±nda oluÅŸan kritik hata giderildi. MenÃ¼ yapÄ±sÄ± merkezi kaynaÄŸa (Resource) taÅŸÄ±narak stabilite saÄŸlandÄ±.
+- **GÃ¶rsel DÃ¼zenleme**: KullanÄ±m kÄ±lavuzundaki etiket (Tag) uyumsuzluklarÄ± giderilerek XML doÄŸrulama hatalarÄ± Ã§Ã¶zÃ¼ldÃ¼.
+
+## [0.9.7] - 2026-03-14
+
+### Added
+- **Nakit Kasa ModÃ¼lÃ¼**: YalnÄ±zca banka hesaplarÄ± haricinde kalan, fiziksel nakit bakiyelerinin ve iÅŸlemlerinin takip edilebilmesi iÃ§in Ã¶zel "Nakit Kasa" kartÄ± HesaplarÄ±m paneline entegre edildi.
+- **Nakit Kasa Detay EkranÄ± (`CashDetailWindow`)**: TÃ¼m gelir, gider ve transfer iÅŸlemlerinden sadece "Nakit" olarak seÃ§ilenleri toplayÄ±p gÃ¶steren detylÄ± liste penceresi eklendi.
+- **GÃ¶rsel Renk KodlamasÄ± (`UI FormattedAmount`)**: Kredi KartÄ±, Banka ve Nakit Kasa detay ekranlarÄ±ndaki tÃ¼m `Tutar` (Amount) sÃ¼tunlarÄ± iyileÅŸtirildi. ArtÄ±k harcamalar kÄ±rmÄ±zÄ± renkli eksi (-) iÅŸaretiyle, gelirler ve borÃ§ Ã¶demeleri yeÅŸil renkli artÄ± (+) iÅŸaretiyle gÃ¶steriliyor.
+
+### Fixed
+- **Kredi KartÄ± BorÃ§ Ã–deme HatasÄ±**: "ğŸ’¸ BorÃ§ Ã–de" panelinden yapÄ±lan Ã¶demelerin, kredi kartÄ± borcunu azaltmak yerine matematiksel olarak iki katÄ±na Ã§Ä±karmasÄ±na (Ã§ift eksileme mantÄ±k hatasÄ±na) sebep olan kritik hata giderildi. Ã–demeler artÄ±k bankadan (-) Bakiye, Kredi kartÄ±na (+) Bakiye olarak 2 ayrÄ± senkronize transfer iÅŸlemi ÅŸeklinde kusursuz kayÄ±t ediliyor.
+- **Nakit Kasa Transfer MantÄ±ÄŸÄ±**: Harcama ve transfer pencerelerinde nakit para kullanÄ±ldÄ±ÄŸÄ±nda artÄ±k bakiyenin anÄ±nda Nakit Kasadan (veya ilgili bankadan) dÃ¼ÅŸÃ¼rÃ¼lmesi ve gerektiÄŸinde "Kasa Eksiye DÃ¼ÅŸecek" limit aÅŸÄ±m uyarÄ±sÄ± verilmesi saÄŸlandÄ±.
+
+## [0.9.6] - 2026-03-12
+- **Uygulama Ä°Ã§i Kilit EkranÄ± (In-App Lock Screen)**: Otomatik kilitleme (Auto-Lock) devreye girdiÄŸinde artÄ±k tÃ¼m Windows ekranÄ± yerine *sadece FinTrack penceresi* kilitleniyor. Bu sayede uygulama kilitliyken bile pencereyi baÅŸka bir ekrana taÅŸÄ±yabilir veya arkada kalan diÄŸer programlarÄ±nÄ±zÄ± engel olmadan kullanabilirsiniz.
+- **Yeni Gelir/Gider Kategorisi ("Hatun")**: KullanÄ±cÄ±nÄ±n eÅŸ/partner iÅŸlemlerini daha kolay takip edebilmesi iÃ§in Gelir ve Gider ayrÄ±mÄ± olan "Hatun" kategorisi sisteme eklendi.
+
+### Fixed & Changed
+- **Banka HesaplarÄ± AnlÄ±k GÃ¼ncelleme HatasÄ± (Bakiye Yenileme)**: Ãœst menÃ¼de yer alan "Yeni Ä°ÅŸlem Ekle" butonu kullanÄ±larak yeni bir gelir/gider girildiÄŸinde, arka plandaki "HesaplarÄ±m", "KartlarÄ±m" ve "YatÄ±rÄ±mlar" ekranlarÄ±ndaki gÃ¼ncel bakiyelerin otomatik olarak yenilenmemesi (refresh olmamasÄ±) sorunu giderildi. ArtÄ±k iÅŸlem kaydedildiÄŸi an arayÃ¼zdeki bakiyeler anÄ±nda tazeleniyor ve Hesap Ã–zeti (modal) penceresiyle tamamen tutarlÄ± hale geliyor.
+- **Banka AdlarÄ±nÄ±n GÃ¶rÃ¼nmemesi**: `HesaplarÄ±m` ekranÄ±ndaki kartlarda (Ã–rn: Vadesiz KiÅŸisel) hangi bankaya ait olduklarÄ±nÄ±n (Ã–rn: Garanti, Ä°ÅŸ BankasÄ± vb.) yazmamasÄ± sebebiyle oluÅŸan kafa karÄ±ÅŸÄ±klÄ±ÄŸÄ± giderildi; hesap kartlarÄ±na belirgin bir ÅŸekilde **Banka AdÄ±** eklendi.
+- **Manuel Yedekten DÃ¶nme Rehberi**: Ayarlar > KullanÄ±m KÄ±lavuzu sekmesindeki "GÃ¼venlik, Yedekleme ve Bulut" bÃ¶lÃ¼mÃ¼ne olasÄ± bir senaryoda yedekten manuel olarak nasÄ±l dÃ¶nÃ¼leceÄŸine dair adÄ±m adÄ±m rehber eklendi.
+- **GÃ¼venli Kilit EkranÄ±**: Uygulama (Auto-Lock) ile kilitlendiÄŸinde arka planda aÃ§Ä±k kalmÄ±ÅŸ olan tÃ¼m alt pencerelerin (hesap detaylarÄ±, yeni iÅŸlem ekleme vs.) ekranda aÃ§Ä±kta kalmasÄ± ve arkadan gÃ¶rÃ¼nmeye devam etmesi gÃ¼venlik aÃ§Ä±ÄŸÄ± kapatÄ±larak alt pencereler kilit esnasÄ±nda otomatik olarak kapatÄ±lacak ÅŸekilde dÃ¼zenlendi.
+- **Kredi KartÄ± Eksi Bakiye GÃ¶rÃ¼nÃ¼mÃ¼**: Kredi kartÄ± Ã¶demesi girildiÄŸinde veya gÃ¼ncellenirken (transfer iÅŸlemleri) arayÃ¼zde `-5429,88` gibi kafa karÄ±ÅŸtÄ±rÄ±cÄ± negatif deÄŸerlerin gÃ¶rÃ¼nmesi (`DisplayAmount` Ã¶zelliÄŸi eklenerek) engellendi; sadece saf pozitif tutarlarÄ±n gÃ¶sterilmesi saÄŸlandÄ±. Arka planda bakiye dÃ¼ÅŸÃ¼mÃ¼ iÅŸlemi aynÄ± kalarak muhasebesel doÄŸruluk korundu.
+
+## [0.9.5] - 2026-03-08
+
+- **GeliÅŸmiÅŸ Taksitli Ä°ÅŸlem DesteÄŸi**: Kredi kartÄ± harcamalarÄ±nda taksit desteÄŸi eklendi. Tek bir alÄ±ÅŸveriÅŸ giriÅŸiyle gelecek aylarÄ±n taksitleri otomatik olarak takvime iÅŸlenir.
+- **AkÄ±llÄ± Taksit Grubu YÃ¶netimi**: Taksitli bir iÅŸlem silinmek istendiÄŸinde sistem otomatik olarak algÄ±lar ve tÃ¼m taksit grubunu (gelecek aylar dahil) tek tÄ±kla silme seÃ§eneÄŸi sunar.
+- **Standart IBAN FormatÄ±**: IBAN numaralarÄ± artÄ±k tÃ¼m ekranlarda (HesaplarÄ±m, YÃ¶netim vb.) otomatik olarak standart 4'erli gruplar (TRxx xxxx...) halinde okunabilir formatta gÃ¶sterilir.
+
+### Fixed
+- **HesaplarÄ±m ArayÃ¼z Ä°yileÅŸtirmesi**: Banka hesap listesindeki hesap adÄ± ve IBAN bilgilerinin Ã¼st Ã¼ste binme (overlap) sorunu giderildi; bilgiler alt alta daha okunaklÄ± bir yapÄ±ya kavuÅŸturuldu.
+- **KartlarÄ±m ArayÃ¼z Ä°yileÅŸtirmesi**: Kredi kartÄ± Ã¶zetlerinde "baÄŸlÄ± kart" bilgilerinin borÃ§ toplamÄ± ile Ã§akÄ±ÅŸmasÄ± sorunu dikey katmanlÄ± yeni grid tasarÄ±mÄ± ile Ã§Ã¶zÃ¼ldÃ¼.
+- **Senkronize Transfer Silme**: Bir transfer iÅŸlemi (Para Transferi veya Kart Ã–demesi) silindiÄŸinde, karÅŸÄ± hesaptaki ilgili kayÄ±t da otomatik olarak bulunur ve silinerek bakiye tutarlÄ±lÄ±ÄŸÄ± saÄŸlanÄ±r.
+- **VeritabanÄ± Uyum HatasÄ±**: Yeni eklenen taksit Ã¶zellikleri sonrasÄ± oluÅŸan "Pending Model Changes" hatasÄ± senkronize bir EF Core geÃ§iÅŸi (Migration) ile giderildi.
+
+
+## [0.9.4] - 2026-03-02
+
+### Added
+- **KÃ¼resel Tarih Filtresi (Global Date Filter)**: Ana ekranÄ±n tepe menÃ¼sÃ¼ne modern gÃ¶rÃ¼nÃ¼mlÃ¼ bir tarih (Ay/YÄ±l) filtresi eklendi. ArtÄ±k geÃ§miÅŸ aylara ait gelir/gider detaylarÄ±nÄ± ve toplam harcamalarÄ± tek tÄ±kla gÃ¶rebilirsiniz.
+- **Rakam BiÃ§imlendirme (Binlik AyracÄ±)**: Ä°ÅŸlem Ekleme, Kredi KartÄ± Ã–demesi, YatÄ±rÄ±m AlÄ±m/SatÄ±m vb. dahil uygulama genelindeki tÃ¼m tutar giriÅŸ kutularÄ±na anlÄ±k binlik ayraÃ§ (Ã¶rn: 1.250,50) dÃ¼zeltmesi eklendi. Girdi deneyimi Ã§ok daha finansal standartlara uygun hale getirildi.
+- **AkÄ±llÄ± Profil Ä°Ã§e AktarÄ±mÄ±**: `.db` dosyasÄ±ndan mevcut bir baÄŸlantÄ± kurulurken veritabanÄ± dosyasÄ±nÄ±n ismi otomatik olarak profil adÄ± olarak doldurulacak ÅŸekilde iyileÅŸtirildi.
+
+### Fixed
+- **Modern Bilgilendirme ve Onay Pencereleri**: Ayarlar ve veri onay sÃ¼reÃ§lerinde karÅŸÄ±nÄ±za Ã§Ä±kan eski nesil Windows mesaj eklentileri (`MessageBox`) yerine uygulamanÄ±n koyu/aÃ§Ä±k temasÄ±na uygun modern `InfoDialogWindow` ve `GeneralConfirmWindow` tasarÄ±mlarÄ±na geÃ§ildi.
+
+## [0.9.3] - 2026-03-01
+
+### Added
+- **Modern Åifre DeÄŸiÅŸtirme UI**: `Ayarlar > GÃ¼venlik` sekmesi modern, kart tabanlÄ± bir tasarÄ±ma ve 3D gÃ¶lge efektlerine ![alt text](image.png)geÃ§irildi.
+- **Premium Mesaj KutularÄ±**: Ayarlar menÃ¼sÃ¼ndeki tÃ¼m eski Windows `MessageBox` uyarÄ±larÄ±, uygulamanÄ±n genel temasÄ±na uygun `GeneralConfirmWindow` ile deÄŸiÅŸtirildi.
+- **Ana BaÅŸlÄ±k Versiyon GÃ¶sterimi**: Uygulama versiyon numarasÄ± (Ã–rn: v0.9.3) artÄ±k ana pencerenin saÄŸ alt kÃ¶ÅŸesindeki durum Ã§ubuÄŸunda (StatusBar) dinamik olarak gÃ¶rÃ¼nÃ¼yor.
+- **GÃ¶rsel GÃ¼ncelleme Ä°lerleyiÅŸi**: GÃ¼ncelleme penceresine (Update Window) gerÃ§ek zamanlÄ± yÃ¼zde (%) ve MB bazlÄ± indirme ilerleme Ã§ubuÄŸu eklendi. Alt alta Ã§akÄ±ÅŸan yazÄ± sorunlarÄ± giderildi.
+- **Åifre Kutusu DÃ¼zenlemesi**: Ayarlar ekranÄ±ndaki ÅŸifre giriÅŸ kutularÄ±nÄ±n bazÄ± ekranlarda daralmasÄ± (collapse) engellendi ve yerleÅŸim optimize edildi.
+
+### Fixed
+- **Uygulama Simgesi (App Icon) ÅeffaflÄ±ÄŸÄ± ve GÃ¶rÃ¼nÃ¼rlÃ¼k Sorunu**: 
+  - GÃ¶rev Ã§ubuÄŸunda ve pencere baÅŸlÄ±klarÄ±nda simgenin etrafÄ±nda oluÅŸan beyaz Ã§erÃ§eve (damalÄ± arka plan) Ã¶zel bir iÅŸleme algoritmasÄ± ile temizlenerek **gerÃ§ek ÅŸeffaflÄ±k** saÄŸlandÄ±.
+  - Simgelerin bazÄ± pencerelerde (Ã–rn: GiriÅŸ EkranÄ±) kaybolmasÄ±na sebep olan kaynak baÄŸlama (Resource) hatalarÄ± giderildi.
+  - Simgelerin gÃ¶rÃ¼nÃ¼rlÃ¼ÄŸÃ¼nÃ¼ tÃ¼m pencerelerde standartlaÅŸtÄ±rmak iÃ§in `App.xaml` Ã¼zerine global bir stil kuralÄ± eklendi. Hem kaliteyi artÄ±rmak hem de sorunlarÄ± aÅŸmak iÃ§in baÅŸlÄ±k Ã§ubuklarÄ±nda yÃ¼ksek Ã§Ã¶zÃ¼nÃ¼rlÃ¼klÃ¼ **PNG** formatÄ±na, genel Windows kullanÄ±mÄ± iÃ§in ise **ICO** formatÄ±na geÃ§ildi.
+- **Otomatik .keys OnarÄ±mÄ±**: Eski profillerde "DatabasePath" boÅŸ olduÄŸu iÃ§in `.keys` dosyasÄ±nÄ±n oluÅŸmasÄ±nÄ± engelleyen kritik mantÄ±k hatasÄ± giderildi. ArtÄ±k her giriÅŸte dosya otomatik doÄŸrulanÄ±r/oluÅŸturulur.
+- **GeliÅŸmiÅŸ GÃ¼ncelleyici (Updater)**: Ä°ndirme iÅŸlemlerinde `User-Agent` eksikliÄŸi nedeniyle oluÅŸan hatalar giderildi ve gÃ¼ncelleme betiÄŸi (bat), uygulama kapanmadan dosya deÄŸiÅŸimini zorlamayacak ÅŸekilde gÃ¼Ã§lendirildi.
+- **GitHub API EriÅŸimi**: Gizli repository nedeniyle gÃ¼ncellemelerin 404 vermesi sorunu iÃ§in genel eriÅŸim altyapÄ±sÄ± optimize edildi.
+
+## [0.9.1] - 2026-03-01
+- **Otomatik Kilitleme (Auto-Lock)**:
+  - Uzun sÃ¼reli hareketsizlik (mouse/klavye kullanÄ±lmamasÄ±) durumunda uygulamanÄ±n otomatik olarak bir ÅŸifre kalkanÄ± ile kilitlenmesi saÄŸlandÄ±.
+  - Sizi verilerinizden uzaklaÅŸtÄ±ÄŸÄ±nÄ±zda gÃ¼venlik altÄ±na alan bu ekran, sadece uygulamanÄ±n ana ÅŸifresi ile aÃ§Ä±labiliyor.
+  - Otomatik kilitleme sÃ¼resi varsayÄ±lan olarak **3 dakika** ayarlÄ± olarak gelir. Ä°stenirse `Ayarlar > GÃ¼venlik` menÃ¼sÃ¼nden sÃ¼re deÄŸiÅŸtirilebilir veya tamamen kapatÄ±labilir.
+- **Uygulama Ä°Ã§i Otomatik GÃ¼ncelleme (Auto-Updater)**:
+  - FinTrack'in yeni sÃ¼rÃ¼mlerinin otomatik olarak tespit edilmesi ve tek tuÅŸla indirilip kurulmasÄ± iÃ§in altyapÄ± geliÅŸtirildi.
+  - Uygulama sadece her baÅŸlangÄ±Ã§ta GitHub Ã¼zerindeki kararlÄ± (Release) sÃ¼rÃ¼mleri denetler ve "Yeni SÃ¼rÃ¼m Var" uyarÄ±sÄ± ile beraber o sÃ¼rÃ¼me ait yenilik notlarÄ±nÄ± ekranda gÃ¶sterir.
+  - Arka planda Ã§alÄ±ÅŸan gÃ¼ncelleyici sistemi (updater), eski dosyayÄ± silip yeni kurulan `.exe` dosyasÄ± ile uygulamayÄ± saniyeler iÃ§inde baÅŸtan baÅŸlatÄ±r. Tamamen Ã¼cretsiz ve gÃ¼venli GitHub altyapÄ±sÄ± Ã¼zerine inÅŸa edildi.
+- **GÃ¼venli Otomatik Yedekleme (Auto-Backup)**: Uygulama kapanÄ±rken (veya profil deÄŸiÅŸtirirken) veritabanÄ±nÄ±zÄ±n ÅŸifreli bir kopyasÄ±nÄ± istediÄŸiniz bir klasÃ¶re (Ã¶rn. OneDrive, Google Drive) otomatik olarak yedekleyen geliÅŸmiÅŸ veri koruma sistemi eklendi.
+    - **AkÄ±llÄ± Temizlik**: "Sadece son 5 yedeÄŸi tut" veya "30 gÃ¼nden eski yedekleri sil" gibi kurallarla disk alanÄ±nÄ±zÄ±n dolmasÄ± engellenir.
+    - **Ä°lk Kurulum AsistanÄ±**: KullanÄ±cÄ± yedekleme klasÃ¶rÃ¼ seÃ§memiÅŸse, sisteme ilk giriÅŸinde otomatik uyarÄ±/Ã¶neri penceresi Ã§Ä±karak "Veri gÃ¼venliÄŸiniz iÃ§in yedek klasÃ¶rÃ¼ seÃ§in" ÅŸeklinde yÃ¶nlendirme yapar.
+- **Kredi KartÄ± YÃ¶netimi Ä°yileÅŸtirmeleri**:
+    - Kart ekleme ekranÄ±, kafa karÄ±ÅŸÄ±klÄ±ÄŸÄ±nÄ± Ã¶nlemek iÃ§in aÃ§Ä±klayÄ±cÄ± baÅŸlÄ±klar ve daha dÃ¼zenli bir yerleÅŸimle yenilendi.
+    - BaÄŸlÄ± (ana) kart seÃ§im listesinde banka ve kart adÄ± beraber gÃ¶sterilecek ÅŸekilde (Ã–rn: *YapÄ± Kredi - Master*) gÃ¼ncellendi.
+- **VeritabanÄ± TaÅŸÄ±nabilirliÄŸi (Sidecar Keys)**:
+    - VeritabanÄ± dosyasÄ± baÅŸka bir bilgisayara taÅŸÄ±ndÄ±ÄŸÄ±nda ÅŸifreleme bilgilerinin de taÅŸÄ±nabilmesi iÃ§in otomatik `.keys` dosyasÄ± altyapÄ±sÄ± kuruldu.
+    - Mevcut bir veritabanÄ± dosyasÄ± seÃ§ildiÄŸinde sistem anahtarlarÄ± otomatik algÄ±lar ve yeni ÅŸifre oluÅŸturmak yerine mevcut ÅŸifreyle giriÅŸ yapÄ±lmasÄ±nÄ± saÄŸlar.
+- **GiriÅŸ EkranÄ± GÃ¼ncellemesi**: Uygulama versiyon numarasÄ± artÄ±k giriÅŸ ekranÄ±nÄ±n saÄŸ alt kÃ¶ÅŸesinde dinamik olarak gÃ¶rÃ¼nÃ¼yor.
+
+- **GÃ¼Ã§lendirilmiÅŸ Åifreleme (PBKDF2 & Salt)**: Veri gizliliÄŸi ve gÃ¼venliÄŸi "Askeri DÃ¼zey" (Military-Grade) standartlarÄ±na yÃ¼kseltildi. 
+    - Uygulama ÅŸifreleri (`HashedPassword`) artÄ±k dÃ¼z SHA-256 yerine, brute-force (kaba kuvvet) saldÄ±rÄ±larÄ±nÄ± imkansÄ±z kÄ±lan **PBKDF2** algoritmasÄ± ve rastgele **Salt** kullanÄ±larak ÅŸifreleniyor. 
+    - Eski sÃ¼rÃ¼mlerde oluÅŸturulan ÅŸifreler, kullanÄ±cÄ± uygulamaya ilk giriÅŸ yaptÄ±ÄŸÄ±nda *otomatik* ve kesintisiz olarak yeni yÃ¼ksek gÃ¼venlikli PBKDF2 altyapÄ±sÄ±na yÃ¼kseltiliyor (Geriye dÃ¶nÃ¼k tam uyumluluk).
+
+## [0.9.0] - 2026-02-28
+- **GeliÅŸmiÅŸ Raporlama Merkezi (`ReportsView`)**: Uygulamaya gÃ¶rsel istatistikler ve analiz sekmeleri eklendi.
+    - **Harcama DaÄŸÄ±lÄ±mÄ±**: Kategorilere gÃ¶re harcamalarÄ± gÃ¶rsel barlar ve yÃ¼zdelerle Ã¶zetler.
+    - **AylÄ±k Trendler**: Son 6 ayÄ±n Gelir vs Gider karÅŸÄ±laÅŸtÄ±rmasÄ±nÄ± grafiksel olarak gÃ¶sterir.
+    - **YatÄ±rÄ±m Analizi**: PortfÃ¶y daÄŸÄ±lÄ±mÄ±nÄ±, toplam varlÄ±k deÄŸerini ve kÃ¢r/zarar durumunu analiz eder.
+- **Modern Profil YÃ¶netimi (`AddProfileWindow`)**: Ã‡oklu profil desteÄŸi modern bir arayÃ¼zle yenilendi.
+    - **VeritabanÄ± Ä°Ã§e Aktarma**: Yeni profil oluÅŸtururken bilgisayardaki mevcut bir `.db` dosyasÄ±nÄ± seÃ§ip baÄŸlama opsiyonu eklendi.
+    - **Ä°zole VeritabanÄ±**: Her profilin kendi `fintrack_ProfilAdÄ±.db` dosyasÄ± ile tam izolasyon saÄŸlandÄ±.
+- **GÃ¼venli Profil Silme AkÄ±ÅŸÄ±**: Profil silme iÅŸlemi artÄ±k hata payÄ±nÄ± sÄ±fÄ±ra indiren ve gÃ¼venliÄŸi artÄ±ran 3 aÅŸamalÄ± bir akÄ±ÅŸa sahip:
+    - **AÅŸama 1 (Onay)**: Ä°ÅŸlemin ciddiyetini belirten ilk onay diyaloÄŸu.
+    - **AÅŸama 2 (Åifre)**: Sadece bu iÅŸlem iÃ§in aÃ§Ä±lan profesyonel ÅŸifre doÄŸrulama penceresi.
+    - **AÅŸama 3 (Veri SeÃ§imi)**: AyarlarÄ±n mÄ± yoksa veritabanÄ±nÄ±n mÄ± silineceÄŸine dair son karar ekranÄ±.
+- **Modern TasarÄ±mlÄ± Onay Pencereleri**: Standart Windows mesaj kutularÄ± yerine projenin premium tasarÄ±mÄ±na uygun Ã¶zel pencereler eklendi:
+    - `ConfirmPasswordWindow`: Ä°ÅŸlem onaylarÄ± iÃ§in ÅŸÄ±k ÅŸifre giriÅŸ kutusu.
+    - `DeleteDataConfirmWindow`: Veri silme tercihleri iÃ§in yÃ¼ksek kontrastlÄ± ve net seÃ§enekli onay ekranÄ±.
+    - `GeneralConfirmWindow`: Uygulama geneli iÃ§in modernize edilmiÅŸ esnek onay diyaloÄŸu.
+- **Profil BaÄŸlantÄ±sÄ±nÄ± Kesme ('-' Butonu)**: GiriÅŸ ekranÄ±ndaki `-` butonu, profili tamamen silmek yerine sadece uygulamadan "ayÄ±rmak" (unlink) iÅŸleviyle geri getirildi. VeritabanÄ± dosyasÄ±na dokunulmadan profil listeden kaldÄ±rÄ±lÄ±r.
+- **Standart VeritabanÄ± Konumu**: Yeni oluÅŸturulan profillerin veritabanÄ± dosyalarÄ± artÄ±k daha gÃ¼venli ve silinmeye karÅŸÄ± direnÃ§li olan `Belgelerim\FinTrack` klasÃ¶rÃ¼ne otomatik olarak kaydediliyor.
+    - Eski profillerin bulunduÄŸu klasÃ¶rler muhafaza edildi. "SÄ±fÄ±rla" veya "Sil" iÅŸlemleri her iki klasÃ¶rÃ¼ de temizleyecek ÅŸekilde gÃ¼Ã§lendirildi.
+    - Profil oluÅŸturma ekranÄ±nda veritabanÄ± yolunun nereye oluÅŸacaÄŸÄ± dinamik olarak gÃ¶sterildi.
+- **Onay ve UyarÄ± Pencereleri Modernizasyonu:**
+    - Uygulama genelinde bulunan standart ve eski stil Windows `MessageBox` pop-up'larÄ±nÄ±n tamamÄ±, yeni `GeneralConfirmWindow` yapÄ±sÄ±na geÃ§irildi.
+    - `GeneralConfirmWindow`, iptal butonuna ihtiyaÃ§ duymayan "Bilgi" veya "Hata" pop-up'larÄ± iÃ§in 'Sadece Tamam' destekli hale getirildi.
+- **Profil BazlÄ± SÄ±fÄ±rlama**: ArtÄ±k "UygulamayÄ± SÄ±fÄ±rla" yerine, kullanÄ±cÄ±larÄ±n sadece seÃ§ili profilin verilerini gÃ¼venle temizleyebileceÄŸi izolasyon mantÄ±ÄŸÄ±na geÃ§ildi.
+- **GiriÅŸ EkranÄ± ve UX Ä°yileÅŸtirmeleri**: 
+    - GiriÅŸ ekranÄ±ndan riskli `-` butonu kaldÄ±rÄ±larak yetki "Profili Sil" linkine taÅŸÄ±ndÄ± (Sonraki gÃ¼ncellemeyle `-` butonu gÃ¼venli ayrÄ±ÅŸtÄ±rma iÅŸleviyle geri dÃ¶ndÃ¼).
+    - TÃ¼m pencereler (Ã–zellikle `RecoveryCodeWindow`) `SizeToContent="Height"` ile iÃ§eriÄŸe, Windows metin kÃ¼Ã§Ã¼ltme/bÃ¼yÃ¼tme (DPI) ayarlarÄ±na tam uyumlu hale getirildi. ArtÄ±k butonlarÄ±n veya metinlerin yarÄ±m kalma sorunu yok.
+
+### Fixed
+- **XAML Compilation (MC1000 & MC3000 & MC3015)**: `ReportsView.xaml` ve `LoginWindow.xaml` dosyalarÄ±ndaki derleme hatalarÄ± (XAML Syntax) dÃ¼zeltildi.
+- **UI SÄ±ÄŸmama Sorunu**: Åifre onay ve profil ekleme pencerelerindeki butonlarÄ±n kaybolma/sÄ±ÄŸmama sorunu giderildi.
+
+## [0.8.0] - 2026-02-23
+
+### Added
+- **YatÄ±rÄ±m PortfÃ¶yÃ¼ ModÃ¼lÃ¼ (`InvestmentsView`)**: Hisse senedi, dÃ¶viz, altÄ±n ve kripto para gibi varlÄ±klarÄ± takip etmek iÃ§in detaylÄ± kÃ¢r/zarar gÃ¶stergeli yeni ekran eklendi.
+- **YatÄ±rÄ±m AlÄ±m ve SatÄ±m Ä°ÅŸlemleri**: Dinamik maliyet ve mevcut deÄŸer hesaplamalarÄ±na sahip alÄ±m ve satÄ±m operasyon panelleri (Pencereler) tasarlandÄ±.
+- **Kredi KartÄ± ve Banka Entegrasyonu**: YatÄ±rÄ±m iÅŸlemlerinde doÄŸrudan sistemde kayÄ±tlÄ± Banka HesaplarÄ± veya Kredi KartlarÄ±ndan Ã¶deme yapma (ya da tahsil etme) Ã¶zelliÄŸi sisteme baÄŸlandÄ±. AlÄ±m sÄ±rasÄ±nda cÃ¼zdandan limit/bakiye dÃ¼ÅŸÃ¼rÃ¼lÃ¼rken, satÄ±m iÅŸleminde gelir hesaba aktarÄ±lÄ±r.
+- **Masraf ve Komisyon (Fee) Takibi**: YatÄ±rÄ±m iÅŸlemleri sÄ±rasÄ±nda oluÅŸan aracÄ± kurum kesintilerini sisteme dÃ¢hil etmek iÃ§in Komisyon alanÄ± eklendi ve toplam maliyet/gelir hesaplamasÄ±na entegre edildi.
+- **Yahoo Finance API Entegrasyonu**: DÃ¶viz (USD, EUR vb.), Emtia (XAU-Gram AltÄ±n Ã§evirisi ile) ve BIST Hisse Senetleri iÃ§in Ã¼cretsiz ve canlÄ± fiyat Ã§ekme kÃ¶prÃ¼sÃ¼ (API) entegre edildi.
+- **KiÅŸiselleÅŸtirilmiÅŸ API AyarlarÄ± ve KayÄ±t**: `SettingsView` iÃ§erisine yeni bir "API ve Entegrasyonlar" sekmesi (KÄ±lavuz sekmesi ile Bulut sekmesi arasÄ±na taÅŸÄ±ndÄ±) eklenerek uygulamanÄ±n fiyat takibi *Sadece Manuel*, *Yahoo Finance* ve kiÅŸisel veri sunucularÄ±nÄ±z iÃ§in *Ã–zel API (Custom URL)* modlarÄ±na bÃ¶lÃ¼ndÃ¼.
+- **Bulut Senkronizasyonu Ayar KontrolÃ¼**: Bulut Senkronizasyonu (Google Drive / OneDrive) sekmesindeki klasÃ¶r seÃ§imi adÄ±mÄ±na da "AyarlarÄ± Kaydet" butonu eklendi. BÃ¶ylece, klasÃ¶r seÃ§ildikten hemen sonra arka planda yapÄ±lan iÅŸlemler sadece kayÄ±t onayÄ± verildiÄŸinde tetikleniyor.
+- **AyarlarÄ± Kaydet DesteÄŸi**: API ve Bulut saÄŸlayÄ±cÄ± seÃ§imlerinin kaydedilmesi onaylÄ± hale getirildi.
+- **Panel Refaktoringi ve UX DÃ¼zeltmeleri**: `AddInvestmentWindow`, `SellInvestmentWindow` ve `UpdatePricesWindow` pencerelerindeki ScrollViewer sÄ±nÄ±rlandÄ±rmalarÄ± kaldÄ±rÄ±larak `SizeToContent="Height"` sistemine geÃ§iÅŸ yapÄ±ldÄ±. Pencere altÄ±ndaki gereksiz gri alanlar yok edildi.
+- **MenÃ¼ Optimizasyonu**: KullanÄ±cÄ±nÄ±n ana menÃ¼deki eriÅŸim sÄ±klÄ±ÄŸÄ± hedeflenerek "ğŸ“ˆ YatÄ±rÄ±mlar" butonu "ğŸ“Š Raporlar" butonunun hemen Ã¼stÃ¼ne taÅŸÄ±ndÄ±.
+
+## [0.7.0] - 2026-02-22
+
+### Added
+- **Banka HesaplarÄ± AltyapÄ±sÄ±**: Sisteme banka hesaplarÄ± (`BankAccount` modeli) entegre edildi ve veritabanÄ± altyapÄ±sÄ± (Migration) gÃ¼ncellendi.
+- **HesaplarÄ±m EkranÄ± (`AccountsView`)**: KullanÄ±cÄ±larÄ±n tÃ¼m banka hesaplarÄ±nÄ±, aÃ§Ä±lÄ±ÅŸ bakiyelerini ve gÃ¼ncel bakiyelerini gÃ¶rebileceÄŸi yeni SPA ekranÄ± eklendi (Sol menÃ¼den eriÅŸilebilir).
+- **Banka HesabÄ± YÃ¶netimi**: Banka hesaplarÄ±nÄ± ekleme, dÃ¼zenleme, aktif/pasif yapma ve silme iÅŸlemlerini barÄ±ndÄ±ran **Banka HesaplarÄ±m** yÃ¶netim paneli eklendi (IBAN desteÄŸi mevcut).
+- **GeliÅŸmiÅŸ Transfer Sistemi (`TransferWindow`)**: Hesaplar arasÄ± Ã§ift yÃ¶nlÃ¼ para transferlerini destekleyen Ã¶zel sistem eklendi.
+  - **EFT / Havale**: Bankadan bankaya transfer.
+  - **Kredi KartÄ± Ã–demesi**: Banka veya nakit hesabÄ±ndan kredi kartÄ± borÃ§ Ã¶demesi.
+  - **ATM Nakit**: Bankadan nakit Ã§ekme ve nakitten bankaya para yatÄ±rma (Cash to Bank / Bank to Cash).
+- **Kredi KartÄ± Ã–demesi Kaynak SeÃ§imi**: "KartlarÄ±m" menÃ¼sÃ¼ Ã¼zerinden yapÄ±lan hÄ±zlÄ± Ã¶demelerde (`MakePaymentWindow`) artÄ±k Ã¶demenin hangi hesaptan (Nakit veya herhangi bir aktif Banka HesabÄ±) dÃ¼ÅŸÃ¼leceÄŸi seÃ§ilebiliyor. Bu sayede kart borcu Ã¶denirken, ilgili banka hesabÄ±nÄ±n veya toplam nakit varlÄ±ÄŸÄ±n bakiyesi de otomatik olarak azaltÄ±larak "Toplam VarlÄ±k" bakiyesi ile tam uyum saÄŸlanÄ±yor.
+- **Ã–deme YÃ¶ntemi CÃ¼zdan SeÃ§imi**: Ä°ÅŸlem Ekleme (`AddTransactionWindow`) ve Ä°ÅŸlem DÃ¼zenleme (`EditTransactionWindow`) panellerine "Nakit" veya kayÄ±tlÄ± "Banka HesaplarÄ±" seÃ§enekleri Ã¼zerinden iÅŸlem yapma imkanÄ± eklendi. Sabit bir Gelir (Ã¶rn: MaaÅŸ, EFT) veya gider (Ã¶rn: Kira) eklerken doÄŸrudan ilgili banka hesabÄ± seÃ§ilerek otomatik bakiye dÃ¼ÅŸÃ¼mÃ¼/artÄ±ÅŸÄ± saÄŸlanÄ±r.
+- **GeliÅŸmiÅŸ Dashboard ToplamÄ±**: Ana Ekranda (Dashboard) yer alan *GÃ¼ncel Bakiye*, banka aÃ§Ä±lÄ±ÅŸ tutarlarÄ± ile birleÅŸtirilerek **Toplam VarlÄ±k (Nakit + Banka)** ÅŸekline dÃ¶nÃ¼ÅŸtÃ¼rÃ¼ldÃ¼.
+- **Hesap Hareketleri Detay Penceresi (`AccountDetailWindow`)**: Her banka hesabÄ± iÃ§in tÃ¼m gelir, gider ve transfer geÃ§miÅŸini tarih sÄ±rasÄ±na gÃ¶re gÃ¶steren detaylÄ± inceleme ekranÄ± eklendi. "Hesaplar" sekmesindeki "Hareketler" butonuyla eriÅŸilebilir.
+- **KullanÄ±m KÄ±lavuzu (Help Section)**: Ayarlar menÃ¼sÃ¼ne uygulamanÄ±n detaylÄ± kullanÄ±m rehberini iÃ§eren "ğŸ“– KullanÄ±m KÄ±lavuzu" sekmesi (Tab) eklendi. Banka iÅŸlemleri, asÄ±l/baÄŸlÄ± kart mantÄ±ÄŸÄ± ve bÃ¼tÃ§e enflasyonu gibi detaylar akordeon yapÄ±sÄ±nda sunuldu.
+- **KullanÄ±cÄ± Deneyimi (UX)**: `Banka HesaplarÄ± YÃ¶netimi` penceresindeki tÃ¼m metin kutularÄ±na (TextBox) ÅŸÄ±k WPF stilleriyle yer tutucu (Watermark/Placeholder) ipucu metinleri (Ã¶rn. "Banka AdÄ± (Garanti)", "AÃ§Ä±lÄ±ÅŸ â‚º" vb.) eklendi.
+
+
+## [0.6.0] - 2026-02-21
+
+### Added
+- **Modern Uygulama Simgesi (App Icon)**: FinTrack iÃ§in TÃ¼rk LirasÄ± (â‚º) temalÄ±, yÃ¼ksek Ã§Ã¶zÃ¼nÃ¼rlÃ¼klÃ¼ gÃ¼mÃ¼ÅŸ madeni para tasarÄ±mlÄ± yeni ikon eklendi. Hem uygulama penceresinde hem de derlenmiÅŸ `.exe` dosyasÄ±nda (MasaÃ¼stÃ¼/GÃ¶rev Ã‡ubuÄŸu) gÃ¶rÃ¼nÃ¼r hale getirildi.
+- **Truly Single-File Publish**: YayÄ±nlama (Publish) sÃ¼reci mÃ¼kemmelleÅŸtirildi. ArtÄ±k native kÃ¼tÃ¼phaneler (SQLCipher vb.) EXE iÃ§erisine gÃ¶mÃ¼lÃ¼r, gereksiz hata ayÄ±klama dosyalarÄ± (.pdb) temizlenir ve dosya boyutu sÄ±kÄ±ÅŸtÄ±rÄ±larak tam taÅŸÄ±nabilir tek bir dosya Ã¼retilir.
+
+## [0.5.0] - 2026-02-21
+
+### Added
+- **Merkezi Ayarlar EkranÄ± (`SettingsView`)**: GÃ¼venlik ve yapÄ±landÄ±rma ayarlarÄ± tek bir modern ekran altÄ±nda toplandÄ±.
+    - **ğŸ”’ GÃ¼venlik Sekmesi**: Åifre deÄŸiÅŸtirme iÅŸlemleri artÄ±k uygulama iÃ§inden direkt yapÄ±labiliyor.
+    - **â˜ï¸ Bulut Senkron Sekmesi**: VeritabanÄ±nÄ± bulut klasÃ¶rlerine taÅŸÄ±ma ve yÃ¶netme Ã¶zelliÄŸi eklendi.
+    - **â„¹ï¸ HakkÄ±nda Sekmesi**: Uygulama sÃ¼rÃ¼mÃ¼ ve geliÅŸtirici bilgileri eklendi.
+- **Tam VeritabanÄ± Åifrelemesi (SQLCipher)**: VeritabanÄ± dosyasÄ± (`fintrack.db`) bir bÃ¼tÃ¼n olarak AES-256 ile ÅŸifrelendi. Rakamlar, tarihler ve kategoriler dahil tÃ¼m iÃ§erik koruma altÄ±na alÄ±ndÄ±.
+- **Dinamik Åifreleme YÃ¶netimi**: Uygulama aÃ§Ä±lÄ±ÅŸÄ±nda anahtar doÄŸrulamasÄ± ve ÅŸifresiz veritabanÄ±ndan ÅŸifreliye otomatik geÃ§iÅŸ (migration) sistemi eklendi.
+- **Bulut Senkronizasyonu (Google Drive, OneDrive, Dropbox)**: VeritabanÄ±nÄ± herhangi bir klasÃ¶re taÅŸÄ±ma ve o klasÃ¶rden Ã§alÄ±ÅŸtÄ±rma (Dynamic DB Path) desteÄŸi eklendi.
+- **Dashboard UI Ä°yileÅŸtirmeleri**: "Alacak" ve "BorÃ§" sÃ¼tunlarÄ± iÃ§in baÄŸÄ±msÄ±z kaydÄ±rma (Scroll) desteÄŸi eklendi. "Fatura DaÄŸÄ±lÄ±mÄ±" paneli daha iyi bir mantÄ±ksal gruplama iÃ§in Giderler (BorÃ§) tarafÄ±na taÅŸÄ±ndÄ±.
+- **Sidebar Yenilemesi**: Yan menÃ¼ sadeleÅŸtirildi; "Bulut Senkron" butonu Ayarlar iÃ§erisine taÅŸÄ±ndÄ±, "Åifre ve GÃ¼venlik" butonu "âš™ï¸ Ayarlar" olarak gÃ¼ncellendi.
+
+### Fixed
+- **VeritabanÄ± EriÅŸim HatasÄ± (File in Use)**: SQLCipher ÅŸifreleme iÅŸlemi sÄ±rasÄ±nda dosya kilitleme sorunu yaÅŸayan baÄŸlantÄ± havuzu (Pooling) Ã§akÄ±ÅŸmasÄ± giderildi.
+
+### Removed
+- **BaÄŸÄ±msÄ±z Pencereler**: ArtÄ±k kullanÄ±lmayan `ChangePasswordWindow` ve `CloudSyncView` modal pencereleri kaldÄ±rÄ±ldÄ±.
+
+## [0.4.0] - 2026-02-21
+
+### Added
+- **GeliÅŸmiÅŸ Raporlar GÃ¶rÃ¼nÃ¼mÃ¼ (`ReportsView`)**: Belirli tarih aralÄ±klarÄ±na gÃ¶re gelir/gider analizi yapabilen yeni SPA ekranÄ± eklendi.
+- **Dinamik Kredi KartÄ± Ekstre YÃ¶netimi**: Kredi kartlarÄ± iÃ§in "Hesap Kesim GÃ¼nÃ¼" ve "Son Ã–deme GÃ¼nÃ¼" Ã¶zellikleri eklendi. BorÃ§ takibi artÄ±k takvim ayÄ± yerine ekstre dÃ¶nemine gÃ¶re yapÄ±lÄ±yor.
+- **Aktif Kartlar EkranÄ± (`CardsView`)**: KartlarÄ±m menÃ¼sÃ¼ tamamen yenilenerek SPA tarzÄ± interaktif bir ekrana dÃ¶nÃ¼ÅŸtÃ¼rÃ¼ldÃ¼.
+    - Kalan borÃ§ ve ekstre kesimine kalan gÃ¼n sayÄ±sÄ±nÄ± gÃ¶steren akÄ±llÄ± ilerleme Ã§ubuklarÄ± (Progress Bars) eklendi.
+    - Kart bazlÄ± hÄ±zlÄ± Ã¶deme ve detay inceleme butonlarÄ± eklendi.
+- **AsÄ±l ve BaÄŸlÄ± (Sanal) Kart YÃ¶netimi**: Birden fazla kartÄ±n borcunu tek bir "Ana Kart" altÄ±nda birleÅŸtirme (Consolidation) Ã¶zelliÄŸi eklendi. Harcamalar ayrÄ± takip edilirken borÃ§lar tekilleÅŸtirildi.
+- **Kategori HiyerarÅŸisi (Alt Kategoriler)**: Kategorilere hiyerarÅŸi desteÄŸi eklendi. "Faturalar" gibi ana kategoriler altÄ±nda "Elektrik", "Su", "Ä°nternet" gibi alt kategoriler tanÄ±mlanabiliyor.
+- **HiyerarÅŸik Ä°ÅŸlem YÃ¶netimi**: Ä°ÅŸlem ekleme ve dÃ¼zenleme pencereleri, kategorileri hiyerarÅŸik bir yapÄ±da (Ã¶rn. Faturalar > Elektrik) gÃ¶sterecek ÅŸekilde yenilendi.
+- **âš¡ Fatura DaÄŸÄ±lÄ±m Paneli**: Ana ekrana (Dashboard), o ayki fatura harcamalarÄ±nÄ±zÄ± tÃ¼rlerine gÃ¶re (Elektrik: â‚ºX, Su: â‚ºY vb.) anlÄ±k Ã¶zetleyen dinamik bir panel eklendi.
+- **Kredi KartÄ± BorÃ§ Ã–deme**: `MakePaymentWindow` Ã¼zerinden kart borcu Ã¶deme Ã¶zelliÄŸi eklendi. Ã–demeler Ã§ift sayÄ±mÄ± engellemek iÃ§in "Transfer" tÃ¼rÃ¼nde kaydediliyor.
+- **Yeni Ä°ÅŸlem TÃ¼rÃ¼: Transfer**: Gelir ve Gider dÄ±ÅŸÄ±nda, hesaplar arasÄ± para transferi (Ã¶rn. kart Ã¶demesi) iÃ§in yeni bir kategori tÃ¼rÃ¼ eklendi.
+
+### Fixed
+- **Tarih Hesaplama Sistemi**: Kredi kartÄ± ekstre dÃ¶nemleri, gÃ¼n sonu (23:59:59) ve gÃ¼n baÅŸÄ± sÄ±nÄ±rlarÄ±na gÃ¶re daha hassas hesaplanacak ÅŸekilde gÃ¼ncellendi.
+- **Veri DoÄŸrulama**: Kart eklerken/gÃ¼ncellerken kesim ve Ã¶deme gÃ¼nlerinin zorunlu ve geÃ§erli (1-31) olmasÄ± saÄŸlandÄ±.
+- **Uyumluluk YamasÄ±**: Eski kayÄ±tlarda `0` olarak kalmÄ±ÅŸ olan kesim gÃ¼nÃ¼ bilgilerinin uygulamayÄ± Ã§Ã¶kertmesi engellendi (Otomatik gÃ¼venlik bariyeri).
+
+## [0.3.0] - 2026-02-21
+
+### Added
+- **Tek Sayfa UygulamasÄ± (SPA) Mimarisi**: Uygulama iÃ§i gezinti sistemi yenilendi. "BÃ¼tÃ§e" ve "Ana Ekran" gibi bÃ¶lÃ¼mler artÄ±k yeni pencere aÃ§mak yerine ana ekran iÃ§erisinde dinamik olarak (UserControl ile) deÄŸiÅŸiyor.
+- **Yanal Navigasyon (Sidebar)**: Ana pencereye modern bir sol menÃ¼ eklendi. GeliÅŸmiÅŸ gÃ¶rsellik iÃ§in navigasyon butonlarÄ± bu menÃ¼ye taÅŸÄ±ndÄ±.
+- **HÄ±zlÄ± Kategori SeÃ§imi**: "Ä°ÅŸlem Ekle" penceresindeki kategori listesi artÄ±k tÃ¼rÃ¼ne gÃ¶re (Ã¶nce Gelir/YeÅŸil, sonra Gider/KÄ±rmÄ±zÄ±) sÄ±ralanarak gÃ¶steriliyor.
+- **TaÅŸÄ±nabilirlik (SQLite GeÃ§iÅŸi)**: SQL Server baÄŸÄ±mlÄ±lÄ±ÄŸÄ± tamamen kaldÄ±rÄ±ldÄ±. Uygulama artÄ±k yerel bir `fintrack.db` dosyasÄ± kullanÄ±yor.
+- **Cross-Platform AltyapÄ±sÄ±**: VeritabanÄ± ve Ã§ekirdek mantÄ±k (Core) macOS ve Linux ile uyumlu hale getirildi.
+- **Tek Dosya YayÄ±nlama (Publish)**: Kurulum gerektirmeyen, taÅŸÄ±nabilir `.exe` oluÅŸturma desteÄŸi eklendi.
+- **GÃ¼venlik (Åifre DeÄŸiÅŸtir)**: Ana ekrana `ğŸ”‘ Åifre` butonu eklendi. Eski ÅŸifreyi doÄŸrulayarak yeni ÅŸifre belirlenebilir; ÅŸifreli veriler etkilenmez.
+- **BÃ¼tÃ§e YÃ¶netimi**: Her gider kategorisi iÃ§in aylÄ±k harcama limiti tanÄ±mlama sistemi eklendi.
+- **Otomatik AylÄ±k SÄ±fÄ±rlama**: BÃ¼tÃ§e takibi her ay baÅŸÄ±nda otomatik olarak sÄ±fÄ±rlanÄ±r; geÃ§miÅŸ aylÄ±k veriler kaybolmaz.
+- **YÄ±llÄ±k KarÅŸÄ±laÅŸtÄ±rma**: AynÄ± aydÄ± bir Ã¶nceki yÄ±la gÃ¶re harcama farkÄ±nÄ± gÃ¶steren karÅŸÄ±laÅŸtÄ±rma satÄ±rÄ± eklendi.
+- **Enflasyon DÃ¼zeltmesi (TÃœÄ°K)**: TÃœYFE verisiyle dÃ¼zeltilmiÅŸ gerÃ§ek harcama artÄ±ÅŸÄ±/azalÄ±ÅŸÄ± hesaplamasÄ±. TÃœÄ°K aÃ§Ä±k API'si (kayÄ±t gerektirmez) kullanÄ±lÄ±r; internet yoksa yerel cache ve gÃ¶mÃ¼lÃ¼ 2023-2026 TÃœFE tablosu devreye girer.
+- **BÃ¼tÃ§e Penceresi (`BudgetWindow`)**: Ay navigasyonu, ilerleme Ã§ubuklarÄ±, durum renklendirmesi (YeÅŸil / SarÄ± / KÄ±rmÄ±zÄ±) ve limit dÃ¼zenleyici panel iÃ§eren yeni ekran.
+- **Ana MenÃ¼ GÃ¼ncellemesi**: MainWindow baÅŸlÄ±ÄŸÄ±na "BÃ¼tÃ§e" butonu eklendi.
+- **VeritabanÄ±**: `BudgetLimits` ve `InflationCaches` tablolarÄ± EF Core migration ile eklendi.
+- **Yeni Kategoriler (Gider)**: KiÅŸisel HarÃ§lÄ±k, Ã‡ocuk HarÃ§lÄ±ÄŸÄ±, Taze GÄ±da & Pazar, Aile HarcamalarÄ±, UlaÅŸÄ±m, Ev & YaÅŸam, Giyim, EÄŸitim, SaÄŸlÄ±k, Hediye & BaÄŸÄ±ÅŸ eklendi.
+- **Yeni Kategoriler (Gelir)**: Yemek Ã–deneÄŸi, Aile DesteÄŸi eklendi.
+- **Kredi KartÄ± Takibi**: Banka ve kart bazlÄ± harcama takibi sistemi eklendi.
+- **Ekstre GÃ¶rÃ¼nÃ¼mÃ¼**: Ana ekranda her banka/kart iÃ§in o ayki toplam harcama otomatik listelenir.
+  - Banka bazlÄ± gruplandÄ±rma ve ara toplamlar eklendi.
+  - Kart harcamalarÄ± otomatik olarak "Toplam Gelir" hanesine dahil edilerek bakiye dengelemesi saÄŸlandÄ±.
+- **Kart Harcama DetayÄ±**: Kart toplamÄ±na tÄ±klandÄ±ÄŸÄ±nda o aya ait tÃ¼m kart harcamalarÄ±nÄ± gÃ¶steren detay penceresi aÃ§Ä±lÄ±r.
+- **UI**: Ä°ÅŸlem Ekle ve DÃ¼zenle ekranlarÄ±nda kategoriler yeÅŸil (Gelir) / kÄ±rmÄ±zÄ± (Gider) renk kodlamasÄ± ile gÃ¶steriliyor.
+- **Ã–deme YÃ¶ntemi**: Ä°ÅŸlem eklerken "Nakit" veya kayÄ±tlÄ± "Kredi KartÄ±" seÃ§me imkanÄ± getirildi.
+- **Kart YÃ¶netimi**: Mevcut kartlarÄ±n banka adÄ± ve etiketini dÃ¼zenlemek iÃ§in "ğŸ’¾ GÃ¼ncelle" Ã¶zelliÄŸi eklendi.
+- **UI GeliÅŸtirmeleri**: 
+  - Gelir tablosu ve kart Ã¶zeti arasÄ±nda **%50 paylaÅŸÄ±mlÄ± (50/50 split)** dinamik dÃ¼zen saÄŸlandÄ±.
+  - Kart Ã¶zeti Ã§ok uzadÄ±ÄŸÄ±nda ana tablonun yarÄ±da kalmamasÄ± iÃ§in kaydÄ±rÄ±labilir (Scrollable) alan eklendi.
+
+## [0.2.0] - 2026-02-21 00:00
+
+### Added
+- **UI Localization**: Translated all user-facing text, buttons, and error messages to Turkish.
+- **Dashboard Cards**: Added modern visual cards for Total Income (Toplam Gelir), Total Expense (Toplam Gider), and Net Balance (GÃ¼ncel Bakiye) at the top of the main window.
+- **Context Menus**: Added right-click context menus to the DataGrids for quick actions.
+- **Transaction Management**: Implemented "Sil" (Delete) feature with a confirmation dialog to remove transactions.
+- **Transaction Management**: Added "DÃ¼zenle" (Edit) feature with a dedicated `EditTransactionWindow`.
+- **Database Seeding**: Translated default database transaction categories to Turkish (MaaÅŸ, Kira, vb.) via EF Core Migrations.
+- **Security (Login)**: Introduced `LoginWindow` requiring users to define and enter a password to prevent unauthorized access.
+- **Security (Two-Tier Encryption)**: Implemented AES-256 military-grade encryption for the `Transaction.Description` field in the database.
+- **Security (Recovery)**: Added an automated 16-character Recovery Code generation and display system during first launch.
+- **Security (Reset)**: Created `PasswordResetWindow` allowing users to securely reset their password using the Recovery Code without losing their encrypted data.
+- **UI Enhancements**: Added color-coding (Green for Income, Red for Expense) and currency formatting to the transaction amounts in the Dashboard DataGrids for better visual scannability.
+
+## [0.1.0] - 2026-02-18 22:58
+
+### Added
+- Initial project structure created.
+- **FinTrack.Core**: Class Library for business logic.
+- **FinTrack.Data**: Class Library for database access (SQL Server Express).
+- **FinTrack.WPF**: Windows Presentation Foundation application for UI.
+- **Database**: Configured Entity Framework Core with SQL Server.
+- **UI**: Added 'Add Transaction' window with category selection.
+- **Transactions**: Implemented saving new transactions to SQL Server.
+- **Dashboard**: Redesigned to show Income (Alacak) and Expense (BorÃ§) side-by-side.
+- **Dashboard**: Added total balance calculation to status bar.
+- **System**: Reverted to .NET 10 (Preview) per user request.
+
+---
+
+## ğŸ“¦ ArÅŸiv: FinTrack â†’ Avalonia UI GeÃ§iÅŸ PlanÄ±
+
+*Not: Bu bÃ¶lÃ¼m, uygulamanÄ±n WPF'ten platform baÄŸÄ±msÄ±z Avalonia UI altyapÄ±sÄ±na geÃ§iÅŸini belgeleyen orijinal plandan aktarÄ±lmÄ±ÅŸtÄ±r.*
+
+- **BaÅŸlangÄ±Ã§:** 2026-05-10
+- **Hedef Platformlar:** Windows (x64), Linux (x64), Android (arm64)
+
+### Faz 0: Proje AltyapÄ±sÄ± (Temel Kurulum) `[DONE]`
+- `dotnet new install Avalonia.Templates` ile ÅŸablonlarÄ± yÃ¼kle
+- `FinTrack.Avalonia` projesini oluÅŸtur (`net10.0`)
+- Core ve Data projelerini referans ekle
+- NuGet paketlerini yÃ¼kle (`CommunityToolkit.Mvvm`, `SQLCipher`)
+- Global exception handling ve SQLite init ayarlarÄ±nÄ± yap
+
+### Faz 1-11: MVVM, UI, VeritabanÄ± ve Modernizasyon `[DONE]`
+- Avalonia Ã¼zerinde cross-platform MVVM mimarisi kuruldu.
+- WPF projesindeki tÃ¼m View ve ViewModel'ler modern Avalonia yapÄ±sÄ±na taÅŸÄ±ndÄ±.
+- Ã–zel diyaloglar, tema desteÄŸi, otomatik kilitleme ve platform baÄŸÄ±msÄ±z dosya yÃ¶neticileri eklendi.
+
+### Faz 12: Build, Test & DaÄŸÄ±tÄ±m (Gelecek Planlar)
+- `FinTrack.Tests` (xUnit) projesini kur
+- GitHub Actions CI/CD pipeline yapÄ±landÄ±r
+- `.apk` (Android) ve `.AppImage` (Linux) Ã§Ä±ktÄ±larÄ±nÄ± doÄŸrula
+
+### ğŸ› ï¸ Teknik Notlar
+- **UI Framework:** Avalonia UI 12.0.2
+- **Mimar:** MVVM (CommunityToolkit.Mvvm)
+- **Render Motoru:** Skia (Cross-platform performans iÃ§in)
+- **VeritabanÄ±:** SQLCipher (Åifreleme korunacak)
+

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using FinTrack.Core.Models;
 using FinTrack.Data;
 using System.Linq;
+using FinTrack.Core.Helpers;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -40,7 +41,7 @@ public partial class ManageInvestmentsViewModel : ViewModelBase
         catch (System.Exception ex)
         {
             // Error handling placeholder
-            System.Diagnostics.Debug.WriteLine(ex.Message);
+            AppLogger.Error(ex.Message);
         }
     }
 

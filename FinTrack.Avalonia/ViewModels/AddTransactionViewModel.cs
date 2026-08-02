@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using FinTrack.Core.Models;
 using FinTrack.Data;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -107,7 +108,7 @@ public partial class AddTransactionViewModel : ViewModelBase
 
         // Load Payment Methods
         PaymentMethods.Clear();
-        PaymentMethods.Add(new PaymentItemViewModel { Label = "💵 Nakit", Card = null, Bank = null });
+        PaymentMethods.Add(new PaymentItemViewModel { Label = LocalizationService.GetString("AddTransaction_Cash"), Card = null, Bank = null });
 
         var bankAccounts = await _context.BankAccounts.Where(b => b.IsActive).OrderBy(b => b.BankName).ThenBy(b => b.AccountName).ToListAsync();
         foreach (var bank in bankAccounts)
@@ -134,13 +135,13 @@ public partial class AddTransactionViewModel : ViewModelBase
         string cleanAmount = AmountText.Replace(".", "").Replace(",", ".");
         if (!decimal.TryParse(cleanAmount, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal totalAmount) || totalAmount <= 0)
         {
-            ShowError("Lütfen geçerli bir tutar giriniz.");
+            ShowError(LocalizationService.GetString("Global_ErrInvalidAmount"));
             return;
         }
 
         if (SelectedCategory == null)
         {
-            ShowError("Lütfen bir kategori seçiniz.");
+            ShowError(LocalizationService.GetString("AddTransaction_ErrCategory"));
             return;
         }
 
@@ -173,7 +174,7 @@ public partial class AddTransactionViewModel : ViewModelBase
                         Date = startDate.AddMonths(i),
                         Amount = installmentAmount,
                         CategoryId = SelectedCategory.Id,
-                        Description = $"{baseDescription} ({i + 1}/{installmentCount} Taksit)".Trim(),
+                        Description = string.Format(LocalizationService.GetString("AddTransaction_InstallmentFormat"), baseDescription, i + 1, installmentCount).Trim(),
                         CreditCardAccountId = cardId,
                         BankAccountId = bankId,
                         GroupId = groupId
@@ -201,7 +202,7 @@ public partial class AddTransactionViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            ShowError($"İşlem kaydedilirken hata oluştu: {ex.Message}");
+            ShowError(string.Format(LocalizationService.GetString("AddTransaction_ErrSave"), ex.Message));
         }
     }
 

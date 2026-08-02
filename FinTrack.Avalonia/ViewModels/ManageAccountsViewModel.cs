@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -56,10 +57,10 @@ public partial class ManageAccountsViewModel : ViewModelBase
     private bool _isEditing = false;
 
     [ObservableProperty]
-    private string _formTitle = "Yeni Banka Hesabı Ekle";
+    private string _formTitle = LocalizationService.GetString("ManageAccounts_AddTitle");
 
     [ObservableProperty]
-    private string _submitButtonText = "Hesap Ekle";
+    private string _submitButtonText = LocalizationService.GetString("ManageAccounts_AddButton");
 
     private BankAccount? _editingAccount = null;
 
@@ -68,7 +69,7 @@ public partial class ManageAccountsViewModel : ViewModelBase
 
     public ManageAccountsViewModel()
     {
-        _context = App.Services?.GetService<AppDbContext>();
+        _context = AppDbContext.CreateNew();
         _ = LoadAccountsAsync();
     }
 
@@ -98,7 +99,7 @@ public partial class ManageAccountsViewModel : ViewModelBase
 
         if (string.IsNullOrWhiteSpace(NewBankName) || string.IsNullOrWhiteSpace(NewAccountName))
         {
-            ShowError("Banka Adı ve Hesap Adı zorunludur.");
+            ShowError(LocalizationService.GetString("ManageAccounts_ErrNameReq"));
             return;
         }
 
@@ -161,8 +162,8 @@ public partial class ManageAccountsViewModel : ViewModelBase
     {
         _editingAccount = account;
         IsEditing = true;
-        FormTitle = "Hesabı Düzenle";
-        SubmitButtonText = "Güncelle";
+        FormTitle = LocalizationService.GetString("ManageAccounts_EditTitle");
+        SubmitButtonText = LocalizationService.GetString("ManageAccounts_UpdateButton");
 
         NewBankName = account.BankName;
         NewAccountName = account.AccountName;
@@ -178,8 +179,8 @@ public partial class ManageAccountsViewModel : ViewModelBase
     {
         _editingAccount = null;
         IsEditing = false;
-        FormTitle = "Yeni Banka Hesabı Ekle";
-        SubmitButtonText = "Hesap Ekle";
+        FormTitle = LocalizationService.GetString("ManageAccounts_AddTitle");
+        SubmitButtonText = LocalizationService.GetString("ManageAccounts_AddButton");
 
         NewBankName = string.Empty;
         NewAccountName = string.Empty;
@@ -212,7 +213,7 @@ public partial class ManageAccountsViewModel : ViewModelBase
         bool hasTransactions = await _context.Transactions.AnyAsync(t => t.BankAccountId == account.Id);
         if (hasTransactions)
         {
-            ShowError("Bu hesaba ait işlemler bulunduğu için hesap silinemez. Bunun yerine hesabı pasif yapabilirsiniz.");
+            ShowError(LocalizationService.GetString("ManageAccounts_ErrHasTx"));
             return;
         }
 

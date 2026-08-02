@@ -14,7 +14,8 @@ namespace FinTrack.Data.Services
     /// </summary>
     public class InflationService
     {
-        private readonly AppDbContext _db;
+        // Empty constructor for fallback
+        public InflationService() { }
 
         // TÜİK open-data endpoint — no API key required.
         // Series TP.FE.OKTG01 = monthly TÜFE annual change rate.
@@ -46,7 +47,8 @@ namespace FinTrack.Data.Services
 
         public InflationService(AppDbContext db)
         {
-            _db = db;
+            // We don't store db to avoid ObjectDisposedException on view switch.
+            // Using short-lived contexts instead.
         }
 
         // ── Public API ────────────────────────────────────────────────────────
@@ -91,10 +93,18 @@ namespace FinTrack.Data.Services
         private async Task<double?> TryGetSingleMonthAsync(int year, int month)
         {
             // 1. DB cache
-            var cached = _db.InflationCaches
-                            .FirstOrDefault(i => i.Year == year && i.Month == month);
-            if (cached != null)
-                return cached.CpiRate;
+            try
+            {
+                using var db = AppDbContext.CreateNew();
+                if (db != null)
+                {
+                    var cached = db.InflationCaches
+                                    .FirstOrDefault(i => i.Year == year && i.Month == month);
+                    if (cached != null)
+                        return cached.CpiRate;
+                }
+            }
+            catch { }
 
             // 2. TÜİK API
             if (!_isApiDown)
@@ -138,10 +148,17 @@ namespace FinTrack.Data.Services
         /// <summary>Returns the last cached entry's fetch timestamp, or null.</summary>
         public DateTime? LastFetchedAt()
         {
-            return _db.InflationCaches
-                      .OrderByDescending(i => i.FetchedAt)
-                      .Select(i => (DateTime?)i.FetchedAt)
-                      .FirstOrDefault();
+            try
+            {
+                using var db = AppDbContext.CreateNew();
+                if (db == null) return null;
+                
+                return db.InflationCaches
+                          .OrderByDescending(i => i.FetchedAt)
+                          .Select(i => (DateTime?)i.FetchedAt)
+                          .FirstOrDefault();
+            }
+            catch { return null; }
         }
 
 
@@ -194,21 +211,28 @@ namespace FinTrack.Data.Services
 
         private void UpsertCache(int year, int month, double rate)
         {
-            var existing = _db.InflationCaches
-                              .FirstOrDefault(i => i.Year == year && i.Month == month);
-            if (existing == null)
+            try
             {
-                _db.InflationCaches.Add(new InflationCache
+                using var db = AppDbContext.CreateNew();
+                if (db == null) return;
+
+                var existing = db.InflationCaches
+                                  .FirstOrDefault(i => i.Year == year && i.Month == month);
+                if (existing == null)
                 {
-                    Year = year, Month = month, CpiRate = rate, FetchedAt = DateTime.UtcNow
-                });
+                    db.InflationCaches.Add(new InflationCache
+                    {
+                        Year = year, Month = month, CpiRate = rate, FetchedAt = DateTime.UtcNow
+                    });
+                }
+                else
+                {
+                    existing.CpiRate = rate;
+                    existing.FetchedAt = DateTime.UtcNow;
+                }
+                db.SaveChanges();
             }
-            else
-            {
-                existing.CpiRate = rate;
-                existing.FetchedAt = DateTime.UtcNow;
-            }
-            _db.SaveChanges();
+            catch { }
         }
     }
 }

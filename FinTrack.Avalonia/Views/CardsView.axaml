@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:FinTrack.Avalonia.ViewModels"
              xmlns:conv="using:Avalonia.Data.Converters"
+             xmlns:loc="using:FinTrack.Avalonia.Localization"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="FinTrack.Avalonia.Views.CardsView"
              x:DataType="vm:CardsViewModel"
@@ -11,19 +12,19 @@
 
     <Grid Margin="10" RowDefinitions="Auto,Auto,*">
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,15">
-            <TextBlock Grid.Column="0" Text="KREDİ KARTLARIM" FontSize="16" FontWeight="Bold" Foreground="#34495E" VerticalAlignment="Center"/>
-            <Button Grid.Column="1" Content="Kartları Yönet" Command="{Binding ManageCardsCommand}" Background="Transparent" Foreground="#3498DB" FontWeight="SemiBold"/>
+            <TextBlock Grid.Column="0" Text="{loc:Translate Cards_MyCreditCards}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+            <Button Grid.Column="1" Content="{loc:Translate Cards_ManageCards}" Command="{Binding ManageCardsCommand}" Background="Transparent" Foreground="#3498DB" FontWeight="SemiBold"/>
         </Grid>
 
         <!-- Summary Section -->
-        <Border Grid.Row="1" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20" Margin="0,0,0,20">
+        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,0,10">
             <Grid ColumnDefinitions="*,*">
                 <StackPanel Grid.Column="0">
-                    <TextBlock Text="Toplam Kredi Limiti" FontSize="13" Foreground="#7F8C8D" FontWeight="SemiBold"/>
-                    <TextBlock Text="{Binding TotalCreditLimit, StringFormat='{}{0:C0}'}" FontSize="24" FontWeight="Bold" Foreground="#2C3E50"/>
+                    <TextBlock Text="{loc:Translate Cards_TotalCreditLimit}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding TotalCreditLimit, StringFormat='{}{0:C0}'}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1">
-                    <TextBlock Text="Toplam Güncel Borç" FontSize="13" Foreground="#7F8C8D" FontWeight="SemiBold"/>
+                    <TextBlock Text="{loc:Translate Cards_TotalCurrentDebt}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="SemiBold"/>
                     <TextBlock Text="{Binding TotalCreditDebt, StringFormat='{}{0:C2}'}" FontSize="24" FontWeight="Bold" Foreground="#E74C3C"/>
                 </StackPanel>
             </Grid>
@@ -33,16 +34,16 @@
             <ItemsControl ItemsSource="{Binding CardsList}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:CardItemViewModel">
-                        <Border Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20" Margin="0,0,0,15">
+                        <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10" Margin="0,0,0,15">
                             <Grid ColumnDefinitions="2*,2*,Auto">
                                 
                                 <!-- Card Info -->
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding BankName}" FontSize="13" Foreground="#7F8C8D" FontWeight="SemiBold"/>
-                                    <TextBlock Text="{Binding CardLabel}" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,2,0,0"/>
-                                    <TextBlock Text="{Binding LinkedCardsText}" FontSize="11" Foreground="#95A5A6" Margin="0,2,0,0" IsVisible="{Binding LinkedCardsText, Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"/>
+                                    <TextBlock Text="{Binding BankName}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding CardLabel}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,2,0,0"/>
+                                    <TextBlock Text="{Binding LinkedCardsText}" FontSize="11" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,2,0,0" IsVisible="{Binding LinkedCardsText, Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"/>
                                     
-                                    <TextBlock Text="{Binding StatementDescription}" FontSize="12" Foreground="#34495E" Margin="0,15,0,5"/>
+                                    <TextBlock Text="{Binding StatementDescription}" FontSize="12" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,15,0,5"/>
                                     <Grid ColumnDefinitions="*,Auto">
                                         <ProgressBar Grid.Column="0" Value="{Binding ProgressValue}" Minimum="0" Maximum="100" Height="6" Foreground="{Binding ProgressColor}" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                         <TextBlock Grid.Column="1" Text="{Binding DaysRemainingText}" FontSize="11" Foreground="{Binding ProgressColor}" FontWeight="Bold"/>
@@ -52,20 +53,21 @@
                                 <!-- Debt & Limit -->
                                 <StackPanel Grid.Column="1" Margin="40,0,0,0" VerticalAlignment="Center">
                                     <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,5">
-                                        <TextBlock Grid.Column="0" Text="Güncel Borç:" FontSize="13" Foreground="#7F8C8D"/>
+                                        <TextBlock Grid.Column="0" Text="{loc:Translate Cards_CurrentDebt}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}"/>
                                         <TextBlock Grid.Column="1" Text="{Binding TotalDebt, StringFormat='{}{0:C2}'}" FontSize="18" FontWeight="Bold" Foreground="#E74C3C"/>
                                     </Grid>
                                     <Grid ColumnDefinitions="*,Auto">
-                                        <TextBlock Grid.Column="0" Text="Kalan Limit:" FontSize="12" Foreground="#95A5A6"/>
+                                        <TextBlock Grid.Column="0" Text="{loc:Translate Cards_RemainingLimit}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
                                         <TextBlock Grid.Column="1" Text="{Binding RemainingLimit, StringFormat='{}{0:C0}'}" FontSize="12" Foreground="#27AE60" FontWeight="SemiBold"/>
                                     </Grid>
-                                    <ProgressBar Value="{Binding LimitProgressValue}" Minimum="0" Maximum="100" Height="4" Foreground="#E74C3C" Background="#ECF0F1" Margin="0,5,0,0"/>
+                                    <ProgressBar Value="{Binding LimitProgressValue}" Minimum="0" Maximum="100" Height="4" Foreground="#E74C3C" Background="{DynamicResource CardSecondaryBackgroundBrush}" Margin="0,5,0,0"/>
                                 </StackPanel>
 
                                 <!-- Actions -->
                                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="30,0,0,0">
-                                    <Button Content="Borç Öde" Background="#27AE60" Foreground="White" CornerRadius="6" Padding="15,8" IsEnabled="{Binding CanPay}" Command="{Binding #RootControl.((vm:CardsViewModel)DataContext).PayDebtCommand}" CommandParameter="{Binding CardId}"/>
-                                    <Button Content="Detaylar" Background="#F4F6F9" Foreground="#34495E" CornerRadius="6" Padding="15,8" Command="{Binding #RootControl.((vm:CardsViewModel)DataContext).ShowDetailsCommand}" CommandParameter="{Binding CardId}"/>
+                                    <Button Content="🤖 Ekstre Yükle" Background="#8E44AD" Foreground="White" CornerRadius="6" Padding="10,5" Command="{Binding #RootControl.((vm:CardsViewModel)DataContext).UploadStatementCommand}" CommandParameter="{Binding CardId}" ToolTip.Tip="PDF veya Görsel ekstre yükleyip otomatik işlemleri çıkar"/>
+                                    <Button Content="{loc:Translate Cards_PayDebt}" Background="#27AE60" Foreground="White" CornerRadius="6" Padding="10,5" IsEnabled="{Binding CanPay}" Command="{Binding #RootControl.((vm:CardsViewModel)DataContext).PayDebtCommand}" CommandParameter="{Binding CardId}"/>
+                                    <Button Content="{loc:Translate General_Details}" Background="{DynamicResource CardSecondaryBackgroundBrush}" Foreground="{DynamicResource PrimaryTextBrush}" CornerRadius="6" Padding="10,5" Command="{Binding #RootControl.((vm:CardsViewModel)DataContext).ShowDetailsCommand}" CommandParameter="{Binding CardId}"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -73,6 +75,14 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+        
+        <!-- Loading Overlay -->
+        <Grid Grid.RowSpan="3" IsVisible="{Binding IsLoading}" Background="#80000000" ZIndex="100">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15">
+                <ProgressBar IsIndeterminate="True" Foreground="#3498DB" Width="200" Height="4"/>
+                <TextBlock Text="Ekstre analiz ediliyor, lütfen bekleyin..." Foreground="White" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 
 </UserControl>

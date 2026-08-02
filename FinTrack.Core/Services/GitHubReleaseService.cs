@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
+using FinTrack.Core.Helpers;
 
 namespace FinTrack.Core.Services
 {
@@ -94,7 +95,7 @@ namespace FinTrack.Core.Services
             catch (Exception ex)
             {
                 // Optionally log the exception
-                System.Diagnostics.Debug.WriteLine($"Update check failed: {ex.Message}");
+                AppLogger.Error($"Update check failed: {ex.Message}");
                 return new GitHubReleaseInfo { IsUpdateAvailable = false };
             }
         }

@@ -26,6 +26,8 @@ public partial class SettingsView : UserControl
             // Wire up events for View-side operations
             vm.ShowConfirmDialog += ShowConfirmDialogAsync;
             vm.RequestFolderSelection += RequestFolderSelectionAsync;
+            vm.RequestFileSaveSelection += RequestFileSaveSelectionAsync;
+            vm.RequestFileOpenSelection += RequestFileOpenSelectionAsync;
             vm.LoadCategories();
         }
     }
@@ -59,6 +61,48 @@ public partial class SettingsView : UserControl
             if (result.Count > 0)
             {
                 return result[0].Path.LocalPath;
+            }
+        }
+        return null;
+    }
+
+    private async System.Threading.Tasks.Task<string?> RequestFileSaveSelectionAsync(string title)
+    {
+        var parentWindow = (this.VisualRoot as Window) 
+            ?? (global::Avalonia.Application.Current?.ApplicationLifetime as global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+
+        if (parentWindow != null)
+        {
+            var file = await parentWindow.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                Title = title,
+                SuggestedFileName = "FinTrackBackup",
+                DefaultExtension = "json",
+                FileTypeChoices = new[] { new FilePickerFileType("JSON Dosyası") { Patterns = new[] { "*.json" } } }
+            });
+
+            return file?.Path.LocalPath;
+        }
+        return null;
+    }
+
+    private async System.Threading.Tasks.Task<string?> RequestFileOpenSelectionAsync(string title)
+    {
+        var parentWindow = (this.VisualRoot as Window) 
+            ?? (global::Avalonia.Application.Current?.ApplicationLifetime as global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+
+        if (parentWindow != null)
+        {
+            var files = await parentWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = title,
+                AllowMultiple = false,
+                FileTypeFilter = new[] { new FilePickerFileType("JSON Dosyası") { Patterns = new[] { "*.json" } } }
+            });
+
+            if (files.Count > 0)
+            {
+                return files[0].Path.LocalPath;
             }
         }
         return null;
@@ -99,7 +143,7 @@ public partial class SettingsView : UserControl
 
         if (category == null) return;
 
-        var db = App.Services?.GetService<AppDbContext>();
+        var db = AppDbContext.CreateNew();
         if (db == null) return;
 
         var parentWindow = (this.VisualRoot as Window) 

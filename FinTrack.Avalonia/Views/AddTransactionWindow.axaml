@@ -1,14 +1,15 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window SizeToContent="WidthAndHeight" xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
         x:Class="FinTrack.Avalonia.Views.AddTransactionWindow"
         x:DataType="vm:AddTransactionViewModel"
-        Title="İşlem Ekle" Height="440" Width="420"
-        WindowStartupLocation="CenterOwner" CanResize="False" Background="#F4F6F9">
+        Title="{loc:Translate AddTransaction_Title}"
+        WindowStartupLocation="CenterOwner" CanResize="False" Background="{DynamicResource CardSecondaryBackgroundBrush}">
     
-    <Grid Margin="20">
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
+            <ColumnDefinition/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -22,27 +23,27 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Yeni İşlem Ekle" Grid.ColumnSpan="2" FontSize="18" FontWeight="Bold" Margin="0,0,0,20" Foreground="#2C3E50"/>
+        <TextBlock Text="{loc:Translate AddTransaction_Title}" Grid.ColumnSpan="2" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource PrimaryTextBrush}"/>
 
         <!-- Error Message -->
         <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding ErrorMessage}" Foreground="Red" IsVisible="{Binding HasError}" TextWrapping="Wrap" Margin="0,0,0,10"/>
 
         <!-- Date -->
-        <TextBlock Text="Tarih:" Grid.Row="2" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E"/>
+        <TextBlock Text="{loc:Translate Global_Date}" Grid.Row="2" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}"/>
         <CalendarDatePicker Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" HorizontalAlignment="Stretch" SelectedDate="{Binding SelectedDate}"/>
 
         <!-- Amount -->
-        <TextBlock Text="Tutar:" Grid.Row="3" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E"/>
-        <TextBox Name="AmountTextBox" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" Padding="8" Text="{Binding AmountText}" PlaceholderText="Örn: 150.50" LostFocus="AmountTextBox_LostFocus"/>
+        <TextBlock Text="{loc:Translate Global_Amount}" Grid.Row="3" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" Padding="8" Text="{Binding AmountText}" PlaceholderText="150,50"/>
 
         <!-- Category -->
-        <TextBlock Text="Kategori:" Grid.Row="4" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#34495E"/>
+        <TextBlock Text="{loc:Translate Global_Category}" Grid.Row="4" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}"/>
         <ComboBox Grid.Row="4" Grid.Column="1" Margin="0,0,0,10" HorizontalAlignment="Stretch" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <Border Width="{Binding IndentWidth}"/>
-                        <Ellipse Width="10" Height="10" Margin="0,0,8,0" VerticalAlignment="Center" Fill="{Binding TypeColor}"/>
+                        <Ellipse Margin="0,0,8,0" VerticalAlignment="Center" Fill="{Binding TypeColor}"/>
                         <TextBlock Text="{Binding TypeIcon}" Margin="0,0,5,0" VerticalAlignment="Center" FontSize="12"/>
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="{Binding FontWeight}" Foreground="{Binding ForegroundColor}"/>
                     </StackPanel>
@@ -51,7 +52,7 @@
         </ComboBox>
 
         <!-- Payment Method -->
-        <TextBlock Text="Ödeme Yöntemi:" Grid.Row="5" VerticalAlignment="Top" Margin="0,8,0,0" FontWeight="SemiBold" Foreground="#34495E"/>
+        <TextBlock Text="{loc:Translate AddTransaction_PaymentMethod}" Grid.Row="5" VerticalAlignment="Top" Margin="0,8,0,0" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}"/>
         <StackPanel Grid.Row="5" Grid.Column="1" Margin="0,0,0,10">
             <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding PaymentMethods}" SelectedItem="{Binding SelectedPaymentMethod}">
                 <ComboBox.ItemTemplate>
@@ -63,20 +64,20 @@
             
             <!-- Installment Toggle -->
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0" IsVisible="{Binding IsInstallmentAllowed}">
-                <CheckBox Content="Taksitli İşlem" VerticalAlignment="Center" Cursor="Hand" IsChecked="{Binding IsInstallment}"/>
-                <TextBlock Text="Taksit:" Margin="10,0,5,0" VerticalAlignment="Center" IsVisible="{Binding IsInstallment}"/>
-                <ComboBox Width="60" IsVisible="{Binding IsInstallment}" ItemsSource="{Binding InstallmentOptions}" SelectedItem="{Binding SelectedInstallmentCount}"/>
+                <CheckBox Content="{loc:Translate AddTransaction_InstallmentCheck}" VerticalAlignment="Center" Cursor="Hand" IsChecked="{Binding IsInstallment}"/>
+                <TextBlock Text="{loc:Translate AddTransaction_InstallmentLabel}" Margin="10,0,5,0" VerticalAlignment="Center" IsVisible="{Binding IsInstallment}"/>
+                <ComboBox IsVisible="{Binding IsInstallment}" ItemsSource="{Binding InstallmentOptions}" SelectedItem="{Binding SelectedInstallmentCount}"/>
             </StackPanel>
         </StackPanel>
 
         <!-- Description -->
-        <TextBlock Text="Açıklama:" Grid.Row="6" VerticalAlignment="Top" Margin="0,5,0,0" FontWeight="SemiBold" Foreground="#34495E"/>
+        <TextBlock Text="{loc:Translate Global_Description}" Grid.Row="6" VerticalAlignment="Top" Margin="0,5,0,0" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}"/>
         <TextBox Grid.Row="6" Grid.Column="1" Margin="0,0,0,10" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding Description}"/>
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="İptal" Width="90" Margin="0,0,10,0" Padding="10" Command="{Binding CancelCommand}" Background="#ECF0F1" BorderThickness="0" HorizontalContentAlignment="Center"/>
-            <Button Content="Kaydet" Width="100" Padding="10" Command="{Binding SaveCommand}" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" HorizontalContentAlignment="Center"/>
+        <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button Content="{loc:Translate Global_Cancel}" Margin="0,0,10,0" Padding="10" Command="{Binding CancelCommand}" Background="{DynamicResource CardSecondaryBackgroundBrush}" BorderThickness="0" HorizontalContentAlignment="Center"/>
+            <Button Content="{loc:Translate Global_Save}" Padding="10" Command="{Binding SaveCommand}" Background="#27AE60" Foreground="White" FontWeight="Bold" BorderThickness="0" HorizontalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

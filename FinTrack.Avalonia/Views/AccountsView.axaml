@@ -3,54 +3,56 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             xmlns:loc="using:FinTrack.Avalonia.Localization"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
              x:Class="FinTrack.Avalonia.Views.AccountsView"
              x:DataType="vm:AccountsViewModel">
 
     <Grid Margin="10" RowDefinitions="Auto,*">
         
-        <StackPanel Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock Text="CÜZDAN (NAKİT)" FontSize="16" FontWeight="Bold" Foreground="#34495E" Margin="0,0,0,10"/>
-            <Border Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20">
+        <StackPanel Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock Text="{loc:Translate Accounts_WalletCash}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,10"/>
+            <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="10">
                 <Grid ColumnDefinitions="*,Auto,Auto">
                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                        <TextBlock Text="Toplam Nakit Bakiye" FontSize="14" Foreground="#7F8C8D" Margin="0,0,0,5"/>
+                        <TextBlock Text="{loc:Translate Accounts_TotalCashBalance}" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,0,0,5"/>
                         <TextBlock Text="{Binding CashBalanceDisplay}" FontSize="24" FontWeight="Bold" Foreground="#27AE60"/>
                     </StackPanel>
                     
-                    <Button Grid.Column="1" Content="Transfer" Command="{Binding TransferCommand}" CommandParameter="{x:Null}" Background="#F39C12" Foreground="White" CornerRadius="6" Padding="15,8" Margin="0,0,10,0"/>
-                    <Button Grid.Column="2" Content="Detaylar" Command="{Binding ShowDetailsCommand}" CommandParameter="{x:Null}" Background="#3498DB" Foreground="White" CornerRadius="6" Padding="15,8"/>
+                    <Button Grid.Column="1" Content="{loc:Translate General_Transfer}" Command="{Binding TransferCommand}" CommandParameter="{x:Null}" Background="#F39C12" Foreground="White" CornerRadius="6" Padding="10,5" Margin="0,0,10,0"/>
+                    <Button Grid.Column="2" Content="{loc:Translate General_Details}" Command="{Binding ShowDetailsCommand}" CommandParameter="{x:Null}" Background="#3498DB" Foreground="White" CornerRadius="6" Padding="10,5"/>
                 </Grid>
             </Border>
         </StackPanel>
 
         <Grid Grid.Row="1" RowDefinitions="Auto,*">
             <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
-                <TextBlock Grid.Column="0" Text="BANKA HESAPLARIM" FontSize="16" FontWeight="Bold" Foreground="#34495E" VerticalAlignment="Center"/>
-                <Button Grid.Column="1" Content="Hesapları Yönet" Command="{Binding ManageAccountsCommand}" Background="Transparent" Foreground="#3498DB" FontWeight="SemiBold"/>
+                <TextBlock Grid.Column="0" Text="{loc:Translate Accounts_MyBankAccounts}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="{loc:Translate Accounts_ManageAccounts}" Command="{Binding ManageAccountsCommand}" Background="Transparent" Foreground="#3498DB" FontWeight="SemiBold"/>
             </Grid>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding AccountsList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="15" Margin="0,0,0,10">
+                            <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="8" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="15" Margin="0,0,0,10">
                                 <Grid ColumnDefinitions="*,Auto,Auto">
                                     <StackPanel Grid.Column="0">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <TextBlock Text="{Binding Icon}" FontSize="18" VerticalAlignment="Center"/>
-                                            <TextBlock Text="{Binding BankName}" FontSize="15" FontWeight="Bold" Foreground="#2C3E50" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding BankName}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
                                         </StackPanel>
-                                        <TextBlock Text="{Binding AccountName}" FontSize="13" Foreground="#7F8C8D" Margin="0,4,0,2"/>
+                                        <TextBlock Text="{Binding AccountName}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,4,0,2"/>
                                         <TextBlock Text="{Binding IBAN}" FontSize="12" Foreground="#BDC3C7" FontFamily="Consolas"/>
                                     </StackPanel>
                                     
                                     <TextBlock Grid.Column="1" Text="{Binding CurrentBalance, StringFormat='{}{0:C2}'}" 
-                                               FontSize="18" FontWeight="Bold" Foreground="#2C3E50" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                                               FontSize="18" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                     
                                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                                        <Button Content="Transfer" Command="{Binding $parent[UserControl].((vm:AccountsViewModel)DataContext).TransferCommand}" CommandParameter="{Binding AccountId}" Background="#F4F6F9" Foreground="#34495E" CornerRadius="4"/>
-                                        <Button Content="Detaylar" Command="{Binding $parent[UserControl].((vm:AccountsViewModel)DataContext).ShowDetailsCommand}" CommandParameter="{Binding AccountId}" Background="#F4F6F9" Foreground="#34495E" CornerRadius="4"/>
+                                        <Button Content="🤖 Ekstre Yükle" Command="{Binding $parent[UserControl].((vm:AccountsViewModel)DataContext).UploadStatementCommand}" CommandParameter="{Binding AccountId}" Background="#8E44AD" Foreground="White" CornerRadius="4" ToolTip.Tip="PDF veya Görsel ekstre yükleyip otomatik işlemleri çıkar"/>
+                                        <Button Content="{loc:Translate General_Transfer}" Command="{Binding $parent[UserControl].((vm:AccountsViewModel)DataContext).TransferCommand}" CommandParameter="{Binding AccountId}" Background="{DynamicResource CardSecondaryBackgroundBrush}" Foreground="{DynamicResource PrimaryTextBrush}" CornerRadius="4"/>
+                                        <Button Content="{loc:Translate General_Details}" Command="{Binding $parent[UserControl].((vm:AccountsViewModel)DataContext).ShowDetailsCommand}" CommandParameter="{Binding AccountId}" Background="{DynamicResource CardSecondaryBackgroundBrush}" Foreground="{DynamicResource PrimaryTextBrush}" CornerRadius="4"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -58,6 +60,14 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
+        </Grid>
+        
+        <!-- Loading Overlay -->
+        <Grid Grid.RowSpan="2" IsVisible="{Binding IsLoading}" Background="#80000000" ZIndex="100">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15">
+                <ProgressBar IsIndeterminate="True" Foreground="#3498DB" Width="200" Height="4"/>
+                <TextBlock Text="Ekstre analiz ediliyor, lütfen bekleyin..." Foreground="White" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+            </StackPanel>
         </Grid>
     </Grid>
 

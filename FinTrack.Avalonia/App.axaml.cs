@@ -10,6 +10,7 @@ using FinTrack.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using FinTrack.Core.Helpers;
 
 namespace FinTrack.Avalonia;
 
@@ -39,7 +40,7 @@ public partial class App : Application
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
         {
             var exception = e.ExceptionObject as Exception;
-            System.Diagnostics.Debug.WriteLine($"Unhandled Exception:\n\n{exception?.Message}\n\nStack:\n{exception?.StackTrace}");
+            AppLogger.Error($"Unhandled Exception:\n\n{exception?.Message}\n\nStack:\n{exception?.StackTrace}");
         };
 
         var services = new ServiceCollection();

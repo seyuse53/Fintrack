@@ -44,6 +44,29 @@ public partial class SettingsViewModel : ViewModelBase
         }
     }
 
+    // ==================== LANGUAGE SETTINGS ====================
+
+    [ObservableProperty]
+    private List<string> _availableLanguages = new() { "Türkçe", "English" };
+
+    [ObservableProperty]
+    private string _selectedLanguage = "Türkçe";
+
+    partial void OnSelectedLanguageChanged(string value)
+    {
+        string langCode = value == "English" ? "en" : "tr";
+        SettingsManager.SetLanguagePreference(langCode);
+        FinTrack.Avalonia.Localization.LocalizationService.Instance.SetLanguage(langCode);
+        
+        if (ShowConfirmDialog != null)
+        {
+            _ = ShowConfirmDialog.Invoke(
+                FinTrack.Avalonia.Localization.LocalizationService.GetString("Global_Info"), 
+                FinTrack.Avalonia.Localization.LocalizationService.GetString("Settings_LanguageChangedRestart"), 
+                FinTrack.Avalonia.Localization.LocalizationService.GetString("Global_OK"), "");
+        }
+    }
+
     // ==================== SECURITY TAB ====================
 
     [ObservableProperty]
@@ -147,6 +170,9 @@ public partial class SettingsViewModel : ViewModelBase
     private string _customApiUrl = string.Empty;
 
     [ObservableProperty]
+    private string _geminiApiKey = string.Empty;
+
+    [ObservableProperty]
     private bool _showCustomApiPanel;
 
     [ObservableProperty]
@@ -217,7 +243,8 @@ public partial class SettingsViewModel : ViewModelBase
 
     public event Func<string, string, string, string, System.Threading.Tasks.Task<bool?>>? ShowConfirmDialog;
     public event Func<string, System.Threading.Tasks.Task<string?>>? RequestFolderSelection;
-
+    public event Func<string, System.Threading.Tasks.Task<string?>>? RequestFileSaveSelection;
+    public event Func<string, System.Threading.Tasks.Task<string?>>? RequestFileOpenSelection;
     // ==================== CONSTRUCTOR ====================
 
     public SettingsViewModel()
@@ -230,6 +257,8 @@ public partial class SettingsViewModel : ViewModelBase
     private void LoadData()
     {
         SelectedTheme = SettingsManager.GetThemePreference();
+        string langCode = SettingsManager.GetLanguagePreference();
+        SelectedLanguage = (langCode == "en-US" || langCode == "en") ? "English" : "Türkçe";
         LoadVersionHistory();
         
         // Security
@@ -248,6 +277,7 @@ public partial class SettingsViewModel : ViewModelBase
             FonProviderIndex = (int)settings.FonProvider;
             DigerProviderIndex = (int)settings.DigerProvider;
             CustomApiUrl = SettingsManager.GetCustomApiUrl() ?? string.Empty;
+            GeminiApiKey = SettingsManager.GetGeminiApiKey() ?? string.Empty;
 
             bool hasCustom = settings.DovizProvider == ApiProviderType.Custom
                 || settings.AltinProvider == ApiProviderType.Custom
@@ -368,7 +398,7 @@ public partial class SettingsViewModel : ViewModelBase
     {
         try
         {
-            var db = App.Services?.GetService<AppDbContext>();
+            var db = AppDbContext.CreateNew();
             if (db == null) return;
 
             var categories = db.Categories
@@ -399,7 +429,7 @@ public partial class SettingsViewModel : ViewModelBase
     {
         try
         {
-            var db = App.Services?.GetService<AppDbContext>();
+            var db = AppDbContext.CreateNew();
             if (db == null) return;
 
             TransactionType selectedType = SelectedCategoryTypeIndex == 1
@@ -439,7 +469,7 @@ public partial class SettingsViewModel : ViewModelBase
 
         try
         {
-            var db = App.Services?.GetService<AppDbContext>();
+            var db = AppDbContext.CreateNew();
             if (db == null) return;
 
             int? parentId = null;
@@ -481,7 +511,7 @@ public partial class SettingsViewModel : ViewModelBase
 
         try
         {
-            var db = App.Services?.GetService<AppDbContext>();
+            var db = AppDbContext.CreateNew();
             if (db == null) return;
 
             foreach (var cat in items)
@@ -511,7 +541,7 @@ public partial class SettingsViewModel : ViewModelBase
 
         try
         {
-            var db = App.Services?.GetService<AppDbContext>();
+            var db = AppDbContext.CreateNew();
             if (db == null) return;
 
             foreach (var cat in items)
@@ -648,6 +678,80 @@ public partial class SettingsViewModel : ViewModelBase
             await ShowConfirmDialog.Invoke("Başarılı", "Yedekleme ayarları başarıyla kaydedildi.", "Tamam", "");
     }
 
+    // ==================== DATA EXPORT & IMPORT ====================
+
+    [RelayCommand]
+    private async System.Threading.Tasks.Task ExportDataAsync()
+    {
+        if (ShowConfirmDialog != null)
+        {
+            var confirmed = await ShowConfirmDialog.Invoke(
+                "Güvenlik Uyarısı (Şifresiz Veri)",
+                "FinTrack uygulamasındaki verileriniz normalde yüksek güvenlikli algoritmalarla (AES & SQLCipher) korunmaktadır.\n\nAncak 'Dışa Aktar' işlemini gerçekleştirirseniz, TÜM FİNANSAL VERİLERİNİZ şifresiz, düz metin (JSON) formatında kaydedilecektir. Yani bu dosyayı eline geçiren herkes tüm hesaplarınızı ve bakiyelerinizi çıplak halde okuyabilir.\n\nBu riski kabul ederek verilerinizi şifresiz olarak dışarı çıkarmak istediğinize emin misiniz?",
+                "Evet, Dışa Aktar",
+                "Vazgeç");
+
+            if (confirmed != true) return;
+        }
+
+        if (RequestFileSaveSelection != null)
+        {
+            string? filePath = await RequestFileSaveSelection.Invoke("Verileri JSON Olarak Dışa Aktar");
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                try
+                {
+                    using var context = AppDbContext.CreateNew();
+                    await DataExportImportService.ExportDataAsync(context, filePath);
+
+                    if (ShowConfirmDialog != null)
+                        await ShowConfirmDialog.Invoke("Başarılı", "Tüm verileriniz başarıyla JSON dosyasına aktarıldı.", "Tamam", "");
+                }
+                catch (Exception ex)
+                {
+                    if (ShowConfirmDialog != null)
+                        await ShowConfirmDialog.Invoke("Hata", $"Dışa aktarma sırasında bir hata oluştu: {ex.Message}", "Tamam", "");
+                }
+            }
+        }
+    }
+
+    [RelayCommand]
+    private async System.Threading.Tasks.Task ImportDataAsync()
+    {
+        if (RequestFileOpenSelection != null)
+        {
+            string? filePath = await RequestFileOpenSelection.Invoke("Verileri JSON'dan İçe Aktar");
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                if (ShowConfirmDialog != null)
+                {
+                    var confirmed = await ShowConfirmDialog.Invoke(
+                        "DİKKAT: Veritabanı Silinecek!",
+                        "Seçtiğiniz JSON dosyasındaki veriler içe aktarılacak.\n\nBunu yaparsanız, MEVCUT TÜM VERİLERİNİZ SİLİNECEK ve yerine dosyadaki veriler yazılacaktır.\n\nEmin misiniz?",
+                        "Evet, Sil ve Yükle",
+                        "Vazgeç");
+
+                    if (confirmed != true) return;
+                }
+
+                try
+                {
+                    using var context = AppDbContext.CreateNew();
+                    await DataExportImportService.ImportDataAsync(context, filePath);
+
+                    if (ShowConfirmDialog != null)
+                        await ShowConfirmDialog.Invoke("Başarılı", "Veriler başarıyla içe aktarıldı! Değişikliklerin tüm ekranlara yansıması için uygulamayı kapatıp yeniden açmanızı tavsiye ederiz.", "Tamam", "");
+                }
+                catch (Exception ex)
+                {
+                    if (ShowConfirmDialog != null)
+                        await ShowConfirmDialog.Invoke("Hata", $"İçe aktarma sırasında bir hata oluştu: {ex.Message}", "Tamam", "");
+                }
+            }
+        }
+    }
+
     // ==================== API & TAX COMMANDS ====================
 
     [RelayCommand]
@@ -661,6 +765,7 @@ public partial class SettingsViewModel : ViewModelBase
         var diger = (ApiProviderType)DigerProviderIndex;
 
         SettingsManager.SaveCategoryProviders(doviz, altin, hisse, kripto, fon, diger);
+        SettingsManager.SetGeminiApiKey(GeminiApiKey);
 
         bool hasCustom = doviz == ApiProviderType.Custom || altin == ApiProviderType.Custom
             || hisse == ApiProviderType.Custom || kripto == ApiProviderType.Custom;
@@ -672,7 +777,10 @@ public partial class SettingsViewModel : ViewModelBase
         ShowCustomApiPanel = hasCustom;
 
         if (ShowConfirmDialog != null)
-            await ShowConfirmDialog.Invoke("Başarılı", "API ayarları başarıyla kaydedildi.\n\nYatırımlar sayfasında 'Fiyatları Çek' butonuyla yeni ayarları test edebilirsiniz.", "Tamam", "");
+            await ShowConfirmDialog.Invoke(
+                FinTrack.Avalonia.Localization.LocalizationService.GetString("Global_Success"), 
+                FinTrack.Avalonia.Localization.LocalizationService.GetString("Settings_ApiSaved"), 
+                FinTrack.Avalonia.Localization.LocalizationService.GetString("Global_OK"), "");
     }
 
     [RelayCommand]

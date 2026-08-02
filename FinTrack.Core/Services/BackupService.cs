@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using FinTrack.Core.Helpers;
 
 namespace FinTrack.Core.Services
 {
@@ -36,7 +37,7 @@ namespace FinTrack.Core.Services
             {
                 // In a desktop app on exit, we shouldn't throw to avoid crashing the exit process
                 // Ideally this would be logged to a file if a logger existed
-                System.Diagnostics.Debug.WriteLine($"Backup failed: {ex.Message}");
+                AppLogger.Error($"Backup failed: {ex.Message}");
             }
         }
 
@@ -69,14 +70,14 @@ namespace FinTrack.Core.Services
                         }
                         catch (Exception ex)
                         {
-                            System.Diagnostics.Debug.WriteLine($"Failed to delete old backup {file.Name}: {ex.Message}");
+                            AppLogger.Error($"Failed to delete old backup {file.Name}: {ex.Message}");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Backup cleanup failed: {ex.Message}");
+                AppLogger.Error($"Backup cleanup failed: {ex.Message}");
             }
         }
     }

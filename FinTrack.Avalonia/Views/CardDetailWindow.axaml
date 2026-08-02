@@ -3,79 +3,95 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:FinTrack.Avalonia.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="650" d:DesignHeight="600"
-        Width="650" Height="600"
-        WindowStartupLocation="CenterOwner" CanResize="False" Background="#F4F6F9"
+        xmlns:loc="using:FinTrack.Avalonia.Localization"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        Width="800" Height="650" WindowStartupLocation="CenterOwner" CanResize="True" Background="{DynamicResource CardSecondaryBackgroundBrush}"
         x:Class="FinTrack.Avalonia.Views.CardDetailWindow"
         x:DataType="vm:CardDetailViewModel"
         Title="{Binding CardTitle}"
         Icon="/Assets/app_icon.ico">
 
-    <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
+    <Grid Margin="10" RowDefinitions="Auto,Auto,*,Auto">
         
-        <TextBlock Grid.Row="0" Text="{Binding CardTitle}" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" Foreground="#2C3E50"/>
+        <TextBlock Grid.Row="0" Text="{Binding CardTitle}" FontSize="20" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource PrimaryTextBrush}"/>
         
         <!-- Card Limits & Debt -->
-        <Border Grid.Row="1" Background="White" CornerRadius="12" BorderBrush="#E0E0E0" BorderThickness="1" Padding="20" Margin="0,0,0,20">
+        <Border Grid.Row="1" Background="{DynamicResource CardBackgroundBrush}" CornerRadius="12" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" Padding="20" Margin="0,0,0,20">
             <Grid ColumnDefinitions="*,*,*">
                 <!-- Limit -->
                 <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Text="Limit" FontSize="14" Foreground="#7F8C8D" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                    <TextBlock Text="{Binding LimitDisplay}" FontSize="24" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{loc:Translate CardDetail_Limit}" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding LimitDisplay}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
                 </StackPanel>
 
                 <!-- Current Debt -->
                 <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Text="Güncel Borç" FontSize="14" Foreground="#7F8C8D" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                    <TextBlock Text="{loc:Translate CardDetail_CurrentDebt}" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding CurrentDebtDisplay}" FontSize="28" FontWeight="Bold" Foreground="#E74C3C" HorizontalAlignment="Center"/>
                 </StackPanel>
 
                 <!-- Remaining Limit -->
                 <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Text="Kalan Limit" FontSize="14" Foreground="#7F8C8D" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                    <TextBlock Text="{loc:Translate CardDetail_RemainingLimit}" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding RemainingLimitDisplay}" FontSize="24" FontWeight="Bold" Foreground="#27AE60" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- Transactions List -->
+        <!-- Transactions List Grouped by Statement Period -->
         <ScrollViewer Grid.Row="2" Margin="0,0,0,20">
-            <ItemsControl ItemsSource="{Binding Transactions}">
+            <ItemsControl ItemsSource="{Binding StatementGroups}">
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:CardDetailItem">
-                        <Border Background="White" CornerRadius="8" BorderBrush="#E0E0E0" BorderThickness="1" Padding="12" Margin="0,0,0,10">
-                            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
-                                <!-- Date & Icon -->
-                                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Icon}" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Date, StringFormat='dd MMM'}" FontSize="14" FontWeight="Bold" Foreground="#2C3E50"/>
-                                        <TextBlock Text="{Binding Date, StringFormat='yyyy'}" FontSize="12" Foreground="#95A5A6"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                
-                                <!-- Description & Category -->
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding Description}" FontSize="14" FontWeight="SemiBold" Foreground="#34495E"/>
-                                    <TextBlock Text="{Binding CategoryName}" FontSize="12" Foreground="#7F8C8D" Margin="0,2,0,0" TextTrimming="CharacterEllipsis"/>
-                                </StackPanel>
-                                
-                                <!-- Amount -->
-                                <TextBlock Grid.Column="2" Text="{Binding AmountText}" Foreground="{Binding ForegroundColor}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0"/>
+                    <DataTemplate x:DataType="vm:StatementGroup">
+                        <Expander IsExpanded="{Binding IsExpanded}" HorizontalAlignment="Stretch" Margin="0,0,0,10" Background="White" CornerRadius="8" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
+                            <Expander.Header>
+                                <Grid ColumnDefinitions="*,Auto,Auto,Auto" Margin="0,5">
+                                    <TextBlock Grid.Column="0" Text="{Binding PeriodName}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding TotalDebtDisplay}" Foreground="#C62828" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding TotalPaymentDisplay}" Foreground="#27AE60" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding RemainingDebtDisplay}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0"/>
+                                </Grid>
+                            </Expander.Header>
+                            <ItemsControl ItemsSource="{Binding Transactions}" Margin="0,10,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:CardDetailItem">
+                                        <Border Background="Transparent" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,0,0,1" Padding="5,10">
+                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                                <!-- Date & Icon -->
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Icon}" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                    <StackPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Date, StringFormat='dd MMM'}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                        <TextBlock Text="{Binding Date, StringFormat='yyyy'}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                
+                                                <!-- Description & Category -->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Description}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                                    <TextBlock Text="{Binding CategoryName}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,2,0,0" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+                                                
+                                                <!-- Amount -->
+                                                <TextBlock Grid.Column="2" Text="{Binding AmountText}" Foreground="{Binding ForegroundColor}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0"/>
 
-                                <!-- Edit / Delete Buttons -->
-                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Button Content="✏️" ToolTip.Tip="Düzenle" Padding="6,4" Margin="0,0,4,0" FontSize="14"
-                                            Background="Transparent" BorderThickness="0" Cursor="Hand"
-                                            Command="{Binding $parent[ItemsControl].((vm:CardDetailViewModel)DataContext).EditTransactionCommand}"
-                                            CommandParameter="{Binding}"/>
-                                    <Button Content="🗑️" ToolTip.Tip="Sil" Padding="6,4" FontSize="14"
-                                            Background="Transparent" BorderThickness="0" Cursor="Hand"
-                                            Command="{Binding $parent[ItemsControl].((vm:CardDetailViewModel)DataContext).DeleteTransactionCommand}"
-                                            CommandParameter="{Binding}"/>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
+                                                <!-- Edit / Delete Buttons -->
+                                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Button Content="✏️" ToolTip.Tip="{loc:Translate Global_Edit}" Padding="6,4" Margin="0,0,4,0" FontSize="14"
+                                                            Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                                            Command="{Binding $parent[Window].((vm:CardDetailViewModel)DataContext).EditTransactionCommand}"
+                                                            CommandParameter="{Binding}"/>
+                                                    <Button Content="🗑️" ToolTip.Tip="{loc:Translate Global_Delete}" Padding="6,4" FontSize="14"
+                                                            Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                                            Command="{Binding $parent[Window].((vm:CardDetailViewModel)DataContext).DeleteTransactionCommand}"
+                                                            CommandParameter="{Binding}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 
@@ -83,8 +99,8 @@
         </ScrollViewer>
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Kapat" Width="100" Padding="10" Command="{Binding CloseCommand}" Background="#ECF0F1" Foreground="#34495E" FontWeight="Bold" BorderThickness="0" HorizontalContentAlignment="Center"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button Content="{loc:Translate Global_Close}" Width="100" Padding="10" Command="{Binding CloseCommand}" Background="{DynamicResource CardSecondaryBackgroundBrush}" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="Bold" BorderThickness="0" HorizontalContentAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

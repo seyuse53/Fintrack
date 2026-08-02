@@ -6,13 +6,387 @@
 
 All notable changes to this project will be documented in this file.
 
+
 ---
 
 ## 📋 FinTrack Geliştirme Planı (Update Plan)
 
 Bu doküman, FinTrack projesine eklenecek yeni özellikleri, geliştirme fikirlerini ve tamamlanan aşamaları tek bir çatı altında takip etmek için oluşturulmuştur.
 
-### ✨ Tamamlanan Özellikler
+### 🚀 Tamamlanan Özellikler
+
+## [2.2.5] - 2026-08-02 — Dil Ayarları Senkronizasyon Düzeltmesi
+
+### Fixed
+- **Giriş ve Uygulama İçi Dil Uyumsuzluğu**: Giriş ekranında (Login) seçilen "English" dil seçeneğinin, giriş yapıldıktan sonra "Ayarlar" menüsünde "Türkçe" olarak görünmesine sebep olan bölgesel kod uyumsuzluğu (en-US vs en) düzeltildi. Artık giriş ekranında seçilen dil ayarı tüm uygulama menülerine ve ayarlara doğru şekilde yansıyor.
+- **Kısmen İngilizce/Türkçe Görünen Menüler (Çoklu Dil Senkronizasyonu)**: Uygulama Türkçe başlatıldığında veya dil değiştirildiğinde, sol menü (Sidebar) gibi bazı bileşenlerin İngilizce (veya işletim sistemi dilinde) kalması ve ayarların Türkçe görünmesi sorunu çözüldü. Arka planda çalışan işlemlerin (thread) dil ayarını doğru alabilmesi için `DefaultThreadCurrentCulture` ataması yapılarak tüm arayüzün %100 seçilen dilde yüklenmesi garanti altına alındı.
+- **Bozuk Para Birimi Simgeleri (¤)**: Uygulama dilinin "tr" (nötr dil) olarak ayarlanması sonucu `.ToString("C")` formatlı döviz gösterimlerinde varsayılan, tanımsız para birimi sembolünün (`¤`) çıkması sorunu giderildi. Uygulama dili "tr" seçildiğinde arka planda bölge bazlı "tr-TR", "en" seçildiğinde "en-US" formatlaması kullanılarak Türk Lirası (`₺`) ve Dolar (`$`) simgelerinin düzgün görünmesi sağlandı.
+- **Açılır Pencerelerin (Popup) Ekrandan Taşma Sorunu**: Yatırım detayları, işlem geçmişi ve hesap yönetimi gibi açılır pencerelerde (popup) bulunan veri tablolarının (DataGrid), içerik uzadıkça pencereyi orantısız şekilde sağa veya aşağıya doğru sonsuz genişletmesi (ekrandan taşması) engellendi. Pencerelere makul varsayılan genişlik ve yükseklikler atanarak, masaüstü standartlarına uygun kaydırma çubuğu (scrollbar) davranışı kazandırıldı.
+
+## [2.2.4] - 2026-08-02 — Akıllı Ekstre İçe Aktarma (Gemini AI) Genişletmesi
+
+### Added
+- **Banka Hesapları İçin Ekstre Aktarımı**: "Kredi Kartı" tarafında bulunan ekstre aktarım altyapısı, standart banka hesaplarına da (AccountsView) entegre edildi. Artık tüm hesaplarda PDF/Görsel formatındaki dökümler yapay zeka ile otomatik aktarılabiliyor.
+- **Evrensel Gemini API Ayarı**: Ayarlar sayfasına "Yapay Zeka Ayarları" menüsü eklenerek API Key girişi sağlandı ve bu ayarın veritabanına/ayarlara şifreli kaydedilmesi gerçekleştirildi.
+- **Dinamik Prompt (Sorgu)**: Gemini yapay zekasına gönderilen direktif, kredi kartlarına ek olarak banka hesap dökümlerini (Hesap Özeti) de anlayıp ayrıştırabilecek şekilde kapsayıcı hale getirildi.
+- **Ekstre Dönemleri Gruplaması (Restored)**: Kredi Kartı Detayları ekranında işlemlerin ekstre dönemlerine göre (1 Nisan - 1 Mayıs vb.) kronolojik olarak gruplandığı ve her dönemin Harcama/Ödeme/Kalan özetlerinin sunulduğu özellik yeniden kodlanarak arayüze kazandırıldı.
+
+### Fixed
+- **Kayıp Arayüz Elemanlarının Geri Getirilmesi**: Çoklu dil (i18n) güncellemeleri sırasında kaybolan "Kredi Kartı Ekstre Yükle" butonu ve fonksiyonu onarılarak arayüze tekrar eklendi.
+- **Detay Ekranları Taşma Sorunları**: Kart Detayları (`CardDetailWindow`) ve Hesap Detayları (`AccountDetailWindow`) ekranlarında, çok sayıda işlem olduğunda pencerelerin ekran dışına taşması hatası giderildi (Sabit boyut ve yeniden boyutlandırma yeteneği eklendi).
+- **Şifreli Metin (Mojibake) Hatası**: Kredi kartı ve banka hesabı detay listelerinde, veritabanına şifreli ("G:base64...") kaydedilen işlem açıklamalarının ekranda çözülmeden gösterilmesi sorunu düzeltildi. Artık tüm açıklamalar anında Türkçe metne dönüştürülüyor.
+
+## [2.2.3] - 2026-07-30 — İngilizce Dil Desteği Finali (Faz 7)
+
+### Added
+- Yeni profil oluşturma ekranı (`AddProfileView` ve `AddProfileViewModel`) Türkçe ve İngilizce dillerine yerelleştirildi.
+- Ana pencere başlığı (`MainWindow.axaml`) çoklu dil sistemine dâhil edildi.
+- `i18n-plan.md` dosyası güncellenerek Faz 6 ve Faz 7 tamamlandı olarak işaretlendi. Tüm proje bazında İngilizce çeviri işlemleri **%100** oranında tamamlandı!
+
+## [2.2.2] - 2026-07-29 — Kategori, Hesap Detay ve Çeşitli Pencerelerin Çevirisi (Faz 5C)
+
+### Added
+- `ImportPreviewWindow` (Ekstre Önizleme), `UpdateAvailableWindow` (Güncelleme Uyarı) pencereleri lokalize edildi.
+- `CategoryDetailWindow`, `CategoryEditWindow`, `AccountDetailWindow`, `CardDetailWindow`, `InvestmentDetailWindow` gibi tüm detay ve düzenleme modallarının UI bileşenleri i18n altyapısına geçirildi.
+- Detay pencerelerinin ViewModel'lerinde yer alan işlem tanımları, türler ve onay uyarı metinleri Türkçe/İngilizce çift dile uygun olacak şekilde yapılandırıldı.
+
+## [2.2.1] - 2026-07-29 — Yatırım Pencereleri ve Diyaloglar Çevirisi (Faz 5B)
+
+### Added
+- Yatırım ekleme (`AddInvestmentWindow`), satma (`SellInvestmentWindow`) ve düzenleme (`EditInvestmentAssetWindow`) pencerelerindeki tüm metinler i18n ile uyumlu hale getirildi. İlgili view modellerdeki kategori, hata ve önizleme metinleri de çevirildi.
+- Genel sistem diyalogları olan `ConfirmDialog`, `ErrorDialogWindow` ve `InfoDialogWindow` pencerelerindeki statik metinler lokalize edildi. "Tamam", "İptal", "Evet", "Hayır" gibi ortak butonlar merkezi key yapısına (`Global_`) bağlandı.
+
+## [2.2.0] - 2026-07-29 — Temel İşlem ve Transfer Ekranları Çevirisi (Faz 5A)
+
+### Added
+- İşlem ekleme (`AddTransactionWindow`), düzenleme (`EditTransactionWindow`), transfer (`TransferWindow`) ve kredi kartı ödeme (`PayCreditCardWindow`) ekranlarındaki metinler lokalizasyon altyapısına geçirildi.
+- Her sayfada kullanılan ortak terimler (Tarih, Tutar, Kategori, Açıklama, İptal, Kaydet vb.) için `Global_` ön ekine sahip merkezi `String` key'leri eklendi, böylece tekrarlı kullanımlar azaltıldı.
+
+## [2.1.9] - 2026-07-29 — Bütçe, Raporlar ve Vergi Ekranları Çevirisi (Faz 4C)
+
+### Added
+- Bütçe yönetimi (BudgetView.axaml & BudgetViewModel.cs), Raporlar (ReportsView.axaml & ReportsViewModel.cs) ve Vergi hesaplama (TaxCalculationWindow.axaml & TaxCalculationViewModel.cs) ekranlarındaki tüm metinler çoklu dil (İngilizce) sistemine dahil edildi.
+- İlgili tüm anahtarlar Strings.resx ve Strings.en.resx dosyalarına eklendi.
+
+### Changed
+- ReportsViewModel ve TaxCalculationViewModel içindeki kategori atamalarında "Diğer" ibaresi dil desteğine göre dinamikleştirildi.
+
+## [2.1.8] - 2026-07-29 — Ana Ekran (Dashboard) Çevirisi (Faz 3)
+
+### Added
+- **Dashboard Çevirisi (Faz 3)**: Ana Ekranda (Dashboard) yer alan tüm özet kart başlıkları ve tablo (Gelir/Gider/Transfer) başlıkları çoklu dil sistemine (i18n) entegre edildi. Para biriminin (₺) her koşulda sabit kalması ve tarih (ay) formatlarının dil değişimine anında tepki vermesi sağlandı.
+
+### Fixed
+- **Bütçe Ekranından Hızlı Geçişlerde Çökme Hatası (ObjectDisposedException)**: Bütçe ekranı açıldığında arka planda TÜİK API'den enflasyon verisi çekilirken (TÜFE), veri inmeden Ana Ekrana (veya başka bir sekmeye) hızlıca geçildiğinde Entity Framework'ün `ObjectDisposedException` fırlatarak uygulamanın tamamen çökmesine yol açan sorun çözüldü. `InflationService` yeniden yapılandırılarak, uzun süren arka plan API çağrılarında ViewModel'in veritabanı bağlantısı yerine kendi kısa ömürlü ve izole (short-lived) veritabanı bağlantılarını kullanması sağlandı.
+
+
+
+## [2.1.9] - 2026-07-29 � Ayarlar (Settings) ve Dil Se�imi Eklentisi (Faz 6)
+
+### Added
+- Ayarlar sayfas� (SettingsView) T�rk�e ve �ngilizce dillerine yerelle�tirildi.
+- Ayarlar -> G�r�n�m sekmesine 'Dil Se�imi' a��l�r kutusu (ComboBox) eklendi.
+- SettingsViewModel i�ine dil de�i�tirme mant��� (SelectedLanguage, AvailableLanguages) eklendi ve anl�k de�i�im uyar� dialogu ba�land�.
+
+### Changed
+- i18n-plan.md g�ncellenerek Faz 6 tamamland� olarak i�aretlendi ve Faz 7'ye (Aktif Faz) ge�ildi.
+
+
+## [2.1.7] - 2026-07-28 — Ana Menü (Sidebar) ve Üst Bar Çevirisi
+
+### Added
+- **Ana Menü Çevirisi (Faz 1)**: Uygulamanın ana menüsü (Sidebar) ve üst bilgi çubuğu (TopBar) tamamen çoklu dil destekli (Türkçe/İngilizce) hale getirildi. 
+- **Dinamik Başlıklar**: Sayfa başlıklarının (ViewTitle) ve tarih filtrelerindeki ay isimlerinin seçilen dile göre (veya dili anında değiştirdiğinizde) otomatik güncellenmesi sağlandı.
+
+## [2.1.6] - 2026-07-28 — Çoklu Dil (İngilizce) Altyapısı ve Giriş Ekranı
+
+### Added
+- **i18n Altyapısı (Faz 0)**: FinTrack için İngilizce ve Türkçe dil desteği altyapısı kuruldu. `LocalizationService` ve `TranslateExtension` sınıfları oluşturuldu. Anında dil değiştirme desteği (uygulamayı yeniden başlatmadan) için `IValueConverter` ve `LanguageVersion` tabanlı reaktif (reactive) yapı kuruldu (Avalonia Indexer bug'ını aşmak için).
+- **Dil Dosyaları**: `Strings.resx` (Varsayılan/Türkçe) ve `Strings.en.resx` (İngilizce) dosyaları projeye dâhil edildi.
+- **Giriş Ekranı Çevirisi (Faz 2)**: Giriş ekranı (LoginView) tamamen çoklu dil destekli hale getirildi ve anında dil değiştirmeyi test edebilmek için arayüze `🌐 TR/EN` butonu eklendi.
+
+## [2.1.5] - 2026-07-28 — Veritabanı Tablo Eksikliği ve İçe Aktarma Hatası Çözümü
+
+### Fixed
+- **Eksik Tablo (InvestmentTransactions / Categories) Hatası**: Kullanıcıların uygulamaya giriş yaparken, JSON içe aktarma yaparken veya yeni bir profilde "Bütçe" sayfasına geçerken aldığı `SQLite Error 1: 'no such table...'` hataları tamamen giderildi.
+- **Kök Neden Çözümü (Tam Onarım)**: Yeni bir profil (boş veritabanı) oluşturulduğunda, Entity Framework Core'un standart `Migrate()` komutu şifreleme altyapısıyla (SQLCipher) çakışarak tabloların hiçbirini oluşturamadan çöküyordu. Bu sorunu aşmak için `LoginViewModel` içerisine bir güvenlik ağı eklendi: Eğer `Migrate()` başarısız olursa ve veritabanı tamamen boşsa (`Categories` tablosu yoksa), sistem otomatik olarak `context.Database.EnsureCreated()` komutunu tetikleyerek şifreli bağlantı üzerinden veritabanındaki **tüm tabloların** eksiksiz ve kusursuz bir şekilde oluşturulmasını sağlıyor. Ayrıca eski veritabanlarından kalan eksik tablolar için de manuel onarım (CREATE TABLE) scriptleri sisteme dahil edildi.
+
+## [2.1.4] - 2026-07-28 — Giriş Ekranı Akış Düzeltmeleri ve Kurtarma Kodu Gösterimi
+
+### Added
+- **Kurtarma Kodu Gösterimi (KRİTİK)**: İlk profil kurulumu sırasında oluşturulan kurtarma kodu artık kullanıcıya inline panel olarak gösteriliyor. Kullanıcı kodu güvenli bir yere kaydettiğini onaylamadan uygulamaya geçemiyor. Daha önce bu kod `// TODO` yorumu altında gösterilmeden geçiliyordu.
+
+### Fixed
+- **Profil Oluşturma Sonrası Otomatik Seçim**: Yeni profil oluşturulduktan sonra giriş ekranına dönüldüğünde, yeni profil otomatik olarak seçili geliyor. Daha önce listedeki ilk profil seçiliyordu ve kullanıcı yeni profilini elle seçmek zorunda kalıyordu.
+- **Pencere Boyutu Düzeltmesi**: Profil ekleme (AddProfileView) ekranına geçildiğinde pencere artık 1200x700'e genişlemiyor; giriş ekranıyla aynı kompakt boyutta kalıyor.
+
+### Changed
+- **Sürüm Numarası Güncellemesi**: Giriş ekranındaki sürüm göstergesi `v2.0.0-beta.6`'dan `v2.1.3`'e güncellendi.
+
+## [2.1.3] - 2026-07-26 — Lisans Telif Hakkı Güncellemesi
+
+### Changed
+- **Lisans Sahibi**: Lisans (`LICENSE`) dosyasındaki telif hakkı sahibi bilgisi (Copyright) `seyuse53` yerine, Türkçe karakter içermeyecek şekilde `Kurtulus Technology` olarak güncellendi.
+
+## [2.1.2] - 2026-07-26 — Kapsamlı Güvenlik İyileştirmeleri ve UI Düzeltmeleri
+
+### Added
+- **Gelişmiş Şifreleme (PBKDF2 & Salt)**: Şifre türetme (Key Derivation) mekanizmasına tuzlama (Salt) desteği eklendi. Ana parola ve kurtarma parolası için `Settings` içerisine bağımsız `PasswordSalt` ve `RecoverySalt` alanları eklendi.
+
+### Fixed
+- **Bellek Sızıntısı (Memory Leak)**: Uygulama kilitlendiğinde (Auto-Lock) veritabanı şifreleme anahtarının (DEK) bellekten silinmeme zafiyeti (Kritik Açık) `ClearActiveKey` metodu eklenerek giderildi.
+- **İzole Anahtar Yedekleme**: Yanlışlıkla veritabanıyla aynı klasöre kaydedilen `.keys` dosyası, güvenlik nedeniyle işletim sistemi düzeyinde korunan `%LOCALAPPDATA%\FinTrack` klasörüne taşındı.
+- **Kaynak Kod Temizliği**: Geçmişteki kriz yönetimi için eklenmiş olan `_oldBrokenPassphrase` (Hardcoded şifre) sabiti ve bağlı göç kodları tamamen silindi.
+- **Proje Temizliği**: Kök dizinde yer kaplayan geçmişten kalma 23 adet debug script/log dosyası ve 2 adet test klasörü silinerek proje arındırıldı.
+- **Sıfır Uyarı (Zero Warnings)**: Derleme esnasında oluşan CS8600 (Nullable), CS0219 (Gereksiz Değişken), SYSLIB0060 (Obsolete Constructor) ve AVLN5001 (Obsolete WindowDecorations/Watermark) uyarıları onarıldı.
+
+### Changed
+- **Kesintisiz Geçiş (Seamless Migration)**: Eski saltsız veritabanı anahtarlarına sahip kullanıcıların, herhangi bir işlem yapmasına gerek kalmadan ilk girişlerinde otomatik olarak yeni Salt/PBKDF2 altyapısına yükseltilmesi sağlandı.
+- **Esnek UI (Hesapları Yönet)**: Hesapları Yönet (`ManageAccountsWindow`) penceresi sabit boyuttan çıkarılarak esnek, genişletilebilir (resizable) hale getirildi ve görüntü bozulmaması için (500x500) minimum boyut sınırı konuldu.
+
+## [2.1.1] - 2026-07-26 — Şifreli Banka Adı Keşfi ve Koruyucu Kural
+
+### Fixed
+- **Kalıntı Şifreli BankName Tespiti**: Hesaplarım ekranında bir banka hesabının adının düz metin yerine şifreli Base64 formatında (`SvrehhLBRI...`) gösterildiği tespit edildi. Bu sorun, geçmişte (beta.23) BankName alanlarının AES ile şifrelenmesi ve ardından anahtar bozulma krizi (beta.45) nedeniyle `DecryptBankNames` migrasyonunun bu kaydı çözemeyip şifreli bırakmasından kaynaklanmaktadır. Sıfırdan oluşturulan yeni profillerde bu sorun oluşmaz, çünkü güncel kodda BankName/IBAN alanlarına şifreleme uygulanmamaktadır.
+
+### Changed
+- **AGENTS.md Koruyucu Kural Eklendi**: Gelecekte aynı hatanın tekrarını önlemek amacıyla, `BankAccount.BankName`, `BankAccount.IBAN` ve `CreditCardAccount.BankName` alanlarına alan bazlı şifreleme (ValueConverter veya CryptoProvider.Encrypt) uygulanmasını **açıkça yasaklayan** yeni bir kural (Madde 4 - Knowledge Base) AGENTS.md dosyasına eklendi. SQLCipher zaten veritabanı düzeyinde tam şifreleme sağladığından ek alan şifrelemeye gerek olmadığı belgelendi.
+- **Veri Güvenliği İlkeleri (Kural 4) Güçlendirildi**: Eski "Kod ve Tasarım Standartları" başlığı, kapsamlı bir **Veri Güvenliği İlkeleri (KRİTİK)** kuralına yükseltildi. Eklenen yeni alt maddeler: (1) Hassas verilerin (DEK, şifreler, IBAN, API anahtarları) log çıktılarına yazılması yasağı, (2) Veritabanı yapısı değişikliklerinde şifreleme stratejisi değerlendirmesi zorunluluğu, (3) Güvenlik-kritik sınıflara (`CryptoProvider`, `SettingsManager`, `EncryptionService`, `AppDbContext.OnConfiguring`) yapılacak değişikliklerde yan etki analizi ve risk bildirimi zorunluluğu.
+
+## [2.1.0] - 2026-07-17 — Kararlı Sürüm (Stable Release) ve JSON Export/Import Özelliği
+
+### Added
+- **JSON Dışa Aktar (Export)**: Kullanıcıların mevcut finansal verilerini (hesaplar, bütçeler, işlemler vb.) şifresiz ve düzenlenebilir düz metin (JSON) formatında dışa aktarabilmesini sağlayan özellik eklendi.
+- **JSON İçe Aktar (Import)**: Dışa aktarılıp (gerekirse) Notepad ile düzenlenebilen temiz JSON dosyasının, veritabanını sıfırlayarak yerine temiz bir sayfa olarak yüklenmesini sağlayan İçe Aktarma özelliği eklendi.
+- `SettingsViewModel` ve `SettingsView` içerisine FileDialogs (Dosya Seçici Pencere) destekleri entegre edilerek Yedekleme sekmesine şık butonlar yerleştirildi.
+
+## [2.0.0-beta.47] - 2026-07-17 — "G:" Ön Ekli Şifreli Banka İsimleri Düzeltmesi
+
+### Fixed
+- **"G:" Ön Ekli Şifreli Verilerin Çözülememesi**: Bazı banka hesaplarının BankName ve IBAN alanları veritabanında `G:base64ciphertext` formatında saklanıyordu. Önceki `DecryptBankNames` migrasyonu bu "G:" ön ekini soyamadığı için `CryptoProvider.Decrypt` çağrısı Base64 parse hatasına düşüp şifreli metni olduğu gibi bırakıyordu. Yeni `TryDecryptValue` yardımcı metodu eklenerek hem "G:" ön ekli hem de ön eksiz (raw base64) şifreli veriler doğru şekilde çözülmesi sağlandı.
+- **Akıllı Şifreli Veri Tespiti**: Eski sürümdeki kaba uzunluk kontrolü (`Length > 20`) yerine, Base64 karakterleri (+, /, =) ve metin yapısını analiz eden `IsLikelyEncrypted` metodu eklendi. Gerçek IBAN'lar (TR ile başlayan 26 karakter) ve normal banka isimleri yanlışlıkla şifre çözmeye gönderilmiyor.
+
+## [2.0.0-beta.46] - 2026-07-16 — Banka Hesapları İçin Kalıcı Şifre Çözümü ve Entity Framework Hata Düzeltmesi
+
+### Fixed
+- **Dashboard Açılış Hatası (LINQ Translation Error)**: Banka isimlerini ve IBAN'ları on-the-fly (anlık) şifre çözmek için eklenen Entity Framework `ValueConverter` tanımlamalarının, uygulama içindeki `OrderBy(b => b.BankName)` ve `Contains()` gibi LINQ sorgularını bozarak (SQL server-side değerlendirme hatası) Dashboard açılırken uygulamanın çökmesine (`InvalidOperationException`) yol açtığı tespit edildi.
+- **Kalıcı Düzeltme (Data Decryption Migration)**: ValueConverter yaklaşımı tamamen iptal edildi. Bunun yerine, uygulamaya başarılı giriş yapıldıktan hemen sonra veritabanındaki şifreli kalmış BankName ve IBAN kayıtlarını kalıcı olarak şifresiz hale dönüştüren (Decrypt) ve düz metin kaydeden bir Migration süreci (`DecryptBankNames`) eklendi. Böylece hem LINQ hataları çözüldü hem de arayüzde doğru isimlerin görünmesi sağlandı.
+
+## [2.0.0-beta.45] - 2026-07-16 — Şifreleme Anahtarı Bozulması ve Veri Erişim Krizinin Çözümü
+
+### Fixed
+- **EncryptedDataKey Bozulması Tespit ve Onarım**: Settings dosyasındaki `EncryptedDataKey` değerinin bozulduğu (AES ile çözülemez hale geldiği) tespit edildi. Yedek settings dosyasından (`settings_PrivateFinTrack2026.json`) gerçek 32-byte DEK (`ICwM9+...`) kurtarılarak `EncryptedDataKey` yeniden şifrelendi ve onarıldı.
+- **CryptoProvider Çökme Hatası Giderildi**: `CryptoProvider.Encrypt` metodu geçersiz AES anahtar boyutunda (72 byte) exception fırlatarak uygulamayı çökertiyordu. Hem `Encrypt` hem `Decrypt` metodlarına AES key boyut doğrulaması (16/24/32 byte) ve try-catch koruması eklendi. Geçersiz anahtarla şifreleme yerine plaintext döndürülmesi sağlandı.
+- **SQLCipher PRAGMA Rekey Migrasyonu**: Veritabanı eski (bozuk) passphrase ile şifrelenmiş durumdaydı. `AppDbContext.OnConfiguring` metoduna tek seferlik otomatik migration eklendi: yeni DEK ile DB açılamazsa eski passphrase ile açıp `PRAGMA rekey` ile yeni DEK'e geçiş yapılıyor.
+
+### Changed
+- **Kök Neden Analizi**: `VerifyPasswordAndLoadKey` fonksiyonunda DEK çözme başarısız olduğunda `CryptoProvider.Decrypt`'in catch bloğu şifreli veriyi (72 byte blob) olduğu gibi `ActiveDataKey`'e atıyordu. SQLCipher bu blob'u passphrase olarak kabul edip DB'yi açabiliyordu, ancak `Description` alanının ValueConverter'ı aynı blob ile AES şifreleme yapmaya çalışınca çöküyordu.
+
+## [2.0.0-beta.44] - 2026-07-15 — Ekstre İçe Aktarımında Akıllı Referans (Eşleştirme) Sistemi
+
+### Changed
+- **Ekstre Mükerrer Kontrolü**: İçe aktarım sırasında yapılan "Mükerrer?" kontrolünün mantığı tamamen değiştirildi. Artık yapay zekanın bulduğu açıklama ile kullanıcının manuel girdiği açıklamanın birebir eşleşmesi beklenmiyor (çünkü banka açıklamaları her zaman farklıdır). Bunun yerine sadece "Tarih" ve "Tutar" üzerinden kesin eşleşme aranıyor.
+- **Elle Girilen Veriyi Referans Alma**: Eğer aynı gün, aynı tutarda bir işlem veritabanında zaten varsa, sistem bunu "⚠️ Eşleşen Kayıt" olarak işaretliyor ve o satırın onay (seçim) tikini **otomatik olarak kaldırıyor**. Böylece kullanıcının daha önceden manuel ve özenle girdiği kayıt (kategorisiyle birlikte) **referans alınıp korunuyor**, ekstredeki ham veri onun üzerine yazılmıyor.
+- **Detaylı Bilgilendirme**: Kullanıcı "⚠️ Eşleşen Kayıt" rozetinin üzerine fare ile geldiğinde, sistemin bunu hangi manuel kayıtla (Tarih, Açıklama, Tutar) eşleştirdiğini şeffaf bir şekilde görebiliyor.
+
+## [2.0.0-beta.43] - 2026-07-15 — Log Hata Düzeltmeleri ve Performans İyileştirmesi
+
+### Fixed
+- **Dashboard Çökme Hatası (Year/Month)**: Dashboard (Ana Ekran) yüklenirken, bazı senaryolarda tarih (yıl) parametresinin eksik/geçersiz gitmesi sonucu `Year must be between 1 and 9999` hatasına yol açan bir istisna (Exception) giderildi. Artık geçersiz veya eksik bir tarih gelirse sistem otomatik olarak güncel yılı ve ayı baz alarak kusursuz şekilde yüklenmeye devam ediyor.
+- **EF Core Veritabanı Migrasyon Uyarısı**: Giriş yapıldığında Entity Framework'ün `PendingModelChangesWarning` (bekleyen model değişiklikleri) uyarısı fırlatarak login sürecini engellemesi sorunu, uyarı gizlenerek (Suppress) çözüldü.
+
+## [2.0.0-beta.42] - 2026-07-15 — Yapay Zeka (Gemini) JSON Ayrıştırma İyileştirmesi
+
+### Fixed
+- **Ekstre Yükleme Hatası (Entegrasyon Hatası)**: Yapay zeka modelinin (Gemini) ekstreyi analiz ettikten sonra bazen yanıtı bir kod bloğu (```json ... ```) veya ekstra açıklamalarla sarmalayarak göndermesi sonucu sistemin hata verip ekstreyi içeri aktaramama sorunu çözüldü. Sisteme, yapay zekadan dönen karmaşık metnin içinden saf JSON verisini (sadece '{' ve '}' arasını) bulup ayıklayabilen akıllı bir filtre eklendi. Ayrıca Gemini'nin obje `{...}` yerine dümdüz bir dizi `[...]` dönmesi durumu da yakalanarak sorunsuz ayrıştırılması sağlandı.
+
+## [2.0.0-beta.41] - 2026-07-15 — Kredi Kartı Devreden Bakiye Mantığı
+
+### Changed
+- **Kredi Kartı Ekstre Hesaplaması**: Kart detaylarındaki dönemsel ekstrelerin "Kalan" hesaplama mantığı tamamen yenilendi. Artık kredi kartı ekstreleri tamamen gerçeğe uygun şekilde çalışıyor; eski dönemlerden kalan borçlar yeni döneme "Devreden" olarak ekleniyor. Böylece örneğin Mayıs ayında yaptığınız bir ödeme sadece Mayıs'ın değil, tüm geçmiş dönemlerin biriken borcunu sıfırlayarak en güncel "Kalan" bakiyenin her zaman doğru çıkmasını sağlıyor. Kutu başlıklarına "Devreden" tutar gösterimi de eklendi.
+
+## [2.0.0-beta.40] - 2026-07-15 — Detay Pencereleri Boyutlandırma ve Düzen İyileştirmesi
+
+### Changed
+- **Kart ve Hesap Detayları Ekranı**: Kredi Kartı ve Banka Hesabı detay pencereleri (CardDetailWindow ve AccountDetailWindow) artık kullanıcı tarafından yeniden boyutlandırılabilir (Resizable) hale getirildi. 
+- **Asimetrik Düzen Düzeltmesi**: Kredi Kartı Detayları ekranındaki ekstreyi listeleyen bölümün (Expander) sağ tarafta boşluk bırakıp asimetrik durmasına sebep olan hizalama sorunu çözüldü. Artık listeler pencerenin tam genişliğine esneyerek ekranı bütünüyle kullanacak şekilde hizalanıyor.
+
+## [2.0.0-beta.39] - 2026-07-15 — Ekstre İçe Aktarımında Akıllı Kategori Filtreleme
+
+### Changed
+- **Ekstre İçe Aktarım Önizleme (Import Preview)**: Yapay zeka tarafından çözümlenen ekstreyi onaylama ekranında, her bir işlem satırı için gösterilen "Kategori" seçimi açılır kutusu (ComboBox) akıllı hale getirildi. Artık o satırdaki işlem bir "Gider" ise (tutar negatifse) sadece Gider kategorileri listelenecek; eğer bir "Gelir" ise sadece Gelir kategorileri listelenecek. Bu sayede kullanıcının yanlışlıkla gidere gelir kategorisi seçmesinin önüne geçildi ve liste karmaşası azaltıldı.
+
+## [2.0.0-beta.38] - 2026-07-15 — Hesaplarım Sıralama Düzeltmesi
+
+### Fixed
+- **Hesap Listesi Sıralaması**: Banka hesaplarının "Hesaplarım" ve "Hesapları Yönet" ekranlarındaki alfabetik sıralama mantığı düzeltildi. Veritabanı (SQLite) kaynaklı Türkçe karakter sıralama sorunu çözülerek verilerin bellek üzerinde C# standartlarında (BankName ve AccountName'e göre) tam uyumlu, gruplu ve düzgün bir alfabetik sıraya girmesi sağlandı.
+
+## [2.0.0-beta.37] - 2026-07-15 — Ana Ekran Dinamik Renklendirme
+
+### Changed
+- **Fark-Kalan Gösterimi**: Ana Ekranda (Özet) yer alan gelir-gider tablosunun en altındaki "Fark-Kalan" satırı dinamik hale getirildi. Artık kalan tutar pozitifse veya sıfırsa (gelir, giderden büyük veya eşitse) yeşil renk; negatifse (gider, geliri aşmışsa) kırmızı renk alarak kullanıcının bütçe durumunu bir bakışta anlaması sağlandı.
+
+## [2.0.0-beta.36] - 2026-07-15 — IBAN Doğrulama ve Hesap Silme Düzeltmeleri
+
+### Fixed
+- **Hesap Silme Hatası**: Kullanıcılar açılış bakiyesi ile yeni bir hesap oluşturduklarında, sistemin otomatik olarak "Açılış Bakiyesi" işlemi oluşturması nedeniyle "işlem bulunan hesaplar silinemez" uyarısı verilip hesabın silinmesine engel olan mantık hatası giderildi. Artık hesaba ait sadece açılış bakiyesi işlemi varsa hesap (ve bağlı işlem) silinebilecek.
+- **IBAN Benzersizlik Kontrolü**: Yeni bir banka hesabı eklerken veya düzenlerken sistemde zaten kayıtlı olan bir IBAN numarasının tekrar kaydedilmesine izin veren eksiklik giderildi. Artık mükerrer IBAN girişlerinde sistem uyarı verecek.
+
+## [2.0.0-beta.35] - 2026-07-15 — Pencere Boyutlandırma İyileştirmesi
+
+### Changed
+- **Hesapları Yönet Penceresi**: Kullanıcıların çok sayıda hesabı daha rahat listeleyip görebilmesi için Hesapları Yönet (`ManageAccountsWindow`) penceresinin yeniden boyutlandırılabilir (Resizable) olması sağlandı.
+
+## [2.0.0-beta.34] - 2026-07-15 — İşlem Sonrası Bakiye Gösterimi
+
+### Added
+- **İşlem Sonrası Bakiye/Borç Gösterimi**: Hesap Detayları ve Kredi Kartı Detayları ekranlarındaki işlem listelerine, her bir işlemin hemen altına (tutarın altına) o anki güncel bakiye veya kalan borç bilgisi (işlem sonrası bakiye) eklendi. Böylece işlemlerin hesap bakiyesine anlık etkisi çok daha rahat takip edilebilecek.
+
+## [2.0.0-beta.33] - 2026-07-15 — Merkezileştirilmiş Loglama ve Kod Temizliği
+
+### Added
+- **Merkezileştirilmiş Loglama**: Proje genelinde kullanılan `System.Diagnostics.Debug.WriteLine` bazlı geçici hata kayıt yöntemleri temizlendi. Yerine `FinTrack.Core.Helpers.AppLogger` sınıfı eklendi ve tüm hatalar (ve info mesajları) LocalAppData altındaki `FinTrack\Logs` klasörüne (.log dosyasına) kaydedilecek şekilde yapılandırıldı.
+
+### Removed
+- **Ölü Kodlar**: `AvaloniaSparklineControl.cs` içerisinde uzun süredir kullanılmayan ve yorum satırına alınmış olan grafik etiketleri (Labels) kod bloğu temizlendi.
+
+## [2.0.0-beta.32] - 2026-07-12 — Minimum Şifre Gücü Politikası ve Süreli Değişim
+
+### Added
+- **Minimum Şifre Karmaşıklığı**: Veritabanı ve profil şifresi oluşturulurken / değiştirilirken; en az 8 karakter uzunluğunda olması, içerisinde en az 1 büyük harf, 1 küçük harf, 1 rakam ve 1 özel karakter (örn: !@#$%^&*) barındırması zorunluluğu getirildi. Bu sayede "1234" veya "qwert" gibi kolay tahmin edilebilir şifrelerin kullanılması engellendi.
+- **Canlı Şifre Gücü Göstergesi**: Şifre belirleme ve değiştirme ekranlarına şifrenizin gücünü (Zayıf, Orta, Güçlü) anlık olarak gösteren, kırmızı, sarı ve yeşil renklerde dolan görsel bir ilerleme çubuğu eklendi.
+- **Şifre Geçerlilik Süresi (Zorunlu Yenileme)**: Yeni şifre belirlerken veya şifrenizi değiştirirken şifrenizin geçerlilik süresini (3, 6, 9 veya 12 Ay) seçme opsiyonu sunuldu. Belirlediğiniz süre dolduğunda, uygulama giriş yapmanıza izin vermeden önce güvenlik için sizden yeni bir şifre belirlemenizi isteyecek (Zorunlu Şifre Yenileme Ekranı).
+
+## [2.0.0-beta.31] - 2026-07-11 — Bankacılık Sınıfı Kriptografi (PBKDF2 & AES-GCM) ve Kesintisiz Geçiş
+
+### Added
+- **PBKDF2 Şifre Türetme (V2)**: Kullanıcı parolalarının doğrulanması için sadece SHA-256 (V1) kullanan mevcut sistem yerine, çok daha güvenli olan `Rfc2898DeriveBytes` (PBKDF2) entegre edildi. 100.000 iterasyonlu bu yeni algoritma sayesinde kaba kuvvet (brute-force) saldırılarına karşı üst düzey koruma sağlandı.
+- **AES-GCM Şifreleme (V2)**: Veritabanı şifreleme motoru AES-CBC'den, kimlik doğrulamalı şifreleme sağlayan (Authenticated Encryption) **AES-GCM** moduna yükseltildi. Böylece şifreli verilerin değiştirilip değiştirilmediği (integrity) matematiksel olarak kanıtlanabilir hale geldi.
+
+### Changed
+- **Kesintisiz Geçiş (Seamless Migration)**: Mevcut kullanıcı verilerinin bozulmaması için otomatik bir "Geriye Uyumluluk" mekanizması geliştirildi:
+  - Eski AES-CBC verileri, okunurken arka planda yeni AES-GCM standardına çevrilerek kaydedilecek.
+  - Kullanıcılar mevcut şifreleriyle her zamanki gibi giriş yapabilecek, sistem giriş anında altyapıyı görünmez bir şekilde PBKDF2 standartlarına yükseltecek.
+
+
+
+## [2.0.0-beta.30] - 2026-07-11 — Transfer İşlemlerinde Karşı Hesap Gösterimi
+
+### Added
+- **Arayüzde Karşı Bacak Gösterimi**: Transfer tipi işlemlerde, paranın "nereye" gittiği veya "nereden" geldiğinin anlaşılabilmesi için işlem listelerine (hesap detayları ve kredi kartı detayları ekranları) otomatik olarak karşı hesabın adı (örn. Hedef: Nakit, Kaynak: Garanti BBVA) eklendi.
+- **Detaylı Transfer Görüntüleme**: İşlem düzenleme ekranında (`EditTransactionWindow`), düzenlenmekte olan işlemin bir transfer olması durumunda o transferin diğer ucundaki hesabın hangisi olduğu salt okunur ve şeffaf bir bilgi alanı (`PairedAccountInfo`) olarak gösterilmeye başlandı.
+
+
+
+## [2.0.0-beta.29] - 2026-07-11 — Ana Ekran Kategori Detayları Penceresi
+
+### Added
+- **Dashboard Kategori Detayları Ekranı**: Ana Ekranda (Dashboard) listelenen gelir ve gider kategorilerinin (örn. Kredi Kartı Ödemesi, Market vb.) satırlarına tıklandığında, o kalemi oluşturan hesap hareketlerinin tamamını detaylarıyla (Tarih, Açıklama, Hesap, Tutar) gösteren ferah ve yeni bir detay penceresi (CategoryDetailWindow) eklendi.
+- **Dinamik Sütun Boyutlandırma ve Hibrit Esneklik**: Hem Kategori detayları penceresinde hem de Raporlar kısmındaki "İşlem Dökümü" tablolarında, kullanıcıların fareyle sütun genişliklerini dilediği gibi ayarlayabilmesine (Resize) olanak sağlandı. Sağ tarafta gereksiz beyaz boşluk kalmaması için sadece "Açıklama" sütunlarına otomatik ekranı doldurma (Star Sizing) görevi verildi.
+
+### Fixed
+- **Compiled Bindings (x:DataType) Hatası Çözümü**: Avalonia'nın XAML tarafındaki katı derleme güvenlik standartları gereği, CategoryDetailWindow oluşturulurken alınan "Cannot parse a compiled binding without an explicit x:DataType" hatası, doğru ViewModel referanslarının tanımlanmasıyla giderildi.
+
+
+## [2.0.0-beta.28] - 2026-07-11 — Raporlar Ekranına İşlem Dökümü (Dashboard Görünümü) & Piyasa Özeti İyileştirmesi
+
+### Added
+- **Raporlar Ekranına İşlem Dökümü Sekmesi Eklendi**: "Raporlar ve Analiz" ekranında yer alan sekmelerin arasına, seçilen tarih aralığında gerçekleşen tüm işlemleri Dashboard (Ana Ekran) mantığıyla (sol tarafta gelirler, sağ tarafta giderler) listeleyen yeni bir "İşlem Dökümü" sekmesi entegre edildi. Bu yeni görünümde; işlem tarihi, açıklaması, işlem kategorisi, işlem tutarı ve işlemin gerçekleştiği hesap/kart bilgisi satır bazında detaylı bir şekilde kullanıcıya sunuldu.
+
+### Fixed
+- **Dashboard Canlı Kur Özeti Asenkronlaştırıldı**: Ana ekrandaki yeşil bilgi çubuğuna entegre edilen canlı piyasa verileri (USD, EUR, XAU, XU100) çekim işlemi, uygulamanın (UI) akıcılığını bozmaması için "Task.Run" ile tamamen arka planda çalışacak asenkron yapıya kavuşturuldu. Ayrıca aylar arasında hızlı geçiş yapıldığında arka planda bekleyen isteklerin aynı metni tekrarlı olarak ekrana yazması (double-write bug) 'Contains' kontrolü ile giderildi.
+- **Kredi Kartı Ödemesi Çift Sayım (Double-Count) Hatası Çözüldü**: Planlanan sütununa değer çekilirken, hesaplar arası transfer işleminde paranın hem çıkan hesaptan hem de giren hesaptan iki kez toplanmasına neden olan mantık hatası giderildi; sadece Vadesiz Hesaptan çıkan (CreditCardAccountId == null && Amount < 0) işlemler baz alındı.
+- **Sıralama Mantığı Düzeltildi**: Dashboard görünümünde, gerçekleşen verinin olmadığı gelecek aylar seçildiğinde (ActualAmount=0) tabloların sıralamasının rastgele çalışması sorunu giderildi; sıralama algoritması "Gerçekleşen tutar yoksa Planlanan tutara göre sırala" kuralıyla güncellendi.
+- **Enflasyon Mantığı Genişletildi**: Kredi kartı ekstreleri de dahil tüm harcamaların yıllık bazda enflasyondan etkileneceği gerçek hayat senaryosuna uyumlu olarak, transfer işlemlerindeki enflasyon muafiyeti kaldırılarak, Kredi Kartı Ödemesi ve Ekstre Ödemesi kalemlerine de yıllık enflasyon artışının otomatik yansıması sağlandı.
+
+## [2.0.0-beta.27] - 2026-07-11 — Ana Ekran (Dashboard) Bütçe Görünümü İyileştirmesi
+
+### Changed
+- **Dashboard Görünümü Yenilendi**: Ana ekranın alt kısmında yer alan "işlem tabanlı" 3 sütunlu liste görünümü tamamen kaldırılarak, yerine Excel şablonundaki bütçe planlamasına uygun şekilde **Kategori Bazlı 2 Sütunlu (Alacak ve Borç)** tablo görünümüne geçildi.
+- Her kategori için "Planlanan" değeri öncelikle sistemdeki bütçe limitlerinden çekildi. Eğer bir limit atanmamışsa, **geçen yılın aynı ayındaki gerçekleşen tutara yıllık enflasyon oranı eklenerek** otomatik ve mantıklı bir "Planlanan" tutar oluşturuldu (hem gelir hem de gider kalemleri için).
+- Transfer işlemlerinin yarattığı bilgi kirliliği giderilerek, transferler nakit akış yönüne göre Alacak ve Borç tablolarına "Transfer Girişi / Çıkışı" başlıkları altında düzenli olarak entegre edildi.
+
+### Fixed
+- **Bütçe Takvim Algoritması Çelişkisi Giderildi**: Bütçe (Budget) sekmesindeki aylık harcama hesaplamalarının, Dashboard (Ana Ekran) gibi "Bir önceki ayın son iş günü ile bu ayın son iş günü" mantığını kullanmak yerine standart takvim ayını (Ayın 1'ini) kullandığı tespit edildi. Bütçe hesaplamaları ve Dashboard'un "geçen yılın aynı ayı" sorguları, FinTrack standart ay hesaplama (GetLastBusinessDayOfMonth) rutinine geçirilerek tüm sistemde veri bütünlüğü sağlandı.
+
+## [2.0.0-beta.26] - 2026-07-11 — Kredi Kartı Ekstre Geçmişi ve Borç Ödeme İyileştirmesi (Görev 1-2)
+
+### Added
+- **Aylık Ekstre Geçmişi Görünümü**: Kredi Kartı Detayları ekranında işlemler artık düz bir liste yerine, hesap kesim tarihlerine göre (ekstre dönemi bazında) kronolojik olarak gruplanarak (Expander yapısında) gösteriliyor.
+- **Ekstre Özet Bilgileri**: Her ekstre döneminin başlığında o döneme ait "Toplam Harcama", "Ödeme" ve "Kalan Net Borç" miktarları ayrı ayrı listeleniyor.
+- **Borç Ödeme Otomasyonu**: "Borç Öde" ekranında aktif döneme ait borç hesaplanarak gösterildi ve tek tıkla dönem borcunu doldurmayı sağlayan "Tamamını Öde" (FillFullAmount) butonu eklendi.
+- **Yetersiz Bakiye Koruması**: Kredi kartı borcu ödenirken, seçilen kaynağın (nakit veya banka hesabı) bakiyesi yetersiz ise kullanıcıya "Güncel Bakiye: ₺X.XXX,XX" bilgisi ile uyarı verilmesi ve eksi bakiyeye düşme durumunda işlem onayı (ConfirmDialog) istenmesi sağlandı.
+
+## [2.0.0-beta.25] - 2026-07-10 — Anahtar Dosyasının Güvenli Konuma Taşınması (Görev 6)
+
+### Added
+- **İzole Anahtar Depolaması**: Veritabanı şifreleme bilgilerini içeren `.keys` dosyası artık veritabanı ile aynı klasörde (Belgelerim) tutulmak yerine işletim sisteminin koruduğu `%LOCALAPPDATA%\FinTrack\` gizli sistem klasörüne taşındı.
+- **Güvenlik (Seçenek A)**: Bu sayede yedekleme klasörünün veya veritabanı dosyasının kopyalanması durumunda anahtar dosyasının da sızdırılması engellendi ("Sandık" ve "Anahtar" fiziksel olarak ayrıldı).
+- **Otomatik Temizlik**: Uygulama açıldığında eski konumdaki `.keys` dosyası tespit edilirse otomatik olarak yeni yerine taşınıp eski konumdan siliniyor.
+
+## [2.0.0-beta.24] - 2026-07-10 — Bellek Güvenliği İyileştirmesi (Görev 5)
+
+### Added
+- **Bellek Güvenliği (In-Memory Protection)**: Uygulama kilitlendiğinde (Auto-Lock veya manuel kilitleme) veri şifreleme anahtarı (DEK - Data Encryption Key) bellekte (RAM) açık halde tutulmayıp anında temizleniyor (`SettingsManager.ClearActiveKey()`). Bu sayede kilit ekranındayken bilgisayara yapılabilecek bellek dump (memory dump) saldırılarına karşı veritabanı şifresi tamamen güvenceye alındı. Anahtar, kullanıcı şifresiyle yeniden giriş yapıldığında tekrar oluşturuluyor.
+
+
+## [2.0.0-beta.23] - 2026-07-10 — IBAN ve Banka Adı Alanlarına Otomatik Şifreleme (Görev 4)
+
+### Added
+- **Hassas Veri Şifreleme**: Banka hesaplarına ait IBAN ve Banka Adı (BankName) alanları artık veritabanında düz metin olarak değil, AES-256-CBC standardında şifrelenmiş (encrypted) olarak saklanıyor.
+- **Otomatik Migration (Geçiş)**: Mevcut şifresiz IBAN ve Banka Adı kayıtlarının sisteme ilk giriş yapıldığında otomatik olarak şifreli formata dönüştürülmesi sağlandı. Bu işlem her cihazda sadece bir kez çalışacak şekilde ayarlandı.
+
+
+## [2.0.0-beta.22] - 2026-07-10 — Gemini API Hata Mesajı ve Gecikme İyileştirmesi
+
+### Fixed
+- **Gemini API Yüksek Talep Hatası**: Gemini servislerindeki yoğunluk sebebiyle (503 Service Unavailable) oluşan hatalar için tekrar deneme süresi uzatıldı (max 5 deneme, artan bekleme süresi).
+- **Kullanıcı Deneyimi**: Karmaşık JSON hata mesajı yerine kullanıcıya dostça ("Google Gemini sunucuları şu an çok yoğun...") hata mesajı gösterilmesi sağlandı.
+
+
+## [2.0.0-beta.21] - 2026-07-09 — Gemini API Retry Mekanizması
+
+### Fixed
+- **Gemini 503/429 Hataları**: Gemini API'ye ardışık ekstre yüklendiğinde yoğunluk sebebiyle (High Demand - 503 veya 429) uygulamanın hata vermesi sorunu düzeltildi. API çağrılarına otomatik yeniden deneme (retry) mekanizması eklendi. Artık API meşgul olduğunda 3 defaya kadar artan sürelerle bekleyip arka planda tekrar deneyecek.
+
+## [2.0.0-beta.20] - 2026-07-07 — Kredi Kartı Ekstre Yükleme İyileştirmeleri
+
+### Added
+- **Yükleme Bildirimi (Loading Indicator)**: Kredi kartı ekstresi yüklenirken ve yapay zeka ile analiz edilirken, arka plandaki işlemin devam ettiğini kullanıcıya gösteren tam sayfa bir yükleme animasyonu (Loading Overlay) eklendi.
+
+## [2.0.0-beta.19] - 2026-07-06 — Kredi Kartı Limit ve Borç Hesaplama Düzeltmeleri
+
+### Added
+- **Toplam Kalan Limit Gösterimi**: Kartlarım sayfasındaki en üst özet kutusuna, tüm kartların harcanabilir limitlerini toplayarak gösteren dinamik bir "Toplam Kalan Limit" bölümü eklendi.
+
+### Fixed
+- **Yatırım İşlemlerinin Borca Yansımama Hatası**: Kredi kartı veya sanal kart üzerinden gerçekleştirilen Altın, BES, Fon gibi "Yatırım" alımlarının (InvestmentTransactions), ilgili kartın dönem içi borcuna eklenmemesi ve limitinden düşülmemesi problemi çözüldü. Artık tüm sanal/asıl kart yatırımları, limitleri ve borçları kusursuz olarak etkiliyor.
+
+## [2.0.0-beta.18] - 2026-07-06 — Gemini API Modülü Güncellemesi ve Önizleme İyileştirmeleri
+
+### Added
+- **Ekstre Toplam Tutar Gösterimi**: İçe aktarma önizleme ekranının (ImportPreviewWindow) alt kısmına, sadece seçili (tikli) işlemlerin net toplamını hesaplayan ve anlık güncellenen dinamik bir "Seçilen Toplam" göstergesi eklendi.
+- **Kullanım Kılavuzu Güncellemesi**: Ayarlar ekranındaki Kılavuz sekmesine "🤖 Gemini API Kurulumu ve İçe Aktarma" başlığıyla detaylı bir kurulum rehberi eklendi. Ayrıca Gemini API ayarlarına bu kılavuza hızlı geçiş sağlayan bir kısayol butonu entegre edildi.
+
+### Changed
+- **Gemini API Model Yükseltmesi (Hata Çözümü)**: Google'ın `gemini-1.5-flash` model ismini eski kabul edip kaldırmasından kaynaklı "Not Found" hatası giderildi. Analiz motorunun hatasız çalışması ve Google güncellemelerinden etkilenmemesi için arka plan modeli `gemini-flash-latest` olarak güncellendi.
+
+## [2.0.0-beta.17] - 2026-07-04 — Gemini API ile Kredi Kartı Ekstresi İçe Aktarma
+
+### Added
+- **Gemini Yapay Zeka Servisi (GeminiParserService)**: Kredi kartı ekstre dosyalarını (PDF ve resim/ekran görüntüsü formatlarında) Gemini 1.5 Flash API aracılığıyla analiz edip yapılandırılmış işlem verisi olarak döndüren asenkron servis katmanı entegre edildi.
+- **Güvenli Gemini API Ayarı**: Ayarlar -> API ve Vergi sekmesine Gemini API anahtarının girilebileceği şifreli maskeye sahip yeni bir kart tasarımı ve saklama altyapısı eklendi.
+- **Ekstre Yükleme Butonu**: Kredi Kartlarım ekranında her bir kart için doğrudan "Ekstre Yükle" butonu eklendi; dosya seçici entegre edilerek yükleme ve analiz akışı başlatıldı.
+- **İçe Aktarma Önizleme Ekranı (ImportPreviewWindow)**: Yapay zekadan dönen harcamaların listelendiği, tarih, açıklama ve kategorilerin düzenlenebildiği, mükerrer kayıt analizinin yapıldığı ve onaylanan harcamaların tek tıkla veritabanına aktarıldığı modern bir önizleme ekranı geliştirildi.
+
+## [2.0.0-beta.16] - 2026-06-21 — Güvenlik Fonksiyonlarının Avalonia'ya Taşınması
+
+### Added
+- **Gelişmiş Profil Yönetimi (+ ve - Butonları)**: Giriş ekranındaki (+) butonuyla uygulama içinden hiç ayrılmadan yeni profil oluşturma veya "Gözat" ile mevcut `.db` veritabanını sisteme bağlama entegre edildi. (-) butonu ile de profilin veri tabanı silinmeden sadece cihazdan kaldırılarak bağlantısının kesilmesi sağlandı. Seçilen dosyanın adının otomatik profil adına işlenmesi eklendi.
+- **Şifremi Unuttum (Kurtarma) ve Çift Doğrulama**: Avalonia'nın giriş ekranına modern bir alt-panel (inline) olarak şifre kurtarma mekanizması entegre edildi. Yeni şifre belirlenirken yanlış yazımları önlemek adına şifreyi iki kez sorma (doğrulama) şartı getirildi.
+- **Güvenli Profil Silme (Kalıcı Silme)**: WPF sürümündeki 3 aşamalı profil silme ve `ConfirmPassword` mantığı yeniden uyarlandı. Giriş ekranı üzerinden yanlışlıkla profil silinmesini önlemek adına "Kalıcı Olarak Sil" işlemi öncesi ana şifre doğrulaması isteyen özel kırmızı uyarı ekranı tasarlandı.
+- **Kurtarma Kodu (Recovery Code) Gösterimi**: Yeni bir profil oluşturulduğunda kullanıcıya verilen (ve uygulamanın WPF sürümünde bulunan) kritik "Kurtarma Kodu"nun, Avalonia kurulum ekranında görünmemesi ve kullanıcıya verilmemesi hatası (TODO) düzeltildi. Kod, kopyalanabilir ve şık bir panelde kullanıcı onayından geçerek teslim edilecek formata dönüştürüldü.
+- **Arayüz Entegrasyonu (Inline UI)**: Tüm bu güvenlik fonksiyonları harici popup pencereler açmak yerine, doğrudan LoginView içerisinde şık, akıcı ve çok daha modern bir geçişle (inline panel mantığıyla) sağlandı.
 
 ## [2.0.0-beta.15] - 2026-06-21 — Kredi Kartı Detay Ekranı Geliştirmeleri
 
@@ -714,3 +1088,4 @@ Projenin sürdürülebilirliği ve güvenliği için aşağıdaki prensipler uyg
 - **Mimar:** MVVM (CommunityToolkit.Mvvm)
 - **Render Motoru:** Skia (Cross-platform performans için)
 - **Veritabanı:** SQLCipher (Şifreleme korunacak)
+

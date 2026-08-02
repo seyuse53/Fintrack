@@ -9,6 +9,7 @@ using FinTrack.Core.Models;
 using FinTrack.Core.Services;
 using FinTrack.Data;
 using Microsoft.EntityFrameworkCore;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels
 {
@@ -41,7 +42,7 @@ namespace FinTrack.Avalonia.ViewModels
         private string _netReturnColorHex = "#2C3E50";
 
         [ObservableProperty]
-        private string _transactionCountText = "(0 işlem)";
+        private string _transactionCountText = string.Format(LocalizationService.GetString("Tax_TxCountFormat"), 0);
 
         [ObservableProperty]
         private ObservableCollection<TaxDetailViewModel> _taxDetails = new();
@@ -102,7 +103,7 @@ namespace FinTrack.Avalonia.ViewModels
                     var asset = tx.InvestmentAsset;
                     if (asset == null) continue;
 
-                    string category = asset.Category ?? "Diğer";
+                    string category = asset.Category ?? LocalizationService.GetString("Global_Other");
 
                     if (tx.Type == InvestmentTransactionType.Sell)
                     {
@@ -119,7 +120,7 @@ namespace FinTrack.Avalonia.ViewModels
                         {
                             Date = tx.Date,
                             AssetName = $"{asset.Symbol} ({asset.Name})",
-                            TypeText = "🔴 Satış",
+                            TypeText = LocalizationService.GetString("Tax_Sell"),
                             TypeColorHex = "#E74C3C",
                             Amount = tx.Amount,
                             BuyCost = buyCost,
@@ -146,7 +147,7 @@ namespace FinTrack.Avalonia.ViewModels
                         {
                             Date = tx.Date,
                             AssetName = $"{asset.Symbol} ({asset.Name})",
-                            TypeText = "💰 Temettü",
+                            TypeText = LocalizationService.GetString("Tax_Dividend"),
                             TypeColorHex = "#F39C12",
                             Amount = tx.Amount,
                             BuyCost = 0,
@@ -171,7 +172,7 @@ namespace FinTrack.Avalonia.ViewModels
                 NetReturnText = netReturn >= 0 ? $"+₺{netReturn:N2}" : $"-₺{Math.Abs(netReturn):N2}";
                 NetReturnColorHex = netReturn >= 0 ? "#2980B9" : "#E74C3C";
 
-                TransactionCountText = $"({taxItems.Count} işlem)";
+                TransactionCountText = string.Format(LocalizationService.GetString("Tax_TxCountFormat"), taxItems.Count);
                 TaxDetails = new ObservableCollection<TaxDetailViewModel>(taxItems);
             }
             catch

@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  
+  <data name="Login_Title" xml:space="preserve"><value>KT FinTrack'e Giriş Yapın</value></data>
+  <data name="Login_NewProfile" xml:space="preserve"><value>Yeni Profil Kurulumu</value></data>
+  <data name="Login_SelectProfile" xml:space="preserve"><value>Profil Seçin:</value></data>
+  <data name="Login_EnterPassword" xml:space="preserve"><value>Şifrenizi Girin:</value></data>
+  <data name="Login_EnterPasswordAgain" xml:space="preserve"><value>Şifrenizi Tekrar Girin:</value></data>
+  <data name="Login_Button_Login" xml:space="preserve"><value>Giriş</value></data>
+  <data name="Login_Button_CompleteSetup" xml:space="preserve"><value>Kurulumu Tamamla</value></data>
+  <data name="Login_Button_ForgotPassword" xml:space="preserve"><value>Şifremi Unuttum</value></data>
+  <data name="Login_Button_DeleteProfile" xml:space="preserve"><value>Profili Sil</value></data>
+  <data name="Login_PasswordReset" xml:space="preserve"><value>Şifre Sıfırlama</value></data>
+  <data name="Login_RecoveryCodePlaceholder" xml:space="preserve"><value>Kurtarma Kodunuz</value></data>
+  <data name="Login_NewPasswordPlaceholder" xml:space="preserve"><value>Yeni Şifre</value></data>
+  <data name="Login_NewPasswordConfirmPlaceholder" xml:space="preserve"><value>Yeni Şifre (Tekrar)</value></data>
+  <data name="Login_Button_Cancel" xml:space="preserve"><value>İptal</value></data>
+  <data name="Login_Button_Reset" xml:space="preserve"><value>Sıfırla</value></data>
+  <data name="Login_DeleteProfilePermanent" xml:space="preserve"><value>Profili Kalıcı Olarak Sil</value></data>
+  <data name="Login_DeleteProfileWarning" xml:space="preserve"><value>Bu işlem geri alınamaz! Mevcut profilin veritabanı tamamen silinecektir. Lütfen devam etmek için şifrenizi girin.</value></data>
+  <data name="Login_DeleteProfileWarningShort" xml:space="preserve"><value>Seçili profili kalıcı olarak silmek istediğinize emin misiniz? (Veritabanı korunur, sadece bağlantı koparılır)</value></data>
+  <data name="Login_RemoveProfileTitle" xml:space="preserve"><value>Profili Listeden Kaldır</value></data>
+  <data name="Login_Tooltip_AddProfile" xml:space="preserve"><value>Yeni Profil Ekle</value></data>
+  <data name="Login_Tooltip_RemoveProfile" xml:space="preserve"><value>Profili Listeden Kaldır</value></data>
+
+  <data name="Login_Msg_ProfileRemoved" xml:space="preserve"><value>'{0}' bağlantısı listeden kaldırıldı.</value></data>
+  <data name="Login_Msg_PasswordsDoNotMatch" xml:space="preserve"><value>Şifreler eşleşmiyor.</value></data>
+  <data name="Login_Msg_PasswordMinLength" xml:space="preserve"><value>Şifre en az 4 karakter olmalıdır.</value></data>
+  <data name="Login_Msg_SetupCompleted" xml:space="preserve"><value>Kurulum tamamlandı. Giriş yapabilirsiniz.</value></data>
+  <data name="Login_Msg_InvalidPassword" xml:space="preserve"><value>Geçersiz şifre veya bozuk veritabanı.</value></data>
+  <data name="Login_Msg_RecoveryCodeInvalid" xml:space="preserve"><value>Geçersiz kurtarma kodu.</value></data>
+  <data name="Login_Msg_PasswordResetSuccess" xml:space="preserve"><value>Şifreniz başarıyla sıfırlandı.</value></data>
+  <data name="Login_Msg_PasswordResetFailed" xml:space="preserve"><value>Şifre sıfırlama başarısız oldu.</value></data>
+  <data name="Login_Msg_IncorrectPassword" xml:space="preserve"><value>Şifre yanlış.</value></data>
+  <data name="Login_Msg_ProfileDeleted" xml:space="preserve"><value>'{0}' profili kalıcı olarak silindi.</value></data>
+  
+  <!-- Phase 1: Sidebar & TopBar -->
+  <data name="Main_Subtitle" xml:space="preserve"><value>Kişisel Finans Takip</value></data>
+  <data name="Menu_Dashboard" xml:space="preserve"><value>🏠 Ana Ekran (Özet)</value></data>
+  <data name="Menu_Budget" xml:space="preserve"><value>📊 Bütçe</value></data>
+  <data name="Menu_Cards" xml:space="preserve"><value>💳 Kartlarım</value></data>
+  <data name="Menu_Accounts" xml:space="preserve"><value>🏦 Hesaplarım</value></data>
+  <data name="Menu_Investments" xml:space="preserve"><value>📈 Yatırımlar</value></data>
+  <data name="Menu_Bes" xml:space="preserve"><value>🧓 Bireysel Emeklilik</value></data>
+  <data name="Menu_Reports" xml:space="preserve"><value>📉 Raporlar</value></data>
+  <data name="Menu_Settings" xml:space="preserve"><value>⚙️ Ayarlar</value></data>
+  <data name="Main_SearchPlaceholder" xml:space="preserve"><value>Ara... (Ctrl+K)</value></data>
+  <data name="Main_AddTransaction" xml:space="preserve"><value>+ Yeni İşlem Ekle</value></data>
+  
+  <data name="Main_Title_Dashboard" xml:space="preserve"><value>Ana Ekran (Özet)</value></data>
+  <data name="Main_Title_Budget" xml:space="preserve"><value>Bütçe Yönetimi</value></data>
+  <data name="Main_Title_Cards" xml:space="preserve"><value>Kartlarım</value></data>
+  <data name="Main_Title_Accounts" xml:space="preserve"><value>Hesaplarım</value></data>
+  <data name="Main_Title_Investments" xml:space="preserve"><value>Yatırımlar</value></data>
+  <data name="Main_Title_Bes" xml:space="preserve"><value>Bireysel Emeklilik (BES)</value></data>
+  <data name="Main_Title_Reports" xml:space="preserve"><value>Raporlar ve Analiz</value></data>
+  <data name="Main_Title_Settings" xml:space="preserve"><value>Ayarlar</value></data>
+  <!-- Phase 3: Dashboard -->
+  <data name="Dashboard_TotalIncome" xml:space="preserve"><value>Toplam Gelir</value></data>
+  <data name="Dashboard_TotalExpense" xml:space="preserve"><value>Toplam Gider</value></data>
+  <data name="Dashboard_TotalWealth" xml:space="preserve"><value>Toplam Varlık (Nakit + Banka)</value></data>
+  <data name="Dashboard_InvestmentPortfolio" xml:space="preserve"><value>Yatırım Portföyü</value></data>
+  <data name="Dashboard_IncomeThisMonth" xml:space="preserve"><value>🟢 ALACAK (BU AY)</value></data>
+  <data name="Dashboard_TransferOther" xml:space="preserve"><value>🔄 TRANSFER / DİĞER</value></data>
+  <data name="Dashboard_ExpenseThisMonth" xml:space="preserve"><value>🔴 BORÇ (BU AY)</value></data>
+
+  <!-- Phase 4A: Accounts and Cards -->
+  <data name="Accounts_WalletCash" xml:space="preserve"><value>CÜZDAN (NAKİT)</value></data>
+  <data name="Accounts_TotalCashBalance" xml:space="preserve"><value>Toplam Nakit Bakiye</value></data>
+  <data name="Accounts_MyBankAccounts" xml:space="preserve"><value>BANKA HESAPLARIM</value></data>
+  <data name="Accounts_ManageAccounts" xml:space="preserve"><value>Hesapları Yönet</value></data>
+  <data name="General_Transfer" xml:space="preserve"><value>Transfer</value></data>
+  <data name="General_Details" xml:space="preserve"><value>Detaylar</value></data>
+  <data name="Cards_MyCreditCards" xml:space="preserve"><value>KREDİ KARTLARIM</value></data>
+  <data name="Cards_ManageCards" xml:space="preserve"><value>Kartları Yönet</value></data>
+  <data name="Cards_TotalCreditLimit" xml:space="preserve"><value>Toplam Kredi Limiti</value></data>
+  <data name="Cards_TotalCurrentDebt" xml:space="preserve"><value>Toplam Güncel Borç</value></data>
+  <data name="Cards_CurrentDebt" xml:space="preserve"><value>Güncel Borç:</value></data>
+  <data name="Cards_RemainingLimit" xml:space="preserve"><value>Kalan Limit:</value></data>
+  <data name="Cards_PayDebt" xml:space="preserve"><value>Borç Öde</value></data>
+  <data name="ManageAccounts_MakeInactive" xml:space="preserve"><value>Pasif Yap</value></data>
+  <data name="ManageAccounts_MakeActive" xml:space="preserve"><value>Aktif Yap</value></data>
+  <data name="General_Edit" xml:space="preserve"><value>Düzenle</value></data>
+  <data name="General_Delete" xml:space="preserve"><value>Sil</value></data>
+  <data name="ManageAccounts_BankName" xml:space="preserve"><value>Banka Adı:</value></data>
+  <data name="ManageAccounts_SelectBank" xml:space="preserve"><value>Banka Seçiniz...</value></data>
+  <data name="ManageAccounts_AccountName" xml:space="preserve"><value>Hesap Adı:</value></data>
+  <data name="ManageAccounts_EgChecking" xml:space="preserve"><value>Örn: Vadesiz TL</value></data>
+  <data name="ManageAccounts_IbanOptional" xml:space="preserve"><value>IBAN (Opsiyonel):</value></data>
+  <data name="ManageAccounts_InitialBalance" xml:space="preserve"><value>Açılış Bakiyesi:</value></data>
+  <data name="ManageAccounts_Eg1000" xml:space="preserve"><value>Örn: 1000.00</value></data>
+  <data name="General_Cancel" xml:space="preserve"><value>İptal</value></data>
+  <data name="General_Close" xml:space="preserve"><value>Kapat</value></data>
+  <data name="ManageAccounts_Inactive" xml:space="preserve"><value>Pasif</value></data>
+  <data name="ManageCards_CardNameLabel" xml:space="preserve"><value>Kart Adı (Etiket)</value></data>
+  <data name="ManageCards_EgMainVirtual" xml:space="preserve"><value>Örn: Asıl Kart, Sanal Kart</value></data>
+  <data name="ManageCards_Limit" xml:space="preserve"><value>Limit (₺)</value></data>
+  <data name="ManageCards_StatementDay" xml:space="preserve"><value>Hesap Kesim (Gün)</value></data>
+  <data name="ManageCards_PaymentDueDay" xml:space="preserve"><value>Son Ödeme (Gün)</value></data>
+  <data name="ManageCards_LinkedCardOptional" xml:space="preserve"><value>Bağlı Olduğu Kart (Opsiyonel)</value></data>
+  <data name="ManageCards_ExistingCards" xml:space="preserve"><value>MEVCUT KARTLAR</value></data>
+  <data name="ManageCards_StatusInactive" xml:space="preserve"><value>Durum: Pasif</value></data>
+  <data name="ManageAccounts_AddTitle" xml:space="preserve"><value>Yeni Banka Hesabı Ekle</value></data>
+  <data name="ManageAccounts_AddButton" xml:space="preserve"><value>Hesap Ekle</value></data>
+  <data name="ManageAccounts_EditTitle" xml:space="preserve"><value>Hesabı Düzenle</value></data>
+  <data name="ManageAccounts_UpdateButton" xml:space="preserve"><value>Güncelle</value></data>
+  <data name="ManageAccounts_ErrNameReq" xml:space="preserve"><value>Banka Adı ve Hesap Adı zorunludur.</value></data>
+  <data name="ManageAccounts_ErrHasTx" xml:space="preserve"><value>Bu hesaba ait işlemler bulunduğu için hesap silinemez. Bunun yerine hesabı pasif yapabilirsiniz.</value></data>
+  <data name="ManageCards_NoLinkedCard" xml:space="preserve"><value>Bağlı Kart Yok (Ana Kart)</value></data>
+  <data name="ManageCards_ErrNameReq" xml:space="preserve"><value>Banka Adı ve Kart Adı zorunludur.</value></data>
+  <data name="ManageCards_ErrInvalidLimit" xml:space="preserve"><value>Geçerli bir limit giriniz.</value></data>
+  <data name="ManageCards_ErrStatementDay" xml:space="preserve"><value>Hesap kesim günü 1 ile 31 arasında olmalıdır.</value></data>
+  <data name="ManageCards_ErrDueDay" xml:space="preserve"><value>Son ödeme günü 1 ile 31 arasında olmalıdır.</value></data>
+  <data name="ManageCards_AddTitle" xml:space="preserve"><value>YENİ KART EKLE</value></data>
+  <data name="ManageCards_AddButton" xml:space="preserve"><value>Kart Ekle</value></data>
+  <data name="ManageCards_EditTitle" xml:space="preserve"><value>KARTI DÜZENLE</value></data>
+  <data name="ManageCards_ErrHasTx" xml:space="preserve"><value>Bu karta ait işlemler bulunduğu için kart silinemez. Bunun yerine kartı pasif yapabilirsiniz.</value></data>
+  <data name="ManageCards_ErrHasChild" xml:space="preserve"><value>Bu karta bağlı ek/sanal kartlar bulunduğu için silinemez. Önce bağlı kartları silmelisiniz.</value></data>
+  <data name="Cards_DaysLeftExcl" xml:space="preserve"><value>{0} Gün Kaldı!</value></data>
+  <data name="Cards_DaysLeft" xml:space="preserve"><value>{0} Gün Kaldı</value></data>
+  <data name="Cards_Days" xml:space="preserve"><value>{0} Gün</value></data>
+  <data name="Cards_StatementDesc" xml:space="preserve"><value>{0} - {1} Ekstresi</value></data>
+  <data name="Investments_TotalPortfolio" xml:space="preserve"><value>Toplam Portföy</value></data>
+  <data name="Investments_TotalCost" xml:space="preserve"><value>Toplam Maliyet</value></data>
+  <data name="Investments_NetProfitLoss" xml:space="preserve"><value>Net Kâr / Zarar</value></data>
+  <data name="Investments_TopPerformer" xml:space="preserve"><value>En Çok Kazandıran</value></data>
+  <data name="Investments_Category" xml:space="preserve"><value>Kategori:</value></data>
+  <data name="Investments_TaxReport" xml:space="preserve"><value>📊 Vergi Raporu</value></data>
+  <data name="Investments_FetchPrices" xml:space="preserve"><value>🔄 Fiyatları Çek (API)</value></data>
+  <data name="Investments_Manage" xml:space="preserve"><value>➕ Yatırım Al/Sat</value></data>
+  <data name="Investments_Amount" xml:space="preserve"><value>Miktar</value></data>
+  <data name="Investments_CostAndPrice" xml:space="preserve"><value>Maliyet / Anlık Fiyat</value></data>
+  <data name="Investments_TotalValueAndProfit" xml:space="preserve"><value>Toplam Değer / Kâr</value></data>
+  <data name="Investments_Details" xml:space="preserve"><value>İşlemler</value></data>
+  <data name="Bes_CurrentContracts" xml:space="preserve"><value>Mevcut BES Sözleşmeleriniz</value></data>
+  <data name="Bes_Manage" xml:space="preserve"><value>➕ Yeni BES Ekle / Ödeme Yap</value></data>
+  <data name="Bes_UpdateContract" xml:space="preserve"><value>Sözleşmeyi Güncelle</value></data>
+  <data name="Bes_History" xml:space="preserve"><value>Geçmiş İşlemler</value></data>
+  <data name="Bes_ContractNo" xml:space="preserve"><value>Müşteri/Sözleşme No:</value></data>
+  <data name="Bes_StartDate" xml:space="preserve"><value>Sözleşme Yürürlük:</value></data>
+  <data name="Bes_RetirementDate" xml:space="preserve"><value>Emeklilik Tarihi:</value></data>
+  <data name="Bes_TimeUntilRetirement" xml:space="preserve"><value>Emekliliğe Kalan Süre:</value></data>
+  <data name="Bes_VestingRate" xml:space="preserve"><value>Devlet Katkısı Hakediş:</value></data>
+  <data name="Bes_StateContribution" xml:space="preserve"><value>Devlet Katkısı:</value></data>
+  <data name="Bes_CostBasis" xml:space="preserve"><value>Ana Para (Ödenen)</value></data>
+  <data name="Bes_GoldBasis" xml:space="preserve"><value>Altın Karş. (Ana Para)</value></data>
+  <data name="Bes_GoldCurrent" xml:space="preserve"><value>Güncel (Katkı Dahil)</value></data>
+  <data name="Bes_CurrentValue" xml:space="preserve"><value>Güncel Fon Değeri</value></data>
+  <data name="Bes_Profit" xml:space="preserve"><value>Fon Getirisi (Kâr)</value></data>
+  <data name="Bes_VestedContribution" xml:space="preserve"><value>Hakedilen Devlet Katkısı</value></data>
+  <data name="Bes_SystemDuration" xml:space="preserve"><value>Sistemde Süre</value></data>
+  <data name="Bes_MonthlyAvg" xml:space="preserve"><value>Aylık Ort. Birikim</value></data>
+  <data name="Bes_FundPrice" xml:space="preserve"><value>Fon Birim Fiyatı</value></data>
+  <data name="Bes_NotEntered" xml:space="preserve"><value>Girilemedi</value></data>
+  <data name="ManageInvestments_Title" xml:space="preserve"><value>Yatırımları Yönet</value></data>
+  <data name="ManageInvestments_Header" xml:space="preserve"><value>Yatırım Portföyü Yönetimi</value></data>
+  <data name="ManageInvestments_Desc" xml:space="preserve"><value>Mevcut varlıklarınızı listeleyebilir, yeni alım satım işlemi yapabilirsiniz.</value></data>
+  <data name="ManageInvestments_AddBtn" xml:space="preserve"><value>+ Yeni Yatırım (Satın Al)</value></data>
+  <data name="ManageInvestments_History" xml:space="preserve"><value>📋 Geçmiş</value></data>
+  <data name="ManageInvestments_Edit" xml:space="preserve"><value>✏️ Düzenle</value></data>
+  <data name="ManageInvestments_Sell" xml:space="preserve"><value>💸 Sat</value></data>
+  <data name="ManageInvestments_Delete" xml:space="preserve"><value>🗑️ Sil</value></data>
+  <data name="UpdateBes_Title" xml:space="preserve"><value>BES Değerlerini Güncelle</value></data>
+  <data name="UpdateBes_ContractNoLabel" xml:space="preserve"><value>Müşteri/Sözleşme No</value></data>
+  <data name="UpdateBes_BirthDate" xml:space="preserve"><value>Doğum Tarihi</value></data>
+  <data name="UpdateBes_BirthDateDesc" xml:space="preserve"><value>Yaşınıza göre emeklilik tarihi otomatik hesaplanır.</value></data>
+  <data name="UpdateBes_RetirementAge" xml:space="preserve"><value>Emeklilik Yaşı</value></data>
+  <data name="UpdateBes_StartDate" xml:space="preserve"><value>Sözleşme Yürürlük Tarihi</value></data>
+  <data name="UpdateBes_RetirementDate" xml:space="preserve"><value>Emeklilik Tarihi</value></data>
+  <data name="UpdateBes_CurrentValue" xml:space="preserve"><value>Güncel Fon Değeri (TL)</value></data>
+  <data name="UpdateBes_CurrentValueDesc" xml:space="preserve"><value>Boş bırakırsanız otomatik hesaplanır.</value></data>
+  <data name="UpdateBes_StateContribution" xml:space="preserve"><value>Devlet Katkısı (TL)</value></data>
+  <data name="UpdateBes_StateContributionDesc" xml:space="preserve"><value>Otomatik hakediş hesaplanır.</value></data>
+  <data name="Investments_Weight" xml:space="preserve"><value>Ağırlık:</value></data>
+  <data name="Bes_NotSpecified" xml:space="preserve"><value>Belirtilmemiş</value></data>
+  <data name="Bes_DurationFormat" xml:space="preserve"><value>{0} Yıl {1} Ay</value></data>
+  <data name="Bes_RetirementEarned" xml:space="preserve"><value>Emeklilik Hakkı Kazanıldı!</value></data>
+  <data name="Bes_TimeLeftFormat" xml:space="preserve"><value>{0} yıl {1} ay</value></data>
+  <data name="Budget_Title" xml:space="preserve"><value>📊 Bütçe Yönetimi</value></data>
+  <data name="Budget_UpdateData" xml:space="preserve"><value>🔄 Verileri Güncelle</value></data>
+  <data name="Budget_SelectCategory" xml:space="preserve"><value>Kategori Seçin</value></data>
+  <data name="Budget_MonthlyLimit" xml:space="preserve"><value>Aylık Limit (₺)</value></data>
+  <data name="Budget_Apply" xml:space="preserve"><value>Uygula</value></data>
+  <data name="Budget_Save" xml:space="preserve"><value>💾 Kaydet</value></data>
+  <data name="Budget_Delete" xml:space="preserve"><value>🗑 Sil</value></data>
+  <data name="Budget_Cancel" xml:space="preserve"><value>✕ Vazgeç</value></data>
+  <data name="Budget_Loading" xml:space="preserve"><value>Yükleniyor...</value></data>
+  <data name="Budget_SuggestionFormat" xml:space="preserve"><value>💡 Öneri (Geçen Yıl + Enflasyon): {0:C0}</value></data>
+  <data name="Budget_NoLimit" xml:space="preserve"><value>{0:C0} (limit yok)</value></data>
+  <data name="Budget_NoData" xml:space="preserve"><value>💡 {0} {1}: Veri yok</value></data>
+  <data name="Budget_LastYearFormat" xml:space="preserve"><value>💡 {0} {1}: {2:C0}</value></data>
+  <data name="Budget_NoInflationData" xml:space="preserve"><value>📈 Enflasyon verisi mevcut değil</value></data>
+  <data name="Budget_InflationAdj" xml:space="preserve"><value>{0:C0} (TÜFE %{1:F1})</value></data>
+  <data name="Budget_Saved" xml:space="preserve"><value>🟢 Tasarruf!</value></data>
+  <data name="Budget_Increased" xml:space="preserve"><value>🔴 Artış</value></data>
+  
+  <data name="Reports_StartDate" xml:space="preserve"><value>Başlangıç Tarihi:</value></data>
+  <data name="Reports_EndDate" xml:space="preserve"><value>Bitiş Tarihi:</value></data>
+  <data name="Reports_Analyze" xml:space="preserve"><value>🔍 Analiz Et</value></data>
+  <data name="Reports_PeriodIncome" xml:space="preserve"><value>Dönem Geliri</value></data>
+  <data name="Reports_PeriodExpense" xml:space="preserve"><value>Dönem Gideri</value></data>
+  <data name="Reports_NetSavings" xml:space="preserve"><value>Net Tasarruf</value></data>
+  <data name="Reports_TabExpense" xml:space="preserve"><value>📊 Harcama Dağılımı</value></data>
+  <data name="Reports_TopExpenseCategories" xml:space="preserve"><value>En Çok Harcanan Kategoriler</value></data>
+  <data name="Reports_AllExpenses" xml:space="preserve"><value>Tüm Giderlerin Dökümü</value></data>
+  <data name="Reports_Category" xml:space="preserve"><value>Kategori</value></data>
+  <data name="Reports_TxCount" xml:space="preserve"><value>İşlem Sayısı</value></data>
+  <data name="Reports_TotalAmount" xml:space="preserve"><value>Toplam Tutar</value></data>
+  <data name="Reports_Share" xml:space="preserve"><value>Pay</value></data>
+  <data name="Reports_TabIncome" xml:space="preserve"><value>💵 Gelir Dağılımı</value></data>
+  <data name="Reports_TopIncomeCategories" xml:space="preserve"><value>En Çok Gelir Getiren Kategoriler</value></data>
+  <data name="Reports_AllIncomes" xml:space="preserve"><value>Tüm Gelirlerin Dökümü</value></data>
+  <data name="Reports_TabTrends" xml:space="preserve"><value>📈 Trendler (6 Ay)</value></data>
+  <data name="Reports_MonthlyComparison" xml:space="preserve"><value>Aylık Gelir vs Gider Karşılaştırması</value></data>
+  <data name="Reports_TabInvestments" xml:space="preserve"><value>💎 Yatırım Dağılımı</value></data>
+  <data name="Reports_PortfolioAllocation" xml:space="preserve"><value>Portföy Dağılımı (Varlık Türü)</value></data>
+  <data name="Reports_TotalPortfolioValue" xml:space="preserve"><value>TOPLAM PORTFÖY DEĞERİ</value></data>
+  <data name="Reports_TotalProfitLoss" xml:space="preserve"><value>TOPLAM KÂR / ZARAR</value></data>
+  <data name="Reports_Analyzing" xml:space="preserve"><value>Analiz Ediliyor...</value></data>
+  
+  <data name="Tax_Title" xml:space="preserve"><value>📊 Yatırım Vergi Raporu</value></data>
+  <data name="Tax_Year" xml:space="preserve"><value>Yıl:</value></data>
+  <data name="Tax_TotalGain" xml:space="preserve"><value>Toplam Kazanç</value></data>
+  <data name="Tax_EstimatedTax" xml:space="preserve"><value>Tahmini Vergi</value></data>
+  <data name="Tax_DividendIncome" xml:space="preserve"><value>Temettü Geliri (Brüt)</value></data>
+  <data name="Tax_NetReturn" xml:space="preserve"><value>Net Getiri (Vergi Sonrası)</value></data>
+  <data name="Tax_TxDetails" xml:space="preserve"><value>📋 İşlem Detayları</value></data>
+  <data name="Tax_Date" xml:space="preserve"><value>Tarih</value></data>
+  <data name="Tax_Asset" xml:space="preserve"><value>Varlık</value></data>
+  <data name="Tax_Type" xml:space="preserve"><value>Tür</value></data>
+  <data name="Tax_Amount" xml:space="preserve"><value>Adet</value></data>
+  <data name="Tax_BuyCost" xml:space="preserve"><value>Alım Maliyeti</value></data>
+  <data name="Tax_SellRevenue" xml:space="preserve"><value>Satış Geliri</value></data>
+  <data name="Tax_Gain" xml:space="preserve"><value>Kazanç</value></data>
+  <data name="Tax_TaxRate" xml:space="preserve"><value>Vergi Oranı</value></data>
+  <data name="Tax_Warning" xml:space="preserve"><value>Bu rapor bilgilendirme amaçlıdır, kesin vergi tavsiyesi niteliğinde değildir.</value></data>
+  <data name="Tax_Sell" xml:space="preserve"><value>🔴 Satış</value></data>
+  <data name="Tax_Dividend" xml:space="preserve"><value>💰 Temettü</value></data>
+  <data name="Tax_TxCountFormat" xml:space="preserve"><value>({0} işlem)</value></data>
+  
+  <data name="Global_Other" xml:space="preserve"><value>Diğer</value></data>
+  <data name="Global_Date" xml:space="preserve"><value>Tarih:</value></data>
+  <data name="Global_Amount" xml:space="preserve"><value>Tutar:</value></data>
+  <data name="Global_Category" xml:space="preserve"><value>Kategori:</value></data>
+  <data name="Global_Description" xml:space="preserve"><value>Açıklama:</value></data>
+  <data name="Global_Cancel" xml:space="preserve"><value>İptal</value></data>
+  <data name="Global_Save" xml:space="preserve"><value>Kaydet</value></data>
+  <data name="Global_Update" xml:space="preserve"><value>Güncelle</value></data>
+  <data name="Global_WalletCash" xml:space="preserve"><value>Cüzdan (Nakit)</value></data>
+  <data name="Global_ErrInvalidAmount" xml:space="preserve"><value>Lütfen geçerli bir tutar giriniz.</value></data>
+  <data name="Global_Close" xml:space="preserve"><value>Kapat</value></data>
+
+  <data name="AddTransaction_Title" xml:space="preserve"><value>Yeni İşlem Ekle</value></data>
+  <data name="AddTransaction_PaymentMethod" xml:space="preserve"><value>Ödeme Yöntemi:</value></data>
+  <data name="AddTransaction_InstallmentCheck" xml:space="preserve"><value>Taksitli İşlem</value></data>
+  <data name="AddTransaction_InstallmentLabel" xml:space="preserve"><value>Taksit:</value></data>
+  <data name="AddTransaction_Cash" xml:space="preserve"><value>💵 Nakit</value></data>
+  <data name="AddTransaction_ErrCategory" xml:space="preserve"><value>Lütfen bir kategori seçiniz.</value></data>
+  <data name="AddTransaction_InstallmentFormat" xml:space="preserve"><value>{0} ({1}/{2} Taksit)</value></data>
+  <data name="AddTransaction_ErrSave" xml:space="preserve"><value>İşlem kaydedilirken hata oluştu: {0}</value></data>
+
+  <data name="EditTransaction_Title" xml:space="preserve"><value>İşlem Düzenle</value></data>
+  <data name="EditTransaction_ErrNotFound" xml:space="preserve"><value>İşlem bulunamadı.</value></data>
+  <data name="EditTransaction_ErrUpdate" xml:space="preserve"><value>İşlem güncellenirken hata oluştu: {0}</value></data>
+
+  <data name="Transfer_Title" xml:space="preserve"><value>Para Transferi</value></data>
+  <data name="Transfer_From" xml:space="preserve"><value>Nereden:</value></data>
+  <data name="Transfer_To" xml:space="preserve"><value>Nereye:</value></data>
+  <data name="Transfer_Execute" xml:space="preserve"><value>Transfer Et</value></data>
+  <data name="Transfer_ErrAccounts" xml:space="preserve"><value>Lütfen kaynak ve hedef hesapları seçiniz.</value></data>
+  <data name="Transfer_ErrSameAccount" xml:space="preserve"><value>Kaynak ve hedef hesaplar aynı olamaz.</value></data>
+  <data name="Transfer_DefaultDesc" xml:space="preserve"><value>Para Transferi</value></data>
+
+  <data name="PayCard_Subtitle" xml:space="preserve"><value>Kredi kartı borcunuzu ödeyin</value></data>
+  <data name="PayCard_SourceAccount" xml:space="preserve"><value>Ödeme Yapılacak Hesap (Kaynak)</value></data>
+  <data name="PayCard_AmountToPay" xml:space="preserve"><value>Ödenen Tutar (₺)</value></data>
+  <data name="PayCard_PaymentDate" xml:space="preserve"><value>Ödeme Tarihi</value></data>
+  <data name="PayCard_DescOpt" xml:space="preserve"><value>Açıklama (İsteğe Bağlı)</value></data>
+  <data name="PayCard_Execute" xml:space="preserve"><value>Ödemeyi Kaydet</value></data>
+  <data name="PayCard_TitleFormat" xml:space="preserve"><value>{0} - {1} Borç Ödemesi</value></data>
+  <data name="PayCard_ErrSource" xml:space="preserve"><value>Lütfen ödemenin yapılacağı hesabı seçiniz.</value></data>
+  <data name="PayCard_DefaultDesc" xml:space="preserve"><value>Kredi Kartı Ödemesi</value></data>
+  <data name="Global_OK" xml:space="preserve"><value>Tamam</value></data>
+  <data name="Global_Warning" xml:space="preserve"><value>Dikkat</value></data>
+  <data name="Global_Error" xml:space="preserve"><value>Hata</value></data>
+  <data name="Global_Info" xml:space="preserve"><value>Bilgi</value></data>
+  <data name="Global_Yes" xml:space="preserve"><value>Evet</value></data>
+  <data name="Global_No" xml:space="preserve"><value>Hayır</value></data>
+  <data name="Global_GiveUp" xml:space="preserve"><value>Vazgeç</value></data>
+
+  <data name="AddInvestment_Title" xml:space="preserve"><value>Yeni Yatırım Ekle</value></data>
+  <data name="AddInvestment_Symbol" xml:space="preserve"><value>Sembol (örn: GLD, USD, AAPL)</value></data>
+  <data name="AddInvestment_Name" xml:space="preserve"><value>Varlık Adı</value></data>
+  <data name="AddInvestment_Category" xml:space="preserve"><value>Kategori</value></data>
+  <data name="AddInvestment_Amount" xml:space="preserve"><value>Miktar</value></data>
+  <data name="AddInvestment_UnitPrice" xml:space="preserve"><value>Birim Fiyatı (₺)</value></data>
+  <data name="AddInvestment_Fee" xml:space="preserve"><value>Aracı Kurum Masrafı / Komisyon (₺)</value></data>
+  <data name="AddInvestment_TotalCost" xml:space="preserve"><value>Toplam Maliyet:</value></data>
+  <data name="AddInvestment_PaymentMethod" xml:space="preserve"><value>Ödeme Yapılan Hesap (İsteğe Bağlı)</value></data>
+  <data name="AddInvestment_PaymentHint" xml:space="preserve"><value>Seçilen hesabın bakiyesi otomatik olarak düşürülecektir.</value></data>
+  <data name="AddInvestment_Execute" xml:space="preserve"><value>Ekle</value></data>
+
+  <data name="EditInvestment_Title" xml:space="preserve"><value>Varlık Bilgilerini Düzenle</value></data>
+  <data name="EditInvestment_Symbol" xml:space="preserve"><value>Sembol</value></data>
+  <data name="EditInvestment_Name" xml:space="preserve"><value>Varlık Adı</value></data>
+  <data name="EditInvestment_Category" xml:space="preserve"><value>Kategori</value></data>
+
+  <data name="SellInvestment_Title" xml:space="preserve"><value>Yatırım Satışı</value></data>
+  <data name="SellInvestment_SellAll" xml:space="preserve"><value>Tümünü Sat</value></data>
+  <data name="SellInvestment_SellAmount" xml:space="preserve"><value>Satılacak Miktar</value></data>
+  <data name="SellInvestment_UnitPrice" xml:space="preserve"><value>Birim Fiyatı (₺)</value></data>
+  <data name="SellInvestment_Fee" xml:space="preserve"><value>Aracı Kurum Masrafı / Komisyon (₺)</value></data>
+  <data name="SellInvestment_Account" xml:space="preserve"><value>Satış Gelirinin Aktarılacağı Hesap (İsteğe Bağlı)</value></data>
+  <data name="SellInvestment_AccountHint" xml:space="preserve"><value>Seçilen hesabın bakiyesi otomatik olarak artırılacaktır.</value></data>
+  <data name="SellInvestment_EstRevenue" xml:space="preserve"><value>Tahmini Gelir:</value></data>
+  <data name="SellInvestment_ProfitLoss" xml:space="preserve"><value>Kar / Zarar:</value></data>
+  <data name="SellInvestment_Execute" xml:space="preserve"><value>Satışı Tamamla</value></data>
+
+  <data name="AddInvestment_ErrEmpty" xml:space="preserve"><value>Sembol ve İsim zorunludur.</value></data>
+  <data name="AddInvestment_ErrInvalid" xml:space="preserve"><value>Lütfen geçerli değerler giriniz.</value></data>
+  <data name="AddInvestment_DescFormat" xml:space="preserve"><value>Varlık alımı: {0} {1} @ {2:C2} (Masraf: {3:C2})</value></data>
+  <data name="AddInvestment_GoldFormat" xml:space="preserve"><value> ({0} Gram Altın karşılığı)</value></data>
+  
+  <data name="SellInvestment_Loading" xml:space="preserve"><value>Yükleniyor...</value></data>
+  <data name="SellInvestment_Available" xml:space="preserve"><value>Satılabilir Miktar: {0:N4}</value></data>
+  <data name="SellInvestment_AvgCost" xml:space="preserve"><value>Ort. Maliyet: ₺{0:N2}</value></data>
+  <data name="SellInvestment_AssetInfo" xml:space="preserve"><value>Varlık: {0} ({1})</value></data>
+  <data name="SellInvestment_ErrNotFound" xml:space="preserve"><value>Varlık bulunamadı.</value></data>
+  <data name="SellInvestment_ErrInvalid" xml:space="preserve"><value>Geçerli bir miktar (sahip olduğunuz kadar) ve fiyat giriniz.</value></data>
+  <data name="SellInvestment_DescFormat" xml:space="preserve"><value>Satış: {0} {1} @ {2:C2} (Masraf: {3:C2}, K/Z: {4:C2})</value></data>
+  <data name="SellInvestment_OptCash" xml:space="preserve"><value>💵 Nakit (İsteğe Bağlı)</value></data>
+
+  <data name="Category_Gold" xml:space="preserve"><value>Altın</value></data>
+  <data name="Category_ForeignCurrency" xml:space="preserve"><value>Döviz</value></data>
+  <data name="Category_Stock" xml:space="preserve"><value>Hisse Senedi</value></data>
+  <data name="Category_Crypto" xml:space="preserve"><value>Kripto Para</value></data>
+  <data name="Category_Fund" xml:space="preserve"><value>Fon</value></data>
+  <data name="Category_BES" xml:space="preserve"><value>BES</value></data>
+
+  <data name="ConfirmDialog_Msg" xml:space="preserve"><value>İşlemi onaylıyor musunuz?</value></data>
+  <data name="ErrorDialog_Msg" xml:space="preserve"><value>Bir hata oluştu.</value></data>
+  <!-- Account & Card Details -->
+  <data name="AccountDetail_CurrentBalance" xml:space="preserve"><value>Güncel Bakiye</value></data>
+  <data name="AccountDetail_DeleteConfirm" xml:space="preserve"><value>Bu işlemi kalıcı olarak silmek istediğinize emin misiniz?</value></data>
+  <data name="AccountDetail_TransferDeleteConfirm" xml:space="preserve"><value>Bu bir transfer/ödeme işlemidir. Sildiğinizde karşı hesaptaki bağlantılı kayıt da otomatik olarak silinecektir.
+
+Emin misiniz?</value></data>
+  <data name="AccountDetail_InstallmentDeleteConfirm" xml:space="preserve"><value>Bu işlem bir taksit grubuna aittir. Sildiğinizde bu gruba ait tüm taksitler silinecektir.
+
+Emin misiniz?</value></data>
+
+  <data name="CardDetail_Limit" xml:space="preserve"><value>Limit</value></data>
+  <data name="CardDetail_CurrentDebt" xml:space="preserve"><value>Güncel Borç</value></data>
+  <data name="CardDetail_RemainingLimit" xml:space="preserve"><value>Kalan Limit</value></data>
+  <data name="CardDetail_DeleteConfirm" xml:space="preserve"><value>Bu işlemi kalıcı olarak silmek istediğinize emin misiniz?</value></data>
+  <data name="CardDetail_TransferDeleteConfirm" xml:space="preserve"><value>Bu bir transfer/ödeme/taksit işlemidir. Sildiğinizde bağlantılı tüm kayıtlar da otomatik olarak silinecektir.
+
+Emin misiniz?</value></data>
+  <data name="CardDetail_InstallmentDeleteConfirm" xml:space="preserve"><value>Bu işlem bir taksit grubuna aittir. Sildiğinizde bu gruba ait tüm taksitler silinecektir.
+
+Emin misiniz?</value></data>
+
+  <!-- Category Details -->
+  <data name="CategoryDetail_Title" xml:space="preserve"><value>Kategori İşlem Detayları</value></data>
+  <data name="CategoryDetail_SelectedFormat" xml:space="preserve"><value>Seçilen Kategori: {0}</value></data>
+  <data name="CategoryEdit_Title" xml:space="preserve"><value>Kategori Düzenle</value></data>
+  <data name="CategoryEdit_Name" xml:space="preserve"><value>Kategori Adı</value></data>
+  <data name="CategoryEdit_Parent" xml:space="preserve"><value>Üst Kategori</value></data>
+
+  <!-- Import Preview -->
+  <data name="ImportPreview_Title" xml:space="preserve"><value>Ekstre İçe Aktarma Önizleme</value></data>
+  <data name="ImportPreview_Desc" xml:space="preserve"><value>Yapay zeka tarafından çözümlenen harcamalar aşağıda listelenmiştir. Kaydetmek istediğiniz işlemleri seçin ve onaylayın.</value></data>
+  <data name="ImportPreview_Matched" xml:space="preserve"><value>Eşleşen Kayıt</value></data>
+  <data name="ImportPreview_DupeWarning" xml:space="preserve"><value>Mükerrer olduğu düşünülen işlemlerin seçimi otomatik olarak kaldırılmıştır.</value></data>
+  <data name="ImportPreview_SelectedTotal" xml:space="preserve"><value>Seçilen Toplam: </value></data>
+  <data name="ImportPreview_ImportSelected" xml:space="preserve"><value>Seçilenleri İçe Aktar</value></data>
+
+  <data name="ImportPreview_DupeReason" xml:space="preserve"><value>Bu işlem zaten veritabanında mevcut olabilir.</value></data>
+  <data name="ImportPreview_DupeDetails" xml:space="preserve"><value>Veritabanında eşleşen kayıt:
+Tarih: {0:dd.MM.yyyy}
+Açıklama: {1}
+Tutar: {2:C2}</value></data>
+
+  <!-- Investment Detail -->
+  <data name="InvestmentDetail_TotalAmount" xml:space="preserve"><value>Toplam Adet</value></data>
+  <data name="InvestmentDetail_AvgCost" xml:space="preserve"><value>Ort. Maliyet</value></data>
+  <data name="InvestmentDetail_CurrentPrice" xml:space="preserve"><value>Güncel Fiyat</value></data>
+  <data name="InvestmentDetail_PriceChart" xml:space="preserve"><value>Fiyat Grafiği</value></data>
+  <data name="InvestmentDetail_All" xml:space="preserve"><value>Tümü</value></data>
+  <data name="InvestmentDetail_History" xml:space="preserve"><value>İşlem Geçmişi</value></data>
+  <data name="InvestmentDetail_TotalBuy" xml:space="preserve"><value>Toplam Alım</value></data>
+  <data name="InvestmentDetail_TotalSell" xml:space="preserve"><value>Toplam Satış</value></data>
+  <data name="InvestmentDetail_TotalFee" xml:space="preserve"><value>Komisyon Toplamı</value></data>
+  <data name="InvestmentDetail_NetProfit" xml:space="preserve"><value>Net Kar/Zarar</value></data>
+  <data name="InvestmentDetail_Loading" xml:space="preserve"><value>Yükleniyor...</value></data>
+
+  <!-- Update Available -->
+  <data name="UpdateAvailable_Title" xml:space="preserve"><value>Yeni Bir Sürüm Çıktı!</value></data>
+  <data name="UpdateAvailable_Current" xml:space="preserve"><value>Mevcut Sürüm: {0}</value></data>
+  <data name="UpdateAvailable_New" xml:space="preserve"><value>Yeni Sürüm: {0}</value></data>
+  <data name="UpdateAvailable_Later" xml:space="preserve"><value>Daha Sonra</value></data>
+  <data name="UpdateAvailable_OpenBrowser" xml:space="preserve"><value>Tarayıcıda Aç</value></data>
+  <data name="Global_Edit" xml:space="preserve"><value>Düzenle</value></data>
+  <data name="Global_Delete" xml:space="preserve"><value>Sil</value></data>
+  <data name="AccountDetail_WalletTitle" xml:space="preserve"><value>Cüzdan (Nakit)</value></data>
+  <data name="CategoryDetail_Selected" xml:space="preserve"><value>Seçilen Kategori:</value></data>
+  <data name="CategoryEdit_ErrEmptyName" xml:space="preserve"><value>Lütfen bir kategori adı girin.</value></data>
+  <data name="CategoryEdit_NoParent" xml:space="preserve"><value>-- Yok (Ana Kategori) --</value></data>
+  <data name="Global_Warning" xml:space="preserve"><value>Uyarı</value></data>
+  <data name="Global_Info" xml:space="preserve">
+    <value>Bilgi</value>
+  </data>
+  <data name="Settings_LanguageChangedRestart" xml:space="preserve">
+    <value>Dil değiştirildi. Uygulamayı yeniden başlattığınızda değişiklikler tam olarak uygulanacaktır.</value>
+  </data>
+  <data name="Settings_TabSecurity" xml:space="preserve"><value>🔒 Güvenlik</value></data>
+  <data name="Settings_TabCategories" xml:space="preserve"><value>🏷️ Kategoriler</value></data>
+  <data name="Settings_TabAppearance" xml:space="preserve"><value>🎨 Görünüm ve Dil</value></data>
+  <data name="Settings_TabBackup" xml:space="preserve"><value>☁️ Yedekleme</value></data>
+  <data name="Settings_TabApiTax" xml:space="preserve"><value>🌍 API ve Vergi</value></data>
+  <data name="Settings_TabGuide" xml:space="preserve"><value>📖 Kılavuz</value></data>
+  <data name="Settings_TabAbout" xml:space="preserve"><value>ℹ️ Hakkında</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>⚙️ Ayarlar</value></data>
+  <data name="Settings_Appearance" xml:space="preserve"><value>Uygulama Teması ve Dil</value></data>
+  <data name="Settings_AppearanceDesc" xml:space="preserve"><value>FinTrack arayüzünün görünümünü ve dilini buradan değiştirebilirsiniz.</value></data>
+  <data name="Settings_ThemeSelect" xml:space="preserve"><value>Tema Seçimi</value></data>
+  <data name="Settings_ThemeSystemInfo" xml:space="preserve"><value>Sistem seçeneği cihazınızın varsayılan temasını (Light/Dark) otomatik olarak takip eder.</value></data>
+  <data name="Settings_LanguageSelect" xml:space="preserve"><value>Dil Seçimi (Language)</value></data>
+  <data name="Settings_SecurityTitle" xml:space="preserve"><value>Giriş Şifresini Değiştir</value></data>
+  <data name="Settings_SecurityDesc" xml:space="preserve"><value>Uygulama girişinde kullandığınız ve verilerinizi şifreleyen ana şifreyi buradan güncelleyebilirsiniz.</value></data>
+  <data name="Settings_SecurityCurrentPwd" xml:space="preserve"><value>Mevcut Şifre</value></data>
+  <data name="Settings_SecurityNewPwd" xml:space="preserve"><value>Yeni Şifre</value></data>
+  <data name="Settings_SecurityNewPwdConfirm" xml:space="preserve"><value>Yeni Şifre (Tekrar)</value></data>
+  <data name="Settings_SecurityUpdateBtn" xml:space="preserve"><value>Şifreyi Şimdi Güncelle</value></data>
+  <data name="Settings_AutoLockTitle" xml:space="preserve"><value>Otomatik Kilitleme (Auto-Lock)</value></data>
+  <data name="Settings_AutoLockDesc" xml:space="preserve"><value>Hareketsizlik durumunda ekrana şifre kalkanı koyarak verilerinizi meraklı gözlerden koruyun.</value></data>
+  <data name="Settings_AutoLockEnable" xml:space="preserve"><value>Hareketsizlik durumunda uygulamayı kilitle</value></data>
+  <data name="Settings_AutoLockTime" xml:space="preserve"><value>Kilitlenme Süresi (Dakika):</value></data>
+  <data name="Settings_AutoLockSaveBtn" xml:space="preserve"><value>⏱️ Kilitleme Ayarlarını Kaydet</value></data>
+  <data name="Settings_AboutAppName" xml:space="preserve"><value>FinTrack</value></data>
+  <data name="Settings_AboutVersion" xml:space="preserve"><value>Sürüm 2.0.0-alpha (Avalonia)</value></data>
+  <data name="Settings_AboutDescTitle" xml:space="preserve"><value>Açıklama</value></data>
+  <data name="Settings_AboutDescText" xml:space="preserve"><value>FinTrack, kişisel harcamalarınızı ve bütçenizi en ince ayrıntısıyla takip etmeniz için tasarlanmış, tam şifreli ve yerel veri korumalı bir finans yönetim aracıdır.</value></data>
+  <data name="Settings_AboutSecTitle" xml:space="preserve"><value>Güvenlik ve Gizlilik</value></data>
+  <data name="Settings_AboutSecSqlTitle" xml:space="preserve"><value>🔒 SQLCipher Full Encryption:</value></data>
+  <data name="Settings_AboutSecSqlText" xml:space="preserve"><value>Veritabanı dosyası AES-256 ile bir bütün olarak şifrelenmiştir. Şifreniz olmadan dosya hiçbir araçla açılamaz.</value></data>
+  <data name="Settings_AboutSecZeroTitle" xml:space="preserve"><value>🛡️ Zero-Knowledge Architecture:</value></data>
+  <data name="Settings_AboutSecZeroText" xml:space="preserve"><value>Şifreleme anahtarlarınız sadece sizin cihazınızda saklanır. FinTrack dahil hiç kimse verilerinize erişemez.</value></data>
+  <data name="Settings_AboutSecLocalTitle" xml:space="preserve"><value>💻 Offline-First ve Tam Yerel Kontrol:</value></data>
+  <data name="Settings_AboutSecLocalText" xml:space="preserve"><value>Tüm veriler cihazınızda tutulur. Bulut yedeklemesi bile önce şifrelenerek gönderilir.</value></data>
+  <data name="Settings_AboutAuthorTitle" xml:space="preserve"><value>Geliştirici ve Lisans</value></data>
+  <data name="Settings_AboutAuthorText" xml:space="preserve"><value>Geliştirici: Kadir A.</value></data>
+  <data name="Settings_AboutLicenseText" xml:space="preserve"><value>Lisans: MIT License</value></data>
+  <data name="Settings_AboutGithubText" xml:space="preserve"><value>GitHub Reposu:</value></data>
+  <data name="Settings_AboutContactText" xml:space="preserve"><value>İletişim &amp; Destek:</value></data>
+  <data name="AddProfile_Title" xml:space="preserve"><value>Yeni Profil Oluştur</value></data>
+  <data name="AddProfile_ProfileName" xml:space="preserve"><value>Profil Adı</value></data>
+  <data name="AddProfile_ProfileNamePlaceholder" xml:space="preserve"><value>Örn: Ev, Şirket, Kripto</value></data>
+  <data name="AddProfile_LinkExisting" xml:space="preserve"><value>Varolan Profili Bağla (.db)</value></data>
+  <data name="AddProfile_ErrorEmpty" xml:space="preserve"><value>Profil adı boş olamaz.</value></data>
+  <data name="AddProfile_ErrorExists" xml:space="preserve"><value>'{0}' isminde bir profil zaten mevcut. Lütfen farklı bir profil ismi belirleyin.</value></data>
+  <data name="Global_AppTitle" xml:space="preserve"><value>KT FinTrack - Kişisel Finans Takip</value></data>
+</root>

@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using FinTrack.Avalonia.Localization;
+using FinTrack.Core.Helpers;
+using Avalonia.Platform.Storage;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -44,10 +47,18 @@ public partial class CardsViewModel : ViewModelBase
     [ObservableProperty]
     private decimal _totalCreditDebt;
 
+    [ObservableProperty]
+    private bool _isLoading;
+
     public CardsViewModel()
     {
-        _context = App.Services?.GetService<AppDbContext>();
-        _ = LoadDataAsync();
+        _context = AppDbContext.CreateNew();
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        _context?.Dispose();
     }
 
     public async Task LoadDataAsync()
@@ -59,10 +70,14 @@ public partial class CardsViewModel : ViewModelBase
             var now = DateTime.Now;
 
             // --- FIX FOR INCORRECT CREDIT CARD DEBT CATEGORY ---
-            var badBalances = await _context.Transactions
+            var badBalancesDb = await _context.Transactions
                 .Include(t => t.Category)
-                .Where(t => t.Description != null && t.Description.Contains("Geçmiş Borç Dengelemesi") && t.Category != null && t.Category.Type == TransactionType.Income)
+                .Where(t => t.Category != null && t.Category.Type == TransactionType.Income)
                 .ToListAsync();
+
+            var badBalances = badBalancesDb
+                .Where(t => t.Description != null && t.Description.Contains("Geçmiş Borç Dengelemesi"))
+                .ToList();
 
             if (badBalances.Any())
             {
@@ -224,20 +239,20 @@ public partial class CardsViewModel : ViewModelBase
                 if (remainingDays <= 3)
                 {
                     vm.ProgressColor = "#E74C3C"; 
-                    vm.DaysRemainingText = $"{Math.Ceiling(remainingDays)} Gün Kaldı!";
+                    vm.DaysRemainingText = string.Format(LocalizationService.GetString("Cards_DaysLeftExcl"), Math.Ceiling(remainingDays));
                 }
                 else if (remainingDays <= 10)
                 {
                     vm.ProgressColor = "#F39C12"; 
-                    vm.DaysRemainingText = $"{Math.Ceiling(remainingDays)} Gün Kaldı";
+                    vm.DaysRemainingText = string.Format(LocalizationService.GetString("Cards_DaysLeft"), Math.Ceiling(remainingDays));
                 }
                 else
                 {
                     vm.ProgressColor = "#3498DB"; 
-                    vm.DaysRemainingText = $"{Math.Ceiling(remainingDays)} Gün";
+                    vm.DaysRemainingText = string.Format(LocalizationService.GetString("Cards_Days"), Math.Ceiling(remainingDays));
                 }
 
-                vm.StatementDescription = $"{period.Start:dd MMM} - {period.End:dd MMM} Ekstresi";
+                vm.StatementDescription = string.Format(LocalizationService.GetString("Cards_StatementDesc"), period.Start.ToString("dd MMM"), period.End.ToString("dd MMM"));
                 
                 newItems.Add(vm);
             }
@@ -251,7 +266,7 @@ public partial class CardsViewModel : ViewModelBase
         }
         catch(Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine(ex.Message);
+            AppLogger.Error(ex.Message);
         }
     }
 
@@ -285,6 +300,67 @@ public partial class CardsViewModel : ViewModelBase
             var window = new FinTrack.Avalonia.Views.ManageCardsWindow();
             await window.ShowDialog(desktop.MainWindow);
             await LoadDataAsync();
+        }
+    }
+
+    [RelayCommand]
+    private async Task UploadStatementAsync(int cardId)
+    {
+        if (global::Avalonia.Application.Current?.ApplicationLifetime is global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow != null)
+        {
+            var files = await desktop.MainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "Kredi Kartı Ekstresi Seçin (PDF veya Görsel)",
+                AllowMultiple = false,
+                FileTypeFilter = new[] 
+                { 
+                    new FilePickerFileType("Desteklenen Dosyalar") { Patterns = new[] { "*.pdf", "*.png", "*.jpg", "*.jpeg" } } 
+                }
+            });
+
+            if (files.Count > 0)
+            {
+                var file = files[0];
+                var filePath = file.Path.LocalPath;
+                string apiKey = FinTrack.Core.Services.SettingsManager.GetGeminiApiKey() ?? string.Empty;
+                
+                if (string.IsNullOrWhiteSpace(apiKey))
+                {
+                    var errorDialog = new FinTrack.Avalonia.Views.ConfirmDialog("API Anahtarı Eksik", "Lütfen Ayarlar sayfasından Gemini API anahtarınızı giriniz.", "Tamam", "");
+                    await errorDialog.ShowDialog<bool?>(desktop.MainWindow);
+                    return;
+                }
+
+                try
+                {
+                    IsLoading = true;
+                    byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                    string extension = System.IO.Path.GetExtension(filePath);
+                    
+                    var parser = new FinTrack.Core.Services.GeminiParserService();
+                    var parsedTransactions = await parser.ParseStatementAsync(fileBytes, extension, apiKey);
+
+                    if (parsedTransactions == null || parsedTransactions.Count == 0)
+                    {
+                        var infoDialog = new FinTrack.Avalonia.Views.ConfirmDialog("Sonuç Bulunamadı", "Dosyadan herhangi bir işlem çıkarılamadı.", "Tamam", "");
+                        await infoDialog.ShowDialog<bool?>(desktop.MainWindow);
+                        return;
+                    }
+
+                    var window = new FinTrack.Avalonia.Views.ImportPreviewWindow(cardId, null, parsedTransactions);
+                    await window.ShowDialog(desktop.MainWindow);
+                    await LoadDataAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorDialog = new FinTrack.Avalonia.Views.ConfirmDialog("Hata Oluştu", $"Ekstre işlenirken bir hata oluştu:\n{ex.Message}", "Tamam", "");
+                    await errorDialog.ShowDialog<bool?>(desktop.MainWindow);
+                }
+                finally
+                {
+                    IsLoading = false;
+                }
+            }
         }
     }
 }

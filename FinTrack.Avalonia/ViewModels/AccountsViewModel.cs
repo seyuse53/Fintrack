@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using FinTrack.Core.Helpers;
+using Avalonia.Platform.Storage;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -30,12 +32,20 @@ public partial class AccountsViewModel : ViewModelBase
     private string _cashBalanceDisplay = "₺0,00";
 
     [ObservableProperty]
+    private bool _isLoading;
+
+    [ObservableProperty]
     private ObservableCollection<AccountItemViewModel> _accountsList = new();
 
     public AccountsViewModel()
     {
-        _context = App.Services?.GetService<AppDbContext>();
-        _ = LoadDataAsync();
+        _context = AppDbContext.CreateNew();
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        _context?.Dispose();
     }
 
     public event Action? RequestManageAccounts;
@@ -122,7 +132,7 @@ public partial class AccountsViewModel : ViewModelBase
         }
         catch(Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine(ex.Message);
+            AppLogger.Error(ex.Message);
         }
     }
 
@@ -149,5 +159,66 @@ public partial class AccountsViewModel : ViewModelBase
         if (string.IsNullOrWhiteSpace(iban)) return string.Empty;
         var cleanIban = new string(iban.Where(char.IsLetterOrDigit).ToArray());
         return string.Join(" ", Enumerable.Range(0, (cleanIban.Length + 3) / 4).Select(i => cleanIban.Substring(i * 4, Math.Min(4, cleanIban.Length - i * 4))));
+    }
+
+    [RelayCommand]
+    private async Task UploadStatementAsync(int accountId)
+    {
+        if (global::Avalonia.Application.Current?.ApplicationLifetime is global::Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop && desktop.MainWindow != null)
+        {
+            var files = await desktop.MainWindow.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "Banka Ekstresi Seçin (PDF veya Görsel)",
+                AllowMultiple = false,
+                FileTypeFilter = new[] 
+                { 
+                    new FilePickerFileType("Desteklenen Dosyalar") { Patterns = new[] { "*.pdf", "*.png", "*.jpg", "*.jpeg" } } 
+                }
+            });
+
+            if (files.Count > 0)
+            {
+                var file = files[0];
+                var filePath = file.Path.LocalPath;
+                string apiKey = FinTrack.Core.Services.SettingsManager.GetGeminiApiKey() ?? string.Empty;
+                
+                if (string.IsNullOrWhiteSpace(apiKey))
+                {
+                    var errorDialog = new FinTrack.Avalonia.Views.ConfirmDialog("API Anahtarı Eksik", "Lütfen Ayarlar sayfasından Gemini API anahtarınızı giriniz.", "Tamam", "");
+                    await errorDialog.ShowDialog<bool?>(desktop.MainWindow);
+                    return;
+                }
+
+                try
+                {
+                    IsLoading = true;
+                    byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                    string extension = System.IO.Path.GetExtension(filePath);
+                    
+                    var parser = new FinTrack.Core.Services.GeminiParserService();
+                    var parsedTransactions = await parser.ParseStatementAsync(fileBytes, extension, apiKey);
+
+                    if (parsedTransactions == null || parsedTransactions.Count == 0)
+                    {
+                        var infoDialog = new FinTrack.Avalonia.Views.ConfirmDialog("Sonuç Bulunamadı", "Dosyadan herhangi bir işlem çıkarılamadı.", "Tamam", "");
+                        await infoDialog.ShowDialog<bool?>(desktop.MainWindow);
+                        return;
+                    }
+
+                    var window = new FinTrack.Avalonia.Views.ImportPreviewWindow(null, accountId, parsedTransactions);
+                    await window.ShowDialog(desktop.MainWindow);
+                    await LoadDataAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorDialog = new FinTrack.Avalonia.Views.ConfirmDialog("Hata Oluştu", $"Ekstre işlenirken bir hata oluştu:\n{ex.Message}", "Tamam", "");
+                    await errorDialog.ShowDialog<bool?>(desktop.MainWindow);
+                }
+                finally
+                {
+                    IsLoading = false;
+                }
+            }
+        }
     }
 }

@@ -1,1 +1,5 @@
 Card Family: Asıl Kart MASTER (3)
+Tx 162: Date=7.04.2026, Cat='Aidat' (Expense), Amount=539,0, Effective=539,0
+Tx 163: Date=16.04.2026, Cat='Aidat' (Expense), Amount=4000,0, Effective=4000,0
+Tx 164: Date=16.04.2026, Cat='Eğlence' (Expense), Amount=159,99, Effective=159,99
+Tx 166: Date=30.04.2026, Cat='Kredi Kartı Ödemesi' (Transfer), Amount=4698,99, Effective=-4698,99

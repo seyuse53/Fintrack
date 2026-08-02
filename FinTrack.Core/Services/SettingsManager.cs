@@ -18,11 +18,14 @@ namespace FinTrack.Core.Services
     public class Settings
     {
         public string? HashedPassword { get; set; }
+        public string? PasswordSalt { get; set; } // Salt for DEK encryption
+        public string? RecoverySalt { get; set; } // Salt for Recovery Key
         public string? EncryptedDataKey { get; set; }
         public string? RecoveryEncryptedDataKey { get; set; }
         public string? DatabasePath { get; set; }
         public ApiProviderType PricingApiProvider { get; set; } = ApiProviderType.Manual;
         public string? CustomApiUrl { get; set; }
+        public string? GeminiApiKey { get; set; }
 
         // Kategori bazlı API sağlayıcıları (yazılımdan değiştirmeden ayarlanabilir)
         public ApiProviderType DovizProvider { get; set; } = ApiProviderType.GenelPara;
@@ -85,6 +88,11 @@ namespace FinTrack.Core.Services
 
         // Holds the decrypted data key in memory while the app is running
         public static string? ActiveDataKey { get; private set; }
+
+        public static void ClearActiveKey()
+        {
+            ActiveDataKey = null;
+        }
 
         public static string GetDefaultDbPath(string? profileName = null)
         {
@@ -149,15 +157,18 @@ namespace FinTrack.Core.Services
                 var settings = new Settings { DatabasePath = databasePath };
 
                 // [SIDE-CAR RECOVERY] 
-                // If an existing DB is selected, check for a companion .keys file to restore encryption info
+                // Check for a companion .keys file to restore encryption info
                 if (!string.IsNullOrEmpty(databasePath) && File.Exists(databasePath))
                 {
-                    string keysFile = databasePath + ".keys";
-                    if (File.Exists(keysFile))
+                    string oldKeysFile = databasePath + ".keys";
+                    string newKeysFile = Path.Combine(GetAppDataFolder(), $"recovery_{profileName}.keys");
+                    string? keysFileToRead = File.Exists(newKeysFile) ? newKeysFile : (File.Exists(oldKeysFile) ? oldKeysFile : null);
+
+                    if (keysFileToRead != null)
                     {
                         try
                         {
-                            string keysJson = File.ReadAllText(keysFile);
+                            string keysJson = File.ReadAllText(keysFileToRead);
                             var options = new JsonSerializerOptions 
                             { 
                                 PropertyNameCaseInsensitive = true,
@@ -295,7 +306,7 @@ namespace FinTrack.Core.Services
             string json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(SettingsFile, json);
 
-            // [SIDE-CAR KEYS] Save a copy of encryption info alongside the database for portability
+            // [SIDE-CAR KEYS] Save a copy of encryption info in a secure location (isolated from DB)
             string? dbPath = settings.DatabasePath;
             if (string.IsNullOrEmpty(dbPath))
             {
@@ -314,8 +325,16 @@ namespace FinTrack.Core.Services
                         DatabasePath = dbPath
                     };
                     string keysJson = JsonSerializer.Serialize(keysOnly, new JsonSerializerOptions { WriteIndented = true });
-                    string keysPath = dbPath + ".keys";
+                    // Güvenlik: DB dizini yerine LocalAppData altında izole tutuluyor
+                    string keysPath = Path.Combine(GetAppDataFolder(), $"recovery_{_currentProfile}.keys");
                     File.WriteAllText(keysPath, keysJson);
+
+                    // Eski güvensiz konumdaki .keys dosyasını temizle (varsa)
+                    string oldKeysPath = dbPath + ".keys";
+                    if (File.Exists(oldKeysPath))
+                    {
+                        File.Delete(oldKeysPath);
+                    }
                 }
                 catch { /* Logging would be good here but let's keep it robust */ }
             }
@@ -399,9 +418,60 @@ namespace FinTrack.Core.Services
             SaveSettings(settings);
         }
 
+        public static string? GetGeminiApiKey()
+        {
+            var settings = LoadSettings();
+            return settings.GeminiApiKey;
+        }
+
+        public static void SetGeminiApiKey(string? apiKey)
+        {
+            var settings = LoadSettings();
+            settings.GeminiApiKey = apiKey;
+            SaveSettings(settings);
+        }
+
         public static void RevertSettingsToDefaults()
         {
             SaveSettings(new Settings());
+        }
+
+        private static string _languagePreference = "tr";
+
+        public static string GetLanguagePreference()
+        {
+            try
+            {
+                var settingsFile = Path.Combine(GetAppDataFolder(), "global_settings.json");
+                if (File.Exists(settingsFile))
+                {
+                    string json = File.ReadAllText(settingsFile);
+                    var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
+                    if (dict.TryGetValue("Language", out string? lang))
+                        return lang;
+                }
+            }
+            catch { }
+            return _languagePreference;
+        }
+
+        public static void SetLanguagePreference(string lang)
+        {
+            _languagePreference = lang;
+            try
+            {
+                var settingsFile = Path.Combine(GetAppDataFolder(), "global_settings.json");
+                Dictionary<string, string> dict = new();
+                if (File.Exists(settingsFile))
+                {
+                    string existingJson = File.ReadAllText(settingsFile);
+                    dict = JsonSerializer.Deserialize<Dictionary<string, string>>(existingJson) ?? new Dictionary<string, string>();
+                }
+                dict["Language"] = lang;
+                string newJson = JsonSerializer.Serialize(dict, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(settingsFile, newJson);
+            }
+            catch { }
         }
 
         private static string _themePreference = "Sistem";
@@ -576,13 +646,21 @@ namespace FinTrack.Core.Services
             
             // 3. Hash user password for verification using PBKDF2
             settings.HashedPassword = HashPassword(plainPassword);
+
+            // 4. Generate a Salt for Key Derivation
+            byte[] saltBytes = CryptoProvider.CreateSalt();
+            settings.PasswordSalt = Convert.ToBase64String(saltBytes);
             
-            // 4. Encrypt the DEK with the user's password
-            string passwordKey = CryptoProvider.DeriveKeyFromPassword(plainPassword);
+            // 5. Encrypt the DEK with the user's password (Salted)
+            string passwordKey = CryptoProvider.DeriveKeyFromPassword(plainPassword, settings.PasswordSalt);
             settings.EncryptedDataKey = CryptoProvider.Encrypt(masterDek, passwordKey);
             
-            // 5. Encrypt the DEK with the recovery code
-            string recoveryKey = CryptoProvider.DeriveKeyFromPassword(recoveryCode);
+            // 6. Generate a Salt for Recovery Key Derivation
+            byte[] recoverySaltBytes = CryptoProvider.CreateSalt();
+            settings.RecoverySalt = Convert.ToBase64String(recoverySaltBytes);
+
+            // 7. Encrypt the DEK with the recovery code (Salted)
+            string recoveryKey = CryptoProvider.DeriveKeyFromPassword(recoveryCode, settings.RecoverySalt);
             settings.RecoveryEncryptedDataKey = CryptoProvider.Encrypt(masterDek, recoveryKey);
             
             SaveSettings(settings);
@@ -621,14 +699,46 @@ namespace FinTrack.Core.Services
 
             if (isPasswordCorrect)
             {
-                // Password is correct, let's load the DEK into memory
-                string passwordKey = CryptoProvider.DeriveKeyFromPassword(inputPassword);
+                // Load the DEK into memory
+                string passwordKey;
+                bool needsSaltUpgrade = string.IsNullOrEmpty(settings.PasswordSalt);
+
+                if (needsSaltUpgrade)
+                {
+                    // Legacy unsalted derivation
+                    passwordKey = CryptoProvider.DeriveKeyFromPasswordLegacy(inputPassword);
+                }
+                else
+                {
+                    // Modern salted derivation
+                    passwordKey = CryptoProvider.DeriveKeyFromPassword(inputPassword, settings.PasswordSalt!);
+                }
+                
                 ActiveDataKey = CryptoProvider.Decrypt(settings.EncryptedDataKey!, passwordKey);
                 
                 // Seamlessly upgrade the hash to PBKDF2 if it was old
                 if (needsUpgrade)
                 {
                     settings.HashedPassword = HashPassword(inputPassword);
+                }
+
+                // Seamlessly upgrade key derivation to salted if it was unsalted
+                if (needsSaltUpgrade && !string.IsNullOrEmpty(ActiveDataKey))
+                {
+                    byte[] saltBytes = CryptoProvider.CreateSalt();
+                    settings.PasswordSalt = Convert.ToBase64String(saltBytes);
+                    
+                    string newPasswordKey = CryptoProvider.DeriveKeyFromPassword(inputPassword, settings.PasswordSalt);
+                    settings.EncryptedDataKey = CryptoProvider.Encrypt(ActiveDataKey, newPasswordKey);
+                    
+                    // Also upgrade the RecoveryEncryptedDataKey if one exists
+                    // We don't have the plaintext recovery code, but we know the RecoveryEncryptedDataKey
+                    // Wait, we CANNOT re-encrypt the recovery code because we don't know it!
+                    // But if we change the salt, we must re-encrypt the RecoveryKey.
+                    // This means the user MUST generate a new recovery code, or we store a separate salt for recovery.
+                    // Since storing a separate salt is complex, and the recovery code is rarely used,
+                    // we'll keep the recovery key derivation unsalted if they don't change their password,
+                    // OR we could introduce RecoveryPasswordSalt. Let's add RecoveryPasswordSalt to Settings.
                 }
 
                 // Always save to ensure .keys file exists and is up to date
@@ -669,8 +779,12 @@ namespace FinTrack.Core.Services
             if (string.IsNullOrEmpty(ActiveDataKey))
                 return false;
 
+            // Generate a new salt for the new password
+            byte[] newSaltBytes = CryptoProvider.CreateSalt();
+            settings.PasswordSalt = Convert.ToBase64String(newSaltBytes);
+
             // Re-encrypt the existing DEK with the new password
-            string newPasswordKey = CryptoProvider.DeriveKeyFromPassword(newPassword);
+            string newPasswordKey = CryptoProvider.DeriveKeyFromPassword(newPassword, settings.PasswordSalt);
             settings.EncryptedDataKey = CryptoProvider.Encrypt(ActiveDataKey, newPasswordKey);
 
             // Update the stored hash
@@ -686,7 +800,18 @@ namespace FinTrack.Core.Services
             if (string.IsNullOrEmpty(settings.RecoveryEncryptedDataKey))
                 return false;
 
-            string recoveryKey = CryptoProvider.DeriveKeyFromPassword(recoveryCode);
+            string recoveryKey;
+            if (string.IsNullOrEmpty(settings.RecoverySalt))
+            {
+                // Legacy unsalted recovery derivation
+                recoveryKey = CryptoProvider.DeriveKeyFromPasswordLegacy(recoveryCode);
+            }
+            else
+            {
+                // Modern salted recovery derivation
+                recoveryKey = CryptoProvider.DeriveKeyFromPassword(recoveryCode, settings.RecoverySalt);
+            }
+            
             string decryptedDek = CryptoProvider.Decrypt(settings.RecoveryEncryptedDataKey, recoveryKey);
 
             // If decryption failed, it returns the cipherText itself
@@ -694,8 +819,13 @@ namespace FinTrack.Core.Services
                 return false;
 
             // Decryption succeeded, we have the Master DEK
+            
+            // Generate a new salt for the new password
+            byte[] newSaltBytes = CryptoProvider.CreateSalt();
+            settings.PasswordSalt = Convert.ToBase64String(newSaltBytes);
+
             // 1. Re-encrypt DEK with the new password
-            string newPasswordKey = CryptoProvider.DeriveKeyFromPassword(newPassword);
+            string newPasswordKey = CryptoProvider.DeriveKeyFromPassword(newPassword, settings.PasswordSalt);
             settings.EncryptedDataKey = CryptoProvider.Encrypt(decryptedDek, newPasswordKey);
             
             // 2. Hash the new user password

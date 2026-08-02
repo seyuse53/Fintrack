@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FinTrack.Core.Models;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using FinTrack.Core.Helpers;
 
 namespace FinTrack.Core.Services
 {
@@ -225,7 +226,7 @@ namespace FinTrack.Core.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error fetching price for {symbol}: {ex.Message}");
+                AppLogger.Error($"Error fetching price for {symbol}: {ex.Message}");
             }
 
             return false;
@@ -276,7 +277,7 @@ namespace FinTrack.Core.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"GenelPara error for {symbol}: {ex.Message}");
+                AppLogger.Error($"GenelPara error for {symbol}: {ex.Message}");
             }
 
             return false;
@@ -375,7 +376,7 @@ namespace FinTrack.Core.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Borsa scraper error for {symbol}: {ex.Message}");
+                AppLogger.Error($"Borsa scraper error for {symbol}: {ex.Message}");
             }
 
             return false;
@@ -421,7 +422,7 @@ namespace FinTrack.Core.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Binance error for {symbol}: {ex.Message}");
+                AppLogger.Error($"Binance error for {symbol}: {ex.Message}");
             }
             
             return false;
@@ -490,7 +491,7 @@ namespace FinTrack.Core.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Crypto scraper error for {symbol}: {ex.Message}");
+                AppLogger.Error($"Crypto scraper error for {symbol}: {ex.Message}");
             }
 
             // Kazıma başarısız olursa Binance API'ye (Global Kripto) Fallback yap
@@ -549,7 +550,7 @@ namespace FinTrack.Core.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Altin Scraping error for {symbol}: {ex.Message}");
+                AppLogger.Error($"Altin Scraping error for {symbol}: {ex.Message}");
             }
 
             // Kazıma başarısız olursa GenelPara Altın yöntemine Fallback
@@ -597,7 +598,7 @@ namespace FinTrack.Core.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Doviz Scraping error for {symbol}: {ex.Message}");
+                AppLogger.Error($"Doviz Scraping error for {symbol}: {ex.Message}");
             }
 
             // Kazıma başarısız olursa GenelPara Döviz yöntemine Fallback
@@ -686,7 +687,7 @@ namespace FinTrack.Core.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"GetAvailableSymbolsAsync error: {ex.Message}");
+                AppLogger.Error($"GetAvailableSymbolsAsync error: {ex.Message}");
             }
 
             return results;

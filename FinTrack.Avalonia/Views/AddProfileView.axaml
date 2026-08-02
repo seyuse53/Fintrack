@@ -1,24 +1,34 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FinTrack.Avalonia.ViewModels"
+             xmlns:loc="using:FinTrack.Avalonia.Localization"
              x:Class="FinTrack.Avalonia.Views.AddProfileView"
              x:DataType="vm:AddProfileViewModel">
 
     <Grid Background="#2C3E50">
-        <Border Background="White" CornerRadius="8" Padding="30"
+        <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="8" Padding="10"
                 HorizontalAlignment="Center" VerticalAlignment="Center"
                 Width="350">
-            <StackPanel Spacing="15">
-                <TextBlock Text="Yeni Profil Oluştur" FontSize="20" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center"/>
+            <StackPanel Spacing="10">
+                <TextBlock Text="{loc:Translate AddProfile_Title}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
                 
-                <TextBlock Text="Profil Adı" FontWeight="SemiBold"/>
-                <TextBox Text="{Binding ProfileName}" PlaceholderText="Örn: Ev, Şirket, Kripto"/>
+                <TextBlock Text="{loc:Translate AddProfile_ProfileName}" FontWeight="SemiBold"/>
+                <TextBox Text="{Binding ProfileName}" Watermark="{loc:Translate AddProfile_ProfileNamePlaceholder}"/>
 
                 <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" IsVisible="{Binding HasError}" TextWrapping="Wrap"/>
 
-                <Button Content="Oluştur" Command="{Binding SaveCommand}"
+                <Grid ColumnDefinitions="*,*">
+                    <Button Grid.Column="0" Content="{loc:Translate Global_Cancel}" Command="{Binding CancelCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Background="#95A5A6" Foreground="White" FontSize="16" Padding="10" CornerRadius="4" Margin="0,0,5,0"/>
+                    <Button Grid.Column="1" Content="{loc:Translate Global_Save}" Command="{Binding SaveCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Background="#3498DB" Foreground="White" FontSize="16" Padding="10" CornerRadius="4" Margin="5,0,0,0"/>
+                </Grid>
+
+                <Button Content="{loc:Translate AddProfile_LinkExisting}" Click="LinkExistingProfile_Click"
                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                        Background="#3498DB" Foreground="White" FontSize="16" Padding="10" CornerRadius="4"/>
+                        Background="Transparent" Foreground="#3498DB" FontSize="14" Padding="5" Margin="0,5,0,0" Cursor="Hand" BorderThickness="0"/>
             </StackPanel>
         </Border>
     </Grid>

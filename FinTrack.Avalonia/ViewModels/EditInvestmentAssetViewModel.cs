@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using FinTrack.Core.Models;
 using FinTrack.Data;
+using FinTrack.Avalonia.Localization;
 
 namespace FinTrack.Avalonia.ViewModels;
 
@@ -20,10 +21,18 @@ public partial class EditInvestmentAssetViewModel : ViewModelBase
     private string _name = "";
 
     public ObservableCollection<string> Categories { get; } = new() 
-    { "Altın", "Döviz", "Hisse Senedi", "Kripto Para", "Fon", "BES", "Diğer" };
+    { 
+        LocalizationService.GetString("Category_Gold"), 
+        LocalizationService.GetString("Category_ForeignCurrency"), 
+        LocalizationService.GetString("Category_Stock"), 
+        LocalizationService.GetString("Category_Crypto"), 
+        LocalizationService.GetString("Category_Fund"), 
+        LocalizationService.GetString("Category_BES"), 
+        LocalizationService.GetString("Global_Other") 
+    };
 
     [ObservableProperty]
-    private string _selectedCategory = "Diğer";
+    private string _selectedCategory = LocalizationService.GetString("Global_Other");
 
     [ObservableProperty]
     private string _errorMessage = "";
@@ -51,7 +60,7 @@ public partial class EditInvestmentAssetViewModel : ViewModelBase
         HasError = false;
         if (string.IsNullOrWhiteSpace(Symbol) || string.IsNullOrWhiteSpace(Name))
         {
-            ShowError("Sembol ve İsim alanları boş bırakılamaz.");
+            ShowError(LocalizationService.GetString("AddInvestment_ErrEmpty"));
             return;
         }
 
